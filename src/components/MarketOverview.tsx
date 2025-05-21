@@ -1,6 +1,6 @@
 
 import { MarketIndex } from '@/lib/mockData';
-import { ArrowTrendingUp, ArrowTrendingDown } from 'lucide-react';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 
 interface MarketOverviewProps {
   indices: MarketIndex[];
@@ -28,9 +28,9 @@ const MarketOverview: React.FC<MarketOverviewProps> = ({ indices }) => {
               <p className="text-base font-semibold">{index.value.toLocaleString('en-US', { maximumFractionDigits: 2 })}</p>
               <div className={`flex items-center gap-1 ${index.change >= 0 ? 'text-stockpulse-green' : 'text-stockpulse-coral'}`}>
                 {index.change >= 0 ? (
-                  <ArrowTrendingUp className="h-3.5 w-3.5" />
+                  <TrendingUp className="h-3.5 w-3.5" />
                 ) : (
-                  <ArrowTrendingDown className="h-3.5 w-3.5" />
+                  <TrendingDown className="h-3.5 w-3.5" />
                 )}
                 <span className="text-sm font-medium">
                   {index.change >= 0 ? '+' : ''}{index.change.toFixed(2)} ({index.changePercent >= 0 ? '+' : ''}{index.changePercent.toFixed(2)}%)
