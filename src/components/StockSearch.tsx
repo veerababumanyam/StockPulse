@@ -21,31 +21,31 @@ const StockSearch: React.FC<StockSearchProps> = ({ stocks, onSelect }) => {
 
   return (
     <div className="relative">
-      <div className="flex items-center border rounded-xl bg-white shadow-sm focus-within:ring-2 focus-within:ring-stockpulse-blue/20 focus-within:border-stockpulse-blue">
-        <div className="pl-4 pr-2">
-          <Search className="h-4 w-4 text-gray-400" />
+      <div className="flex items-center neumorphic bg-gradient-pastel transition-all duration-300 focus-within:shadow-neumorphic-inset">
+        <div className="pl-5 pr-2">
+          <Search className="h-5 w-5 text-stockpulse-blue" />
         </div>
         <input
-          className="w-full py-3 px-1 text-sm focus:outline-none rounded-xl"
+          className="w-full py-4 px-1 text-base focus:outline-none rounded-xl bg-transparent"
           placeholder="Search symbols, companies, or AI themes..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setTimeout(() => setIsFocused(false), 150)}
         />
-        <div className="pr-4 pl-2">
-          <div className="bg-blue-50 p-1 rounded-md">
+        <div className="pr-5 pl-2">
+          <div className="bg-stockpulse-pastel-blue p-1.5 rounded-lg">
             <Sparkles className="h-4 w-4 text-stockpulse-blue" />
           </div>
         </div>
       </div>
       
       {isFocused && query && filteredStocks.length > 0 && (
-        <div className="absolute mt-2 w-full bg-white rounded-xl shadow-lg border border-gray-200 z-10 max-h-80 overflow-y-auto animate-fade-in divide-y divide-gray-100">
+        <div className="absolute mt-3 w-full bg-white rounded-xl shadow-neumorphic border border-gray-100 z-10 max-h-80 overflow-y-auto animate-fade-in divide-y divide-gray-100">
           {filteredStocks.map((stock) => (
             <div
               key={stock.symbol}
-              className="px-4 py-3 hover:bg-gray-50 cursor-pointer flex justify-between transition-colors"
+              className="px-5 py-3.5 hover:bg-stockpulse-gray-light/30 cursor-pointer flex justify-between transition-colors"
               onClick={() => {
                 onSelect(stock.symbol);
                 setQuery('');
@@ -67,23 +67,23 @@ const StockSearch: React.FC<StockSearchProps> = ({ stocks, onSelect }) => {
       )}
       
       {isFocused && query && filteredStocks.length === 0 && (
-        <div className="absolute mt-2 w-full bg-white rounded-xl shadow-lg border border-gray-200 z-10 p-4 text-center animate-fade-in">
+        <div className="absolute mt-3 w-full bg-white rounded-xl shadow-neumorphic border border-gray-100 z-10 p-5 text-center animate-fade-in">
           <p className="text-gray-500">No stocks found matching "{query}"</p>
         </div>
       )}
       
       {!query && (
-        <div className="mt-3 flex flex-wrap gap-2">
-          <button className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors text-gray-700">
+        <div className="mt-4 flex flex-wrap gap-2">
+          <button className="px-4 py-2 text-xs neumorphic-button text-gray-700">
             #TechStocks
           </button>
-          <button className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors text-gray-700">
+          <button className="px-4 py-2 text-xs neumorphic-button text-gray-700">
             #RisingStars
           </button>
-          <button className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors text-gray-700">
+          <button className="px-4 py-2 text-xs neumorphic-button text-gray-700">
             #Dividends
           </button>
-          <button className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded-full transition-colors text-gray-700">
+          <button className="px-4 py-2 text-xs neumorphic-button text-gray-700">
             #AITrends
           </button>
         </div>

@@ -33,14 +33,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, type, onSwitchTy
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md rounded-xl shadow-neumorphic bg-gradient-pastel">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">
+          <DialogTitle className="text-xl font-heading font-semibold">
             {type === 'login' ? 'Log in to StockPulse AI' : 'Create an Account'}
           </DialogTitle>
           <button 
             onClick={onClose} 
-            className="absolute top-3 right-3 rounded-full p-1 hover:bg-gray-100"
+            className="absolute top-3 right-3 rounded-full p-1.5 hover:bg-stockpulse-pastel-blue transition-all duration-300"
           >
             <X className="h-4 w-4" />
           </button>
@@ -56,7 +56,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, type, onSwitchTy
                 onChange={(e) => setName(e.target.value)}
                 required
                 placeholder="John Doe"
-                className="border-gray-300"
+                className="shadow-neumorphic-sm focus:shadow-neumorphic-sm-inset transition-all duration-300 rounded-xl border-none"
               />
             </div>
           )}
@@ -70,7 +70,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, type, onSwitchTy
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="john@example.com"
-              className="border-gray-300"
+              className="shadow-neumorphic-sm focus:shadow-neumorphic-sm-inset transition-all duration-300 rounded-xl border-none"
             />
           </div>
           
@@ -83,13 +83,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, type, onSwitchTy
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="••••••••"
-              className="border-gray-300"
+              className="shadow-neumorphic-sm focus:shadow-neumorphic-sm-inset transition-all duration-300 rounded-xl border-none"
             />
           </div>
           
           <Button 
             type="submit"
-            className="w-full bg-stockpulse-blue hover:bg-stockpulse-blue-dark"
+            className="w-full"
           >
             {type === 'login' ? 'Log In' : 'Create Account'}
           </Button>
@@ -101,7 +101,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, type, onSwitchTy
                 <button
                   type="button"
                   onClick={() => onSwitchType('register')}
-                  className="text-stockpulse-blue hover:underline"
+                  className="text-stockpulse-blue hover:underline transition-all duration-300"
                 >
                   Sign up
                 </button>
@@ -112,7 +112,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, type, onSwitchTy
                 <button
                   type="button"
                   onClick={() => onSwitchType('login')}
-                  className="text-stockpulse-blue hover:underline"
+                  className="text-stockpulse-blue hover:underline transition-all duration-300"
                 >
                   Log in
                 </button>
@@ -125,15 +125,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, type, onSwitchTy
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              <span className="px-2 bg-white text-gray-500 rounded-full bg-gradient-pastel shadow-neumorphic-sm-inset">Or continue with</span>
             </div>
           </div>
           
           <div className="grid grid-cols-2 gap-3">
-            <Button variant="outline" type="button" className="border-gray-300">
+            <Button variant="neumorphic" type="button">
               Google
             </Button>
-            <Button variant="outline" type="button" className="border-gray-300">
+            <Button variant="neumorphic" type="button">
               Apple
             </Button>
           </div>

@@ -38,15 +38,16 @@ const Navbar = () => {
   return (
     <nav className={`fixed w-full top-0 z-20 transition-all duration-300 ${
       isScrolled 
-        ? 'bg-white border-b border-gray-200 shadow-sm' 
-        : 'bg-white/90 backdrop-blur-md'
+        ? 'bg-white/90 backdrop-blur-md shadow-neumorphic-sm' 
+        : 'bg-white/70 backdrop-blur-md'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0 flex items-center">
-              <span className="text-stockpulse-blue font-bold text-xl">
-                Stock<span className="text-stockpulse-teal">Pulse</span>
+              <span className="font-heading text-xl font-bold">
+                <span className="text-stockpulse-blue">Stock</span>
+                <span className="text-stockpulse-teal">Pulse</span>
                 <span className="text-stockpulse-blue-dark">AI</span>
               </span>
             </div>
@@ -65,12 +66,12 @@ const Navbar = () => {
                   AI Insights
                   <ChevronDown className="ml-1 h-4 w-4" />
                 </button>
-                <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
-                  <div className="py-1" role="menu">
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Price Predictions</a>
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Market Sentiment</a>
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Trend Analysis</a>
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">News Impact</a>
+                <div className="absolute left-0 mt-2 w-48 rounded-xl shadow-neumorphic bg-white/95 backdrop-blur-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10 border border-gray-100">
+                  <div className="py-1.5" role="menu">
+                    <a href="#" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-stockpulse-pastel-blue rounded-md mx-1.5">Price Predictions</a>
+                    <a href="#" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-stockpulse-pastel-blue rounded-md mx-1.5">Market Sentiment</a>
+                    <a href="#" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-stockpulse-pastel-blue rounded-md mx-1.5">Trend Analysis</a>
+                    <a href="#" className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-stockpulse-pastel-blue rounded-md mx-1.5">News Impact</a>
                   </div>
                 </div>
               </div>
@@ -80,31 +81,31 @@ const Navbar = () => {
           <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-gray-400" />
+                <Search className="h-4 w-4 text-stockpulse-blue-light" />
               </div>
               <input
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-stockpulse-blue focus:border-stockpulse-blue sm:text-sm"
-                placeholder="Search..."
+                className="block w-full pl-10 pr-3 py-2 rounded-xl shadow-neumorphic-sm focus:shadow-neumorphic-sm-inset transition-all duration-300 bg-white/80 border-none text-gray-900 placeholder-gray-500 focus:placeholder-gray-400 sm:text-sm"
+                placeholder="Quick search..."
                 type="search"
               />
             </div>
             
-            <button className="p-2 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none hover:bg-gray-100">
+            <button className="p-2 rounded-full text-gray-500 hover:text-stockpulse-blue focus:outline-none hover:bg-stockpulse-pastel-blue transition-all duration-300">
               <Bell className="h-5 w-5" />
             </button>
             
-            <div className="flex space-x-2">
+            <div className="flex space-x-3">
               <Button 
                 variant="outline" 
                 onClick={handleLogin}
-                className="font-medium border-stockpulse-blue text-stockpulse-blue hover:bg-stockpulse-blue hover:text-white"
+                className="font-medium border-stockpulse-blue text-stockpulse-blue hover:bg-stockpulse-blue hover:text-white rounded-xl px-5"
               >
                 Log in
               </Button>
               <Button 
                 variant="default" 
                 onClick={handleRegister}
-                className="font-medium bg-stockpulse-blue hover:bg-stockpulse-blue-dark"
+                className="font-medium bg-gradient-blue text-white hover:opacity-90 rounded-xl px-5"
               >
                 Sign up
               </Button>
@@ -114,7 +115,7 @@ const Navbar = () => {
           <div className="flex items-center sm:hidden">
             <button
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none"
+              className="inline-flex items-center justify-center p-2 rounded-xl shadow-neumorphic-sm active:shadow-neumorphic-sm-inset text-gray-500 hover:text-stockpulse-blue focus:outline-none"
             >
               {isMenuOpen ? (
                 <X className="block h-6 w-6" />
@@ -128,29 +129,29 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="sm:hidden bg-white border-b border-gray-200 animate-slide-in-right">
-          <div className="pt-2 pb-3 space-y-1">
+        <div className="sm:hidden bg-white border-b border-gray-200 animate-slide-in-right shadow-neumorphic-sm">
+          <div className="pt-2 pb-3 space-y-1 px-2">
             <a
               href="#"
-              className="bg-stockpulse-blue-light bg-opacity-10 border-l-4 border-stockpulse-blue text-stockpulse-blue block pl-3 pr-4 py-2 text-base font-medium"
+              className="bg-stockpulse-pastel-blue border-l-4 border-stockpulse-blue text-stockpulse-blue block pl-3 pr-4 py-2.5 text-base font-medium rounded-r-xl"
             >
               Dashboard
             </a>
             <a
               href="#"
-              className="border-l-4 border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 text-base font-medium"
+              className="border-l-4 border-transparent text-gray-500 hover:bg-stockpulse-pastel-blue hover:border-stockpulse-blue-light hover:text-gray-700 block pl-3 pr-4 py-2.5 text-base font-medium rounded-r-xl"
             >
               Markets
             </a>
             <a
               href="#"
-              className="border-l-4 border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 text-base font-medium"
+              className="border-l-4 border-transparent text-gray-500 hover:bg-stockpulse-pastel-blue hover:border-stockpulse-blue-light hover:text-gray-700 block pl-3 pr-4 py-2.5 text-base font-medium rounded-r-xl"
             >
               Portfolio
             </a>
             <a
               href="#"
-              className="border-l-4 border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 text-base font-medium"
+              className="border-l-4 border-transparent text-gray-500 hover:bg-stockpulse-pastel-blue hover:border-stockpulse-blue-light hover:text-gray-700 block pl-3 pr-4 py-2.5 text-base font-medium rounded-r-xl"
             >
               AI Insights
             </a>
@@ -158,8 +159,8 @@ const Navbar = () => {
           <div className="pt-4 pb-3 border-t border-gray-200">
             <div className="flex items-center px-4">
               <div className="flex-shrink-0">
-                <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
-                  <User className="h-6 w-6 text-gray-500" />
+                <div className="h-10 w-10 rounded-full bg-stockpulse-pastel-purple flex items-center justify-center">
+                  <User className="h-6 w-6 text-stockpulse-purple" />
                 </div>
               </div>
               <div className="ml-3">
@@ -167,16 +168,16 @@ const Navbar = () => {
                 <div className="text-sm font-medium text-gray-500">Sign in to access all features</div>
               </div>
             </div>
-            <div className="mt-3 space-y-1">
+            <div className="mt-3 space-y-1 px-2">
               <button
                 onClick={handleLogin}
-                className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                className="block w-full text-left px-4 py-2.5 text-base font-medium text-gray-500 hover:text-stockpulse-blue hover:bg-stockpulse-pastel-blue rounded-xl transition-all duration-300"
               >
                 Log in
               </button>
               <button
                 onClick={handleRegister}
-                className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                className="block w-full text-left px-4 py-2.5 text-base font-medium text-gray-500 hover:text-stockpulse-blue hover:bg-stockpulse-pastel-blue rounded-xl transition-all duration-300"
               >
                 Sign up
               </button>

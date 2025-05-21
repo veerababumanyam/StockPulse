@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { Button } from '@/components/ui/button';
@@ -19,14 +18,14 @@ const StockChart: React.FC<StockChartProps> = ({
   data, 
   symbol, 
   positiveColor = "#10B981", 
-  negativeColor = "#F43F5E" 
+  negativeColor = "#F87171" 
 }) => {
   const [timeRange, setTimeRange] = useState<'1D' | '1W' | '1M' | '3M' | 'YTD' | '1Y'>('1M');
   
   // Determine if the trend is positive (for line color)
   const isPositive = data.length > 1 && data[data.length - 1].price >= data[0].price;
   const lineColor = isPositive ? positiveColor : negativeColor;
-  const gradientColor = isPositive ? "rgba(16, 185, 129, 0.2)" : "rgba(244, 63, 94, 0.2)";
+  const gradientColor = isPositive ? "rgba(16, 185, 129, 0.2)" : "rgba(248, 113, 113, 0.2)";
   
   // Filter data based on selected time range
   const getFilteredData = () => {
@@ -65,7 +64,7 @@ const StockChart: React.FC<StockChartProps> = ({
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-3 shadow-lg border border-gray-100 rounded-lg">
+        <div className="neumorphic p-4 shadow-neumorphic-sm">
           <p className="text-xs text-gray-500 mb-1">{label}</p>
           <p className="text-base font-semibold">{formatValue(payload[0].value)}</p>
         </div>
@@ -75,23 +74,23 @@ const StockChart: React.FC<StockChartProps> = ({
   };
 
   return (
-    <div className="stockpulse-card p-5 w-full h-full animate-fade-in">
+    <div className="stockpulse-card p-6 w-full h-full animate-fade-in">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <h3 className="text-lg font-semibold flex items-center">
+        <h3 className="text-lg font-heading font-semibold flex items-center">
           <div 
             className={`h-3 w-3 rounded-full mr-2 ${isPositive ? 'bg-stockpulse-green' : 'bg-stockpulse-coral'}`}
           ></div>
           {symbol} Price Chart
         </h3>
-        <div className="flex bg-gray-100 p-1 rounded-lg">
+        <div className="neumorphic p-1 rounded-xl inline-flex">
           {(['1D', '1W', '1M', '3M', 'YTD', '1Y'] as const).map((range) => (
             <Button 
               key={range}
               variant={timeRange === range ? "default" : "ghost"}
-              className={`py-1 px-3 text-xs h-auto rounded-md ${
+              className={`py-1.5 px-3.5 text-xs h-auto rounded-lg ${
                 timeRange === range 
-                  ? 'bg-white text-stockpulse-blue shadow-sm' 
-                  : 'text-gray-500 hover:text-stockpulse-blue'
+                  ? 'text-white shadow-none' 
+                  : 'text-gray-600 hover:text-stockpulse-blue-dark hover:bg-stockpulse-pastel-blue'
               }`}
               onClick={() => setTimeRange(range)}
             >
@@ -101,7 +100,7 @@ const StockChart: React.FC<StockChartProps> = ({
         </div>
       </div>
       
-      <div className="h-72 w-full">
+      <div className="h-72 w-full neumorphic p-4">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={filteredData}
@@ -152,7 +151,7 @@ const StockChart: React.FC<StockChartProps> = ({
         </ResponsiveContainer>
       </div>
 
-      <div className="flex justify-between items-center mt-4 text-sm text-gray-500 border-t border-gray-100 pt-4">
+      <div className="flex justify-between items-center mt-5 text-sm text-gray-500 border-t border-gray-100 pt-4">
         <div>
           <span className="font-medium text-gray-700">Open:</span> ${filteredData[0]?.price.toFixed(2)}
         </div>

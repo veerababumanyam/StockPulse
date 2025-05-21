@@ -1,4 +1,6 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,11 +16,11 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 221 83% 53%;
+    --primary: 246 83% 59%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 189 94% 43%;
+    --secondary-foreground: 210 40% 98%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
@@ -31,7 +33,7 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221 83% 53%;
+    --ring: 246 83% 59%;
 
     --radius: 0.75rem;
   }
@@ -46,10 +48,10 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 221 83% 53%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 246 83% 59%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 189 94% 43%;
     --secondary-foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
@@ -63,24 +65,40 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 246 83% 59%;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border transition-all duration-300;
   }
 
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-semibold tracking-tight;
+  }
+
+  h1 {
+    @apply text-3xl md:text-4xl;
+  }
+  
+  h2 {
+    @apply text-2xl md:text-3xl;
+  }
+  
+  h3 {
+    @apply text-xl md:text-2xl;
+  }
 }
 
 @layer components {
   .stockpulse-card {
-    @apply bg-white rounded-xl shadow-md transition-all duration-200 hover:shadow-card-hover border border-stockpulse-gray/10;
+    @apply bg-white rounded-xl shadow-neumorphic-sm transition-all duration-300 hover:shadow-neumorphic border border-stockpulse-gray/10;
   }
   
   .positive {
@@ -92,7 +110,7 @@
   }
   
   .stat-card {
-    @apply p-4 rounded-lg flex flex-col gap-1;
+    @apply p-4 rounded-xl bg-gradient-pastel flex flex-col gap-1 shadow-neumorphic-sm;
   }
   
   .stat-value {
@@ -117,11 +135,27 @@
   }
 
   .nav-item {
-    @apply px-3 py-2 rounded-md transition-colors duration-200 hover:bg-stockpulse-blue/10;
+    @apply px-3 py-2 rounded-lg transition-all duration-200 hover:bg-stockpulse-blue/10;
   }
 
   .nav-item.active {
-    @apply bg-stockpulse-blue/10 text-stockpulse-blue font-medium;
+    @apply bg-stockpulse-blue/10 text-stockpulse-blue font-medium shadow-neumorphic-sm-inset;
+  }
+  
+  .neumorphic {
+    @apply shadow-neumorphic bg-stockpulse-gray-light rounded-xl;
+  }
+  
+  .neumorphic-inset {
+    @apply shadow-neumorphic-inset bg-stockpulse-gray-light rounded-xl;
+  }
+  
+  .neumorphic-button {
+    @apply rounded-xl py-2 px-4 shadow-neumorphic-sm bg-stockpulse-gray-light hover:shadow-neumorphic active:shadow-neumorphic-sm-inset transition-all duration-300;
+  }
+  
+  .indicator-dot {
+    @apply inline-block h-2.5 w-2.5 rounded-full;
   }
 }
 
