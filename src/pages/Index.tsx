@@ -13,7 +13,6 @@ const Index = () => {
 
   const handleStockSelect = (symbol: string) => {
     setSelectedStock(symbol);
-    // In a real app, this would fetch the selected stock's data
     console.log('Selected stock:', symbol);
   };
 
@@ -22,22 +21,33 @@ const Index = () => {
   const chartData = mockChartData[selectedStock as keyof typeof mockChartData] || [];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-50">
       <Navbar />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
           {/* Left column - watchlist and market overview */}
           <div className="flex flex-col gap-6">
-            <div>
-              <h2 className="text-xl font-semibold mb-3">Watchlist</h2>
+            <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-blue">Watchlist</h2>
+                <button className="text-sm font-medium text-stockpulse-blue hover:text-stockpulse-blue-dark transition-colors">
+                  See All
+                </button>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-                {mockStocks.slice(0, 4).map((stock) => (
-                  <StockCard
-                    key={stock.symbol}
-                    stock={stock}
-                    onClick={() => handleStockSelect(stock.symbol)}
-                  />
+                {mockStocks.slice(0, 4).map((stock, index) => (
+                  <div 
+                    key={stock.symbol} 
+                    className="animate-slide-up" 
+                    style={{ animationDelay: `${0.1 + index * 0.05}s` }}
+                  >
+                    <StockCard
+                      stock={stock}
+                      onClick={() => handleStockSelect(stock.symbol)}
+                      isSelected={stock.symbol === selectedStock}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
@@ -47,16 +57,16 @@ const Index = () => {
           
           {/* Middle column - stock details and chart */}
           <div className="lg:col-span-2 flex flex-col gap-6">
-            <div className="stockpulse-card p-4 mb-2">
+            <div className="stockpulse-card p-4 mb-2 animate-fade-in">
               <StockSearch stocks={mockStocks} onSelect={handleStockSelect} />
             </div>
             
             {selectedStockData && (
-              <div className="stockpulse-card p-4">
-                <div className="flex justify-between mb-4">
+              <div className="stockpulse-card p-5 animate-fade-in">
+                <div className="flex justify-between mb-6">
                   <div>
                     <h2 className="text-2xl font-bold">{selectedStockData.name} ({selectedStockData.symbol})</h2>
-                    <p className="text-sm text-gray-500">{selectedStockData.sector}</p>
+                    <p className="text-sm text-gray-500 mt-1">{selectedStockData.sector}</p>
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold">${selectedStockData.price.toFixed(2)}</div>
@@ -71,19 +81,19 @@ const Index = () => {
                 </div>
                 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                  <div className="stat-card bg-gray-50">
+                  <div className="stat-card bg-gray-50 border border-gray-100 hover:border-stockpulse-blue-light/30 transition-colors">
                     <div className="stat-label">Volume</div>
                     <div className="stat-value">{(selectedStockData.volume / 1000000).toFixed(1)}M</div>
                   </div>
-                  <div className="stat-card bg-gray-50">
+                  <div className="stat-card bg-gray-50 border border-gray-100 hover:border-stockpulse-blue-light/30 transition-colors">
                     <div className="stat-label">Market Cap</div>
                     <div className="stat-value">{selectedStockData.marketCap}</div>
                   </div>
-                  <div className="stat-card bg-gray-50">
+                  <div className="stat-card bg-gray-50 border border-gray-100 hover:border-stockpulse-blue-light/30 transition-colors">
                     <div className="stat-label">P/E Ratio</div>
                     <div className="stat-value">{selectedStockData.pe ? selectedStockData.pe.toFixed(2) : 'N/A'}</div>
                   </div>
-                  <div className="stat-card bg-gray-50">
+                  <div className="stat-card bg-gray-50 border border-gray-100 hover:border-stockpulse-blue-light/30 transition-colors">
                     <div className="stat-label">Dividend</div>
                     <div className="stat-value">{selectedStockData.dividend ? `${selectedStockData.dividend}%` : 'N/A'}</div>
                   </div>
@@ -105,18 +115,33 @@ const Index = () => {
       </div>
       
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="text-center md:flex md:justify-between md:text-left">
-            <div className="mb-4 md:mb-0">
-              <p className="text-sm text-gray-500">
-                &copy; 2025 StockPulse AI. All rights reserved.
-              </p>
+      <footer className="bg-white border-t border-gray-200 mt-12 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <div className="text-stockpulse-blue-dark font-bold text-xl mb-4">StockPulse<span className="text-stockpulse-teal">AI</span></div>
+              <p className="text-sm text-gray-500 mb-4">Cutting-edge AI-powered stock analysis and market insights platform.</p>
+              <p className="text-sm text-gray-500">&copy; 2025 StockPulse AI. All rights reserved.</p>
             </div>
-            <div className="flex justify-center md:justify-end space-x-6">
-              <a href="#" className="text-sm text-gray-500 hover:text-gray-900">Terms</a>
-              <a href="#" className="text-sm text-gray-500 hover:text-gray-900">Privacy</a>
-              <a href="#" className="text-sm text-gray-500 hover:text-gray-900">Contact</a>
+            
+            <div>
+              <h3 className="text-md font-semibold mb-4">Resources</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-sm text-gray-500 hover:text-stockpulse-blue transition-colors">Documentation</a></li>
+                <li><a href="#" className="text-sm text-gray-500 hover:text-stockpulse-blue transition-colors">API Access</a></li>
+                <li><a href="#" className="text-sm text-gray-500 hover:text-stockpulse-blue transition-colors">Learning Center</a></li>
+                <li><a href="#" className="text-sm text-gray-500 hover:text-stockpulse-blue transition-colors">Market Updates</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-md font-semibold mb-4">Company</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-sm text-gray-500 hover:text-stockpulse-blue transition-colors">About Us</a></li>
+                <li><a href="#" className="text-sm text-gray-500 hover:text-stockpulse-blue transition-colors">Terms of Service</a></li>
+                <li><a href="#" className="text-sm text-gray-500 hover:text-stockpulse-blue transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="text-sm text-gray-500 hover:text-stockpulse-blue transition-colors">Contact</a></li>
+              </ul>
             </div>
           </div>
         </div>

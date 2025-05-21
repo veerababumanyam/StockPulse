@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { Button } from '@/components/ui/button';
 
 interface ChartData {
@@ -18,14 +18,15 @@ interface StockChartProps {
 const StockChart: React.FC<StockChartProps> = ({ 
   data, 
   symbol, 
-  positiveColor = "#0D9488", 
-  negativeColor = "#F56565" 
+  positiveColor = "#10B981", 
+  negativeColor = "#F43F5E" 
 }) => {
   const [timeRange, setTimeRange] = useState<'1D' | '1W' | '1M' | '3M' | 'YTD' | '1Y'>('1M');
   
   // Determine if the trend is positive (for line color)
   const isPositive = data.length > 1 && data[data.length - 1].price >= data[0].price;
   const lineColor = isPositive ? positiveColor : negativeColor;
+  const gradientColor = isPositive ? "rgba(16, 185, 129, 0.2)" : "rgba(244, 63, 94, 0.2)";
   
   // Filter data based on selected time range
   const getFilteredData = () => {
@@ -36,7 +37,7 @@ const StockChart: React.FC<StockChartProps> = ({
     
     switch (timeRange) {
       case '1D':
-        return data.slice(-2); // Just show today
+        return data.slice(-2);
       case '1W':
         return data.slice(-7);
       case '1M':
@@ -64,9 +65,9 @@ const StockChart: React.FC<StockChartProps> = ({
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-2 shadow-md border border-gray-200 rounded-md">
-          <p className="text-xs text-gray-500">{label}</p>
-          <p className="text-sm font-medium">{formatValue(payload[0].value)}</p>
+        <div className="bg-white p-3 shadow-lg border border-gray-100 rounded-lg">
+          <p className="text-xs text-gray-500 mb-1">{label}</p>
+          <p className="text-base font-semibold">{formatValue(payload[0].value)}</p>
         </div>
       );
     }
@@ -74,17 +75,22 @@ const StockChart: React.FC<StockChartProps> = ({
   };
 
   return (
-    <div className="stockpulse-card p-4 w-full h-full">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold">{symbol} Price Chart</h3>
-        <div className="flex space-x-1">
+    <div className="stockpulse-card p-5 w-full h-full animate-fade-in">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <h3 className="text-lg font-semibold flex items-center">
+          <div 
+            className={`h-3 w-3 rounded-full mr-2 ${isPositive ? 'bg-stockpulse-green' : 'bg-stockpulse-coral'}`}
+          ></div>
+          {symbol} Price Chart
+        </h3>
+        <div className="flex bg-gray-100 p-1 rounded-lg">
           {(['1D', '1W', '1M', '3M', 'YTD', '1Y'] as const).map((range) => (
             <Button 
               key={range}
-              variant={timeRange === range ? "default" : "outline"}
-              className={`py-1 px-2 text-xs ${
+              variant={timeRange === range ? "default" : "ghost"}
+              className={`py-1 px-3 text-xs h-auto rounded-md ${
                 timeRange === range 
-                  ? 'bg-stockpulse-blue text-white' 
+                  ? 'bg-white text-stockpulse-blue shadow-sm' 
                   : 'text-gray-500 hover:text-stockpulse-blue'
               }`}
               onClick={() => setTimeRange(range)}
@@ -95,13 +101,19 @@ const StockChart: React.FC<StockChartProps> = ({
         </div>
       </div>
       
-      <div className="h-64 w-full">
+      <div className="h-72 w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart
+          <AreaChart
             data={filteredData}
-            margin={{ top: 5, right: 5, left: 0, bottom: 5 }}
+            margin={{ top: 10, right: 10, left: 0, bottom: 10 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+            <defs>
+              <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={lineColor} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={lineColor} stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
             <XAxis 
               dataKey="date" 
               tickFormatter={(date) => {
@@ -111,30 +123,46 @@ const StockChart: React.FC<StockChartProps> = ({
                   ? d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
                   : d.toLocaleDateString([], {month: 'short', day: 'numeric'});
               }}
-              tick={{fontSize: 10}}
-              axisLine={{ stroke: '#E2E8F0' }}
+              tick={{fontSize: 11, fill: '#6B7280'}}
+              axisLine={{ stroke: '#E5E7EB' }}
               tickLine={false}
+              dy={10}
             />
             <YAxis 
               domain={['auto', 'auto']}
-              tick={{fontSize: 10}} 
+              tick={{fontSize: 11, fill: '#6B7280'}} 
               tickFormatter={(value) => `$${value}`}
-              axisLine={{ stroke: '#E2E8F0' }}
+              axisLine={false}
               tickLine={false}
-              width={45}
+              width={50}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Line 
+            <Area 
               type="monotone" 
               dataKey="price" 
               stroke={lineColor} 
               strokeWidth={2}
+              fillOpacity={1}
+              fill="url(#colorPrice)"
               dot={false}
-              activeDot={{ r: 4 }}
-              animationDuration={500}
+              activeDot={{ r: 6, strokeWidth: 2, stroke: 'white' }}
+              animationDuration={800}
             />
-          </LineChart>
+          </AreaChart>
         </ResponsiveContainer>
+      </div>
+
+      <div className="flex justify-between items-center mt-4 text-sm text-gray-500 border-t border-gray-100 pt-4">
+        <div>
+          <span className="font-medium text-gray-700">Open:</span> ${filteredData[0]?.price.toFixed(2)}
+        </div>
+        <div>
+          <span className="font-medium text-gray-700">Close:</span> ${filteredData[filteredData.length - 1]?.price.toFixed(2)}
+        </div>
+        <div className={isPositive ? 'text-stockpulse-green' : 'text-stockpulse-coral'}>
+          <span className="font-medium">Change:</span> {isPositive ? '+' : '-'}
+          ${Math.abs(filteredData[filteredData.length - 1]?.price - filteredData[0]?.price).toFixed(2)}
+        </div>
       </div>
     </div>
   );

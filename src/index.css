@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 217 91% 24%;
+    --primary: 221 83% 53%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -31,9 +31,9 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 221 83% 53%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 
   .dark {
@@ -46,7 +46,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 217 91% 60%;
+    --primary: 221 83% 53%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -80,11 +80,11 @@
 
 @layer components {
   .stockpulse-card {
-    @apply bg-white rounded-xl shadow-md transition-all duration-200 hover:shadow-lg border border-stockpulse-gray/20;
+    @apply bg-white rounded-xl shadow-md transition-all duration-200 hover:shadow-card-hover border border-stockpulse-gray/10;
   }
   
   .positive {
-    @apply text-stockpulse-teal font-medium;
+    @apply text-stockpulse-green font-medium;
   }
   
   .negative {
@@ -100,6 +100,39 @@
   }
   
   .stat-label {
-    @apply text-sm text-muted-foreground;
+    @apply text-sm text-muted-foreground font-medium;
+  }
+
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-sm border border-white/20 shadow-glass;
+  }
+
+  .animated-gradient {
+    background-size: 200% 200%;
+    animation: gradient 8s ease infinite;
+  }
+
+  .card-highlight {
+    @apply border-l-4 border-stockpulse-blue;
+  }
+
+  .nav-item {
+    @apply px-3 py-2 rounded-md transition-colors duration-200 hover:bg-stockpulse-blue/10;
+  }
+
+  .nav-item.active {
+    @apply bg-stockpulse-blue/10 text-stockpulse-blue font-medium;
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
