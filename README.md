@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="tools/assets/StockPulseLogo-main.png" alt="StockPulse AI Logo" width="400"/>
+</div>
+
 # StockPulse: AI-Powered Stock Analysis Platform
 
 StockPulse is an advanced stock analysis platform leveraging specialized AI agents to provide comprehensive insights for traders and investors. It offers 360-degree analysis, including technical, fundamental, sentiment, and alternative data, across various trading timeframes and strategies.
