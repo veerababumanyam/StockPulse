@@ -1,6 +1,7 @@
 {
   "name": "stockpulse-ai",
   "private": true,
+  "license": "Apache-2.0",
   "version": "0.1.0",
   "packageManager": "npm@10.2.4",
   "workspaces": [
