@@ -1,0 +1,667 @@
+---
+description: 
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: false
+---
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: true
+
+
+# StockPulse Trading Module Guidelines
+# StockPulse Trading Module Guidelines
+
+
+## Trading Module Architecture
+## Trading Module Architecture
+
+
+The trading modules implement different trading approaches and timeframes:
+The trading modules implement different trading approaches and timeframes:
+
+
+1. **Module Types**
+1. **Module Types**
+   - **Day Trading Module**: Ultra-short-term (intraday) trading
+   - **Day Trading Module**: Ultra-short-term (intraday) trading
+   - **Positional Trading Module**: Multi-day trading
+   - **Positional Trading Module**: Multi-day trading
+   - **Short-Term Investment Module**: Weeks to months timeframe
+   - **Short-Term Investment Module**: Weeks to months timeframe
+   - **Long-Term Investment Module**: Months to years timeframe
+   - **Long-Term Investment Module**: Months to years timeframe
+
+
+2. **Module Structure**
+2. **Module Structure**
+   - **Signal Generation**: Create trading signals based on agent analysis
+   - **Signal Generation**: Create trading signals based on agent analysis
+   - **Strategy Selection**: Choose appropriate trading strategies
+   - **Strategy Selection**: Choose appropriate trading strategies
+   - **Risk Management**: Position sizing and risk controls
+   - **Risk Management**: Position sizing and risk controls
+   - **Execution**: Order generation and submission
+   - **Execution**: Order generation and submission
+   - **Performance Tracking**: Monitor and analyze results
+   - **Performance Tracking**: Monitor and analyze results
+
+
+## Signal Generation
+## Signal Generation
+
+
+1. **Signal Types**
+1. **Signal Types**
+   - **Entry Signals**: Identify opportunities to enter positions
+   - **Entry Signals**: Identify opportunities to enter positions
+   - **Exit Signals**: Identify opportunities to exit positions
+   - **Exit Signals**: Identify opportunities to exit positions
+   - **Risk Signals**: Identify potential risks or changes in market conditions
+   - **Risk Signals**: Identify potential risks or changes in market conditions
+   - **Adjustment Signals**: Identify opportunities to adjust existing positions
+   - **Adjustment Signals**: Identify opportunities to adjust existing positions
+
+
+2. **Signal Properties**
+2. **Signal Properties**
+   - **Direction**: Long, short, or neutral
+   - **Direction**: Long, short, or neutral
+   - **Strength**: Confidence level of the signal
+   - **Strength**: Confidence level of the signal
+   - **Timeframe**: Expected duration of the opportunity
+   - **Timeframe**: Expected duration of the opportunity
+   - **Source**: Agent or analysis that generated the signal
+   - **Source**: Agent or analysis that generated the signal
+   - **Rationale**: Explanation for the signal
+   - **Rationale**: Explanation for the signal
+   - **Supporting Data**: Evidence supporting the signal
+   - **Supporting Data**: Evidence supporting the signal
+
+
+## Strategy Implementation
+## Strategy Implementation
+
+
+1. **Strategy Components**
+1. **Strategy Components**
+   - **Entry Rules**: Conditions for initiating positions
+   - **Entry Rules**: Conditions for initiating positions
+   - **Exit Rules**: Conditions for closing positions
+   - **Exit Rules**: Conditions for closing positions
+   - **Position Sizing**: Determining appropriate position size
+   - **Position Sizing**: Determining appropriate position size
+   - **Risk Management**: Stop-loss and take-profit rules
+   - **Risk Management**: Stop-loss and take-profit rules
+   - **Filters**: Conditions that must be met for strategy activation
+   - **Filters**: Conditions that must be met for strategy activation
+
+
+2. **Strategy Configuration**
+2. **Strategy Configuration**
+   - **Parameters**: Adjustable settings for strategy customization
+   - **Parameters**: Adjustable settings for strategy customization
+   - **Defaults**: Sensible default values for parameters
+   - **Defaults**: Sensible default values for parameters
+   - **Validation**: Checks to ensure parameter values are valid
+   - **Validation**: Checks to ensure parameter values are valid
+   - **Persistence**: Save and load strategy configurations
+   - **Persistence**: Save and load strategy configurations
+
+
+## Risk Management
+## Risk Management
+
+
+1. **Risk Controls**
+1. **Risk Controls**
+   - **Position Sizing**: Calculate appropriate position size based on risk
+   - **Position Sizing**: Calculate appropriate position size based on risk
+   - **Stop-Loss Management**: Dynamic stop-loss placement and adjustment
+   - **Stop-Loss Management**: Dynamic stop-loss placement and adjustment
+   - **Exposure Limits**: Maximum exposure to a single asset or sector
+   - **Exposure Limits**: Maximum exposure to a single asset or sector
+   - **Correlation Analysis**: Identify and manage correlated positions
+   - **Correlation Analysis**: Identify and manage correlated positions
+   - **Volatility Adjustment**: Adjust position size based on volatility
+   - **Volatility Adjustment**: Adjust position size based on volatility
+
+
+2. **Implementation**
+2. **Implementation**
+   - **Pre-Trade Validation**: Verify trade complies with risk rules
+   - **Pre-Trade Validation**: Verify trade complies with risk rules
+   - **Real-Time Monitoring**: Continuously evaluate risk metrics
+   - **Real-Time Monitoring**: Continuously evaluate risk metrics
+   - **Automated Hedging**: Implement automated risk reduction
+   - **Automated Hedging**: Implement automated risk reduction
+   - **Circuit Breakers**: Emergency protocols for extreme conditions
+   - **Circuit Breakers**: Emergency protocols for extreme conditions
+
+
+## Real-Time Processing
+## Real-Time Processing
+
+
+1. **Concurrency Model**
+1. **Concurrency Model**
+   - Use parallel processing for multi-ticker analysis
+   - Use parallel processing for multi-ticker analysis
+   - Implement async processing for non-blocking operations
+   - Implement async processing for non-blocking operations
+   - Add prioritization for critical tasks
+   - Add prioritization for critical tasks
+   - Use appropriate threading/worker models
+   - Use appropriate threading/worker models
+
+
+2. **Performance Optimizations**
+2. **Performance Optimizations**
+   - Optimize critical calculation paths
+   - Optimize critical calculation paths
+   - Implement efficient data structures
+   - Implement efficient data structures
+   - Use caching for frequently accessed data
+   - Use caching for frequently accessed data
+   - Add lazy evaluation where appropriate
+   - Add lazy evaluation where appropriate
+   - Implement incremental updates
+   - Implement incremental updates
+
+
+## User Interface
+## User Interface
+
+
+1. **Trading Interface Components**
+1. **Trading Interface Components**
+   - **Dashboard**: Overview of current market and positions
+   - **Dashboard**: Overview of current market and positions
+   - **Chart Interface**: Technical analysis and entry/exit visualization
+   - **Chart Interface**: Technical analysis and entry/exit visualization
+   - **Order Panel**: Trade entry and management
+   - **Order Panel**: Trade entry and management
+   - **Position Monitor**: Current position tracking
+   - **Position Monitor**: Current position tracking
+   - **Performance Analytics**: Historical performance review
+   - **Performance Analytics**: Historical performance review
+
+
+2. **UI Best Practices**
+2. **UI Best Practices**
+   - Implement clear, error-resistant trading forms
+   - Implement clear, error-resistant trading forms
+   - Add multi-step confirmation for critical actions
+   - Add multi-step confirmation for critical actions
+   - Show real-time data updates
+   - Show real-time data updates
+   - Provide clear feedback for user actions
+   - Provide clear feedback for user actions
+   - Support keyboard shortcuts for efficiency
+   - Support keyboard shortcuts for efficiency
+
+
+## Example Signal Generation
+## Example Signal Generation
+
+
+```typescript
+```typescript
+/**
+/**
+ * Generates trading signals based on technical analysis
+ * Generates trading signals based on technical analysis
+ */
+ */
+export class TechnicalSignalGenerator implements SignalGenerator {
+export class TechnicalSignalGenerator implements SignalGenerator {
+  private readonly logger: Logger;
+  private readonly logger: Logger;
+  private readonly technicalAgents: TechnicalAnalysisAgent[];
+  private readonly technicalAgents: TechnicalAnalysisAgent[];
+  private readonly signalStrengthCalculator: SignalStrengthCalculator;
+  private readonly signalStrengthCalculator: SignalStrengthCalculator;
+  private readonly minimumSignalStrength: number;
+  private readonly minimumSignalStrength: number;
+  
+  
+  constructor(
+  constructor(
+    technicalAgents: TechnicalAnalysisAgent[],
+    technicalAgents: TechnicalAnalysisAgent[],
+    signalStrengthCalculator: SignalStrengthCalculator,
+    signalStrengthCalculator: SignalStrengthCalculator,
+    config: TechnicalSignalConfig,
+    config: TechnicalSignalConfig,
+    logger: Logger
+    logger: Logger
+  ) {
+  ) {
+    this.technicalAgents = technicalAgents;
+    this.technicalAgents = technicalAgents;
+    this.signalStrengthCalculator = signalStrengthCalculator;
+    this.signalStrengthCalculator = signalStrengthCalculator;
+    this.minimumSignalStrength = config.minimumSignalStrength;
+    this.minimumSignalStrength = config.minimumSignalStrength;
+    this.logger = logger;
+    this.logger = logger;
+  }
+  }
+  
+  
+  /**
+  /**
+   * Generate trading signals for a symbol
+   * Generate trading signals for a symbol
+   * @param symbol - Stock symbol to analyze
+   * @param symbol - Stock symbol to analyze
+   * @param timeframe - Analysis timeframe
+   * @param timeframe - Analysis timeframe
+   * @returns Generated trading signals
+   * @returns Generated trading signals
+   */
+   */
+  public async generateSignals(
+  public async generateSignals(
+    symbol: string,
+    symbol: string,
+    timeframe: TimeFrame
+    timeframe: TimeFrame
+  ): Promise<TradingSignal[]> {
+  ): Promise<TradingSignal[]> {
+    this.logger.info('Generating technical signals', { symbol, timeframe });
+    this.logger.info('Generating technical signals', { symbol, timeframe });
+    
+    
+    try {
+    try {
+      // Collect analysis results from all technical agents
+      // Collect analysis results from all technical agents
+      const analysisPromises = this.technicalAgents.map(agent => 
+      const analysisPromises = this.technicalAgents.map(agent => 
+        agent.analyze(symbol, timeframe)
+        agent.analyze(symbol, timeframe)
+      );
+      );
+      
+      
+      const analysisResults = await Promise.all(analysisPromises);
+      const analysisResults = await Promise.all(analysisPromises);
+      
+      
+      // Extract potential signals from analysis results
+      // Extract potential signals from analysis results
+      const potentialSignals = this.extractPotentialSignals(analysisResults);
+      const potentialSignals = this.extractPotentialSignals(analysisResults);
+      
+      
+      // Calculate signal strength and filter by minimum threshold
+      // Calculate signal strength and filter by minimum threshold
+      const validSignals = potentialSignals
+      const validSignals = potentialSignals
+        .map(signal => ({
+        .map(signal => ({
+          ...signal,
+          ...signal,
+          strength: this.signalStrengthCalculator.calculate(signal, analysisResults)
+          strength: this.signalStrengthCalculator.calculate(signal, analysisResults)
+        }))
+        }))
+        .filter(signal => signal.strength >= this.minimumSignalStrength);
+        .filter(signal => signal.strength >= this.minimumSignalStrength);
+      
+      
+      // Apply conflict resolution for contradictory signals
+      // Apply conflict resolution for contradictory signals
+      const finalSignals = this.resolveConflicts(validSignals);
+      const finalSignals = this.resolveConflicts(validSignals);
+      
+      
+      this.logger.info('Technical signal generation complete', { 
+      this.logger.info('Technical signal generation complete', { 
+        symbol,
+        symbol,
+        timeframe,
+        timeframe,
+        signalCount: finalSignals.length 
+        signalCount: finalSignals.length 
+      });
+      });
+      
+      
+      return finalSignals;
+      return finalSignals;
+    } catch (error) {
+    } catch (error) {
+      this.logger.error('Error generating technical signals', {
+      this.logger.error('Error generating technical signals', {
+        symbol,
+        symbol,
+        timeframe,
+        timeframe,
+        error: error.message
+        error: error.message
+      });
+      });
+      
+      
+      throw new SignalGenerationError(
+      throw new SignalGenerationError(
+        `Failed to generate technical signals for ${symbol}: ${error.message}`,
+        `Failed to generate technical signals for ${symbol}: ${error.message}`,
+        { cause: error }
+        { cause: error }
+      );
+      );
+    }
+    }
+  }
+  }
+  
+  
+  /**
+  /**
+   * Extract potential trading signals from analysis results
+   * Extract potential trading signals from analysis results
+   * @private
+   * @private
+   */
+   */
+  private extractPotentialSignals(
+  private extractPotentialSignals(
+    analysisResults: AnalysisResult[]
+    analysisResults: AnalysisResult[]
+  ): PotentialTradingSignal[] {
+  ): PotentialTradingSignal[] {
+    // Implementation details...
+    // Implementation details...
+  }
+  }
+  
+  
+  /**
+  /**
+   * Resolve conflicts between contradictory signals
+   * Resolve conflicts between contradictory signals
+   * @private
+   * @private
+   */
+   */
+  private resolveConflicts(
+  private resolveConflicts(
+    signals: TradingSignal[]
+    signals: TradingSignal[]
+  ): TradingSignal[] {
+  ): TradingSignal[] {
+    // Implementation details...
+    // Implementation details...
+  }
+  }
+}
+}
+```
+```
+
+
+## Example Strategy Implementation
+## Example Strategy Implementation
+
+
+```typescript
+```typescript
+/**
+/**
+ * Breakout trading strategy implementation
+ * Breakout trading strategy implementation
+ */
+ */
+export class BreakoutStrategy implements TradingStrategy {
+export class BreakoutStrategy implements TradingStrategy {
+  private readonly logger: Logger;
+  private readonly logger: Logger;
+  private readonly config: BreakoutStrategyConfig;
+  private readonly config: BreakoutStrategyConfig;
+  private readonly riskManager: RiskManager;
+  private readonly riskManager: RiskManager;
+  
+  
+  constructor(
+  constructor(
+    config: BreakoutStrategyConfig,
+    config: BreakoutStrategyConfig,
+    riskManager: RiskManager,
+    riskManager: RiskManager,
+    logger: Logger
+    logger: Logger
+  ) {
+  ) {
+    this.config = this.validateConfig(config);
+    this.config = this.validateConfig(config);
+    this.riskManager = riskManager;
+    this.riskManager = riskManager;
+    this.logger = logger;
+    this.logger = logger;
+  }
+  }
+  
+  
+  /**
+  /**
+   * Validate strategy configuration
+   * Validate strategy configuration
+   * @private
+   * @private
+   */
+   */
+  private validateConfig(config: BreakoutStrategyConfig): BreakoutStrategyConfig {
+  private validateConfig(config: BreakoutStrategyConfig): BreakoutStrategyConfig {
+    // Validation logic...
+    // Validation logic...
+    return config;
+    return config;
+  }
+  }
+  
+  
+  /**
+  /**
+   * Evaluate signals and generate trading decisions
+   * Evaluate signals and generate trading decisions
+   * @param signals - Trading signals to evaluate
+   * @param signals - Trading signals to evaluate
+   * @param marketData - Current market data
+   * @param marketData - Current market data
+   * @param portfolio - Current portfolio state
+   * @param portfolio - Current portfolio state
+   * @returns Trading decisions
+   * @returns Trading decisions
+   */
+   */
+  public async evaluateSignals(
+  public async evaluateSignals(
+    signals: TradingSignal[],
+    signals: TradingSignal[],
+    marketData: MarketData,
+    marketData: MarketData,
+    portfolio: Portfolio
+    portfolio: Portfolio
+  ): Promise<TradingDecision[]> {
+  ): Promise<TradingDecision[]> {
+    this.logger.info('Evaluating signals for breakout strategy', {
+    this.logger.info('Evaluating signals for breakout strategy', {
+      signalCount: signals.length,
+      signalCount: signals.length,
+      symbols: signals.map(s => s.symbol)
+      symbols: signals.map(s => s.symbol)
+    });
+    });
+    
+    
+    const decisions: TradingDecision[] = [];
+    const decisions: TradingDecision[] = [];
+    
+    
+    for (const signal of signals) {
+    for (const signal of signals) {
+      try {
+      try {
+        // Check if signal matches strategy criteria
+        // Check if signal matches strategy criteria
+        if (!this.isBreakoutSignal(signal)) {
+        if (!this.isBreakoutSignal(signal)) {
+          continue;
+          continue;
+        }
+        }
+        
+        
+        // Verify market conditions are suitable
+        // Verify market conditions are suitable
+        if (!this.areMarketConditionsSuitable(signal, marketData)) {
+        if (!this.areMarketConditionsSuitable(signal, marketData)) {
+          continue;
+          continue;
+        }
+        }
+        
+        
+        // Check if we already have a position
+        // Check if we already have a position
+        const existingPosition = portfolio.getPosition(signal.symbol);
+        const existingPosition = portfolio.getPosition(signal.symbol);
+        
+        
+        if (existingPosition) {
+        if (existingPosition) {
+          // Handle existing position (adjust, exit, hold)
+          // Handle existing position (adjust, exit, hold)
+          const decision = this.handleExistingPosition(signal, existingPosition, marketData);
+          const decision = this.handleExistingPosition(signal, existingPosition, marketData);
+          if (decision) decisions.push(decision);
+          if (decision) decisions.push(decision);
+        } else {
+        } else {
+          // Handle new position opportunity
+          // Handle new position opportunity
+          const decision = this.handleNewPosition(signal, marketData, portfolio);
+          const decision = this.handleNewPosition(signal, marketData, portfolio);
+          if (decision) decisions.push(decision);
+          if (decision) decisions.push(decision);
+        }
+        }
+      } catch (error) {
+      } catch (error) {
+        this.logger.error('Error evaluating signal', {
+        this.logger.error('Error evaluating signal', {
+          symbol: signal.symbol,
+          symbol: signal.symbol,
+          signalType: signal.type,
+          signalType: signal.type,
+          error: error.message
+          error: error.message
+        });
+        });
+      }
+      }
+    }
+    }
+    
+    
+    return decisions;
+    return decisions;
+  }
+  }
+  
+  
+  /**
+  /**
+   * Check if signal indicates a breakout
+   * Check if signal indicates a breakout
+   * @private
+   * @private
+   */
+   */
+  private isBreakoutSignal(signal: TradingSignal): boolean {
+  private isBreakoutSignal(signal: TradingSignal): boolean {
+    // Implementation details...
+    // Implementation details...
+  }
+  }
+  
+  
+  /**
+  /**
+   * Check if market conditions are suitable for this strategy
+   * Check if market conditions are suitable for this strategy
+   * @private
+   * @private
+   */
+   */
+  private areMarketConditionsSuitable(
+  private areMarketConditionsSuitable(
+    signal: TradingSignal, 
+    signal: TradingSignal, 
+    marketData: MarketData
+    marketData: MarketData
+  ): boolean {
+  ): boolean {
+    // Implementation details...
+    // Implementation details...
+  }
+  }
+  
+  
+  /**
+  /**
+   * Handle a signal for an existing position
+   * Handle a signal for an existing position
+   * @private
+   * @private
+   */
+   */
+  private handleExistingPosition(
+  private handleExistingPosition(
+    signal: TradingSignal,
+    signal: TradingSignal,
+    position: Position,
+    position: Position,
+    marketData: MarketData
+    marketData: MarketData
+  ): TradingDecision | null {
+  ): TradingDecision | null {
+    // Implementation details...
+    // Implementation details...
+  }
+  }
+  
+  
+  /**
+  /**
+   * Handle a signal for a potential new position
+   * Handle a signal for a potential new position
+   * @private
+   * @private
+   */
+   */
+  private handleNewPosition(
+  private handleNewPosition(
+    signal: TradingSignal,
+    signal: TradingSignal,
+    marketData: MarketData,
+    marketData: MarketData,
+    portfolio: Portfolio
+    portfolio: Portfolio
+  ): TradingDecision | null {
+  ): TradingDecision | null {
+    // Implementation details...
+    // Implementation details...
+  }
+  }
+}
+}
+```
+```
+
+
+@trading-strategies.md
+@trading-strategies.md
+@risk-management-guidelines.md
+@risk-management-guidelines.md

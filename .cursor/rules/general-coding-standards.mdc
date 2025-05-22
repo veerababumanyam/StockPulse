@@ -1,0 +1,800 @@
+---
+description: General Coding Standards guidelines for StockPulse
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: true
+---
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: true
+
+
+# StockPulse General Coding Standards and Best Practices
+# StockPulse General Coding Standards and Best Practices
+
+
+## Naming Conventions
+## Naming Conventions
+
+
+### Variables and Functions
+### Variables and Functions
+
+start every chat with 🚀
+
+1. **Variable Naming**
+1. **Variable Naming**
+   - Use `camelCase` for variables and function names
+   - Use `camelCase` for variables and function names
+   - Use descriptive names that indicate purpose and type
+   - Use descriptive names that indicate purpose and type
+   - Prefix booleans with `is`, `has`, `should`, etc.
+   - Prefix booleans with `is`, `has`, `should`, etc.
+   - Example: `userData`, `isAuthenticated`, `shouldRefresh`
+   - Example: `userData`, `isAuthenticated`, `shouldRefresh`
+
+
+2. **Function Naming**
+2. **Function Naming**
+   - Use verbs to start function names to indicate action
+   - Use verbs to start function names to indicate action
+   - Use descriptive names that indicate purpose
+   - Use descriptive names that indicate purpose
+   - Examples: `calculateTotal()`, `fetchUserData()`, `validateInput()`
+   - Examples: `calculateTotal()`, `fetchUserData()`, `validateInput()`
+
+
+3. **Constants**
+3. **Constants**
+   - Use `UPPER_SNAKE_CASE` for constants
+   - Use `UPPER_SNAKE_CASE` for constants
+   - Example: `MAX_RETRY_COUNT`, `API_BASE_URL`
+   - Example: `MAX_RETRY_COUNT`, `API_BASE_URL`
+
+
+4. **Private Members**
+4. **Private Members**
+   - Prefix private class members with underscore
+   - Prefix private class members with underscore
+   - Example: `private _internalState`
+   - Example: `private _internalState`
+
+
+### Classes, Interfaces, and Types
+### Classes, Interfaces, and Types
+
+
+1. **Class Naming**
+1. **Class Naming**
+   - Use `PascalCase` for class names
+   - Use `PascalCase` for class names
+   - Use nouns or noun phrases
+   - Use nouns or noun phrases
+   - Examples: `StockAnalyzer`, `UserProfile`
+   - Examples: `StockAnalyzer`, `UserProfile`
+
+
+2. **Interface Naming**
+2. **Interface Naming**
+   - Use `PascalCase` for interface names
+   - Use `PascalCase` for interface names
+   - Do not use the `I` prefix
+   - Do not use the `I` prefix
+   - Examples: `UserData`, `StockQuote`
+   - Examples: `UserData`, `StockQuote`
+
+
+3. **Type Naming**
+3. **Type Naming**
+   - Use `PascalCase` for type aliases
+   - Use `PascalCase` for type aliases
+   - Use suffixes like `Props`, `State`, `Config` when appropriate
+   - Use suffixes like `Props`, `State`, `Config` when appropriate
+   - Examples: `ButtonProps`, `AppState`, `ServiceConfig`
+   - Examples: `ButtonProps`, `AppState`, `ServiceConfig`
+
+
+4. **Enum Naming**
+4. **Enum Naming**
+   - Use `PascalCase` for enum names
+   - Use `PascalCase` for enum names
+   - Use singular form for the enum name
+   - Use singular form for the enum name
+   - Use `PascalCase` for enum members
+   - Use `PascalCase` for enum members
+   - Examples: `TimeFrame.OneMinute`, `ChartType.Candlestick`
+   - Examples: `TimeFrame.OneMinute`, `ChartType.Candlestick`
+
+
+### File and Directory Naming
+### File and Directory Naming
+
+
+1. **File Naming**
+1. **File Naming**
+   - Use `kebab-case` for file names
+   - Use `kebab-case` for file names
+   - Use descriptive names that indicate purpose
+   - Use descriptive names that indicate purpose
+   - Use consistent suffixes (`.component.tsx`, `.service.ts`, etc.)
+   - Use consistent suffixes (`.component.tsx`, `.service.ts`, etc.)
+   - Examples: `stock-chart.component.tsx`, `auth.service.ts`
+   - Examples: `stock-chart.component.tsx`, `auth.service.ts`
+
+
+2. **Directory Naming**
+2. **Directory Naming**
+   - Use `kebab-case` for directory names
+   - Use `kebab-case` for directory names
+   - Use plural form for directories containing multiple items of same type
+   - Use plural form for directories containing multiple items of same type
+   - Examples: `components`, `services`, `hooks`
+   - Examples: `components`, `services`, `hooks`
+
+
+3. **Test Files**
+3. **Test Files**
+   - Suffix test files with `.test.ts` or `.spec.ts`
+   - Suffix test files with `.test.ts` or `.spec.ts`
+   - Name tests to match the file being tested
+   - Name tests to match the file being tested
+   - Examples: `auth.service.test.ts`
+   - Examples: `auth.service.test.ts`
+
+
+## Code Quality Standards
+## Code Quality Standards
+
+
+### Formatting and Style
+### Formatting and Style
+
+
+1. **Code Formatting**
+1. **Code Formatting**
+   - Use ESLint and Prettier for consistent formatting
+   - Use ESLint and Prettier for consistent formatting
+   - Use 2 spaces for indentation
+   - Use 2 spaces for indentation
+   - Limit line length to 100 characters
+   - Limit line length to 100 characters
+   - Use semicolons at the end of statements
+   - Use semicolons at the end of statements
+
+
+2. **Braces and Spacing**
+2. **Braces and Spacing**
+   - Always use braces for control statements, even for single-line blocks
+   - Always use braces for control statements, even for single-line blocks
+   - Place opening brace on the same line as the statement
+   - Place opening brace on the same line as the statement
+   - Add space before opening brace
+   - Add space before opening brace
+   - Example:
+   - Example:
+     ```typescript
+     ```typescript
+     if (condition) {
+     if (condition) {
+       doSomething();
+       doSomething();
+     } else {
+     } else {
+       doSomethingElse();
+       doSomethingElse();
+     }
+     }
+     ```
+     ```
+
+
+3. **Comments**
+3. **Comments**
+   - Use JSDoc comments for functions, classes, and interfaces
+   - Use JSDoc comments for functions, classes, and interfaces
+   - Use inline comments sparingly and only for complex logic
+   - Use inline comments sparingly and only for complex logic
+   - Explain why, not what
+   - Explain why, not what
+   - Keep comments up-to-date with code changes
+   - Keep comments up-to-date with code changes
+
+
+### Code Organization
+### Code Organization
+
+
+1. **File Structure**
+1. **File Structure**
+   - Limit files to 400 lines (approximate guideline)
+   - Limit files to 400 lines (approximate guideline)
+   - Group related functionality
+   - Group related functionality
+   - Order imports by: built-in modules, external modules, internal modules
+   - Order imports by: built-in modules, external modules, internal modules
+   - Use barrel exports (`index.ts`) for clean imports
+   - Use barrel exports (`index.ts`) for clean imports
+
+
+2. **Function Organization**
+2. **Function Organization**
+   - Limit functions to 50 lines (approximate guideline)
+   - Limit functions to 50 lines (approximate guideline)
+   - Single responsibility principle: functions should do one thing well
+   - Single responsibility principle: functions should do one thing well
+   - Limit parameters to 3-4 (use objects for more parameters)
+   - Limit parameters to 3-4 (use objects for more parameters)
+   - Return early to avoid deep nesting
+   - Return early to avoid deep nesting
+
+
+3. **Class Organization**
+3. **Class Organization**
+   - Order class members: properties, constructor, public methods, private methods
+   - Order class members: properties, constructor, public methods, private methods
+   - Group related methods together
+   - Group related methods together
+   - Limit class size and complexity
+   - Limit class size and complexity
+   - Prefer composition over inheritance
+   - Prefer composition over inheritance
+
+
+### Error Handling
+### Error Handling
+
+
+1. **Error Types**
+1. **Error Types**
+   - Create custom error classes for different error categories
+   - Create custom error classes for different error categories
+   - Include meaningful error messages
+   - Include meaningful error messages
+   - Add relevant context to errors
+   - Add relevant context to errors
+
+
+2. **Error Handling Strategy**
+2. **Error Handling Strategy**
+   - Use try/catch blocks for error handling
+   - Use try/catch blocks for error handling
+   - Log errors with context
+   - Log errors with context
+   - Provide graceful fallbacks
+   - Provide graceful fallbacks
+   - Never swallow errors silently
+   - Never swallow errors silently
+   - Handle both synchronous and asynchronous errors
+   - Handle both synchronous and asynchronous errors
+
+
+### Testing Standards
+### Testing Standards
+
+
+1. **Test Coverage**
+1. **Test Coverage**
+   - Maintain minimum 80% code coverage
+   - Maintain minimum 80% code coverage
+   - Test all edge cases and error conditions
+   - Test all edge cases and error conditions
+   - Focus on critical business logic
+   - Focus on critical business logic
+
+
+2. **Test Organization**
+2. **Test Organization**
+   - Use Arrange-Act-Assert (AAA) pattern
+   - Use Arrange-Act-Assert (AAA) pattern
+   - Group tests by functionality
+   - Group tests by functionality
+   - Use descriptive test names
+   - Use descriptive test names
+   - Example:
+   - Example:
+     ```typescript
+     ```typescript
+     describe('Authentication Service', () => {
+     describe('Authentication Service', () => {
+       describe('login', () => {
+       describe('login', () => {
+         it('should return user data for valid credentials', async () => {
+         it('should return user data for valid credentials', async () => {
+           // Arrange
+           // Arrange
+           const credentials = { username: 'test', password: 'password' };
+           const credentials = { username: 'test', password: 'password' };
+           
+           
+           // Act
+           // Act
+           const result = await authService.login(credentials);
+           const result = await authService.login(credentials);
+           
+           
+           // Assert
+           // Assert
+           expect(result.user).toBeDefined();
+           expect(result.user).toBeDefined();
+           expect(result.token).toBeDefined();
+           expect(result.token).toBeDefined();
+         });
+         });
+       });
+       });
+     });
+     });
+     ```
+     ```
+
+
+## File Structure and Organization
+## File Structure and Organization
+
+
+### Project Structure
+### Project Structure
+
+
+1. **Package Organization**
+1. **Package Organization**
+   - Maintain clear boundaries between packages
+   - Maintain clear boundaries between packages
+   - Avoid circular dependencies between packages
+   - Avoid circular dependencies between packages
+   - Use well-defined interfaces for package communication
+   - Use well-defined interfaces for package communication
+
+
+2. **Module Organization**
+2. **Module Organization**
+   - Group related files into modules
+   - Group related files into modules
+   - Follow feature-based organization where possible
+   - Follow feature-based organization where possible
+   - Keep implementation details private
+   - Keep implementation details private
+
+
+3. **Component Structure**
+3. **Component Structure**
+   - Follow consistent component organization patterns
+   - Follow consistent component organization patterns
+   - Group related components together
+   - Group related components together
+   - Separate smart (container) and presentational components
+   - Separate smart (container) and presentational components
+
+
+### Standard Directory Structure
+### Standard Directory Structure
+
+
+For modules and features:
+For modules and features:
+
+
+```
+```
+feature/
+feature/
+├── components/       # UI components specific to the feature
+├── components/       # UI components specific to the feature
+├── services/         # Services specific to the feature
+├── services/         # Services specific to the feature
+├── hooks/            # Hooks specific to the feature
+├── hooks/            # Hooks specific to the feature
+├── utils/            # Utilities specific to the feature
+├── utils/            # Utilities specific to the feature
+├── types/            # Type definitions for the feature
+├── types/            # Type definitions for the feature
+├── constants.ts      # Constants related to the feature
+├── constants.ts      # Constants related to the feature
+└── index.ts          # Barrel exports for the feature
+└── index.ts          # Barrel exports for the feature
+```
+```
+
+
+## Architectural Patterns
+## Architectural Patterns
+
+
+### Clean Architecture
+### Clean Architecture
+
+
+1. **Layer Separation**
+1. **Layer Separation**
+   - Domain: Core business logic and entities
+   - Domain: Core business logic and entities
+   - Application: Use cases and business rules
+   - Application: Use cases and business rules
+   - Interface: Controllers, presenters, gateways
+   - Interface: Controllers, presenters, gateways
+   - Infrastructure: Frameworks, databases, external interfaces
+   - Infrastructure: Frameworks, databases, external interfaces
+
+
+2. **Dependency Rule**
+2. **Dependency Rule**
+   - Dependencies point inward
+   - Dependencies point inward
+   - Inner layers have no knowledge of outer layers
+   - Inner layers have no knowledge of outer layers
+   - Use interfaces for dependency inversion
+   - Use interfaces for dependency inversion
+
+
+### SOLID Principles
+### SOLID Principles
+
+
+1. **Single Responsibility Principle**
+1. **Single Responsibility Principle**
+   - Each class/function has one reason to change
+   - Each class/function has one reason to change
+   - Keep modules focused on a single aspect of functionality
+   - Keep modules focused on a single aspect of functionality
+
+
+2. **Open/Closed Principle**
+2. **Open/Closed Principle**
+   - Open for extension, closed for modification
+   - Open for extension, closed for modification
+   - Use interfaces and abstract classes to allow extension
+   - Use interfaces and abstract classes to allow extension
+
+
+3. **Liskov Substitution Principle**
+3. **Liskov Substitution Principle**
+   - Derived classes must be substitutable for their base classes
+   - Derived classes must be substitutable for their base classes
+   - Maintain behavior integrity in inheritance hierarchies
+   - Maintain behavior integrity in inheritance hierarchies
+
+
+4. **Interface Segregation Principle**
+4. **Interface Segregation Principle**
+   - Many specific interfaces are better than one general interface
+   - Many specific interfaces are better than one general interface
+   - Keep interfaces focused and minimal
+   - Keep interfaces focused and minimal
+
+
+5. **Dependency Inversion Principle**
+5. **Dependency Inversion Principle**
+   - Depend on abstractions, not concretions
+   - Depend on abstractions, not concretions
+   - Use dependency injection for flexible components
+   - Use dependency injection for flexible components
+
+
+### Design Patterns
+### Design Patterns
+
+
+1. **Creational Patterns**
+1. **Creational Patterns**
+   - Factory Method: For creating objects without specifying concrete class
+   - Factory Method: For creating objects without specifying concrete class
+   - Singleton: For ensuring a class has only one instance (use sparingly)
+   - Singleton: For ensuring a class has only one instance (use sparingly)
+   - Dependency Injection: For providing dependencies to objects
+   - Dependency Injection: For providing dependencies to objects
+
+
+2. **Structural Patterns**
+2. **Structural Patterns**
+   - Adapter: For making incompatible interfaces compatible
+   - Adapter: For making incompatible interfaces compatible
+   - Decorator: For adding responsibilities to objects dynamically
+   - Decorator: For adding responsibilities to objects dynamically
+   - Facade: For providing simplified interface to complex subsystems
+   - Facade: For providing simplified interface to complex subsystems
+
+
+3. **Behavioral Patterns**
+3. **Behavioral Patterns**
+   - Observer: For implementing event handling systems
+   - Observer: For implementing event handling systems
+   - Strategy: For defining a family of interchangeable algorithms
+   - Strategy: For defining a family of interchangeable algorithms
+   - Command: For encapsulating requests as objects
+   - Command: For encapsulating requests as objects
+
+
+## Industry Standards and Compliance
+## Industry Standards and Compliance
+
+
+### ISO/IEC 25010:2011 Quality Attributes
+### ISO/IEC 25010:2011 Quality Attributes
+
+
+1. **Functional Suitability**
+1. **Functional Suitability**
+   - Completeness: Implement all required functionality
+   - Completeness: Implement all required functionality
+   - Correctness: Functions provide correct results
+   - Correctness: Functions provide correct results
+   - Appropriateness: Functions are suitable for tasks
+   - Appropriateness: Functions are suitable for tasks
+
+
+2. **Performance Efficiency**
+2. **Performance Efficiency**
+   - Time behavior: Response and processing times
+   - Time behavior: Response and processing times
+   - Resource utilization: Resource usage levels
+   - Resource utilization: Resource usage levels
+   - Capacity: Maximum limits that meet requirements
+   - Capacity: Maximum limits that meet requirements
+
+
+3. **Compatibility**
+3. **Compatibility**
+   - Co-existence: Co-exist with other software
+   - Co-existence: Co-exist with other software
+   - Interoperability: Exchange information with other systems
+   - Interoperability: Exchange information with other systems
+
+
+4. **Usability**
+4. **Usability**
+   - Learnability: Easy for users to learn
+   - Learnability: Easy for users to learn
+   - Operability: Easy to operate and control
+   - Operability: Easy to operate and control
+   - User error protection: Protect against user errors
+   - User error protection: Protect against user errors
+   - Accessibility: Usable by people with diverse abilities
+   - Accessibility: Usable by people with diverse abilities
+
+
+5. **Reliability**
+5. **Reliability**
+   - Maturity: System meets reliability needs in normal operation
+   - Maturity: System meets reliability needs in normal operation
+   - Availability: System available when required
+   - Availability: System available when required
+   - Fault tolerance: System operates despite faults
+   - Fault tolerance: System operates despite faults
+   - Recoverability: Recover data and reestablish state after failure
+   - Recoverability: Recover data and reestablish state after failure
+
+
+6. **Security**
+6. **Security**
+   - Confidentiality: Ensure data accessible only to authorized users
+   - Confidentiality: Ensure data accessible only to authorized users
+   - Integrity: Prevent unauthorized data modification
+   - Integrity: Prevent unauthorized data modification
+   - Non-repudiation: Actions can be proven to have occurred
+   - Non-repudiation: Actions can be proven to have occurred
+   - Accountability: Actions can be traced to specific entity
+   - Accountability: Actions can be traced to specific entity
+   - Authenticity: Identity can be proved to be claimed
+   - Authenticity: Identity can be proved to be claimed
+
+
+7. **Maintainability**
+7. **Maintainability**
+   - Modularity: System composed of discrete components
+   - Modularity: System composed of discrete components
+   - Reusability: Assets can be used in more than one system
+   - Reusability: Assets can be used in more than one system
+   - Analyzability: Impact of changes can be assessed
+   - Analyzability: Impact of changes can be assessed
+   - Modifiability: System can be modified without degradation
+   - Modifiability: System can be modified without degradation
+   - Testability: Test criteria can be established
+   - Testability: Test criteria can be established
+
+
+8. **Portability**
+8. **Portability**
+   - Adaptability: Can be adapted to different environments
+   - Adaptability: Can be adapted to different environments
+   - Installability: Can be successfully installed
+   - Installability: Can be successfully installed
+   - Replaceability: Can replace another specified product
+   - Replaceability: Can replace another specified product
+
+
+### Security Best Practices
+### Security Best Practices
+
+
+1. **Input Validation**
+1. **Input Validation**
+   - Validate all input data
+   - Validate all input data
+   - Use appropriate techniques for different data types
+   - Use appropriate techniques for different data types
+   - Implement strict input validation at API boundaries
+   - Implement strict input validation at API boundaries
+
+
+2. **Output Encoding**
+2. **Output Encoding**
+   - Encode output based on the context (HTML, JSON, etc.)
+   - Encode output based on the context (HTML, JSON, etc.)
+   - Prevent XSS and injection attacks
+   - Prevent XSS and injection attacks
+   - Use appropriate libraries for encoding
+   - Use appropriate libraries for encoding
+
+
+3. **Authentication and Authorization**
+3. **Authentication and Authorization**
+   - Implement proper authentication mechanisms
+   - Implement proper authentication mechanisms
+   - Use role-based or attribute-based access control
+   - Use role-based or attribute-based access control
+   - Apply principle of least privilege
+   - Apply principle of least privilege
+
+
+4. **Data Protection**
+4. **Data Protection**
+   - Encrypt sensitive data in transit and at rest
+   - Encrypt sensitive data in transit and at rest
+   - Implement proper key management
+   - Implement proper key management
+   - Follow data protection regulations (GDPR, etc.)
+   - Follow data protection regulations (GDPR, etc.)
+
+
+5. **Logging and Monitoring**
+5. **Logging and Monitoring**
+   - Log security-relevant events
+   - Log security-relevant events
+   - Implement monitoring for suspicious activities
+   - Implement monitoring for suspicious activities
+   - Do not log sensitive information
+   - Do not log sensitive information
+
+
+### Accessibility (WCAG 2.1)
+### Accessibility (WCAG 2.1)
+
+
+1. **Perceivable**
+1. **Perceivable**
+   - Provide text alternatives for non-text content
+   - Provide text alternatives for non-text content
+   - Provide captions and alternatives for multimedia
+   - Provide captions and alternatives for multimedia
+   - Create content that can be presented in different ways
+   - Create content that can be presented in different ways
+   - Make it easier for users to see and hear content
+   - Make it easier for users to see and hear content
+
+
+2. **Operable**
+2. **Operable**
+   - Make all functionality available from a keyboard
+   - Make all functionality available from a keyboard
+   - Give users enough time to read and use content
+   - Give users enough time to read and use content
+   - Do not use content that causes seizures
+   - Do not use content that causes seizures
+   - Help users navigate and find content
+   - Help users navigate and find content
+
+
+3. **Understandable**
+3. **Understandable**
+   - Make text readable and understandable
+   - Make text readable and understandable
+   - Make content appear and operate in predictable ways
+   - Make content appear and operate in predictable ways
+   - Help users avoid and correct mistakes
+   - Help users avoid and correct mistakes
+
+
+4. **Robust**
+4. **Robust**
+   - Maximize compatibility with current and future tools
+   - Maximize compatibility with current and future tools
+
+
+## Documentation Standards
+## Documentation Standards
+
+
+1. **Code Documentation**
+1. **Code Documentation**
+   - Use JSDoc for documenting code
+   - Use JSDoc for documenting code
+   - Document all public APIs
+   - Document all public APIs
+   - Include parameters, return types, and exceptions
+   - Include parameters, return types, and exceptions
+   - Example:
+   - Example:
+     ```typescript
+     ```typescript
+     /**
+     /**
+      * Fetches user data from the API
+      * Fetches user data from the API
+      * @param userId - The ID of the user to fetch
+      * @param userId - The ID of the user to fetch
+      * @returns The user data
+      * @returns The user data
+      * @throws {NotFoundError} If the user doesn't exist
+      * @throws {NotFoundError} If the user doesn't exist
+      */
+      */
+     async function fetchUser(userId: string): Promise<UserData> {
+     async function fetchUser(userId: string): Promise<UserData> {
+       // Implementation
+       // Implementation
+     }
+     }
+     ```
+     ```
+
+
+2. **Architectural Documentation**
+2. **Architectural Documentation**
+   - Maintain high-level architecture diagrams
+   - Maintain high-level architecture diagrams
+   - Document system boundaries and interactions
+   - Document system boundaries and interactions
+   - Explain key design decisions and trade-offs
+   - Explain key design decisions and trade-offs
+
+
+3. **Technical Documentation**
+3. **Technical Documentation**
+   - Maintain up-to-date technical documentation
+   - Maintain up-to-date technical documentation
+   - Include setup instructions, dependencies, and configurations
+   - Include setup instructions, dependencies, and configurations
+   - Document API endpoints and usage
+   - Document API endpoints and usage
+
+
+## Version Control and Commit Standards
+## Version Control and Commit Standards
+
+
+1. **Branching Strategy**
+1. **Branching Strategy**
+   - Use feature branches for new features
+   - Use feature branches for new features
+   - Use fix branches for bug fixes
+   - Use fix branches for bug fixes
+   - Use main/master for stable code
+   - Use main/master for stable code
+   - Use develop for integration
+   - Use develop for integration
+
+
+2. **Commit Messages**
+2. **Commit Messages**
+   - Use conventional commit format: `type(scope): message`
+   - Use conventional commit format: `type(scope): message`
+   - Types: feat, fix, docs, style, refactor, test, chore
+   - Types: feat, fix, docs, style, refactor, test, chore
+   - Keep messages clear, concise, and descriptive
+   - Keep messages clear, concise, and descriptive
+   - Example: `feat(auth): add social login functionality`
+   - Example: `feat(auth): add social login functionality`
+
+
+3. **Pull Requests**
+3. **Pull Requests**
+   - Include descriptive title and description
+   - Include descriptive title and description
+   - Reference related issues
+   - Reference related issues
+   - Keep PRs focused and manageable
+   - Keep PRs focused and manageable
+   - Include tests and documentation
+   - Include tests and documentation
+
+
+These standards help ensure consistency, maintainability, and quality across the StockPulse codebase.
+These standards help ensure consistency, maintainability, and quality across the StockPulse codebase.

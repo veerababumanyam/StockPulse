@@ -1,0 +1,340 @@
+@import url('./assets/fonts/local-fonts.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Default light theme colors - These will be overridden by JS */
+    --primary: 336 100% 50%; /* #FF006A - Vibrant Pink/Magenta */
+    --primary-foreground: 0 0% 100%; /* #FFFFFF - Pure White */
+
+    --secondary: 180 100% 25%; /* #008080 - Muted Teal */
+    --secondary-foreground: 0 0% 100%; /* #FFFFFF - Pure White */
+
+    --background: 0 0% 100%; /* #FFFFFF - Pure White */
+    --foreground: 0 0% 17%; /* #2B2B2B - Deep Charcoal */
+
+    --card: 0 0% 100%; /* #FFFFFF - Pure White */
+    --card-foreground: 0 0% 17%; /* #2B2B2B - Deep Charcoal */
+
+    --popover: 0 0% 100%; /* #FFFFFF - Pure White */
+    --popover-foreground: 0 0% 17%; /* #2B2B2B - Deep Charcoal */
+
+    --muted: 0 0% 95%; /* #F3F3F3 - Lighter Cool Light Gray */
+    --muted-foreground: 0 0% 45%; /* #747474 - Mid Gray */
+
+    --accent: 0 0% 96%; /* #F5F5F5 - Light Gray */
+    --accent-foreground: 0 0% 17%; /* #2B2B2B - Deep Charcoal */
+
+    --destructive: 0 100% 62%; /* #FF3B3B - Red */
+    --destructive-foreground: 0 0% 100%; /* #FFFFFF - Pure White */
+
+    --border: 0 0% 88%; /* #E0E0E0 - Cool Light Gray */
+    --input: 0 0% 88%; /* #E0E0E0 - Cool Light Gray */
+    --ring: 336 100% 50%; /* #FF006A - Vibrant Pink/Magenta */
+
+    --radius: 0.75rem;
+
+    /* StockPulse Brand Colors - Light Theme */
+    --stockpulse-blue: 210 100% 50%;
+    --stockpulse-blue-light: 210 100% 60%;
+    --stockpulse-blue-dark: 210 100% 40%;
+    --stockpulse-pastel-blue: 210 100% 90%;
+
+    --stockpulse-purple: 270 100% 50%;
+    --stockpulse-purple-light: 270 100% 60%;
+    --stockpulse-purple-dark: 270 100% 40%;
+    --stockpulse-pastel-purple: 270 100% 90%;
+
+    --stockpulse-green: 140 100% 36%;
+    --stockpulse-green-light: 140 100% 46%;
+    --stockpulse-green-dark: 140 100% 26%;
+    --stockpulse-pastel-green: 140 100% 90%;
+
+    --stockpulse-coral: 0 100% 63%;
+    --stockpulse-coral-light: 0 100% 73%;
+    --stockpulse-coral-dark: 0 100% 53%;
+    --stockpulse-pastel-pink: 340 100% 90%;
+
+    --stockpulse-gold: 45 100% 50%;
+    --stockpulse-gold-light: 45 100% 60%;
+    --stockpulse-gold-dark: 45 100% 40%;
+    --stockpulse-pastel-yellow: 45 100% 90%;
+
+    --stockpulse-pastel-orange: 25 100% 90%;
+  }
+
+  .dark {
+    /* Default dark theme colors - These will be overridden by JS */
+    --primary: 336 100% 50%; /* #FF006A - Vibrant Pink/Magenta */
+    --primary-foreground: 0 0% 100%; /* #FFFFFF - Pure White */
+
+    --secondary: 180 100% 32%; /* #00A3A3 - Brighter Muted Teal */
+    --secondary-foreground: 0 0% 100%; /* #FFFFFF - Pure White */
+
+    --background: 0 0% 12%; /* #1E1E1E - VS Code inspired dark background */
+    --foreground: 0 0% 91%; /* #E8E8E8 - Light gray text (not pure white) */
+
+    --card: 0 0% 15%; /* #252526 - Slightly lighter than background */
+    --card-foreground: 0 0% 91%; /* #E8E8E8 - Light gray text */
+
+    --popover: 0 0% 15%; /* #252526 - Card background */
+    --popover-foreground: 0 0% 91%; /* #E8E8E8 - Light gray text */
+
+    --muted: 0 0% 18%; /* #2D2D30 - VS Code inspired */
+    --muted-foreground: 0 0% 80%; /* #CCCCCC - More visible */
+
+    --accent: 0 0% 24%; /* #37373D - VS Code inspired */
+    --accent-foreground: 0 0% 100%; /* #FFFFFF - Pure White */
+
+    --destructive: 0 85% 62%; /* #F14C4C - Brighter red for visibility */
+    --destructive-foreground: 0 0% 100%; /* #FFFFFF - Pure White */
+
+    --border: 0 0% 25%; /* #3E3E42 - Visible borders */
+    --input: 0 0% 25%; /* #3E3E42 - Visible borders */
+    --ring: 336 100% 50%; /* #FF006A - Vibrant Pink/Magenta */
+
+    /* StockPulse Brand Colors - Dark Theme */
+    --stockpulse-blue: 210 80% 60%;
+    --stockpulse-blue-light: 210 80% 70%;
+    --stockpulse-blue-dark: 210 80% 25%;
+
+    --stockpulse-purple: 270 80% 60%;
+    --stockpulse-purple-light: 270 80% 70%;
+    --stockpulse-purple-dark: 270 80% 25%;
+
+    --stockpulse-green: 140 70% 45%;
+    --stockpulse-green-light: 140 70% 55%;
+    --stockpulse-green-dark: 140 70% 22%;
+
+    --stockpulse-coral: 0 80% 65%;
+    --stockpulse-coral-light: 0 80% 75%;
+    --stockpulse-coral-dark: 0 80% 25%;
+
+    --stockpulse-gold: 45 80% 55%;
+    --stockpulse-gold-light: 45 80% 65%;
+    --stockpulse-gold-dark: 45 80% 25%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-[hsl(var(--border))] transition-colors duration-200;
+  }
+
+  body {
+    @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight text-foreground;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  h1 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h2 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  h3 {
+    @apply text-xl md:text-2xl;
+  }
+
+  /* Fix for text visibility in both light and dark themes */
+  p, span, div {
+    @apply text-foreground;
+  }
+
+  label, legend {
+    @apply text-foreground;
+  }
+
+  /* Default link styles */
+  a {
+    @apply text-primary hover:text-primary/80;
+  }
+}
+
+@layer components {
+  .stockpulse-card {
+    @apply bg-card text-card-foreground rounded-xl shadow-sm transition-all duration-300 hover:shadow-md border border-border/10;
+  }
+
+  .positive {
+    @apply text-stockpulse-green dark:text-stockpulse-green-light font-medium;
+  }
+
+  .negative {
+    @apply text-destructive font-medium;
+  }
+
+  .stat-card {
+    @apply p-4 rounded-xl bg-card text-card-foreground flex flex-col gap-1 shadow-sm border border-border;
+  }
+
+  .stat-value {
+    @apply text-2xl font-semibold text-foreground;
+  }
+
+  .stat-label {
+    @apply text-sm text-muted-foreground font-medium;
+  }
+
+  .glass-card {
+    @apply bg-background/70 backdrop-blur-sm border border-border/20 text-foreground shadow-sm;
+  }
+
+  .animated-gradient {
+    background-size: 200% 200%;
+    animation: gradient 8s ease infinite;
+  }
+
+  .card-highlight {
+    @apply border-l-4 border-primary;
+  }
+
+  .nav-item {
+    @apply px-3 py-2 rounded-lg transition-all duration-200 hover:bg-primary/10 text-foreground;
+  }
+
+  .nav-item.active {
+    @apply bg-primary/10 text-primary font-medium shadow-sm;
+  }
+
+  .neumorphic {
+    @apply shadow-neumorphic bg-card text-card-foreground rounded-xl;
+  }
+
+  .neumorphic-inset {
+    @apply shadow-neumorphic-inset bg-card text-card-foreground rounded-xl;
+  }
+
+  .neumorphic-button {
+    @apply rounded-xl py-2 px-4 shadow-neumorphic-sm bg-card text-card-foreground hover:shadow-neumorphic active:shadow-neumorphic-sm-inset transition-all duration-300;
+  }
+
+  .indicator-dot {
+    @apply inline-block h-2.5 w-2.5 rounded-full;
+  }
+
+  .theme-switch {
+    @apply relative inline-flex h-6 w-11 items-center rounded-full bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+  }
+
+  .theme-switch[data-state="checked"] {
+    @apply bg-primary;
+  }
+
+  .theme-switch-thumb {
+    @apply pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform;
+  }
+
+  .theme-switch[data-state="checked"] .theme-switch-thumb {
+    @apply translate-x-5;
+  }
+
+  .theme-switch[data-state="unchecked"] .theme-switch-thumb {
+    @apply translate-x-0;
+  }
+
+  /* Dark mode specific styles */
+  .dark .shadow-neumorphic-sm {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  }
+
+  .dark .shadow-neumorphic-sm-inset {
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.35);
+  }
+
+  .dark .shadow-neumorphic {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+  }
+
+  .dark .shadow-glass {
+    box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.4);
+  }
+
+  .dark .nav-item {
+    @apply hover:bg-muted border border-transparent;
+  }
+
+  .dark .nav-item.active {
+    @apply bg-primary/15 border-primary/30;
+  }
+
+  /* Stockpulse card and container styles */
+  .data-card {
+    @apply bg-card text-card-foreground p-4 rounded-lg border border-border shadow-sm;
+  }
+
+  .data-panel {
+    @apply bg-muted/50 text-foreground p-3 rounded-md;
+  }
+
+  .data-item {
+    @apply flex flex-col gap-1;
+  }
+
+  .data-label {
+    @apply text-sm text-muted-foreground font-medium;
+  }
+
+  .data-value {
+    @apply font-semibold text-foreground;
+  }
+
+  /* Responsive layout utilities */
+  .responsive-container {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .responsive-grid {
+    @apply grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+  }
+
+  .responsive-grid-compact {
+    @apply grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3;
+  }
+
+  .responsive-flex {
+    @apply flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0;
+  }
+
+  .responsive-flex-center {
+    @apply flex flex-col md:flex-row items-center justify-center md:space-x-4 space-y-4 md:space-y-0;
+  }
+
+  .responsive-flex-between {
+    @apply flex flex-col md:flex-row items-center justify-between md:space-x-4 space-y-4 md:space-y-0;
+  }
+
+  .responsive-gap {
+    @apply gap-3 md:gap-4 lg:gap-5;
+  }
+
+  .responsive-padding {
+    @apply p-3 sm:p-4 md:p-5;
+  }
+
+  .responsive-margin {
+    @apply my-3 sm:my-4 md:my-5;
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

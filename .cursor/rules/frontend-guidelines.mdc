@@ -1,0 +1,173 @@
+---
+description: frontend guidelines guidelines for StockPulse
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: true
+---
+# StockPulse Frontend Guidelines
+
+## Component Architecture
+
+1. **Component Organization**
+   - Use atomic design principles (atoms, molecules, organisms, templates, pages)
+   - Keep components focused on a single responsibility
+   - Extract reusable parts into separate components
+   - Use composition over inheritance
+
+2. **Component Structure**
+   - Define prop interfaces at the top of the file
+   - Use function components with explicit return types
+   - Use React.memo() for performance-critical components
+   - Destructure props for clarity
+
+## State Management
+
+1. **Local State**
+   - Use `useState` for simple component state
+   - Use `useReducer` for complex state logic
+   - Keep state as minimal as possible
+
+2. **Global State**
+   - Use React Context API for shared state
+   - Use React Query for server state and data fetching
+   - Implement proper context providers in the component hierarchy
+
+3. **Performance**
+   - Memoize expensive calculations with `useMemo`
+   - Optimize callbacks with `useCallback`
+   - Avoid unnecessary re-renders
+   - Implement list virtualization for long lists
+
+## Styling
+
+1. **Tailwind Usage**
+   - Use Tailwind utility classes directly
+   - Follow the project's design tokens and theme
+   - Use the shadcn/ui component library where appropriate
+   - Maintain consistent spacing, colors, and typography
+
+2. **Component Design**
+   - Implement responsive designs
+   - Support dark/light mode themes
+   - Ensure proper contrast ratios for accessibility
+   - Test with different screen sizes and orientations
+
+## Data Visualization
+
+1. **Chart Components**
+   - Use Recharts for consistent chart implementation
+   - Support responsive chart resizing
+   - Implement proper loading and error states
+   - Add proper tooltips and interactions
+   - Maintain consistent styling across all charts
+
+2. **Financial Data Display**
+   - Format numbers consistently (decimal places, units)
+   - Use color coding for positive/negative values
+   - Implement appropriate loading skeletons
+   - Add proper error handling and fallbacks
+
+## Stock Analysis UI
+
+1. **Dashboard Layout**
+   - Implement a grid-based, customizable dashboard
+   - Support drag-and-drop widget arrangement
+   - Save user layout preferences
+   - Optimize for information density while maintaining clarity
+
+2. **Trading Interface**
+   - Design clear, error-resistant trading forms
+   - Implement multi-step confirmation for critical actions
+   - Show real-time data updates
+   - Provide clear feedback for user actions
+
+## Accessibility
+
+1. **Standards Compliance**
+   - Follow WCAG 2.1 AA guidelines
+   - Implement proper semantic HTML
+   - Ensure keyboard navigation works
+   - Support screen readers with ARIA attributes
+
+2. **UI Considerations**
+   - Maintain sufficient color contrast
+   - Provide text alternatives for non-text content
+   - Ensure proper focus management
+   - Support text resizing without breaking layouts
+
+## Performance
+
+1. **Optimizations**
+   - Implement code splitting and lazy loading
+   - Optimize images and assets
+   - Use proper caching strategies
+   - Monitor bundle size
+
+2. **Data Handling**
+   - Implement virtualized lists for large datasets
+   - Use web workers for heavy computations
+   - Implement proper data pagination and filtering
+   - Optimize API requests with batching and debouncing
+
+## Example Component Pattern
+
+```tsx
+interface StockChartProps {
+  symbol: string;
+  timeframe: TimeFrame;
+  indicators: TechnicalIndicator[];
+  height?: number;
+  width?: number;
+  onIntervalChange?: (interval: TimeFrame) => void;
+}
+
+export const StockChart: React.FC<StockChartProps> = ({
+  symbol,
+  timeframe,
+  indicators,
+  height = 400,
+  width = 800,
+  onIntervalChange
+}) => {
+  // Data fetching with React Query
+  const { data, isLoading, error } = useStockData(symbol, timeframe);
+  
+  // Derived state with useMemo
+  const processedData = useMemo(() => {
+    if (!data) return [];
+    return processStockData(data, indicators);
+  }, [data, indicators]);
+  
+  // Event handlers with useCallback
+  const handleIntervalChange = useCallback((newInterval: TimeFrame) => {
+    onIntervalChange?.(newInterval);
+  }, [onIntervalChange]);
+  
+  // Loading state
+  if (isLoading) return <ChartSkeleton height={height} width={width} />;
+  
+  // Error state
+  if (error) return <ErrorDisplay error={error} />;
+  
+  // Empty state
+  if (!processedData.length) return <NoDataDisplay symbol={symbol} />;
+  
+  return (
+    <div className="rounded-lg border bg-card shadow-sm">
+      <div className="flex justify-between p-4 border-b">
+        <h3 className="text-lg font-medium">{symbol} Chart</h3>
+        <TimeframeSelector 
+          current={timeframe} 
+          onChange={handleIntervalChange} 
+        />
+      </div>
+      <div className="p-4">
+        <ResponsiveContainer width="100%" height={height}>
+          <CandlestickChart data={processedData} indicators={indicators} />
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+};
+```
+
+@shadcn-ui-components.md

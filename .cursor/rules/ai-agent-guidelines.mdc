@@ -1,0 +1,555 @@
+---
+description: 
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: false
+---
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: true
+
+
+# StockPulse AI Agent Guidelines
+# StockPulse AI Agent Guidelines
+
+
+## Agent Framework Architecture
+## Agent Framework Architecture
+
+
+The agent system follows a consistent architecture:
+The agent system follows a consistent architecture:
+
+
+1. **Base Agent**
+1. **Base Agent**
+   - All agents inherit from `BaseAgent` abstract class
+   - All agents inherit from `BaseAgent` abstract class
+   - Implement standard lifecycle methods (initialize, execute, cleanup)
+   - Implement standard lifecycle methods (initialize, execute, cleanup)
+   - Include common utility methods and error handling
+   - Include common utility methods and error handling
+   - Support configuration management
+   - Support configuration management
+   - Add telemetry and monitoring
+   - Add telemetry and monitoring
+
+
+2. **Agent Categories**
+2. **Agent Categories**
+   - **Technical Analysis**: Price pattern analysis, indicator calculations
+   - **Technical Analysis**: Price pattern analysis, indicator calculations
+   - **Fundamental Analysis**: Financial metrics, valuations, growth assessment
+   - **Fundamental Analysis**: Financial metrics, valuations, growth assessment
+   - **Sentiment Analysis**: News, social media, analyst opinions
+   - **Sentiment Analysis**: News, social media, analyst opinions
+   - **Alternative Data**: Non-traditional data sources
+   - **Alternative Data**: Non-traditional data sources
+   - **Meta Agents**: Coordinates other agents, signal aggregation
+   - **Meta Agents**: Coordinates other agents, signal aggregation
+
+
+## Agent Implementation
+## Agent Implementation
+
+
+1. **Agent Design Principles**
+1. **Agent Design Principles**
+   - Single Responsibility: Focus on one analysis domain
+   - Single Responsibility: Focus on one analysis domain
+   - Configurability: Support parameter adjustments
+   - Configurability: Support parameter adjustments
+   - Explainability: Provide reasoning for decisions
+   - Explainability: Provide reasoning for decisions
+   - Resilience: Handle errors gracefully
+   - Resilience: Handle errors gracefully
+   - Performance: Optimize for processing speed
+   - Performance: Optimize for processing speed
+
+
+2. **Implementation Structure**
+2. **Implementation Structure**
+   - Define clear input/output interfaces
+   - Define clear input/output interfaces
+   - Implement standard lifecycle methods
+   - Implement standard lifecycle methods
+   - Add comprehensive error handling
+   - Add comprehensive error handling
+   - Include validation for all inputs
+   - Include validation for all inputs
+   - Support both synchronous and asynchronous operations
+   - Support both synchronous and asynchronous operations
+   - Add proper logging and telemetry
+   - Add proper logging and telemetry
+
+
+3. **Prompt Engineering**
+3. **Prompt Engineering**
+   - Use clear, specific prompts
+   - Use clear, specific prompts
+   - Implement context management
+   - Implement context management
+   - Support multi-step reasoning (chain-of-thought)
+   - Support multi-step reasoning (chain-of-thought)
+   - Include examples when helpful (few-shot learning)
+   - Include examples when helpful (few-shot learning)
+   - Design prompts for specific models
+   - Design prompts for specific models
+
+
+## Agent Collaboration
+## Agent Collaboration
+
+
+1. **Collaboration Patterns**
+1. **Collaboration Patterns**
+   - Implement agent orchestration
+   - Implement agent orchestration
+   - Support message passing between agents
+   - Support message passing between agents
+   - Add result aggregation mechanisms
+   - Add result aggregation mechanisms
+   - Include conflict resolution strategies
+   - Include conflict resolution strategies
+   - Support parallel execution
+   - Support parallel execution
+
+
+2. **Agent Communication**
+2. **Agent Communication**
+   - Use standardized message formats
+   - Use standardized message formats
+   - Implement proper typing for messages
+   - Implement proper typing for messages
+   - Add versioning for message schemas
+   - Add versioning for message schemas
+   - Support both direct and broadcast communication
+   - Support both direct and broadcast communication
+
+
+## Hallucination Prevention
+## Hallucination Prevention
+
+
+1. **Strategies**
+1. **Strategies**
+   - Ground outputs with factual data
+   - Ground outputs with factual data
+   - Implement validation of agent outputs
+   - Implement validation of agent outputs
+   - Use multiple agents for cross-validation
+   - Use multiple agents for cross-validation
+   - Add confidence scores for results
+   - Add confidence scores for results
+   - Include thresholds for action triggers
+   - Include thresholds for action triggers
+
+
+2. **Implementation**
+2. **Implementation**
+   - Retrieve facts before generation
+   - Retrieve facts before generation
+   - Verify outputs against known data
+   - Verify outputs against known data
+   - Implement structured output formats
+   - Implement structured output formats
+   - Add constraints to generation
+   - Add constraints to generation
+   - Include references and sources
+   - Include references and sources
+
+
+## Agent Testing
+## Agent Testing
+
+
+1. **Testing Approaches**
+1. **Testing Approaches**
+   - Unit tests for individual agent functions
+   - Unit tests for individual agent functions
+   - Integration tests for agent interaction
+   - Integration tests for agent interaction
+   - Evaluation tests for agent performance
+   - Evaluation tests for agent performance
+   - Benchmark tests for agent efficiency
+   - Benchmark tests for agent efficiency
+   - Adversarial tests for robustness
+   - Adversarial tests for robustness
+
+
+2. **Evaluation Metrics**
+2. **Evaluation Metrics**
+   - Accuracy of predictions/analysis
+   - Accuracy of predictions/analysis
+   - Relevance of insights
+   - Relevance of insights
+   - Consistency of outputs
+   - Consistency of outputs
+   - Speed of processing
+   - Speed of processing
+   - Resource utilization
+   - Resource utilization
+
+
+## Example Agent Implementation
+## Example Agent Implementation
+
+
+```typescript
+```typescript
+/**
+/**
+ * Technical analysis agent for identifying chart patterns
+ * Technical analysis agent for identifying chart patterns
+ * @extends BaseAgent
+ * @extends BaseAgent
+ */
+ */
+export class PatternRecognitionAgent extends BaseAgent<PatternRecognitionConfig> {
+export class PatternRecognitionAgent extends BaseAgent<PatternRecognitionConfig> {
+  private readonly supportedPatterns: ChartPattern[];
+  private readonly supportedPatterns: ChartPattern[];
+  private readonly historicalService: HistoricalDataService;
+  private readonly historicalService: HistoricalDataService;
+  private readonly indicatorService: IndicatorService;
+  private readonly indicatorService: IndicatorService;
+  
+  
+  constructor(
+  constructor(
+    config: PatternRecognitionConfig,
+    config: PatternRecognitionConfig,
+    historicalService: HistoricalDataService,
+    historicalService: HistoricalDataService,
+    indicatorService: IndicatorService,
+    indicatorService: IndicatorService,
+    logger: Logger
+    logger: Logger
+  ) {
+  ) {
+    super(config, logger);
+    super(config, logger);
+    this.supportedPatterns = config.patterns || DEFAULT_PATTERNS;
+    this.supportedPatterns = config.patterns || DEFAULT_PATTERNS;
+    this.historicalService = historicalService;
+    this.historicalService = historicalService;
+    this.indicatorService = indicatorService;
+    this.indicatorService = indicatorService;
+  }
+  }
+  
+  
+  /**
+  /**
+   * Initialize the agent
+   * Initialize the agent
+   */
+   */
+  public async initialize(): Promise<void> {
+  public async initialize(): Promise<void> {
+    this.logger.info('Initializing PatternRecognitionAgent', {
+    this.logger.info('Initializing PatternRecognitionAgent', {
+      patterns: this.supportedPatterns,
+      patterns: this.supportedPatterns,
+    });
+    });
+    
+    
+    try {
+    try {
+      // Initialize services and resources
+      // Initialize services and resources
+      await this.historicalService.connect();
+      await this.historicalService.connect();
+      await this.indicatorService.initialize();
+      await this.indicatorService.initialize();
+      
+      
+      this.initialized = true;
+      this.initialized = true;
+      this.logger.info('PatternRecognitionAgent initialized successfully');
+      this.logger.info('PatternRecognitionAgent initialized successfully');
+    } catch (error) {
+    } catch (error) {
+      this.logger.error('Failed to initialize PatternRecognitionAgent', { error });
+      this.logger.error('Failed to initialize PatternRecognitionAgent', { error });
+      throw new AgentInitializationError(
+      throw new AgentInitializationError(
+        `Failed to initialize PatternRecognitionAgent: ${error.message}`
+        `Failed to initialize PatternRecognitionAgent: ${error.message}`
+      );
+      );
+    }
+    }
+  }
+  }
+  
+  
+  /**
+  /**
+   * Analyze a stock for chart patterns
+   * Analyze a stock for chart patterns
+   * @param symbol - Stock symbol to analyze
+   * @param symbol - Stock symbol to analyze
+   * @param timeframe - Timeframe for analysis
+   * @param timeframe - Timeframe for analysis
+   * @returns Identified patterns with confidence scores
+   * @returns Identified patterns with confidence scores
+   */
+   */
+  public async findPatterns(
+  public async findPatterns(
+    symbol: string,
+    symbol: string,
+    timeframe: TimeFrame
+    timeframe: TimeFrame
+  ): Promise<PatternRecognitionResult> {
+  ): Promise<PatternRecognitionResult> {
+    this.ensureInitialized();
+    this.ensureInitialized();
+    
+    
+    try {
+    try {
+      // Log the analysis start
+      // Log the analysis start
+      this.logger.info('Starting pattern recognition analysis', {
+      this.logger.info('Starting pattern recognition analysis', {
+        symbol,
+        symbol,
+        timeframe,
+        timeframe,
+        patterns: this.supportedPatterns,
+        patterns: this.supportedPatterns,
+      });
+      });
+      
+      
+      // Fetch historical data
+      // Fetch historical data
+      const historicalData = await this.historicalService.getHistoricalPrices(
+      const historicalData = await this.historicalService.getHistoricalPrices(
+        symbol,
+        symbol,
+        timeframe,
+        timeframe,
+        this.config.lookbackPeriods
+        this.config.lookbackPeriods
+      );
+      );
+      
+      
+      if (!historicalData || historicalData.length < this.config.minimumDataPoints) {
+      if (!historicalData || historicalData.length < this.config.minimumDataPoints) {
+        throw new InsufficientDataError(
+        throw new InsufficientDataError(
+          `Not enough data points for pattern recognition. Need at least ${this.config.minimumDataPoints}, but got ${historicalData?.length || 0}`
+          `Not enough data points for pattern recognition. Need at least ${this.config.minimumDataPoints}, but got ${historicalData?.length || 0}`
+        );
+        );
+      }
+      }
+      
+      
+      // Calculate necessary indicators
+      // Calculate necessary indicators
+      const indicators = await this.calculateIndicators(historicalData);
+      const indicators = await this.calculateIndicators(historicalData);
+      
+      
+      // Detect patterns
+      // Detect patterns
+      const detectedPatterns = await this.detectPatterns(historicalData, indicators);
+      const detectedPatterns = await this.detectPatterns(historicalData, indicators);
+      
+      
+      // Generate insights with reasoning
+      // Generate insights with reasoning
+      const insights = this.generateInsights(detectedPatterns, historicalData);
+      const insights = this.generateInsights(detectedPatterns, historicalData);
+      
+      
+      // Log the analysis completion
+      // Log the analysis completion
+      this.logger.info('Pattern recognition analysis completed', {
+      this.logger.info('Pattern recognition analysis completed', {
+        symbol,
+        symbol,
+        timeframe,
+        timeframe,
+        patternCount: detectedPatterns.length,
+        patternCount: detectedPatterns.length,
+      });
+      });
+      
+      
+      return {
+      return {
+        symbol,
+        symbol,
+        timeframe,
+        timeframe,
+        timestamp: new Date().toISOString(),
+        timestamp: new Date().toISOString(),
+        patterns: detectedPatterns,
+        patterns: detectedPatterns,
+        insights,
+        insights,
+      };
+      };
+    } catch (error) {
+    } catch (error) {
+      // Handle and log errors
+      // Handle and log errors
+      this.logger.error('Error in pattern recognition analysis', {
+      this.logger.error('Error in pattern recognition analysis', {
+        symbol,
+        symbol,
+        timeframe,
+        timeframe,
+        error: error.message,
+        error: error.message,
+      });
+      });
+      
+      
+      // Rethrow with appropriate error type
+      // Rethrow with appropriate error type
+      if (error instanceof InsufficientDataError) {
+      if (error instanceof InsufficientDataError) {
+        throw error;
+        throw error;
+      }
+      }
+      
+      
+      if (error instanceof ExternalServiceError) {
+      if (error instanceof ExternalServiceError) {
+        throw new AnalysisError(
+        throw new AnalysisError(
+          `External service error during pattern analysis: ${error.message}`,
+          `External service error during pattern analysis: ${error.message}`,
+          { cause: error }
+          { cause: error }
+        );
+        );
+      }
+      }
+      
+      
+      throw new AnalysisError(
+      throw new AnalysisError(
+        `Failed to analyze patterns for ${symbol}: ${error.message}`,
+        `Failed to analyze patterns for ${symbol}: ${error.message}`,
+        { cause: error }
+        { cause: error }
+      );
+      );
+    }
+    }
+  }
+  }
+  
+  
+  /**
+  /**
+   * Calculate technical indicators needed for pattern recognition
+   * Calculate technical indicators needed for pattern recognition
+   * @private
+   * @private
+   */
+   */
+  private async calculateIndicators(
+  private async calculateIndicators(
+    data: PriceBar[]
+    data: PriceBar[]
+  ): Promise<IndicatorValues> {
+  ): Promise<IndicatorValues> {
+    // Implementation details...
+    // Implementation details...
+  }
+  }
+  
+  
+  /**
+  /**
+   * Detect chart patterns in the price data
+   * Detect chart patterns in the price data
+   * @private
+   * @private
+   */
+   */
+  private async detectPatterns(
+  private async detectPatterns(
+    data: PriceBar[],
+    data: PriceBar[],
+    indicators: IndicatorValues
+    indicators: IndicatorValues
+  ): Promise<DetectedPattern[]> {
+  ): Promise<DetectedPattern[]> {
+    // Implementation details...
+    // Implementation details...
+  }
+  }
+  
+  
+  /**
+  /**
+   * Generate insights based on detected patterns
+   * Generate insights based on detected patterns
+   * @private
+   * @private
+   */
+   */
+  private generateInsights(
+  private generateInsights(
+    patterns: DetectedPattern[],
+    patterns: DetectedPattern[],
+    data: PriceBar[]
+    data: PriceBar[]
+  ): PatternInsight[] {
+  ): PatternInsight[] {
+    // Implementation details...
+    // Implementation details...
+  }
+  }
+  
+  
+  /**
+  /**
+   * Clean up resources used by the agent
+   * Clean up resources used by the agent
+   */
+   */
+  public async cleanup(): Promise<void> {
+  public async cleanup(): Promise<void> {
+    try {
+    try {
+      // Clean up services and resources
+      // Clean up services and resources
+      await this.historicalService.disconnect();
+      await this.historicalService.disconnect();
+      
+      
+      this.logger.info('PatternRecognitionAgent cleaned up successfully');
+      this.logger.info('PatternRecognitionAgent cleaned up successfully');
+    } catch (error) {
+    } catch (error) {
+      this.logger.error('Error during PatternRecognitionAgent cleanup', { error });
+      this.logger.error('Error during PatternRecognitionAgent cleanup', { error });
+    } finally {
+    } finally {
+      this.initialized = false;
+      this.initialized = false;
+    }
+    }
+  }
+  }
+}
+}
+```
+```
+
+
+@llm-prompt-templates.md
+@llm-prompt-templates.md
+@agent-testing-strategies.md
+@agent-testing-strategies.md

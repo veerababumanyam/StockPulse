@@ -1,0 +1,531 @@
+---
+description: 
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: false
+---
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: true
+
+
+# StockPulse AI Technology Stack Guidelines
+# StockPulse AI Technology Stack Guidelines
+
+
+## Core AI Models and Frameworks
+## Core AI Models and Frameworks
+
+
+To maintain consistency across the StockPulse platform, use the following AI technologies:
+To maintain consistency across the StockPulse platform, use the following AI technologies:
+
+
+1. **Large Language Models (LLMs)**
+1. **Large Language Models (LLMs)**
+   - **Anthropic Claude**: Primary model for natural language understanding, reasoning, and text generation
+   - **Anthropic Claude**: Primary model for natural language understanding, reasoning, and text generation
+   - **Anthropic MCP (Model Control Protocol)**: For controlled, structured agent interactions
+   - **Anthropic MCP (Model Control Protocol)**: For controlled, structured agent interactions
+   - **OpenAI GPT-4**: Alternative for specific tasks requiring its capabilities
+   - **OpenAI GPT-4**: Alternative for specific tasks requiring its capabilities
+   - **Google Gemini**: For multi-modal inputs when analyzing charts, images, or documents
+   - **Google Gemini**: For multi-modal inputs when analyzing charts, images, or documents
+
+
+2. **Retrieval-Augmented Generation (RAG)**
+2. **Retrieval-Augmented Generation (RAG)**
+   - **LightRAG**: Primary framework for all retrieval-augmented generation needs
+   - **LightRAG**: Primary framework for all retrieval-augmented generation needs
+     - Simple and fast retrieval architecture
+     - Simple and fast retrieval architecture
+     - High-quality context extraction optimized for financial data
+     - High-quality context extraction optimized for financial data
+     - Minimal hallucination through proper grounding
+     - Minimal hallucination through proper grounding
+     - Compatible with all major LLM providers
+     - Compatible with all major LLM providers
+
+
+3. **AI-to-AI Communication**
+3. **AI-to-AI Communication**
+   - **Google A2A (AI-to-AI)**: For structured communication between agent systems
+   - **Google A2A (AI-to-AI)**: For structured communication between agent systems
+   - **Agent Orchestration Framework**: Custom orchestration layer built on A2A principles
+   - **Agent Orchestration Framework**: Custom orchestration layer built on A2A principles
+
+
+4. **Vector Databases**
+4. **Vector Databases**
+   - **Pinecone**: Primary vector database for embeddings storage
+   - **Pinecone**: Primary vector database for embeddings storage
+   - **Milvus**: Alternative for specialized vector search needs
+   - **Milvus**: Alternative for specialized vector search needs
+
+
+5. **Embedding Models**
+5. **Embedding Models**
+   - **OpenAI text-embedding-3-large**: Primary embedding model for text
+   - **OpenAI text-embedding-3-large**: Primary embedding model for text
+   - **BAAI/bge-large-en-v1.5**: Alternative cost-effective embedding model
+   - **BAAI/bge-large-en-v1.5**: Alternative cost-effective embedding model
+
+
+## Integration and Deployment
+## Integration and Deployment
+
+
+1. **Model Management**
+1. **Model Management**
+   - Use a unified model registry to track model versions
+   - Use a unified model registry to track model versions
+   - Implement A/B testing for model improvements
+   - Implement A/B testing for model improvements
+   - Set up model monitoring for drift detection
+   - Set up model monitoring for drift detection
+
+
+2. **Prompt Management**
+2. **Prompt Management**
+   - Maintain a centralized prompt library with versioning
+   - Maintain a centralized prompt library with versioning
+   - Use parameterized prompt templates
+   - Use parameterized prompt templates
+   - Implement prompt testing framework
+   - Implement prompt testing framework
+
+
+3. **API Integration**
+3. **API Integration**
+   - Use provider-specific SDKs when available
+   - Use provider-specific SDKs when available
+   - Implement fallback mechanisms across providers
+   - Implement fallback mechanisms across providers
+   - Add proper retry logic and error handling
+   - Add proper retry logic and error handling
+
+
+## Implementation Patterns
+## Implementation Patterns
+
+
+1. **LLM Calls**
+1. **LLM Calls**
+   ```typescript
+   ```typescript
+   // Standard LLM service implementation
+   // Standard LLM service implementation
+   export class LLMService {
+   export class LLMService {
+     private readonly anthropicClient: AnthropicClient;
+     private readonly anthropicClient: AnthropicClient;
+     private readonly openaiClient: OpenAIClient;
+     private readonly openaiClient: OpenAIClient;
+     private readonly logger: Logger;
+     private readonly logger: Logger;
+     
+     
+     constructor(
+     constructor(
+       anthropicClient: AnthropicClient,
+       anthropicClient: AnthropicClient,
+       openaiClient: OpenAIClient,
+       openaiClient: OpenAIClient,
+       logger: Logger
+       logger: Logger
+     ) {
+     ) {
+       this.anthropicClient = anthropicClient;
+       this.anthropicClient = anthropicClient;
+       this.openaiClient = openaiClient;
+       this.openaiClient = openaiClient;
+       this.logger = logger;
+       this.logger = logger;
+     }
+     }
+     
+     
+     async generateText(
+     async generateText(
+       prompt: string, 
+       prompt: string, 
+       options: GenerationOptions
+       options: GenerationOptions
+     ): Promise<string> {
+     ): Promise<string> {
+       try {
+       try {
+         // Default to Anthropic Claude
+         // Default to Anthropic Claude
+         if (options.provider === 'openai' || options.fallbackToOpenAI) {
+         if (options.provider === 'openai' || options.fallbackToOpenAI) {
+           return await this.callOpenAI(prompt, options);
+           return await this.callOpenAI(prompt, options);
+         }
+         }
+         
+         
+         return await this.callAnthropic(prompt, options);
+         return await this.callAnthropic(prompt, options);
+       } catch (error) {
+       } catch (error) {
+         this.logger.error('Error in LLM text generation', { error, prompt });
+         this.logger.error('Error in LLM text generation', { error, prompt });
+         
+         
+         if (options.fallbackToOpenAI && error.provider === 'anthropic') {
+         if (options.fallbackToOpenAI && error.provider === 'anthropic') {
+           this.logger.info('Falling back to OpenAI');
+           this.logger.info('Falling back to OpenAI');
+           return await this.callOpenAI(prompt, options);
+           return await this.callOpenAI(prompt, options);
+         }
+         }
+         
+         
+         throw new LLMServiceError(`Failed to generate text: ${error.message}`);
+         throw new LLMServiceError(`Failed to generate text: ${error.message}`);
+       }
+       }
+     }
+     }
+     
+     
+     // Implementation details...
+     // Implementation details...
+   }
+   }
+   ```
+   ```
+
+
+2. **RAG Implementation**
+2. **RAG Implementation**
+   ```typescript
+   ```typescript
+   // Using LightRAG for retrieval-augmented generation
+   // Using LightRAG for retrieval-augmented generation
+   export class LightRAGService {
+   export class LightRAGService {
+     private readonly vectorStore: VectorStore;
+     private readonly vectorStore: VectorStore;
+     private readonly llmService: LLMService;
+     private readonly llmService: LLMService;
+     private readonly logger: Logger;
+     private readonly logger: Logger;
+     
+     
+     constructor(
+     constructor(
+       vectorStore: VectorStore,
+       vectorStore: VectorStore,
+       llmService: LLMService,
+       llmService: LLMService,
+       logger: Logger
+       logger: Logger
+     ) {
+     ) {
+       this.vectorStore = vectorStore;
+       this.vectorStore = vectorStore;
+       this.llmService = llmService;
+       this.llmService = llmService;
+       this.logger = logger;
+       this.logger = logger;
+     }
+     }
+     
+     
+     async query(
+     async query(
+       question: string,
+       question: string,
+       options: RAGOptions
+       options: RAGOptions
+     ): Promise<RAGResponse> {
+     ): Promise<RAGResponse> {
+       try {
+       try {
+         // Get relevant context from vector database
+         // Get relevant context from vector database
+         const embeddings = await this.createEmbeddings(question);
+         const embeddings = await this.createEmbeddings(question);
+         const relevantDocs = await this.vectorStore.similaritySearch(
+         const relevantDocs = await this.vectorStore.similaritySearch(
+           embeddings,
+           embeddings,
+           options.maxResults || 5
+           options.maxResults || 5
+         );
+         );
+         
+         
+         // Construct prompt with retrieved context
+         // Construct prompt with retrieved context
+         const prompt = this.constructRAGPrompt(question, relevantDocs);
+         const prompt = this.constructRAGPrompt(question, relevantDocs);
+         
+         
+         // Generate response with LLM
+         // Generate response with LLM
+         const response = await this.llmService.generateText(
+         const response = await this.llmService.generateText(
+           prompt,
+           prompt,
+           { 
+           { 
+             temperature: options.temperature || 0.3,
+             temperature: options.temperature || 0.3,
+             provider: options.provider || 'anthropic',
+             provider: options.provider || 'anthropic',
+             fallbackToOpenAI: options.fallback || true
+             fallbackToOpenAI: options.fallback || true
+           }
+           }
+         );
+         );
+         
+         
+         return {
+         return {
+           answer: response,
+           answer: response,
+           sources: relevantDocs.map(doc => doc.metadata),
+           sources: relevantDocs.map(doc => doc.metadata),
+           confidence: this.calculateConfidence(relevantDocs, response)
+           confidence: this.calculateConfidence(relevantDocs, response)
+         };
+         };
+       } catch (error) {
+       } catch (error) {
+         this.logger.error('Error in RAG query', { error, question });
+         this.logger.error('Error in RAG query', { error, question });
+         throw new RAGServiceError(`Failed to process RAG query: ${error.message}`);
+         throw new RAGServiceError(`Failed to process RAG query: ${error.message}`);
+       }
+       }
+     }
+     }
+     
+     
+     // Implementation details...
+     // Implementation details...
+   }
+   }
+   ```
+   ```
+
+
+3. **A2A Communication**
+3. **A2A Communication**
+   ```typescript
+   ```typescript
+   // Implementing Google A2A pattern for agent communication
+   // Implementing Google A2A pattern for agent communication
+   export class AgentCommunicationService {
+   export class AgentCommunicationService {
+     private readonly agents: Map<string, BaseAgent>;
+     private readonly agents: Map<string, BaseAgent>;
+     private readonly logger: Logger;
+     private readonly logger: Logger;
+     
+     
+     constructor(
+     constructor(
+       agents: BaseAgent[],
+       agents: BaseAgent[],
+       logger: Logger
+       logger: Logger
+     ) {
+     ) {
+       this.agents = new Map(agents.map(agent => [agent.id, agent]));
+       this.agents = new Map(agents.map(agent => [agent.id, agent]));
+       this.logger = logger;
+       this.logger = logger;
+     }
+     }
+     
+     
+     async facilitateAgentInteraction(
+     async facilitateAgentInteraction(
+       initiatorId: string,
+       initiatorId: string,
+       targetId: string,
+       targetId: string,
+       message: AgentMessage
+       message: AgentMessage
+     ): Promise<AgentResponse> {
+     ): Promise<AgentResponse> {
+       try {
+       try {
+         const initiator = this.agents.get(initiatorId);
+         const initiator = this.agents.get(initiatorId);
+         const target = this.agents.get(targetId);
+         const target = this.agents.get(targetId);
+         
+         
+         if (!initiator || !target) {
+         if (!initiator || !target) {
+           throw new AgentNotFoundError('Agent not found');
+           throw new AgentNotFoundError('Agent not found');
+         }
+         }
+         
+         
+         // Log the interaction
+         // Log the interaction
+         this.logger.info('Agent communication initiated', {
+         this.logger.info('Agent communication initiated', {
+           from: initiatorId,
+           from: initiatorId,
+           to: targetId,
+           to: targetId,
+           messageType: message.type
+           messageType: message.type
+         });
+         });
+         
+         
+         // Process message through A2A protocol
+         // Process message through A2A protocol
+         const structuredMessage = this.formatA2AMessage(message, initiator, target);
+         const structuredMessage = this.formatA2AMessage(message, initiator, target);
+         
+         
+         // Send to target agent
+         // Send to target agent
+         const response = await target.processIncomingMessage(structuredMessage);
+         const response = await target.processIncomingMessage(structuredMessage);
+         
+         
+         // Log response
+         // Log response
+         this.logger.info('Agent communication completed', {
+         this.logger.info('Agent communication completed', {
+           from: targetId,
+           from: targetId,
+           to: initiatorId,
+           to: initiatorId,
+           responseType: response.type
+           responseType: response.type
+         });
+         });
+         
+         
+         return response;
+         return response;
+       } catch (error) {
+       } catch (error) {
+         this.logger.error('Error in agent communication', { 
+         this.logger.error('Error in agent communication', { 
+           error, 
+           error, 
+           initiator: initiatorId,
+           initiator: initiatorId,
+           target: targetId
+           target: targetId
+         });
+         });
+         
+         
+         throw new AgentCommunicationError(
+         throw new AgentCommunicationError(
+           `Failed to facilitate agent interaction: ${error.message}`
+           `Failed to facilitate agent interaction: ${error.message}`
+         );
+         );
+       }
+       }
+     }
+     }
+     
+     
+     // Implementation details...
+     // Implementation details...
+   }
+   }
+   ```
+   ```
+
+
+## Provider-Specific Configurations
+## Provider-Specific Configurations
+
+
+1. **Anthropic Claude Configuration**
+1. **Anthropic Claude Configuration**
+   - Use Claude 3 Opus for complex financial analysis
+   - Use Claude 3 Opus for complex financial analysis
+   - Use Claude 3 Sonnet for general-purpose tasks
+   - Use Claude 3 Sonnet for general-purpose tasks
+   - Set temperature between 0.1-0.3 for factual responses
+   - Set temperature between 0.1-0.3 for factual responses
+   - Implement proper system prompts with MCP for each agent type
+   - Implement proper system prompts with MCP for each agent type
+
+
+2. **OpenAI Configuration**
+2. **OpenAI Configuration**
+   - Use GPT-4o for multi-modal inputs
+   - Use GPT-4o for multi-modal inputs
+   - Use GPT-4 Turbo for high-reliability tasks
+   - Use GPT-4 Turbo for high-reliability tasks
+   - Implement function calling for structured outputs
+   - Implement function calling for structured outputs
+   - Set temperature between 0.1-0.7 depending on task
+   - Set temperature between 0.1-0.7 depending on task
+
+
+3. **Google Gemini Configuration**
+3. **Google Gemini Configuration**
+   - Use Gemini 1.5 Pro for document analysis
+   - Use Gemini 1.5 Pro for document analysis
+   - Use Gemini 1.5 Flash for lower-latency needs
+   - Use Gemini 1.5 Flash for lower-latency needs
+   - Implement multi-modal prompting for chart analysis
+   - Implement multi-modal prompting for chart analysis
+
+
+## Best Practices
+## Best Practices
+
+
+1. **Prompt Engineering**
+1. **Prompt Engineering**
+   - Use clear, specific instructions
+   - Use clear, specific instructions
+   - Implement few-shot learning for complex tasks
+   - Implement few-shot learning for complex tasks
+   - Maintain prompt versioning
+   - Maintain prompt versioning
+   - Test prompts with multiple models
+   - Test prompts with multiple models
+
+
+2. **RAG Optimization**
+2. **RAG Optimization**
+   - Implement proper chunking strategies
+   - Implement proper chunking strategies
+   - Use hybrid search (keyword + semantic)
+   - Use hybrid search (keyword + semantic)
+   - Add metadata filtering
+   - Add metadata filtering
+   - Implement re-ranking for improved relevance
+   - Implement re-ranking for improved relevance
+
+
+3. **Cost and Latency Management**
+3. **Cost and Latency Management**
+   - Use smaller models for simpler tasks
+   - Use smaller models for simpler tasks
+   - Implement proper caching of responses
+   - Implement proper caching of responses
+   - Consider batch processing for non-real-time analysis
+   - Consider batch processing for non-real-time analysis
+   - Add monitoring for token usage and costs
+   - Add monitoring for token usage and costs
+
+
+Remember that AI technologies evolve rapidly. Review and update this tech stack regularly to incorporate new capabilities and best practices.
+Remember that AI technologies evolve rapidly. Review and update this tech stack regularly to incorporate new capabilities and best practices.
+
+
+@prompt-engineering-best-practices.md
+@prompt-engineering-best-practices.md

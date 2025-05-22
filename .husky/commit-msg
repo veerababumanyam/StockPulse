@@ -1,0 +1,19 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Check if commitlint is installed
+if command -v npx &> /dev/null; then
+  npx --no -- commitlint --edit "$1"
+else
+  # Simple regex check for conventional commits if commitlint is not available
+  commit_msg=$(cat "$1")
+  pattern="^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9-]+\))?: .+$"
+  
+  if ! [[ $commit_msg =~ $pattern ]]; then
+    echo "Error: Commit message does not follow conventional commit format"
+    echo "Format: type(scope): message"
+    echo "Example: feat(auth): add social login"
+    echo "Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+    exit 1
+  fi
+fi 

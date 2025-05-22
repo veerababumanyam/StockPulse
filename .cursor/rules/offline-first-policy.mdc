@@ -1,0 +1,159 @@
+---
+description: Guidelines for reducing internet dependencies and implementing offline-first functionality
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.css", "**/*.scss"]
+alwaysApply: true
+---
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: true
+
+# StockPulse Offline-First Policy
+
+## Core Requirements
+
+1. **No External CDN Dependencies**
+   - All assets (fonts, images, icons, etc.) must be bundled with the application
+   - Avoid using CDN links for any critical resources
+   - Self-host all third-party libraries and frameworks
+   - Use local fallbacks for any external dependencies
+
+2. **Local Font Implementation**
+   - Package all required fonts within the application
+   - Use @font-face declarations with local files
+   - Implement proper font-display strategies for rendering
+   - Include appropriate font formats (woff2, woff, ttf) for cross-browser support
+
+3. **Local Icon System**
+   - Use inline SVG icons rather than icon fonts or external icon libraries
+   - Create a standardized icon component system
+   - Optimize SVGs for size and performance
+   - Maintain a consistent visual style across all icons
+
+4. **Offline Data Access**
+   - Implement client-side storage for critical data
+   - Support offline data creation and modification
+   - Provide synchronization capabilities when online
+   - Implement proper error handling for offline scenarios
+
+5. **Service Worker Implementation**
+   - Cache application shell and critical assets
+   - Implement appropriate caching strategies for API data
+   - Support offline navigation between routes
+   - Provide clear UI indicators for offline status
+
+## Prohibited Practices
+
+1. **External Resource Loading**
+   - Do not use Google Fonts CDN or similar font services
+   - Avoid loading icons from CDNs (FontAwesome, Ionicons, etc.)
+   - Do not use unpkg, jsDelivr, or similar CDNs for libraries
+   - Avoid direct hotlinking to external images or assets
+
+2. **Direct API Dependencies**
+   - Do not design features that fail completely without internet
+   - Avoid synchronous API calls that block rendering
+   - Do not implement features without offline fallbacks
+   - Avoid using third-party services without local alternatives
+
+## Implementation Guidelines
+
+1. **Font Implementation**
+   ```css
+   /* ✅ CORRECT - Local font implementation */
+   @font-face {
+     font-family: 'Inter';
+     font-style: normal;
+     font-weight: 400;
+     font-display: swap;
+     src: url('../assets/fonts/inter/inter-400.ttf') format('truetype');
+   }
+
+   /* ❌ INCORRECT - External font dependency */
+   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+   ```
+
+2. **Icon Implementation**
+   ```tsx
+   /* ✅ CORRECT - Local SVG icon implementation */
+   export const ArrowUpIcon = ({
+     size = 24,
+     color = 'currentColor',
+     strokeWidth = 2,
+     ...props
+   }: IconProps) => (
+     <svg
+       width={size}
+       height={size}
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke={color}
+       strokeWidth={strokeWidth}
+       strokeLinecap="round"
+       strokeLinejoin="round"
+       {...props}
+     >
+       <path d="m12 19 0 -14" />
+       <path d="m5 12 7 -7 7 7" />
+     </svg>
+   );
+
+   /* ❌ INCORRECT - External icon dependency */
+   import { ArrowUp } from 'lucide-react';
+   ```
+
+3. **Asset Loading**
+   ```tsx
+   /* ✅ CORRECT - Local image imports */
+   import logo from '../assets/images/logo.svg';
+
+   /* ❌ INCORRECT - External image URLs */
+   const logo = 'https://example.com/images/logo.svg';
+   ```
+
+4. **Offline Detection**
+   ```tsx
+   /* ✅ CORRECT - Handling offline state */
+   const Component = () => {
+     const isOnline = useOnlineStatus();
+
+     return (
+       <div>
+         {isOnline ? (
+           <LiveData />
+         ) : (
+           <CachedData />
+         )}
+         {!isOnline && <OfflineIndicator />}
+       </div>
+     );
+   };
+
+   /* ❌ INCORRECT - No offline handling */
+   const Component = () => {
+     return <LiveData />;
+   };
+   ```
+
+5. **Library Usage**
+   ```tsx
+   /* ✅ CORRECT - Locally bundled dependencies */
+   import { format } from 'date-fns';
+
+   /* ❌ INCORRECT - CDN script tags */
+   // <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+   ```
+
+## Testing Requirements
+
+1. **Offline Testing**
+   - All features must be tested in offline mode
+   - Implement automated tests for offline functionality
+   - Verify proper error handling for network failures
+   - Test synchronization behavior after reconnection
+
+2. **Performance Testing**
+   - Measure and optimize initial load performance
+   - Verify proper asset caching for subsequent visits
+   - Test on various network conditions (slow, intermittent)
+   - Optimize for minimal main thread work
+
+By following these guidelines, StockPulse will maintain high availability and functionality regardless of network conditions, providing a more reliable and responsive user experience.

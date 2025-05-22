@@ -1,0 +1,455 @@
+---
+description: Backend Guidelines guidelines for StockPulse
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: true
+---
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: true
+
+
+# StockPulse Backend Guidelines
+# StockPulse Backend Guidelines
+
+
+## Architecture
+## Architecture
+
+
+1. **Service-Based Organization**
+1. **Service-Based Organization**
+   - Organize code by domain services
+   - Organize code by domain services
+   - Keep services focused and cohesive
+   - Keep services focused and cohesive
+   - Implement clean separation of concerns
+   - Implement clean separation of concerns
+   - Follow a layered architecture (controllers, services, data access)
+   - Follow a layered architecture (controllers, services, data access)
+
+
+2. **API Design**
+2. **API Design**
+   - Design RESTful APIs with consistent patterns
+   - Design RESTful APIs with consistent patterns
+   - Implement GraphQL for complex data queries
+   - Implement GraphQL for complex data queries
+   - Document APIs with OpenAPI/Swagger
+   - Document APIs with OpenAPI/Swagger
+   - Include comprehensive validation
+   - Include comprehensive validation
+
+
+## Event-Driven Architecture
+## Event-Driven Architecture
+
+
+1. **Event System**
+1. **Event System**
+   - Implement a consistent event schema
+   - Implement a consistent event schema
+   - Develop publishers and subscribers
+   - Develop publishers and subscribers
+   - Use Kafka/RabbitMQ for message brokering
+   - Use Kafka/RabbitMQ for message brokering
+   - Support event persistence and replay
+   - Support event persistence and replay
+
+
+2. **Event Types**
+2. **Event Types**
+   - Market Events (price updates, volume changes)
+   - Market Events (price updates, volume changes)
+   - Analysis Events (new insights, pattern detections)
+   - Analysis Events (new insights, pattern detections)
+   - Signal Events (trading signals, alerts)
+   - Signal Events (trading signals, alerts)
+   - System Events (service status, configuration updates)
+   - System Events (service status, configuration updates)
+   - User Events (preferences, subscriptions)
+   - User Events (preferences, subscriptions)
+
+
+## Agent Implementation
+## Agent Implementation
+
+
+1. **BaseAgent Framework**
+1. **BaseAgent Framework**
+   - Implement standardized interfaces for all agents
+   - Implement standardized interfaces for all agents
+   - Include configuration management
+   - Include configuration management
+   - Support robust error handling
+   - Support robust error handling
+   - Implement lifecycle management (init, execute, cleanup)
+   - Implement lifecycle management (init, execute, cleanup)
+   - Add monitoring and logging capabilities
+   - Add monitoring and logging capabilities
+
+
+2. **Agent Categories**
+2. **Agent Categories**
+   - Technical Analysis Agents (price patterns, indicators)
+   - Technical Analysis Agents (price patterns, indicators)
+   - Fundamental Analysis Agents (financial metrics, valuations)
+   - Fundamental Analysis Agents (financial metrics, valuations)
+   - Sentiment Analysis Agents (news, social media)
+   - Sentiment Analysis Agents (news, social media)
+   - Alternative Data Agents (non-traditional data)
+   - Alternative Data Agents (non-traditional data)
+   - Meta Agents (signal aggregation, portfolio optimization)
+   - Meta Agents (signal aggregation, portfolio optimization)
+
+
+3. **Agent Architecture Patterns**
+3. **Agent Architecture Patterns**
+   - ReAct Pattern (reasoning and acting)
+   - ReAct Pattern (reasoning and acting)
+   - Tool-Using Agents (function calling)
+   - Tool-Using Agents (function calling)
+   - Retrieval-Augmented Agents (with RAG)
+   - Retrieval-Augmented Agents (with RAG)
+   - Multi-Agent Collaboration (orchestration)
+   - Multi-Agent Collaboration (orchestration)
+
+
+## Data Management
+## Data Management
+
+
+1. **Data Integration**
+1. **Data Integration**
+   - Implement standardized data connectors
+   - Implement standardized data connectors
+   - Include data normalization processes
+   - Include data normalization processes
+   - Add validation and enrichment pipelines
+   - Add validation and enrichment pipelines
+   - Support efficient storage strategies
+   - Support efficient storage strategies
+
+
+2. **Database Usage**
+2. **Database Usage**
+   - Use TimescaleDB for time-series data
+   - Use TimescaleDB for time-series data
+   - Use PostgreSQL for relational data
+   - Use PostgreSQL for relational data
+   - Implement Redis for caching
+   - Implement Redis for caching
+   - Design efficient query patterns
+   - Design efficient query patterns
+   - Use proper indexes and optimization
+   - Use proper indexes and optimization
+
+
+3. **Real-Time Processing**
+3. **Real-Time Processing**
+   - Implement stream processing
+   - Implement stream processing
+   - Support windowing and aggregation
+   - Support windowing and aggregation
+   - Add complex event processing (CEP)
+   - Add complex event processing (CEP)
+   - Optimize for low latency
+   - Optimize for low latency
+
+
+## Security
+## Security
+
+
+1. **Authentication and Authorization**
+1. **Authentication and Authorization**
+   - Implement OAuth 2.0/OpenID Connect
+   - Implement OAuth 2.0/OpenID Connect
+   - Use JWT tokens with proper expiration
+   - Use JWT tokens with proper expiration
+   - Add multi-factor authentication support
+   - Add multi-factor authentication support
+   - Implement role-based access control
+   - Implement role-based access control
+   - Add scope-based authorization
+   - Add scope-based authorization
+
+
+2. **Data Protection**
+2. **Data Protection**
+   - Encrypt sensitive data at rest
+   - Encrypt sensitive data at rest
+   - Use TLS 1.3 for data in transit
+   - Use TLS 1.3 for data in transit
+   - Implement field-level encryption
+   - Implement field-level encryption
+   - Add proper data masking
+   - Add proper data masking
+   - Support PII protection
+   - Support PII protection
+
+
+3. **API Security**
+3. **API Security**
+   - Add rate limiting
+   - Add rate limiting
+   - Implement input validation
+   - Implement input validation
+   - Use output encoding
+   - Use output encoding
+   - Add request/response inspection
+   - Add request/response inspection
+   - Implement API abuse detection
+   - Implement API abuse detection
+
+
+## Error Handling
+## Error Handling
+
+
+1. **Error Patterns**
+1. **Error Patterns**
+   - Design consistent error responses
+   - Design consistent error responses
+   - Implement proper HTTP status codes
+   - Implement proper HTTP status codes
+   - Add detailed error messages (only in development)
+   - Add detailed error messages (only in development)
+   - Use error categorization
+   - Use error categorization
+   - Add request IDs for tracking
+   - Add request IDs for tracking
+
+
+2. **Resilience**
+2. **Resilience**
+   - Implement circuit breakers
+   - Implement circuit breakers
+   - Add retries with backoff
+   - Add retries with backoff
+   - Support fallbacks
+   - Support fallbacks
+   - Implement timeouts
+   - Implement timeouts
+   - Add health checks
+   - Add health checks
+
+
+## Performance
+## Performance
+
+
+1. **Optimization**
+1. **Optimization**
+   - Profile code for bottlenecks
+   - Profile code for bottlenecks
+   - Optimize database queries
+   - Optimize database queries
+   - Implement effective caching
+   - Implement effective caching
+   - Add pagination for large result sets
+   - Add pagination for large result sets
+   - Optimize CPU and memory usage
+   - Optimize CPU and memory usage
+
+
+2. **Scalability**
+2. **Scalability**
+   - Design for horizontal scaling
+   - Design for horizontal scaling
+   - Implement stateless services
+   - Implement stateless services
+   - Support database sharding
+   - Support database sharding
+   - Add load balancing
+   - Add load balancing
+   - Implement service discovery
+   - Implement service discovery
+
+
+## Testing
+## Testing
+
+
+1. **Test Types**
+1. **Test Types**
+   - Unit tests for business logic
+   - Unit tests for business logic
+   - Integration tests for data access
+   - Integration tests for data access
+   - API tests for endpoints
+   - API tests for endpoints
+   - Performance tests for critical paths
+   - Performance tests for critical paths
+   - End-to-end tests for key workflows
+   - End-to-end tests for key workflows
+
+
+2. **Test Practices**
+2. **Test Practices**
+   - Use TDD approach
+   - Use TDD approach
+   - Add proper test fixtures
+   - Add proper test fixtures
+   - Implement mocks for external dependencies
+   - Implement mocks for external dependencies
+   - Add continuous testing in CI/CD
+   - Add continuous testing in CI/CD
+   - Support code coverage reporting
+   - Support code coverage reporting
+
+
+## Example Code Structure
+## Example Code Structure
+
+
+```typescript
+```typescript
+// Example service implementation
+// Example service implementation
+
+
+// Define clear interfaces
+// Define clear interfaces
+interface StockDataService {
+interface StockDataService {
+  getHistoricalPrices(symbol: string, timeframe: TimeFrame): Promise<PriceData[]>;
+  getHistoricalPrices(symbol: string, timeframe: TimeFrame): Promise<PriceData[]>;
+  getLatestPrice(symbol: string): Promise<PriceData>;
+  getLatestPrice(symbol: string): Promise<PriceData>;
+  getMultipleSymbols(symbols: string[]): Promise<Record<string, PriceData>>;
+  getMultipleSymbols(symbols: string[]): Promise<Record<string, PriceData>>;
+}
+}
+
+
+// Implementation with proper error handling and validation
+// Implementation with proper error handling and validation
+export class MarketDataService implements StockDataService {
+export class MarketDataService implements StockDataService {
+  private readonly logger: Logger;
+  private readonly logger: Logger;
+  private readonly dataProvider: DataProvider;
+  private readonly dataProvider: DataProvider;
+  private readonly cache: CacheService;
+  private readonly cache: CacheService;
+  
+  
+  constructor(
+  constructor(
+    logger: Logger,
+    logger: Logger,
+    dataProvider: DataProvider,
+    dataProvider: DataProvider,
+    cache: CacheService
+    cache: CacheService
+  ) {
+  ) {
+    this.logger = logger;
+    this.logger = logger;
+    this.dataProvider = dataProvider;
+    this.dataProvider = dataProvider;
+    this.cache = cache;
+    this.cache = cache;
+  }
+  }
+  
+  
+  async getHistoricalPrices(
+  async getHistoricalPrices(
+    symbol: string, 
+    symbol: string, 
+    timeframe: TimeFrame
+    timeframe: TimeFrame
+  ): Promise<PriceData[]> {
+  ): Promise<PriceData[]> {
+    try {
+    try {
+      // Validate inputs
+      // Validate inputs
+      if (!isValidSymbol(symbol)) {
+      if (!isValidSymbol(symbol)) {
+        throw new ValidationError(`Invalid symbol: ${symbol}`);
+        throw new ValidationError(`Invalid symbol: ${symbol}`);
+      }
+      }
+      
+      
+      // Check cache first
+      // Check cache first
+      const cacheKey = `historical:${symbol}:${timeframe}`;
+      const cacheKey = `historical:${symbol}:${timeframe}`;
+      const cachedData = await this.cache.get<PriceData[]>(cacheKey);
+      const cachedData = await this.cache.get<PriceData[]>(cacheKey);
+      if (cachedData) {
+      if (cachedData) {
+        this.logger.debug(`Cache hit for ${cacheKey}`);
+        this.logger.debug(`Cache hit for ${cacheKey}`);
+        return cachedData;
+        return cachedData;
+      }
+      }
+      
+      
+      // Fetch from provider
+      // Fetch from provider
+      this.logger.info(`Fetching historical data for ${symbol}, timeframe ${timeframe}`);
+      this.logger.info(`Fetching historical data for ${symbol}, timeframe ${timeframe}`);
+      const data = await this.dataProvider.fetchHistorical(symbol, timeframe);
+      const data = await this.dataProvider.fetchHistorical(symbol, timeframe);
+      
+      
+      // Process and validate response
+      // Process and validate response
+      const processedData = this.processHistoricalData(data);
+      const processedData = this.processHistoricalData(data);
+      
+      
+      // Cache results
+      // Cache results
+      await this.cache.set(cacheKey, processedData, this.getCacheTTL(timeframe));
+      await this.cache.set(cacheKey, processedData, this.getCacheTTL(timeframe));
+      
+      
+      return processedData;
+      return processedData;
+    } catch (error) {
+    } catch (error) {
+      this.logger.error(`Error fetching historical prices for ${symbol}: ${error.message}`);
+      this.logger.error(`Error fetching historical prices for ${symbol}: ${error.message}`);
+      
+      
+      // Rethrow as appropriate error type
+      // Rethrow as appropriate error type
+      if (error instanceof ValidationError) {
+      if (error instanceof ValidationError) {
+        throw error;
+        throw error;
+      }
+      }
+      
+      
+      if (error.isProviderError) {
+      if (error.isProviderError) {
+        throw new ExternalServiceError(`Data provider error: ${error.message}`);
+        throw new ExternalServiceError(`Data provider error: ${error.message}`);
+      }
+      }
+      
+      
+      throw new ServiceError(`Failed to fetch historical prices: ${error.message}`);
+      throw new ServiceError(`Failed to fetch historical prices: ${error.message}`);
+    }
+    }
+  }
+  }
+  
+  
+  // Additional implementation methods...
+  // Additional implementation methods...
+}
+}
+```
+```
+
+
+@error-handling-patterns.md
+@error-handling-patterns.md

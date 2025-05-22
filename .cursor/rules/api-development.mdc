@@ -1,0 +1,687 @@
+---
+description: 
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: false
+---
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: true
+
+
+# StockPulse API Development Guidelines
+# StockPulse API Development Guidelines
+
+
+## API Architecture
+## API Architecture
+
+
+The StockPulse API follows a consistent architecture across all endpoints:
+The StockPulse API follows a consistent architecture across all endpoints:
+
+
+1. **API Layers**
+1. **API Layers**
+   - **Controller Layer**: Handles HTTP requests and responses
+   - **Controller Layer**: Handles HTTP requests and responses
+   - **Service Layer**: Implements business logic
+   - **Service Layer**: Implements business logic
+   - **Data Access Layer**: Interacts with data sources
+   - **Data Access Layer**: Interacts with data sources
+   - **Validation Layer**: Validates request data
+   - **Validation Layer**: Validates request data
+
+
+2. **API Technologies**
+2. **API Technologies**
+   - **RESTful APIs**: Resource-oriented endpoints for CRUD operations
+   - **RESTful APIs**: Resource-oriented endpoints for CRUD operations
+   - **GraphQL API**: Flexible data querying for complex requests
+   - **GraphQL API**: Flexible data querying for complex requests
+   - **WebSockets**: Real-time data streaming
+   - **WebSockets**: Real-time data streaming
+
+
+## RESTful API Design
+## RESTful API Design
+
+
+1. **Resource Naming**
+1. **Resource Naming**
+   - Use nouns to represent resources (e.g., `/stocks`, `/indicators`)
+   - Use nouns to represent resources (e.g., `/stocks`, `/indicators`)
+   - Use plural forms for collection resources
+   - Use plural forms for collection resources
+   - Use hierarchical relationships for nested resources (e.g., `/stocks/{symbol}/indicators`)
+   - Use hierarchical relationships for nested resources (e.g., `/stocks/{symbol}/indicators`)
+   - Keep URLs lowercase with hyphens for multi-word resources
+   - Keep URLs lowercase with hyphens for multi-word resources
+
+
+2. **HTTP Methods**
+2. **HTTP Methods**
+   - **GET**: Retrieve resources
+   - **GET**: Retrieve resources
+   - **POST**: Create new resources
+   - **POST**: Create new resources
+   - **PUT**: Update resources (full update)
+   - **PUT**: Update resources (full update)
+   - **PATCH**: Update resources (partial update)
+   - **PATCH**: Update resources (partial update)
+   - **DELETE**: Remove resources
+   - **DELETE**: Remove resources
+
+
+3. **Query Parameters**
+3. **Query Parameters**
+   - Use for filtering, sorting, pagination, and field selection
+   - Use for filtering, sorting, pagination, and field selection
+   - Follow consistent naming patterns
+   - Follow consistent naming patterns
+   - Document acceptable values and defaults
+   - Document acceptable values and defaults
+   - Implement validation for all parameters
+   - Implement validation for all parameters
+
+
+4. **Status Codes**
+4. **Status Codes**
+   - Use appropriate HTTP status codes
+   - Use appropriate HTTP status codes
+   - Provide detailed error messages
+   - Provide detailed error messages
+   - Follow consistent error response format
+   - Follow consistent error response format
+   - Include request IDs for error tracking
+   - Include request IDs for error tracking
+
+
+## GraphQL API Design
+## GraphQL API Design
+
+
+1. **Schema Design**
+1. **Schema Design**
+   - Define clear types and relationships
+   - Define clear types and relationships
+   - Use descriptive field names
+   - Use descriptive field names
+   - Implement proper nested object structures
+   - Implement proper nested object structures
+   - Support pagination for collections
+   - Support pagination for collections
+   - Add comprehensive documentation
+   - Add comprehensive documentation
+
+
+2. **Query Design**
+2. **Query Design**
+   - Support field selection
+   - Support field selection
+   - Implement nested queries
+   - Implement nested queries
+   - Add filtering capabilities
+   - Add filtering capabilities
+   - Support sorting and pagination
+   - Support sorting and pagination
+   - Optimize for common query patterns
+   - Optimize for common query patterns
+
+
+3. **Mutation Design**
+3. **Mutation Design**
+   - Use descriptive action names
+   - Use descriptive action names
+   - Return affected entities
+   - Return affected entities
+   - Implement proper error handling
+   - Implement proper error handling
+   - Support optimistic updates
+   - Support optimistic updates
+   - Add comprehensive input validation
+   - Add comprehensive input validation
+
+
+## WebSocket API Design
+## WebSocket API Design
+
+
+1. **Event Types**
+1. **Event Types**
+   - Define clear event categories
+   - Define clear event categories
+   - Use consistent event naming
+   - Use consistent event naming
+   - Document payload structures
+   - Document payload structures
+   - Support versioning for events
+   - Support versioning for events
+
+
+2. **Connection Management**
+2. **Connection Management**
+   - Implement authentication
+   - Implement authentication
+   - Support subscription management
+   - Support subscription management
+   - Add connection lifecycle hooks
+   - Add connection lifecycle hooks
+   - Include heartbeat mechanism
+   - Include heartbeat mechanism
+   - Implement reconnection handling
+   - Implement reconnection handling
+
+
+## API Validation
+## API Validation
+
+
+1. **Input Validation**
+1. **Input Validation**
+   - Use Zod for schema validation
+   - Use Zod for schema validation
+   - Validate query parameters, body content, and headers
+   - Validate query parameters, body content, and headers
+   - Implement type checking and constraints
+   - Implement type checking and constraints
+   - Provide clear error messages
+   - Provide clear error messages
+   - Add sanitization for security
+   - Add sanitization for security
+
+
+2. **Implementation**
+2. **Implementation**
+   - Create reusable validation schemas
+   - Create reusable validation schemas
+   - Implement validation middleware
+   - Implement validation middleware
+   - Add validation to all endpoints
+   - Add validation to all endpoints
+   - Support partial schema validation for PATCH requests
+   - Support partial schema validation for PATCH requests
+   - Include custom validators for complex rules
+   - Include custom validators for complex rules
+
+
+## API Security
+## API Security
+
+
+1. **Authentication**
+1. **Authentication**
+   - Implement OAuth 2.0 / JWT
+   - Implement OAuth 2.0 / JWT
+   - Support API keys
+   - Support API keys
+   - Add multi-factor authentication (when needed)
+   - Add multi-factor authentication (when needed)
+   - Implement secure token management
+   - Implement secure token management
+   - Add proper session handling
+   - Add proper session handling
+
+
+2. **Authorization**
+2. **Authorization**
+   - Implement role-based access control
+   - Implement role-based access control
+   - Add resource-level permissions
+   - Add resource-level permissions
+   - Support scope-based authorization
+   - Support scope-based authorization
+   - Implement proper record ownership
+   - Implement proper record ownership
+   - Add audit logging for sensitive operations
+   - Add audit logging for sensitive operations
+
+
+3. **API Protection**
+3. **API Protection**
+   - Implement rate limiting
+   - Implement rate limiting
+   - Add request throttling
+   - Add request throttling
+   - Use proper CORS configuration
+   - Use proper CORS configuration
+   - Implement CSRF protection
+   - Implement CSRF protection
+   - Add request/response inspection
+   - Add request/response inspection
+
+
+## API Documentation
+## API Documentation
+
+
+1. **Documentation Approach**
+1. **Documentation Approach**
+   - Use OpenAPI/Swagger for RESTful APIs
+   - Use OpenAPI/Swagger for RESTful APIs
+   - Use GraphQL introspection for GraphQL
+   - Use GraphQL introspection for GraphQL
+   - Add comprehensive endpoint descriptions
+   - Add comprehensive endpoint descriptions
+   - Include example requests and responses
+   - Include example requests and responses
+   - Document error scenarios
+   - Document error scenarios
+
+
+2. **Implementation**
+2. **Implementation**
+   - Generate documentation from code
+   - Generate documentation from code
+   - Keep documentation in sync with implementation
+   - Keep documentation in sync with implementation
+   - Add usage examples and code snippets
+   - Add usage examples and code snippets
+   - Include authentication requirements
+   - Include authentication requirements
+   - Document rate limits and quotas
+   - Document rate limits and quotas
+
+
+## API Versioning
+## API Versioning
+
+
+1. **Versioning Strategy**
+1. **Versioning Strategy**
+   - Use URL path versioning (e.g., `/v1/stocks`)
+   - Use URL path versioning (e.g., `/v1/stocks`)
+   - Support backward compatibility
+   - Support backward compatibility
+   - Document breaking changes
+   - Document breaking changes
+   - Implement deprecation notices
+   - Implement deprecation notices
+   - Maintain multiple active versions
+   - Maintain multiple active versions
+
+
+2. **Implementation**
+2. **Implementation**
+   - Create version-specific routes
+   - Create version-specific routes
+   - Support version routing middleware
+   - Support version routing middleware
+   - Document version differences
+   - Document version differences
+   - Include sunset dates for deprecated versions
+   - Include sunset dates for deprecated versions
+   - Add migration guides
+   - Add migration guides
+
+
+## Example Controller Implementation
+## Example Controller Implementation
+
+
+```typescript
+```typescript
+/**
+/**
+ * Controller for stock-related endpoints
+ * Controller for stock-related endpoints
+ */
+ */
+@Controller('stocks')
+@Controller('stocks')
+export class StocksController {
+export class StocksController {
+  constructor(
+  constructor(
+    private readonly stocksService: StocksService,
+    private readonly stocksService: StocksService,
+    private readonly logger: Logger
+    private readonly logger: Logger
+  ) {}
+  ) {}
+  
+  
+  /**
+  /**
+   * Get a list of stocks with optional filtering
+   * Get a list of stocks with optional filtering
+   * @route GET /stocks
+   * @route GET /stocks
+   */
+   */
+  @Get()
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get a list of stocks' })
+  @ApiOperation({ summary: 'Get a list of stocks' })
+  @ApiQuery({ name: 'sector', required: false, description: 'Filter stocks by sector' })
+  @ApiQuery({ name: 'sector', required: false, description: 'Filter stocks by sector' })
+  @ApiQuery({ name: 'industry', required: false, description: 'Filter stocks by industry' })
+  @ApiQuery({ name: 'industry', required: false, description: 'Filter stocks by industry' })
+  @ApiQuery({ name: 'page', required: false, description: 'Page number (starts from 1)', default: 1 })
+  @ApiQuery({ name: 'page', required: false, description: 'Page number (starts from 1)', default: 1 })
+  @ApiQuery({ name: 'limit', required: false, description: 'Number of items per page', default: 20 })
+  @ApiQuery({ name: 'limit', required: false, description: 'Number of items per page', default: 20 })
+  async getStocks(
+  async getStocks(
+    @Query() query: GetStocksQueryDto,
+    @Query() query: GetStocksQueryDto,
+    @Req() request: RequestWithUser
+    @Req() request: RequestWithUser
+  ): Promise<PaginatedResponse<StockDto>> {
+  ): Promise<PaginatedResponse<StockDto>> {
+    try {
+    try {
+      this.logger.debug('Getting stocks with query', { query, userId: request.user.id });
+      this.logger.debug('Getting stocks with query', { query, userId: request.user.id });
+      
+      
+      // Validate and process query parameters
+      // Validate and process query parameters
+      const validatedQuery = await this.validateStocksQuery(query);
+      const validatedQuery = await this.validateStocksQuery(query);
+      
+      
+      // Get stocks from service
+      // Get stocks from service
+      const result = await this.stocksService.getStocks(validatedQuery, request.user);
+      const result = await this.stocksService.getStocks(validatedQuery, request.user);
+      
+      
+      this.logger.debug('Successfully retrieved stocks', { 
+      this.logger.debug('Successfully retrieved stocks', { 
+        count: result.items.length,
+        count: result.items.length,
+        total: result.meta.totalItems
+        total: result.meta.totalItems
+      });
+      });
+      
+      
+      return result;
+      return result;
+    } catch (error) {
+    } catch (error) {
+      this.handleError(error, 'Failed to retrieve stocks', { query });
+      this.handleError(error, 'Failed to retrieve stocks', { query });
+    }
+    }
+  }
+  }
+  
+  
+  /**
+  /**
+   * Get a single stock by symbol
+   * Get a single stock by symbol
+   * @route GET /stocks/:symbol
+   * @route GET /stocks/:symbol
+   */
+   */
+  @Get(':symbol')
+  @Get(':symbol')
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get a stock by symbol' })
+  @ApiOperation({ summary: 'Get a stock by symbol' })
+  @ApiParam({ name: 'symbol', description: 'Stock symbol (e.g., AAPL)' })
+  @ApiParam({ name: 'symbol', description: 'Stock symbol (e.g., AAPL)' })
+  async getStock(
+  async getStock(
+    @Param('symbol') symbol: string,
+    @Param('symbol') symbol: string,
+    @Req() request: RequestWithUser
+    @Req() request: RequestWithUser
+  ): Promise<StockDto> {
+  ): Promise<StockDto> {
+    try {
+    try {
+      this.logger.debug('Getting stock by symbol', { symbol, userId: request.user.id });
+      this.logger.debug('Getting stock by symbol', { symbol, userId: request.user.id });
+      
+      
+      // Validate symbol
+      // Validate symbol
+      if (!isValidSymbol(symbol)) {
+      if (!isValidSymbol(symbol)) {
+        throw new BadRequestException(`Invalid stock symbol: ${symbol}`);
+        throw new BadRequestException(`Invalid stock symbol: ${symbol}`);
+      }
+      }
+      
+      
+      // Get stock from service
+      // Get stock from service
+      const stock = await this.stocksService.getStockBySymbol(symbol, request.user);
+      const stock = await this.stocksService.getStockBySymbol(symbol, request.user);
+      
+      
+      if (!stock) {
+      if (!stock) {
+        throw new NotFoundException(`Stock not found: ${symbol}`);
+        throw new NotFoundException(`Stock not found: ${symbol}`);
+      }
+      }
+      
+      
+      this.logger.debug('Successfully retrieved stock', { symbol });
+      this.logger.debug('Successfully retrieved stock', { symbol });
+      
+      
+      return stock;
+      return stock;
+    } catch (error) {
+    } catch (error) {
+      this.handleError(error, `Failed to retrieve stock: ${symbol}`, { symbol });
+      this.handleError(error, `Failed to retrieve stock: ${symbol}`, { symbol });
+    }
+    }
+  }
+  }
+  
+  
+  /**
+  /**
+   * Get technical indicators for a stock
+   * Get technical indicators for a stock
+   * @route GET /stocks/:symbol/indicators
+   * @route GET /stocks/:symbol/indicators
+   */
+   */
+  @Get(':symbol/indicators')
+  @Get(':symbol/indicators')
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get technical indicators for a stock' })
+  @ApiOperation({ summary: 'Get technical indicators for a stock' })
+  @ApiParam({ name: 'symbol', description: 'Stock symbol (e.g., AAPL)' })
+  @ApiParam({ name: 'symbol', description: 'Stock symbol (e.g., AAPL)' })
+  @ApiQuery({ name: 'timeframe', required: false, description: 'Timeframe for indicators', enum: TimeFrame })
+  @ApiQuery({ name: 'timeframe', required: false, description: 'Timeframe for indicators', enum: TimeFrame })
+  @ApiQuery({ name: 'indicators', required: false, description: 'Comma-separated list of indicators' })
+  @ApiQuery({ name: 'indicators', required: false, description: 'Comma-separated list of indicators' })
+  async getIndicators(
+  async getIndicators(
+    @Param('symbol') symbol: string,
+    @Param('symbol') symbol: string,
+    @Query() query: GetIndicatorsQueryDto,
+    @Query() query: GetIndicatorsQueryDto,
+    @Req() request: RequestWithUser
+    @Req() request: RequestWithUser
+  ): Promise<IndicatorsResponseDto> {
+  ): Promise<IndicatorsResponseDto> {
+    try {
+    try {
+      this.logger.debug('Getting indicators for stock', { 
+      this.logger.debug('Getting indicators for stock', { 
+        symbol, 
+        symbol, 
+        timeframe: query.timeframe,
+        timeframe: query.timeframe,
+        indicators: query.indicators,
+        indicators: query.indicators,
+        userId: request.user.id 
+        userId: request.user.id 
+      });
+      });
+      
+      
+      // Validate symbol and query
+      // Validate symbol and query
+      if (!isValidSymbol(symbol)) {
+      if (!isValidSymbol(symbol)) {
+        throw new BadRequestException(`Invalid stock symbol: ${symbol}`);
+        throw new BadRequestException(`Invalid stock symbol: ${symbol}`);
+      }
+      }
+      
+      
+      const validatedQuery = await this.validateIndicatorsQuery(query);
+      const validatedQuery = await this.validateIndicatorsQuery(query);
+      
+      
+      // Get indicators from service
+      // Get indicators from service
+      const indicators = await this.stocksService.getStockIndicators(
+      const indicators = await this.stocksService.getStockIndicators(
+        symbol,
+        symbol,
+        validatedQuery,
+        validatedQuery,
+        request.user
+        request.user
+      );
+      );
+      
+      
+      this.logger.debug('Successfully retrieved indicators', { 
+      this.logger.debug('Successfully retrieved indicators', { 
+        symbol, 
+        symbol, 
+        indicatorCount: Object.keys(indicators.data).length 
+        indicatorCount: Object.keys(indicators.data).length 
+      });
+      });
+      
+      
+      return indicators;
+      return indicators;
+    } catch (error) {
+    } catch (error) {
+      this.handleError(error, `Failed to retrieve indicators for: ${symbol}`, { symbol, query });
+      this.handleError(error, `Failed to retrieve indicators for: ${symbol}`, { symbol, query });
+    }
+    }
+  }
+  }
+  
+  
+  /**
+  /**
+   * Handle controller errors in a consistent way
+   * Handle controller errors in a consistent way
+   * @private
+   * @private
+   */
+   */
+  private handleError(error: any, message: string, context: Record<string, any> = {}): never {
+  private handleError(error: any, message: string, context: Record<string, any> = {}): never {
+    // Log the error
+    // Log the error
+    this.logger.error(`${message}: ${error.message}`, {
+    this.logger.error(`${message}: ${error.message}`, {
+      ...context,
+      ...context,
+      stack: error.stack,
+      stack: error.stack,
+    });
+    });
+    
+    
+    // Re-throw specific exceptions
+    // Re-throw specific exceptions
+    if (error instanceof HttpException) {
+    if (error instanceof HttpException) {
+      throw error;
+      throw error;
+    }
+    }
+    
+    
+    // Map to appropriate HTTP exceptions
+    // Map to appropriate HTTP exceptions
+    if (error instanceof EntityNotFoundError) {
+    if (error instanceof EntityNotFoundError) {
+      throw new NotFoundException(error.message);
+      throw new NotFoundException(error.message);
+    }
+    }
+    
+    
+    if (error instanceof ValidationError) {
+    if (error instanceof ValidationError) {
+      throw new BadRequestException(error.message);
+      throw new BadRequestException(error.message);
+    }
+    }
+    
+    
+    if (error instanceof UnauthorizedError) {
+    if (error instanceof UnauthorizedError) {
+      throw new UnauthorizedException(error.message);
+      throw new UnauthorizedException(error.message);
+    }
+    }
+    
+    
+    // Default to internal server error
+    // Default to internal server error
+    throw new InternalServerErrorException(
+    throw new InternalServerErrorException(
+      `${message}: ${process.env.NODE_ENV === 'production' ? 'An unexpected error occurred' : error.message}`
+      `${message}: ${process.env.NODE_ENV === 'production' ? 'An unexpected error occurred' : error.message}`
+    );
+    );
+  }
+  }
+  
+  
+  /**
+  /**
+   * Validate stocks query parameters
+   * Validate stocks query parameters
+   * @private
+   * @private
+   */
+   */
+  private async validateStocksQuery(query: GetStocksQueryDto): Promise<ValidatedStocksQueryDto> {
+  private async validateStocksQuery(query: GetStocksQueryDto): Promise<ValidatedStocksQueryDto> {
+    // Implementation details...
+    // Implementation details...
+  }
+  }
+  
+  
+  /**
+  /**
+   * Validate indicators query parameters
+   * Validate indicators query parameters
+   * @private
+   * @private
+   */
+   */
+  private async validateIndicatorsQuery(query: GetIndicatorsQueryDto): Promise<ValidatedIndicatorsQueryDto> {
+  private async validateIndicatorsQuery(query: GetIndicatorsQueryDto): Promise<ValidatedIndicatorsQueryDto> {
+    // Implementation details...
+    // Implementation details...
+  }
+  }
+}
+}
+```
+```
+
+
+@api-error-handling.md
+@api-error-handling.md
+@openapi-documentation.md
+@openapi-documentation.md

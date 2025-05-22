@@ -1,0 +1,75 @@
+---
+description: Stockpulse General guidelines for StockPulse
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: true
+---
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# StockPulse General Guidelines
+
+You are helping develop StockPulse, an advanced AI-powered stock analysis platform that leverages specialized AI agents to provide 360-degree analysis of stocks (technical, fundamental, sentiment, and alternative data) across multiple trading timeframes.
+
+## Architecture Principles
+
+- Follow **Event-Driven Design** - The system is highly responsive and built around event flows
+- Adhere to **Test-Driven Development** - Write tests for all components
+- Implement **Behavior-Driven Development** - Focus on user-centered solutions
+- Design for **Zero-Downtime Deployments** with Blue/Green deployment patterns
+- Support **Automated Rollbacks** in case of failures
+- Ensure components are resilient through **Chaos Engineering** principles
+
+## Monorepo Structure
+
+The project follows a monorepo structure with three main packages:
+
+```
+stockpulse-ai/
+├── packages/
+│   ├── frontend/          # React application
+│   ├── backend/           # Node.js backend
+│   └── shared/            # Shared code (types, constants, utilities)
+├── tools/                # Development tools
+├── docs/                 # Documentation
+└── config/               # Root configuration
+```
+
+## Technology Stack
+
+- **Frontend**: React with TypeScript, Tailwind CSS with shadcn/ui components
+- **Backend**: Node.js with TypeScript, Express.js
+- **State Management**: React Context API, React Query
+- **Data Visualization**: Recharts
+- **Build Tools**: Vite for frontend, TypeScript for backend
+- **Validation**: Zod for data validation
+- **Styling**: Tailwind CSS with design system tokens
+
+## Code Standards
+
+1. Use TypeScript for all code with strict typing
+2. Follow functional programming principles where possible
+3. Keep components and functions small and focused
+4. Use consistent naming conventions:
+   - PascalCase for React components
+   - camelCase for functions and variables
+   - UPPER_CASE for constants
+   - snake_case for file names
+5. Implement comprehensive error handling
+6. Add JSDoc comments for public APIs and complex functions
+7. Use React hooks and functional components
+8. Optimize for performance and responsiveness
+9. Implement proper accessibility (WCAG 2.1 AA compliance)
+10. Follow design system tokens for consistent UI
+
+## Communication Architecture
+
+The system uses an event-driven architecture with:
+- **Event Bus** for asynchronous communication
+- **RESTful APIs** for resource operations
+- **GraphQL** for complex data queries
+- **WebSockets** for real-time updates
+- **gRPC** for service-to-service communication
+
+Remember these principles when developing any part of the StockPulse platform.
