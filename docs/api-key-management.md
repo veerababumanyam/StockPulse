@@ -1,219 +1,386 @@
-# API Key Management System Design
+# API Key Management System
 
 ## Overview
 
-This document outlines the comprehensive design for the API Key Management System in StockPulse, providing secure storage, management, and usage of API keys for various services including financial data providers and LLM APIs.
+This document outlines the comprehensive design for the API Key Management System in StockPulse. The system provides a secure, user-friendly way to manage API keys for various financial data providers, trading platforms, and AI services integrated with StockPulse.
 
 ## Architecture
 
-### System Components
+### High-Level Architecture
 
-1. **Frontend Management Interface**
-   - User-friendly key management UI
-   - Secure input and display mechanisms
-   - Role-based access controls
-   - Audit logging for key operations
+The API Key Management System consists of the following key components:
 
-2. **Backend Proxy Service**
-   - Secure key storage
-   - Request proxying to protect keys
-   - Rate limiting and quota management
-   - Usage tracking and analytics
+1. **API Key Storage Service**: Securely stores and manages API keys
+2. **API Key Proxy Service**: Handles API requests without exposing keys to the frontend
+3. **API Key Management UI**: User interface for adding, editing, and revoking keys
+4. **API Key Validation Service**: Validates keys before storage and use
+5. **API Key Audit Service**: Tracks usage and provides audit trails
 
-3. **Encryption Layer**
-   - At-rest encryption for stored keys
-   - In-transit encryption for key transmission
-   - Key rotation mechanisms
-   - Secure key generation (when applicable)
+```
+┌─────────────────────────────────────────────────────────┐
+│                 StockPulse Application                  │
+│                                                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │
+│  │ Frontend UI │  │ Backend API │  │ Data Services   │  │
+│  └──────┬──────┘  └──────┬──────┘  └────────┬────────┘  │
+│         │                │                  │           │
+│         ▼                ▼                  ▼           │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │            API Key Management System            │    │
+│  └─────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────┘
+```
 
-4. **Access Control System**
-   - Role-based permissions for key management
-   - Granular access to specific key categories
-   - Approval workflows for sensitive operations
-   - Audit trail for all key-related actions
+### API Key Storage Service
 
-## User Interface Design
+The Storage Service is responsible for securely storing API keys:
 
-### API Key Dashboard
+```
+┌─────────────────────────────────────────────────────────┐
+│                API Key Storage Service                  │
+│                                                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │
+│  │ Encryption  │  │ Key Rotation│  │ Access Control  │  │
+│  │  Engine     │  │  Service    │  │    Manager      │  │
+│  └─────────────┘  └─────────────┘  └─────────────────┘  │
+│                                                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │
+│  │ Secure      │  │ Backup      │  │ Recovery        │  │
+│  │  Database   │  │  Service    │  │   Service       │  │
+│  └─────────────┘  └─────────────┘  └─────────────────┘  │
+└─────────────────────────────────────────────────────────┘
+```
 
-The main API key management dashboard provides:
+#### Key Features:
 
-1. **Key Overview Panel**
-   - List of all configured API services
-   - Status indicators (active, expired, quota limited)
-   - Last used timestamp
-   - Usage metrics and quota information
+- **Encryption**: All keys are encrypted at rest using industry-standard algorithms
+- **Key Rotation**: Automatic and manual key rotation capabilities
+- **Access Control**: Fine-grained access control for key usage
+- **Secure Database**: Dedicated database with enhanced security measures
+- **Backup Service**: Regular backups of encrypted key data
+- **Recovery Service**: Secure key recovery mechanisms
 
-2. **Category Organization**
-   - Keys grouped by service type (Financial Data, LLM Providers, etc.)
-   - Visual indicators for key status
-   - Quick actions for common operations
-   - Search and filter capabilities
+### API Key Proxy Service
 
-3. **Security Indicators**
-   - Key strength assessment
-   - Rotation recommendations
-   - Usage anomaly warnings
-   - Compliance status indicators
+The Proxy Service mediates all API calls that require keys:
 
-### Key Management Interface
+```
+┌─────────────────────────────────────────────────────────┐
+│                 API Key Proxy Service                   │
+│                                                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │
+│  │ Request     │  │ Key         │  │ Response        │  │
+│  │  Interceptor│  │  Injector   │  │   Handler       │  │
+│  └─────────────┘  └─────────────┘  └─────────────────┘  │
+│                                                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │
+│  │ Rate Limit  │  │ Usage       │  │ Error           │  │
+│  │  Enforcer   │  │  Tracker    │  │   Handler       │  │
+│  └─────────────┘  └─────────────┘  └─────────────────┘  │
+└─────────────────────────────────────────────────────────┘
+```
 
-For each API key, users can:
+#### Key Features:
 
-1. **Add New Keys**
-   - Service selection with guided setup
-   - Secure input field with visibility toggle
-   - Automatic validation where possible
-   - Optional alias/description field
+- **Request Interceptor**: Intercepts API requests that require keys
+- **Key Injector**: Securely injects appropriate keys into requests
+- **Response Handler**: Processes and forwards API responses
+- **Rate Limit Enforcer**: Ensures compliance with API rate limits
+- **Usage Tracker**: Monitors and records API key usage
+- **Error Handler**: Manages API errors and key-related issues
 
-2. **Edit Existing Keys**
-   - Update key value securely
-   - Modify description and metadata
-   - Adjust usage limits and permissions
-   - Enable/disable key without deletion
+### API Key Management UI
 
-3. **Key Rotation**
-   - Scheduled rotation reminders
-   - Guided rotation process
-   - Temporary dual-key support during transition
-   - Verification of new key functionality
+The Management UI provides a user-friendly interface for key management:
 
-4. **Deletion and Revocation**
-   - Soft deletion with recovery period
-   - Emergency revocation option
-   - Impact assessment before deletion
-   - Confirmation workflow for critical keys
+```
+┌─────────────────────────────────────────────────────────┐
+│                API Key Management UI                    │
+│                                                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │
+│  │ Key         │  │ Provider    │  │ Usage           │  │
+│  │  Dashboard  │  │  Catalog    │  │   Statistics    │  │
+│  └─────────────┘  └─────────────┘  └─────────────────┘  │
+│                                                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │
+│  │ Key         │  │ Validation  │  │ Security        │  │
+│  │  Editor     │  │  Wizard     │  │   Settings      │  │
+│  └─────────────┘  └─────────────┘  └─────────────────┘  │
+└─────────────────────────────────────────────────────────┘
+```
 
-### Usage Analytics
+#### Key Features:
 
-The analytics view provides:
+- **Key Dashboard**: Overview of all registered API keys
+- **Provider Catalog**: Directory of supported API providers
+- **Usage Statistics**: Visualization of key usage patterns
+- **Key Editor**: Interface for adding, editing, and revoking keys
+- **Validation Wizard**: Step-by-step validation of new keys
+- **Security Settings**: Configuration for key security policies
 
-1. **Usage Metrics**
-   - Requests per day/week/month
-   - Cost tracking (for paid APIs)
-   - Success/failure rates
-   - Quota utilization trends
+### API Key Validation Service
 
-2. **Anomaly Detection**
-   - Unusual usage pattern alerts
-   - Potential security breach indicators
-   - Cost spike warnings
-   - Service disruption detection
+The Validation Service ensures keys are valid before storage and use:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│               API Key Validation Service                │
+│                                                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │
+│  │ Format      │  │ Provider    │  │ Test Request    │  │
+│  │  Checker    │  │  Validator  │  │   Executor      │  │
+│  └─────────────┘  └─────────────┘  └─────────────────┘  │
+│                                                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │
+│  │ Permission  │  │ Rate Limit  │  │ Expiration      │  │
+│  │  Validator  │  │  Detector   │  │   Checker       │  │
+│  └─────────────┘  └─────────────┘  └─────────────────┘  │
+└─────────────────────────────────────────────────────────┘
+```
+
+#### Key Features:
+
+- **Format Checker**: Validates key format against provider requirements
+- **Provider Validator**: Verifies key with the provider's validation endpoint
+- **Test Request Executor**: Performs test API calls to verify functionality
+- **Permission Validator**: Checks key permissions against required scopes
+- **Rate Limit Detector**: Identifies and records key rate limits
+- **Expiration Checker**: Monitors and alerts on key expiration
+
+### API Key Audit Service
+
+The Audit Service tracks all key-related activities:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                 API Key Audit Service                   │
+│                                                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │
+│  │ Usage       │  │ Access      │  │ Change          │  │
+│  │  Logger     │  │  Logger     │  │   Logger        │  │
+│  └─────────────┘  └─────────────┘  └─────────────────┘  │
+│                                                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │
+│  │ Compliance  │  │ Alert       │  │ Report          │  │
+│  │  Monitor    │  │  Generator  │  │   Generator     │  │
+│  └─────────────┘  └─────────────┘  └─────────────────┘  │
+└─────────────────────────────────────────────────────────┘
+```
+
+#### Key Features:
+
+- **Usage Logger**: Records all API calls using each key
+- **Access Logger**: Tracks all access to key information
+- **Change Logger**: Records all modifications to keys
+- **Compliance Monitor**: Ensures compliance with security policies
+- **Alert Generator**: Produces alerts for suspicious activities
+- **Report Generator**: Creates usage and security reports
 
 ## Implementation Details
 
-### Frontend Components
+### Technology Stack
 
-1. **Secure Input Handling**
-   - Masked input fields by default
-   - Clipboard integration with security controls
-   - Temporary visibility toggle
-   - Auto-clearing of displayed keys
+- **Backend**: Node.js/Express or FastAPI for API services
+- **Database**: PostgreSQL with encryption extensions
+- **Key Encryption**: AES-256 for data at rest
+- **Transport Security**: TLS 1.3 for data in transit
+- **Authentication**: OAuth 2.0 and JWT for service authentication
+- **Frontend**: React with TypeScript for management UI
 
-2. **Status Monitoring**
-   - Real-time status indicators
-   - Automated validation checks
-   - Expiration monitoring
-   - Usage quota tracking
+### Security Measures
 
-3. **User Guidance**
-   - Contextual help for each service
-   - Setup wizards for complex integrations
-   - Troubleshooting guides
-   - Best practice recommendations
+1. **Encryption Layers**:
+   - Transport Layer: TLS 1.3 for all communications
+   - Application Layer: Request/response payload encryption
+   - Storage Layer: Field-level encryption for sensitive data
 
-### Backend Services
+2. **Access Control**:
+   - Role-based access control (RBAC) for key management
+   - Multi-factor authentication for sensitive operations
+   - IP-based access restrictions for key usage
 
-1. **Secure Storage**
-   - Encrypted database fields
-   - Hardware security module integration (optional)
-   - Separation from other application data
-   - Regular backup with enhanced security
+3. **Key Handling**:
+   - Keys never exposed to frontend code
+   - Backend proxy for all API calls requiring keys
+   - Automatic key rotation for supported providers
 
-2. **Proxy Mechanism**
-   - Request interception and enrichment
-   - Key injection at request time
-   - Response caching where appropriate
-   - Error handling and retry logic
+4. **Audit and Compliance**:
+   - Comprehensive audit logging
+   - Regular security reviews
+   - Compliance with industry standards (SOC 2, GDPR, etc.)
 
-3. **Monitoring Service**
-   - Usage tracking and analytics
-   - Anomaly detection
-   - Quota management
-   - Health checks for connected services
+### API Key Storage
 
-## Security Considerations
+The system uses a layered approach to key storage:
 
-1. **Key Protection**
-   - Never expose keys in client-side code
-   - Encrypt keys at rest using strong encryption
-   - Implement key rotation policies
-   - Use environment-specific keys
+1. **Encryption**:
+   - Keys encrypted before storage using AES-256
+   - Encryption keys managed through a key management service (KMS)
+   - Different encryption keys for different categories of API keys
 
-2. **Access Controls**
-   - Strict role-based access to key management
-   - Multi-factor authentication for key operations
-   - IP restrictions for key management access
-   - Audit logging for all key-related actions
+2. **Database Structure**:
+   ```sql
+   CREATE TABLE api_keys (
+     id UUID PRIMARY KEY,
+     user_id UUID NOT NULL,
+     provider_id VARCHAR(100) NOT NULL,
+     key_name VARCHAR(100) NOT NULL,
+     encrypted_key BYTEA NOT NULL,
+     key_metadata JSONB,
+     permissions JSONB,
+     created_at TIMESTAMP NOT NULL,
+     updated_at TIMESTAMP NOT NULL,
+     expires_at TIMESTAMP,
+     last_used_at TIMESTAMP,
+     is_active BOOLEAN DEFAULT TRUE,
+     FOREIGN KEY (user_id) REFERENCES users(id),
+     FOREIGN KEY (provider_id) REFERENCES providers(id)
+   );
+   ```
 
-3. **Breach Prevention and Response**
-   - Automated monitoring for suspicious activity
-   - Instant revocation capabilities
-   - Incident response procedures
-   - Regular security audits
+3. **Key Metadata**:
+   - Provider-specific information
+   - Usage limits and quotas
+   - Associated permissions and scopes
+   - Validation history
 
-## Best Practices
+### API Key Proxy
 
-1. **Key Management Lifecycle**
-   - Implement regular key rotation schedules
-   - Document purpose and ownership of each key
-   - Establish emergency revocation procedures
-   - Create key backup and recovery processes
+The proxy service implements the following workflow:
 
-2. **User Education**
-   - Provide clear security guidelines
-   - Train users on secure key handling
-   - Document potential security risks
-   - Establish clear responsibility chains
+1. **Request Interception**:
+   - Frontend makes API requests to the proxy service
+   - Requests include provider ID and operation type
+   - No API keys are included in the request
 
-3. **System Integration**
-   - Use standardized API for key retrieval
-   - Implement graceful failure modes
-   - Provide fallback mechanisms
-   - Ensure proper error handling
+2. **Key Retrieval and Injection**:
+   - Proxy service retrieves appropriate key from storage
+   - Key is decrypted and injected into the request
+   - Request is forwarded to the external API
 
-4. **Compliance and Governance**
-   - Maintain compliance with relevant regulations
-   - Implement appropriate retention policies
-   - Conduct regular security reviews
-   - Document all security measures
+3. **Response Handling**:
+   - Response is received from external API
+   - Usage metrics are recorded
+   - Response is forwarded to the frontend
 
-## Implementation Roadmap
+4. **Error Handling**:
+   - Authentication errors trigger key validation
+   - Rate limit errors implement backoff strategies
+   - Persistent errors generate alerts
 
-1. **Phase 1: Core Management**
-   - Secure storage implementation
-   - Basic UI for key management
-   - Essential proxy functionality
-   - Fundamental access controls
+### User Interface Design
 
-2. **Phase 2: Enhanced Security**
-   - Advanced encryption implementation
-   - Comprehensive access controls
-   - Audit logging system
-   - Key rotation mechanisms
+The API Key Management UI includes the following screens:
 
-3. **Phase 3: Analytics and Monitoring**
-   - Usage tracking and analytics
-   - Anomaly detection
-   - Cost optimization features
-   - Health monitoring integration
+1. **Dashboard**:
+   - Overview of all registered keys
+   - Usage statistics and quotas
+   - Alerts and notifications
 
-4. **Phase 4: Advanced Features**
-   - Automated key rotation
-   - Integration with enterprise security systems
-   - Advanced compliance features
-   - AI-powered usage optimization
+2. **Provider Catalog**:
+   - Directory of supported API providers
+   - Documentation and requirements
+   - Quick-add buttons for popular services
+
+3. **Key Editor**:
+   - Form for adding/editing keys
+   - Field validation and formatting help
+   - Secure input fields for key entry
+
+4. **Validation Wizard**:
+   - Step-by-step validation process
+   - Real-time feedback on key validity
+   - Troubleshooting assistance
+
+5. **Usage Analytics**:
+   - Detailed usage statistics
+   - Cost estimation and optimization
+   - Historical usage patterns
+
+6. **Security Settings**:
+   - Key rotation policies
+   - Access control configuration
+   - Audit log viewer
+
+### Integration with StockPulse
+
+The API Key Management System integrates with StockPulse in the following ways:
+
+1. **Service Integration**:
+   - Financial data providers (e.g., Financial Modeling Prep, TAAPI.IO)
+   - Trading platforms (e.g., Interactive Brokers, Alpaca)
+   - AI services (e.g., OpenAI, Anthropic)
+
+2. **UI Integration**:
+   - Embedded in StockPulse settings
+   - Consistent design language
+   - Contextual key management
+
+3. **Workflow Integration**:
+   - Guided setup during onboarding
+   - Just-in-time key requests
+   - Automatic service discovery
+
+## User Workflows
+
+### Adding a New API Key
+
+1. User navigates to API Key Management in settings
+2. User selects provider from catalog
+3. User enters key details in secure form
+4. System validates key format and permissions
+5. System performs test request to verify functionality
+6. System encrypts and stores the key
+7. User receives confirmation of successful addition
+
+### Using API Services
+
+1. Frontend component requests data from backend service
+2. Backend service identifies required API provider
+3. Backend requests appropriate key from Key Management System
+4. Key Management System retrieves, decrypts, and provides key
+5. Backend uses key to make external API request
+6. Key Management System records usage
+7. Response is returned to frontend
+
+### Key Rotation
+
+1. System identifies keys approaching expiration
+2. User is notified of pending expiration
+3. User generates new key with provider
+4. User adds new key through management UI
+5. System validates new key
+6. System gradually transitions traffic to new key
+7. Old key is deactivated after transition period
+
+## Security Best Practices
+
+1. **Never expose API keys in frontend code**:
+   - All API requests requiring keys must go through backend proxy
+   - Frontend should never have direct access to API keys
+
+2. **Implement proper access controls**:
+   - Restrict key management to authorized users
+   - Implement multi-factor authentication for key operations
+   - Log all access to key information
+
+3. **Encrypt keys at rest**:
+   - Use strong encryption (AES-256 or better)
+   - Store encryption keys separately from data
+   - Implement key rotation for encryption keys
+
+4. **Monitor for suspicious activity**:
+   - Track usage patterns and alert on anomalies
+   - Monitor for unauthorized access attempts
+   - Implement rate limiting for key management APIs
+
+5. **Implement key rotation**:
+   - Encourage regular key rotation
+   - Support automated rotation where possible
+   - Maintain history for audit purposes
 
 ## Conclusion
 
-The API Key Management System provides a secure, user-friendly solution for managing sensitive API credentials within StockPulse. By implementing this system, the application ensures the protection of valuable API keys while providing convenient access and management capabilities to authorized users.
+The API Key Management System provides a secure, user-friendly way to manage API keys for various services integrated with StockPulse. By implementing this system, StockPulse ensures that sensitive API keys are properly secured, while still allowing seamless integration with external services.
+
+The system's architecture prioritizes security, usability, and auditability, ensuring that users can easily manage their API keys while maintaining the highest standards of security and compliance.
