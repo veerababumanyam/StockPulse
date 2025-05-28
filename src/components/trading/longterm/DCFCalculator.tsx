@@ -1,34 +1,56 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, 
-  Tooltip, Legend, ResponsiveContainer, ReferenceLine,
+  Tooltip, Legend, ResponsiveContainer, 
   BarChart, Bar
 } from 'recharts';
-import { Calculator, DollarSign, TrendingUp, TrendingDown, Info, Calendar } from 'lucide-react';
-import { useTheme } from '../../contexts/ThemeContext';
+import { Calculator, TrendingUp, TrendingDown, Info } from 'lucide-react';
+import { useTheme } from '../../../contexts/ThemeContext';
 
 // Mock data for DCF calculation
-const generateMockFinancialData = (years = 5) => {
-  const data = [];
+interface YearlyData {
+  year: number;
+  revenue: number;
+  growthRate: number;
+  ebit: number;
+  margin: number;
+  nopat: number;
+  depreciation: number;
+  capex: number;
+  nwcChange: number;
+  fcf: number;
+  discountedFcf: number;
+}
+
+interface SummaryData {
+  enterpriseValue: number;
+  netDebt: number;
+  equityValue: number;
+  sharesOutstanding: number;
+  fairValue: number;
+  discountRate: number;
+  terminalGrowthRate: number;
+  terminalValue: number;
+  discountedTerminalValue: number;
+}
+
+const generateMockFinancialData = (years = 5): { yearlyData: YearlyData[]; summary: SummaryData } => {
+  const data: YearlyData[] = [];
   const currentYear = new Date().getFullYear();
   
   // Base revenue and growth rate
   let revenue = 1000 + Math.random() * 500; // $1000M - $1500M
   const growthRate = 0.05 + Math.random() * 0.15; // 5% - 20%
   const marginImprovement = 0.002 + Math.random() * 0.005; // 0.2% - 0.7% per year
-  
   // Current financials
   const operatingMargin = 0.15 + Math.random() * 0.10; // 15% - 25%
   const taxRate = 0.21 + Math.random() * 0.05; // 21% - 26%
   const capexPercent = 0.08 + Math.random() * 0.04; // 8% - 12% of revenue
   const depreciationPercent = 0.05 + Math.random() * 0.03; // 5% - 8% of revenue
   const nwcPercent = 0.10 + Math.random() * 0.05; // 10% - 15% of revenue
-  
   // Terminal values
   const terminalGrowthRate = 0.02 + Math.random() * 0.01; // 2% - 3%
   const discountRate = 0.08 + Math.random() * 0.04; // 8% - 12%
-  
   // Generate yearly data
   for (let i = 0; i <= years; i++) {
     const year = currentYear + i;
@@ -41,7 +63,6 @@ const generateMockFinancialData = (years = 5) => {
     const capex = yearRevenue * capexPercent;
     const nwcChange = i === 0 ? 0 : (yearRevenue - data[i-1].revenue) * nwcPercent;
     const fcf = nopat + depreciation - capex - nwcChange;
-    
     data.push({
       year,
       revenue: parseFloat(yearRevenue.toFixed(1)),
@@ -56,21 +77,17 @@ const generateMockFinancialData = (years = 5) => {
       discountedFcf: parseFloat((fcf / Math.pow(1 + discountRate, i)).toFixed(1))
     });
   }
-  
   // Calculate terminal value
   const terminalFcf = data[years].fcf * (1 + terminalGrowthRate);
   const terminalValue = terminalFcf / (discountRate - terminalGrowthRate);
   const discountedTerminalValue = terminalValue / Math.pow(1 + discountRate, years);
-  
   // Calculate enterprise value
   const enterpriseValue = data.reduce((sum, year) => sum + year.discountedFcf, 0) + discountedTerminalValue;
-  
   // Company specific data
   const netDebt = (0.2 + Math.random() * 0.3) * enterpriseValue; // 20% - 50% of EV
   const equityValue = enterpriseValue - netDebt;
   const sharesOutstanding = 100 + Math.random() * 900; // 100M - 1000M shares
   const fairValue = equityValue / sharesOutstanding;
-  
   return {
     yearlyData: data,
     summary: {
@@ -99,7 +116,7 @@ const DCFCalculator: React.FC<DCFCalculatorProps> = ({
   years = 5
 }) => {
   const { colorTheme } = useTheme();
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<{ yearlyData: YearlyData[]; summary: SummaryData } | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [discountRate, setDiscountRate] = useState<number>(10);
@@ -247,6 +264,7 @@ const DCFCalculator: React.FC<DCFCalculatorProps> = ({
     }
   };
 
+  // Guard for null data
   if (loading) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
@@ -266,6 +284,8 @@ const DCFCalculator: React.FC<DCFCalculatorProps> = ({
       </div>
     );
   }
+
+  if (!data) return null;
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
