@@ -13,4 +13,16 @@ module.exports = {
   },
   // Automatically clear mock calls, instances and results before every test
   clearMocks: true,
+  transform: {
+    '^.+\\.(ts|tsx)$': ['ts-jest', {
+      tsconfig: {
+        moduleResolution: 'node',
+        esModuleInterop: true,
+        allowSyntheticDefaultImports: true,
+      }
+    }]
+  },
+  transformIgnorePatterns: [
+    'node_modules/(?!(msw)/)'
+  ],
 }; 

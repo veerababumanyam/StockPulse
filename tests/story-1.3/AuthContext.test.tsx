@@ -1,15 +1,16 @@
 /**
  * Comprehensive Unit Tests for Enhanced AuthContext
  * Tests all Story 1.3 Acceptance Criteria
+ * Location: tests/story-1.3/AuthContext.test.tsx
  */
 import React from 'react';
 import { render, screen, act, waitFor } from '@testing-library/react';
-import { AuthProvider, useAuth, useAuthStatus, useRequireAuth } from './AuthContext';
-import { authService } from '../services/authService';
-import { LoginCredentials, User } from '../types/auth';
+import { AuthProvider, useAuth, useAuthStatus, useRequireAuth } from '../../src/contexts/AuthContext';
+import { authService } from '../../src/services/authService';
+import { LoginCredentials, User } from '../../src/types/auth';
 
 // Mock the auth service
-jest.mock('../services/authService');
+jest.mock('../../src/services/authService');
 const mockAuthService = authService as jest.Mocked<typeof authService>;
 
 // Mock user data
@@ -36,7 +37,11 @@ const TestComponent: React.FC = () => {
       email: 'test@example.com',
       password: 'password123'
     };
-    await login(credentials);
+    try {
+      await login(credentials);
+    } catch (err) {
+      // Handle login errors gracefully in test component
+    }
   };
 
   return (
@@ -83,7 +88,6 @@ const TestRequireAuthComponent: React.FC = () => {
 describe('AuthContext - Story 1.3 Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    // Clear any existing event listeners
     jest.clearAllTimers();
     jest.useFakeTimers();
   });
@@ -103,15 +107,12 @@ describe('AuthContext - Story 1.3 Tests', () => {
         </AuthProvider>
       );
 
-      // Should start loading
       expect(screen.getByTestId('loading')).toHaveTextContent('loading');
       
-      // Wait for initialization
       await waitFor(() => {
         expect(screen.getByTestId('loading')).toHaveTextContent('not-loading');
       });
 
-      // Should have called getCurrentUser (not accessing client-side tokens)
       expect(mockAuthService.getCurrentUser).toHaveBeenCalledTimes(1);
       expect(mockAuthService.getCurrentUser).toHaveBeenCalledWith();
     });
@@ -131,7 +132,6 @@ describe('AuthContext - Story 1.3 Tests', () => {
 
       expect(screen.getByTestId('authenticated')).toHaveTextContent('not-authenticated');
       expect(screen.getByTestId('user-email')).toHaveTextContent('no-user');
-      // Should not show error on initial check failure
       expect(screen.getByTestId('error')).toHaveTextContent('no-error');
     });
   });
@@ -148,12 +148,10 @@ describe('AuthContext - Story 1.3 Tests', () => {
         </AuthProvider>
       );
 
-      // Wait for initial check to complete
       await waitFor(() => {
         expect(screen.getByTestId('loading')).toHaveTextContent('not-loading');
       });
 
-      // Perform login
       await act(async () => {
         screen.getByTestId('login-btn').click();
       });
@@ -172,7 +170,15 @@ describe('AuthContext - Story 1.3 Tests', () => {
 
     it('should handle login failure with appropriate error state', async () => {
       mockAuthService.getCurrentUser.mockRejectedValueOnce(new Error('No session'));
-      mockAuthService.login.mockRejectedValueOnce(new Error('Invalid credentials'));
+      
+      const loginError = {
+        response: {
+          data: {
+            error: 'Invalid credentials'
+          }
+        }
+      };
+      mockAuthService.login.mockRejectedValueOnce(loginError);
 
       render(
         <AuthProvider>
@@ -210,18 +216,15 @@ describe('AuthContext - Story 1.3 Tests', () => {
         expect(screen.getByTestId('authenticated')).toHaveTextContent('authenticated');
       });
 
-      // Clear the mock to ensure no additional calls
       mockAuthService.getCurrentUser.mockClear();
 
-      // Simulate component re-render or navigation
       render(
         <AuthProvider>
           <TestComponent />
         </AuthProvider>
       );
 
-      // Should not make additional API calls for already authenticated state
-      expect(mockAuthService.getCurrentUser).toHaveBeenCalledTimes(1); // Only initial call
+      expect(mockAuthService.getCurrentUser).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -240,7 +243,6 @@ describe('AuthContext - Story 1.3 Tests', () => {
         expect(screen.getByTestId('authenticated')).toHaveTextContent('authenticated');
       });
 
-      // Simulate 401 unauthorized event
       act(() => {
         window.dispatchEvent(new CustomEvent('auth:unauthorized'));
       });
@@ -297,10 +299,8 @@ describe('AuthContext - Story 1.3 Tests', () => {
         </AuthProvider>
       );
 
-      // Should be loading initially
       expect(screen.getByTestId('loading')).toHaveTextContent('loading');
 
-      // Fast-forward timers
       act(() => {
         jest.advanceTimersByTime(100);
       });
@@ -325,8 +325,7 @@ describe('AuthContext - Story 1.3 Tests', () => {
         expect(screen.getByTestId('loading')).toHaveTextContent('not-loading');
       });
 
-      // Should handle network errors gracefully
-      expect(screen.getByTestId('error')).toHaveTextContent('no-error'); // Silent on initial failure
+      expect(screen.getByTestId('error')).toHaveTextContent('no-error');
     });
 
     it('should allow clearing error state', async () => {
@@ -342,7 +341,6 @@ describe('AuthContext - Story 1.3 Tests', () => {
         expect(screen.getByTestId('authenticated')).toHaveTextContent('authenticated');
       });
 
-      // Trigger an error
       act(() => {
         window.dispatchEvent(new CustomEvent('auth:unauthorized'));
       });
@@ -351,7 +349,6 @@ describe('AuthContext - Story 1.3 Tests', () => {
         expect(screen.getByTestId('error')).toHaveTextContent('Your session has expired. Please log in again.');
       });
 
-      // Clear the error
       act(() => {
         screen.getByTestId('clear-error-btn').click();
       });
@@ -362,8 +359,6 @@ describe('AuthContext - Story 1.3 Tests', () => {
 
   describe('AC8: Automatic cookie handling', () => {
     it('should not directly test cookie handling (handled by axios configuration)', () => {
-      // This is implicitly tested through the other tests
-      // The actual cookie handling is tested in the authService tests
       expect(true).toBe(true);
     });
   });
@@ -402,10 +397,13 @@ describe('AuthContext - Story 1.3 Tests', () => {
       );
 
       await waitFor(() => {
+        expect(screen.getByTestId('status-loading')).toHaveTextContent('not-loading');
+      });
+
+      await waitFor(() => {
         expect(screen.getByTestId('status-authenticated')).toHaveTextContent('authenticated');
       });
 
-      expect(screen.getByTestId('status-loading')).toHaveTextContent('not-loading');
       expect(screen.getByTestId('status-anonymous')).toHaveTextContent('not-anonymous');
       expect(screen.getByTestId('status-user')).toHaveTextContent(mockUser.email);
     });
@@ -420,10 +418,13 @@ describe('AuthContext - Story 1.3 Tests', () => {
       );
 
       await waitFor(() => {
+        expect(screen.getByTestId('require-loading')).toHaveTextContent('not-loading');
+      });
+
+      await waitFor(() => {
         expect(screen.getByTestId('requires-auth')).toHaveTextContent('requires-auth');
       });
 
-      expect(screen.getByTestId('require-loading')).toHaveTextContent('not-loading');
       expect(screen.getByTestId('require-error')).toHaveTextContent('Authentication required');
     });
   });
@@ -435,7 +436,6 @@ describe('AuthContext - Story 1.3 Tests', () => {
         return <div>{auth.isAuthenticated ? 'auth' : 'no-auth'}</div>;
       };
 
-      // Suppress console.error for this test
       const originalError = console.error;
       console.error = jest.fn();
 

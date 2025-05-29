@@ -1,0 +1,341 @@
+# StockPulse Development Rules - Enterprise Grade Production Standards
+# 🚀 ALWAYS APPLY THESE RULES - NO EXCEPTIONS
+start every chat with  🚀
+## CRITICAL: PROJECT STRUCTURE ENFORCEMENT
+# These rules MUST be followed strictly. Never deviate from the established structure.
+
+### FILE STRUCTURE RULES (STRICT ENFORCEMENT)
+- ALL components go in `src/components/` with feature-based organization
+- ALL pages go in `src/pages/` with domain-based folders
+- ALL tests go in `tests/` with story-based organization (tests/story-x.x/)
+- ALL documentation goes in `docs/` folder - NEVER create docs elsewhere
+- ALL AI agents go in `a2a-agents/` with service-based folders
+- ALL MCP servers go in `mcp-servers/` with service-based folders
+- ALL backend services go in `services/backend/app/` with layer-based organization
+- ALL utilities go in `src/utils/` or `services/backend/app/utils/`
+- ALL types go in `src/types/` for frontend, `services/backend/app/schemas/` for backend
+- ALL configurations go in `src/config/` or `services/backend/app/core/`
+
+### NAMING CONVENTIONS (MANDATORY)
+- Files: kebab-case (user-login.tsx, market-data.py)
+- Directories: kebab-case (auth/, trading/, risk-management/)
+- React Components: PascalCase (UserLogin, MarketDataChart)
+- Functions/Variables: camelCase (getUserData, isAuthenticated)
+- Constants: UPPER_SNAKE_CASE (API_BASE_URL, DEFAULT_TIMEOUT)
+- Types/Interfaces: PascalCase (UserData, TradingStrategy)
+- Python Classes: PascalCase (UserService, MarketDataProcessor)
+- Python Functions/Variables: snake_case (get_user_data, is_authenticated)
+- Database Tables: snake_case (user_accounts, trading_positions)
+- Environment Variables: UPPER_SNAKE_CASE (DATABASE_URL, JWT_SECRET_KEY)
+
+## TYPESCRIPT/JAVASCRIPT RULES (FRONTEND)
+
+### TYPE SAFETY (STRICT)
+- ALWAYS use strict TypeScript mode - no `any` types allowed
+- ALWAYS define explicit types for function parameters and returns
+- ALWAYS use interfaces for object shapes, types for unions/primitives
+- ALWAYS use `unknown` instead of `any` when type is genuinely unknown
+- ALWAYS validate external data with Zod or similar before using
+- NEVER use `@ts-ignore` - fix the underlying type issue
+
+### CODE QUALITY STANDARDS
+- ALWAYS use functional components with hooks
+- ALWAYS use arrow functions for component definitions
+- ALWAYS destructure props and use TypeScript interface
+- ALWAYS handle loading, error, and success states
+- ALWAYS implement proper error boundaries
+- ALWAYS use React.memo for performance optimization when appropriate
+- ALWAYS use useCallback and useMemo for expensive operations
+- NEVER mutate state directly - use immutable patterns
+
+### AUTHENTICATION & SECURITY
+- ALWAYS use HttpOnly cookies for authentication tokens
+- NEVER store sensitive data in localStorage or sessionStorage
+- ALWAYS validate user permissions before rendering components
+- ALWAYS sanitize user inputs and validate on both client and server
+- ALWAYS use HTTPS in production configurations
+- ALWAYS implement CSRF protection patterns
+- ALWAYS handle 401/403 responses with proper logout
+
+### API INTEGRATION
+- ALWAYS use axios with withCredentials: true for cookie support
+- ALWAYS implement proper error handling with user-friendly messages
+- ALWAYS use React Query for server state management
+- ALWAYS implement proper loading states and optimistic updates
+- ALWAYS handle network errors gracefully
+- NEVER expose API keys or secrets in frontend code
+
+### COMPONENT ARCHITECTURE
+- ALWAYS follow single responsibility principle
+- ALWAYS keep components under 200 lines - extract smaller components
+- ALWAYS co-locate related files (component + styles + tests)
+- ALWAYS use proper prop drilling or context for state sharing
+- ALWAYS implement proper accessibility (ARIA labels, keyboard navigation)
+- ALWAYS ensure responsive design for all screen sizes
+
+## PYTHON RULES (BACKEND)
+
+### TYPE SAFETY & CODE QUALITY
+- ALWAYS use type hints for all function parameters and returns
+- ALWAYS use Pydantic models for data validation
+- ALWAYS use dataclasses or Pydantic for structured data
+- ALWAYS follow PEP 8 style guide strictly
+- ALWAYS use async/await for I/O operations
+- ALWAYS implement proper exception handling
+- NEVER use bare except clauses
+
+### FASTAPI SPECIFIC
+- ALWAYS use dependency injection for database, auth, and services
+- ALWAYS validate request bodies with Pydantic schemas
+- ALWAYS use proper HTTP status codes
+- ALWAYS implement comprehensive error handling middleware
+- ALWAYS use proper response models for API endpoints
+- ALWAYS implement rate limiting for all endpoints
+- ALWAYS add OpenAPI documentation with examples
+
+### DATABASE & ORM
+- ALWAYS use SQLAlchemy async sessions
+- ALWAYS implement proper connection pooling
+- ALWAYS use transactions for multi-table operations
+- ALWAYS validate data integrity constraints
+- ALWAYS implement soft deletes for audit trails
+- ALWAYS use prepared statements to prevent SQL injection
+- NEVER execute raw SQL without parameterization
+
+### SECURITY IMPLEMENTATION
+- ALWAYS validate and sanitize all inputs
+- ALWAYS use proper password hashing (bcrypt)
+- ALWAYS implement rate limiting and account lockout
+- ALWAYS log security events for audit trails
+- ALWAYS use JWT with proper expiration and refresh
+- ALWAYS implement CORS properly for production
+- ALWAYS validate user permissions for every operation
+
+## AI/AGENT DEVELOPMENT RULES
+
+### MCP (MODEL CONTEXT PROTOCOL) COMPLIANCE
+- ALWAYS follow MCP specification for tool interfaces
+- ALWAYS implement proper error handling for MCP calls
+- ALWAYS validate MCP tool inputs with schemas
+- ALWAYS implement proper authentication for MCP servers
+- ALWAYS log MCP interactions for debugging and monitoring
+- ALWAYS use proper timeout and retry mechanisms
+
+### A2A (AGENT-TO-AGENT) PROTOCOL COMPLIANCE
+- ALWAYS implement Google A2A specification correctly
+- ALWAYS provide proper Agent Cards at /.well-known/agent.json
+- ALWAYS implement task lifecycle management (submitted, working, completed, failed)
+- ALWAYS use JSON-RPC 2.0 for A2A communication
+- ALWAYS implement proper authentication between agents
+- ALWAYS handle agent failures gracefully with fallbacks
+
+### AGENT ARCHITECTURE
+- ALWAYS separate agent logic into clear responsibilities
+- ALWAYS implement proper observability and logging
+- ALWAYS use proper error handling and recovery mechanisms
+- ALWAYS implement health checks for all agents
+- ALWAYS use proper resource management and cleanup
+- ALWAYS follow the single responsibility principle for agent skills
+
+### LLM INTEGRATION
+- ALWAYS implement proper prompt management and versioning
+- ALWAYS validate LLM inputs and outputs
+- ALWAYS implement proper token counting and cost tracking
+- ALWAYS handle LLM rate limits and errors gracefully
+- ALWAYS implement safety checks for LLM outputs
+- ALWAYS log LLM interactions for audit and improvement
+
+## FINANCIAL APPLICATION SPECIFIC RULES
+
+### FINANCIAL DATA HANDLING
+- ALWAYS use Decimal type for currency calculations - NEVER float
+- ALWAYS validate financial data ranges and constraints
+- ALWAYS implement proper rounding for currency display
+- ALWAYS handle timezone conversions for market data
+- ALWAYS validate market hours and trading sessions
+- ALWAYS implement proper audit trails for financial transactions
+
+### TRADING & RISK MANAGEMENT
+- ALWAYS implement pre-trade risk checks
+- ALWAYS validate position sizes and account balances
+- ALWAYS implement proper order management lifecycle
+- ALWAYS log all trading decisions and executions
+- ALWAYS implement proper compliance checks
+- ALWAYS handle market data feed interruptions gracefully
+
+### REGULATORY COMPLIANCE
+- ALWAYS implement comprehensive audit logging
+- ALWAYS ensure data privacy and GDPR compliance
+- ALWAYS implement proper access controls and permissions
+- ALWAYS validate regulatory constraints before execution
+- ALWAYS maintain detailed transaction records
+- ALWAYS implement proper data retention policies
+
+## TESTING STANDARDS (MANDATORY)
+
+### TESTING ORGANIZATION
+- ALWAYS create tests in `tests/` folder with story-based structure
+- ALWAYS use `tests/story-x.x/` format for test organization
+- ALWAYS co-locate integration tests with the features they test
+- ALWAYS separate unit, integration, and end-to-end tests clearly
+
+### TESTING REQUIREMENTS
+- ALWAYS achieve minimum 80% code coverage for critical paths
+- ALWAYS test error scenarios and edge cases
+- ALWAYS mock external dependencies in unit tests
+- ALWAYS use real data flows in integration tests
+- ALWAYS test accessibility compliance
+- ALWAYS test security constraints and validations
+
+### TESTING FRAMEWORKS
+- Frontend: ALWAYS use Jest + React Testing Library
+- Backend: ALWAYS use pytest with async support
+- E2E: ALWAYS use Playwright for end-to-end testing
+- ALWAYS use proper test data fixtures and factories
+- ALWAYS clean up test data after test execution
+
+## DOCUMENTATION STANDARDS
+
+### DOCUMENTATION REQUIREMENTS
+- ALWAYS document in `docs/` folder - NEVER elsewhere
+- ALWAYS use markdown format with proper headers
+- ALWAYS include code examples and usage patterns
+- ALWAYS document API endpoints with OpenAPI/Swagger
+- ALWAYS maintain architecture decision records (ADRs)
+- ALWAYS update documentation with code changes
+
+### CODE DOCUMENTATION
+- ALWAYS use JSDoc for TypeScript functions and classes
+- ALWAYS use docstrings for Python functions and classes
+- ALWAYS document complex business logic with inline comments
+- ALWAYS explain WHY, not just WHAT in comments
+- ALWAYS document environment variables and configuration
+- ALWAYS provide setup and deployment instructions
+
+## PERFORMANCE & OPTIMIZATION
+
+### FRONTEND PERFORMANCE
+- ALWAYS implement lazy loading for routes and components
+- ALWAYS optimize bundle size with proper code splitting
+- ALWAYS use React.memo and useMemo for expensive computations
+- ALWAYS implement proper caching strategies
+- ALWAYS optimize images and assets
+- ALWAYS measure and monitor performance metrics
+
+### BACKEND PERFORMANCE
+- ALWAYS use async/await for I/O operations
+- ALWAYS implement proper database indexing
+- ALWAYS use connection pooling for databases
+- ALWAYS implement caching for frequently accessed data
+- ALWAYS optimize database queries and avoid N+1 problems
+- ALWAYS implement proper rate limiting and throttling
+
+## SECURITY & COMPLIANCE
+
+### SECURITY IMPLEMENTATION
+- ALWAYS validate inputs at all boundaries
+- ALWAYS use parameterized queries to prevent SQL injection
+- ALWAYS implement proper authentication and authorization
+- ALWAYS use HTTPS for all communications
+- ALWAYS implement proper session management
+- ALWAYS log security events for monitoring
+
+### COMPLIANCE STANDARDS
+- ALWAYS follow OWASP Top 10 guidelines
+- ALWAYS implement GDPR/CCPA privacy requirements
+- ALWAYS follow financial industry security standards
+- ALWAYS implement SOC 2 compliance patterns
+- ALWAYS maintain audit trails for compliance
+- ALWAYS ensure accessibility compliance (WCAG 2.1 AA+)
+
+## MONITORING & OBSERVABILITY
+
+### LOGGING STANDARDS
+- ALWAYS use structured logging (JSON format)
+- ALWAYS include correlation IDs for tracing
+- ALWAYS log errors with full context and stack traces
+- ALWAYS implement proper log levels (DEBUG, INFO, WARN, ERROR)
+- NEVER log sensitive information (PII, passwords, tokens)
+- ALWAYS implement log rotation and retention policies
+
+### METRICS & MONITORING
+- ALWAYS implement health checks for all services
+- ALWAYS monitor key business metrics
+- ALWAYS implement alerting for critical failures
+- ALWAYS track performance metrics and SLAs
+- ALWAYS implement distributed tracing for complex flows
+- ALWAYS monitor resource usage and scaling metrics
+
+## ERROR HANDLING & RESILIENCE
+
+### ERROR HANDLING PATTERNS
+- ALWAYS implement comprehensive error boundaries
+- ALWAYS provide user-friendly error messages
+- ALWAYS log errors with sufficient context for debugging
+- ALWAYS implement proper retry mechanisms with exponential backoff
+- ALWAYS handle network failures gracefully
+- ALWAYS implement circuit breaker patterns for external services
+
+### RESILIENCE PATTERNS
+- ALWAYS implement proper timeout configurations
+- ALWAYS use health checks for service availability
+- ALWAYS implement graceful degradation for non-critical features
+- ALWAYS design for eventual consistency in distributed systems
+- ALWAYS implement proper backup and recovery procedures
+- ALWAYS test failure scenarios and disaster recovery
+
+## DEPLOYMENT & INFRASTRUCTURE
+
+### CONTAINERIZATION
+- ALWAYS use Docker for consistent environments
+- ALWAYS implement proper multi-stage builds
+- ALWAYS use proper base images and security scanning
+- ALWAYS implement health checks in containers
+- ALWAYS use proper resource limits and constraints
+- ALWAYS follow container security best practices
+
+### CI/CD REQUIREMENTS
+- ALWAYS run all tests before deployment
+- ALWAYS implement proper security scanning
+- ALWAYS use proper environment configuration
+- ALWAYS implement blue-green or rolling deployments
+- ALWAYS implement proper rollback mechanisms
+- ALWAYS maintain deployment audit trails
+
+## CODE REVIEW STANDARDS
+
+### REVIEW REQUIREMENTS
+- ALWAYS require code review for all changes
+- ALWAYS check for adherence to these rules
+- ALWAYS verify test coverage and quality
+- ALWAYS check for security vulnerabilities
+- ALWAYS verify documentation updates
+- ALWAYS ensure performance implications are considered
+
+### QUALITY GATES
+- ALWAYS pass all automated tests
+- ALWAYS meet code coverage requirements
+- ALWAYS pass security scans
+- ALWAYS pass performance benchmarks
+- ALWAYS meet accessibility standards
+- ALWAYS follow the established architecture patterns
+
+## EMERGENCY RESPONSE
+
+### INCIDENT HANDLING
+- ALWAYS prioritize security incidents immediately
+- ALWAYS implement proper incident response procedures
+- ALWAYS maintain communication during incidents
+- ALWAYS conduct post-incident reviews
+- ALWAYS update procedures based on lessons learned
+- ALWAYS test incident response procedures regularly
+
+---
+
+# 🔥 ENFORCEMENT NOTICE
+These rules are MANDATORY for enterprise-grade, production-ready development.
+Any deviation must be justified and documented with clear reasoning.
+Quality gates will enforce these standards automatically.
+Cursor AI will help enforce these rules during development.
+
+# 🚀 ALWAYS END WITH ROCKET EMOJI AS SPECIFIED IN CUSTOM INSTRUCTIONS 🚀 
