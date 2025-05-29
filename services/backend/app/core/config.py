@@ -60,7 +60,7 @@ class Settings(BaseSettings):
     agent_jwt_secret_key: str = "default_secret_key"
     agent_token_expire_minutes: int = 60
 
-    model_config = {"env_file": ".env", "case_sensitive": False}
+    model_config = {"env_file": ".env", "case_sensitive": False, "extra": "ignore"}
 
 
 @lru_cache()
