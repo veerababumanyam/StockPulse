@@ -17,6 +17,7 @@ const Register: React.FC = () => {
   });
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState('');
+  const [advisoryMessage, setAdvisoryMessage] = React.useState('');
   
   const { register } = useAuth();
   
@@ -38,7 +39,13 @@ const Register: React.FC = () => {
       if (!formData.email.trim()) return setError('Email is required');
       if (!/\S+@\S+\.\S+/.test(formData.email)) return setError('Email is invalid');
       if (!formData.password) return setError('Password is required');
-      if (formData.password.length < 8) return setError('Password must be at least 8 characters');
+      // Enhanced password validation
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      if (!passwordRegex.test(formData.password)) {
+        return setError(
+          'Password must be at least 8 characters long, and include at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).'
+        );
+      }
       if (formData.password !== formData.confirmPassword) return setError('Passwords do not match');
       
       return true;
@@ -76,12 +83,21 @@ const Register: React.FC = () => {
     if (!validateStep()) return;
     
     setIsLoading(true);
+    setError('');
+    setAdvisoryMessage('');
     
     try {
-      await register(formData.email, formData.password, formData.name);
-      // Registration successful, redirect happens in AuthContext
+      const response = await register(formData.email, formData.password, formData.name);
+      
+      if (response.fraudContext?.assessment === 'medium-risk') {
+        setAdvisoryMessage(response.fraudContext.reason || 'Your account is under review following a security check. You can proceed normally.');
+      }
     } catch (err) {
-      setError('Registration failed. Please try again.');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred during registration. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -91,7 +107,7 @@ const Register: React.FC = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-secondary-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <Logo size="lg" />
+          <Logo className="h-12 w-auto" />
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900 dark:text-white">
           Create your account
@@ -140,6 +156,12 @@ const Register: React.FC = () => {
           {error && (
             <div className="mb-4 bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-200 p-3 rounded-md text-sm">
               {error}
+            </div>
+          )}
+          
+          {advisoryMessage && (
+            <div className="mb-4 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 p-3 rounded-md text-sm">
+              {advisoryMessage}
             </div>
           )}
           

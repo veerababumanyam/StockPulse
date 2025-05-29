@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { authService } from '../services/authService'; // Import the authService
 
 interface AuthUser {
   id: string;
@@ -13,7 +14,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
+  register: (email: string, password: string, name: string) => Promise<ReturnType<typeof authService.registerUser>>;
   logout: () => void;
   forgotPassword: (email: string) => Promise<void>;
   resetPassword: (token: string, newPassword: string) => Promise<void>;
@@ -49,22 +50,42 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (email: string, password: string, name: string) => {
+  const register = async (email: string, password: string, name: string): Promise<ReturnType<typeof authService.registerUser>> => {
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Collect additional data for fraud check
+      const userAgent = navigator.userAgent;
+      // const ipAddress = await getClientIpAddress(); // Placeholder for a real IP fetching mechanism
+      // For now, IP address collection from frontend is unreliable; backend should ideally provide/log it.
+      // Passing undefined, authService should handle optionality.
+
+      const registrationData = { 
+        name, 
+        email, 
+        password, 
+        userAgent, 
+        // Assuming the existing Register.tsx passes all form data eventually
+        // We need to decide how/if tradingExperience etc. from Register.tsx formData flows here
+        // For now, authService.registerUser UserRegistrationData includes them as optional
+        ipAddress: undefined 
+      };
       
-      // Mock successful registration
+      const authServiceResponse = await authService.registerUser(registrationData);
+      
       setUser({
-        id: '1',
-        email,
-        name,
+        id: authServiceResponse.userId,
+        email: email, 
+        name: name, 
         role: 'user',
         avatar: `https://ui-avatars.com/api/?name=${name.replace(' ', '+')}&background=FF1A6C&color=fff`
       });
+      localStorage.setItem('authToken', authServiceResponse.token); // Example: Storing token
+
+      return authServiceResponse;
+
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('Registration error in AuthContext:', error);
+      // Re-throw the error so it can be caught and handled by the UI component (Register.tsx)
       throw error;
     } finally {
       setIsLoading(false);
