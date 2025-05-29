@@ -1,133 +1,287 @@
-# Story 1.4: Develop AI-Powered Fraud Detection for Registration
+# Story 1.4: MCP Agent Integration for Authentication
 
 **Epic:** [Core User Authentication and Account Setup](../epic-1.md)
-**Status:** To Do
-**Priority:** High
-**Points:** (Estimate - likely 5 or 8 due to AI complexity)
+**Status:** Draft
+**Priority:** Medium
+**Points:** 13
 **Assigned To:**
-**Sprint:**
+**Sprint:** 3
+**Dependencies:** Story 1.2 (Backend Auth), Story 1.3 (Frontend AuthContext)
 
 ## 1. User Story
 
-> As the platform operator,
-> I want an AI agent to analyze new user registrations in real-time to identify and flag potentially fraudulent accounts,
-> So that platform abuse is minimized, legitimate users are protected, and manual review efforts are reduced.
+> As a StockPulse user,
+> I want my authentication events to automatically notify and configure the AI agent ecosystem with my preferences and context,
+> So that the agents can provide personalized analysis and trading recommendations from the moment I log in.
 
 ## 2. Requirements
 
-*   **AI Agent Development:**
-    *   Create a new "AI Fraud Detection Agent" service/module.
-    *   This agent will receive registration attempt data (e.g., email, IP address, user-agent string).
-    *   The agent must return a risk assessment (e.g., risk score, risk level: low/medium/high) and optionally reasons for its assessment.
-*   **RAG Integration:**
-    *   The AI Fraud Detection Agent must utilize a RAG pipeline.
-    *   The RAG knowledge base (`StockPulse_VectorDB`) will store:
-        *   Known fraud patterns (e.g., characteristics of fraudulent emails, IP ranges, velocity patterns).
-        *   Lists of disposable email providers.
-        *   Data from publicly available breach databases (if ethically and legally permissible and GDPR compliant).
-        *   (Potentially) Historical anonymized registration data from StockPulse to learn internal patterns.
-    *   The agent will use retrieved context from the RAG pipeline to inform its risk assessment.
-*   **API Endpoint:**
-    *   Expose an internal API endpoint for the AI Fraud Detection Agent (e.g., `POST /api/v1/agents/fraud-detection/assess-registration`).
-*   **Integration with Registration Flow (Story 1.1):**
-    *   The main user registration process (`authService.ts`) will call this AI agent.
-    *   Based on the agent's response:
-        *   **Low Risk:** Registration proceeds normally.
-        *   **Medium Risk:** Registration might proceed but account is flagged for monitoring, or an additional verification step (e.g., email verification, CAPTCHA) is enforced.
-        *   **High Risk:** Registration is blocked, or account is immediately sent for manual review. (Policy to be defined).
-*   **Configuration:**
-    *   Risk thresholds (for low/medium/high) should be configurable.
-    *   Actions for each risk level should be configurable.
-*   **Logging & Monitoring:**
-    *   Log all fraud assessment requests and responses.
-    *   Monitor agent performance and accuracy.
+*   Integrate FastAPI-MCP to enable agent communication from the authentication system
+*   Notify relevant agents when users authenticate successfully
+*   Propagate user context (preferences, portfolio settings, risk profile) to agents
+*   Handle user logout events to clean up agent contexts
+*   Implement secure agent-to-agent authentication for user-specific operations
+*   Create user context management system for agent ecosystem
+*   Support dynamic agent discovery and context propagation
+*   Implement audit trail for agent authentication events
 
 ## 3. Acceptance Criteria (ACs)
 
-1.  **AC1:** Given a registration attempt with data indicative of low fraud risk (e.g., known good email provider, normal IP), when the AI Fraud Detection Agent assesses it, then it returns a "low" risk assessment.
-2.  **AC2:** Given a registration attempt with data indicative of high fraud risk (e.g., disposable email, known malicious IP), when the AI Fraud Detection Agent assesses it, then it returns a "high" risk assessment with a corresponding reason (e.g., "Disposable email provider detected").
-3.  **AC3:** Given the `authService.ts` receives a "low" risk assessment from the agent for a registration, then the registration process continues as normal (as defined in Story 1.1).
-4.  **AC4:** Given the `authService.ts` receives a "high" risk assessment from the agent, then the registration is blocked, and an appropriate message is queued for the user (handled by Story 1.1). (Alternative: manual review flag is set).
-5.  **AC5 (Medium Risk - Optional/Configurable):** Given the `authService.ts` receives a "medium" risk assessment, then an additional verification step is triggered (e.g., user is forced to verify email before login is allowed, or a CAPTCHA is presented – exact mechanism TBD).
-6.  **AC6:** The RAG pipeline for the fraud agent is functional, capable of ingesting fraud-related documents/data into `StockPulse_VectorDB` and retrieving relevant context for the agent.
-7.  **AC7:** Risk thresholds and corresponding actions (block, flag, allow) are configurable.
-8.  **AC8:** All interactions with the AI Fraud Detection Agent are logged, including input data, risk score, and reasons.
+1.  **AC1:** Given a user successfully logs in, when the authentication event occurs, then relevant agents are notified via MCP with user context information.
+2.  **AC2:** Given user context is propagated to agents, when agents receive the context, then they update their internal state to provide personalized recommendations.
+3.  **AC3:** Given a user logs out, when the logout event occurs, then all agents are notified to clear user-specific contexts and data.
+4.  **AC4:** Given an agent needs to perform user-specific operations, when it validates user context, then it can securely access user permissions and preferences.
+5.  **AC5:** Given multiple agents require user context, when context is propagated, then all relevant agents receive consistent user information.
+6.  **AC6:** Given authentication events occur, when they are processed, then all events are logged for audit and debugging purposes.
+7.  **AC7:** Given the MCP system is unavailable, when authentication occurs, then the authentication process continues without blocking user access.
+8.  **AC8:** Given user preferences change, when preference updates occur, then affected agents are notified of the changes.
 
 ## 4. Technical Guidance for Developer Agent
 
-*   **Relevant PRD Sections:** (To be defined - likely a new section on AI-driven security)
-*   **Relevant Architecture Sections:**
-    *   `docs/infrastructure_design.md#4.3` (StockPulse_VectorDB)
-    *   `docs/infrastructure_design.md#5.1` (RAG Pipeline)
-    *   `docs/infrastructure_design.md#5.2` (AI Agent Architecture - specifically Fraud Detection Agent)
-*   **Key Components/Modules to be affected/created:**
-    *   New AI Agent Service/Module: `src/services/ai/fraudDetectionAgent.ts` (or similar, could be a separate microservice if complex).
-    *   RAG Pipeline components: Scripts for data ingestion, embedding, and retrieval logic.
-    *   Updates to `src/services/authService.ts` (as detailed in Story 1.1).
-    *   Configuration files for risk thresholds and actions.
-*   **API Endpoints Involved:**
-    *   `POST /api/v1/agents/fraud-detection/assess-registration`
-        *   Request Body: `{ "email": "user@example.com", "ipAddress": "x.x.x.x", "userAgent": "Browser Info", "timestamp": "ISO_DATETIME" }`
-        *   Response Body: `{ "riskScore": 0.05, "riskLevel": "low" | "medium" | "high", "reasons": ["Reason 1", "Reason 2"], "agentTraceId": "uuid" }`
-*   **Data Models Involved:**
-    *   Schema for storing fraud patterns/knowledge in `StockPulse_VectorDB`.
-    *   Potentially a new table in `StockPulse_PostgreSQL` for flagged accounts or audit logs of fraud checks.
-*   **Libraries/Frameworks:**
-    *   LLM framework (e.g., LangChain, Semantic Kernel) for agent logic.
-    *   Vector database client library (e.g., Weaviate client, Milvus client).
-    *   Embedding model (e.g., Sentence Transformers from Hugging Face).
-*   **Error Handling Notes:**
-    *   Graceful handling if the Fraud Detection Agent is unavailable or errors out (e.g., default to a specific risk level or bypass with logging).
-*   **Security Considerations:**
-    *   Protection of the fraud detection API endpoint.
-    *   Secure handling of data passed to the agent.
-    *   Ethical considerations regarding data sources for RAG.
-*   **Other Notes:**
-    *   This story focuses on the agent and its integration. The actual UI for additional verification steps (for medium risk) might be a separate linked story.
-    *   The "knowledge base" for RAG needs to be curated and maintained.
+### 4.1 FastAPI-MCP Integration Architecture
+
+*   **MCP Setup:**
+    ```python
+    from fastapi import FastAPI
+    from fastapi_mcp import FastApiMCP
+    from src.services.mcp.agent_notifier import AgentNotificationService
+    
+    app = FastAPI()
+    mcp = FastApiMCP(app)
+    agent_notifier = AgentNotificationService(mcp)
+    ```
+
+*   **Agent Registration:**
+    ```python
+    # Register agents that need authentication context
+    AUTHENTICATION_AGENTS = [
+        "technical_analysis_agent",
+        "portfolio_optimization_agent",
+        "risk_management_agent",
+        "news_analysis_agent",
+        "user_preference_agent"
+    ]
+    ```
+
+### 4.2 User Context Model
+
+*   **UserContext Schema:**
+    ```python
+    class UserContext(BaseModel):
+        user_id: str
+        email: str
+        preferences: Dict[str, Any]
+        portfolio_settings: Dict[str, Any]
+        active_strategies: List[str]
+        risk_profile: str
+        agent_permissions: Dict[str, bool]
+        session_id: str
+        created_at: datetime
+        last_updated: datetime
+    ```
+
+*   **Agent Context Message:**
+    ```python
+    class AgentContextMessage(BaseModel):
+        event_type: str  # "user_authenticated", "user_logged_out", "context_updated"
+        user_context: UserContext
+        timestamp: datetime
+        session_info: Dict[str, Any]
+    ```
+
+### 4.3 Agent Notification Service
+
+*   **Core Service Methods:**
+    ```python
+    class AgentNotificationService:
+        async def notify_user_login(self, user_context: UserContext)
+        async def notify_user_logout(self, user_id: str)
+        async def propagate_user_context(self, user_context: UserContext)
+        async def update_user_preferences(self, user_id: str, preferences: Dict)
+        async def validate_agent_permissions(self, user_id: str, agent_name: str)
+    ```
+
+### 4.4 Authentication Event Integration
+
+*   **Login Event Handler:**
+    ```python
+    @app.post("/api/v1/auth/login")
+    async def login(credentials: LoginRequest, response: Response):
+        # Existing authentication logic
+        user = await authenticate_user(credentials)
+        
+        # Create user context for agents
+        user_context = await create_user_context(user)
+        
+        # Notify agents (non-blocking)
+        asyncio.create_task(
+            agent_notifier.notify_user_login(user_context)
+        )
+        
+        return {"user": user.dict(), "message": "Login successful"}
+    ```
+
+### 4.5 Agent Context Management
+
+*   **Context Repository:**
+    ```python
+    class AgentContextRepository:
+        async def store_user_context(self, user_context: UserContext)
+        async def get_user_context(self, user_id: str) -> UserContext
+        async def update_user_context(self, user_id: str, updates: Dict)
+        async def delete_user_context(self, user_id: str)
+        async def get_agent_permissions(self, user_id: str, agent_name: str)
+    ```
+
+### 4.6 Agent Security Framework
+
+*   **Agent Authentication:**
+    ```python
+    class AgentAuthenticationMiddleware:
+        async def validate_agent_request(self, request: AgentRequest) -> bool
+        async def verify_user_permissions(self, user_id: str, agent_name: str) -> bool
+        async def create_agent_session(self, user_id: str, agent_name: str) -> str
+    ```
+
+### 4.7 Error Handling and Resilience
+
+*   **Circuit Breaker Pattern:** Prevent MCP failures from blocking authentication
+*   **Retry Logic:** Automatic retry for transient MCP communication failures
+*   **Fallback Mechanisms:** Continue authentication if agent notification fails
+*   **Monitoring:** Track agent notification success/failure rates
 
 ## 5. Tasks / Subtasks
 
-1.  **Task 1 (AC6):** Design and implement the RAG pipeline for fraud detection:
-    *   Identify and curate initial knowledge sources (e.g., lists of disposable email domains).
-    *   Develop scripts for ingesting and embedding this data into `StockPulse_VectorDB`.
-2.  **Task 2 (AC1, AC2):** Develop the core logic for the `AIFraudDetectionAgent` service.
-    *   Implement retrieval from RAG.
-    *   Implement LLM interaction for risk assessment based on retrieved context and input data.
-    *   Define logic for determining risk score and level.
-3.  **Task 3 (N/A):** Create the API endpoint `/api/v1/agents/fraud-detection/assess-registration`.
-4.  **Task 4 (AC3, AC4, AC5):** Integrate the call to the fraud detection agent within `authService.ts` (linking to Story 1.1's tasks). Define how to handle different risk levels.
-5.  **Task 5 (AC7):** Implement configuration for risk thresholds and actions.
-6.  **Task 6 (AC8):** Implement logging for all agent interactions and decisions.
-7.  **Task 7 (N/A):** Write unit and integration tests for the AI agent, RAG pipeline, and API endpoint.
+1.  **Task 1 (AC1):** Set up FastAPI-MCP integration
+    *   Configure fastapi-mcp in the authentication service
+    *   Register authentication-relevant agents
+    *   Create basic agent discovery mechanism
+
+2.  **Task 2 (AC1, AC2):** Implement user context creation and propagation
+    *   Create UserContext data model
+    *   Implement context creation from user data
+    *   Build context propagation service
+
+3.  **Task 3 (AC1, AC5):** Create agent notification service
+    *   Implement AgentNotificationService class
+    *   Create event publishing for authentication events
+    *   Handle agent context message routing
+
+4.  **Task 4 (AC3):** Implement logout event handling
+    *   Create logout event notifications
+    *   Implement agent context cleanup
+    *   Handle session termination events
+
+5.  **Task 5 (AC4):** Implement agent authentication framework
+    *   Create agent permission validation
+    *   Implement secure agent session management
+    *   Build agent-to-agent authentication
+
+6.  **Task 6 (AC6):** Create authentication audit system
+    *   Implement audit logging for agent events
+    *   Create audit trail for context propagation
+    *   Build monitoring for agent communication
+
+7.  **Task 7 (AC7):** Implement error handling and resilience
+    *   Add circuit breaker for MCP communication
+    *   Implement retry logic for failed notifications
+    *   Create fallback mechanisms
+
+8.  **Task 8 (AC8):** Create preference update mechanism
+    *   Implement preference change notifications
+    *   Create selective agent updates
+    *   Handle incremental context updates
+
+9.  **Task 9:** Integrate with existing authentication endpoints
+    *   Modify login endpoint to trigger agent notifications
+    *   Update logout endpoint for agent cleanup
+    *   Integrate with session management
+
+10. **Task 10:** Create agent context management API
+    *   Build admin endpoints for context management
+    *   Create debugging tools for agent contexts
+    *   Implement context synchronization endpoints
+
+11. **Task 11:** Write comprehensive tests
+    *   Unit tests for agent notification service
+    *   Integration tests with mocked agents
+    *   End-to-end authentication flow tests
+
+12. **Task 12:** Create monitoring and alerting
+    *   Implement metrics for agent communication
+    *   Create alerts for agent notification failures
+    *   Build dashboards for agent context health
 
 ## 6. Definition of Done (DoD)
 
 *   All Acceptance Criteria (AC1-AC8) met.
-*   AI Fraud Detection Agent is functional and integrated into the registration flow.
-*   RAG pipeline provides relevant context to the agent.
-*   Risk assessments are logged and configurable.
-*   Code reviewed, merged, tests passing.
+*   FastAPI-MCP integration configured and functional.
+*   Agent notification service implemented and tested.
+*   User context propagation working for all relevant agents.
+*   Authentication events triggering appropriate agent notifications.
+*   Logout events properly cleaning up agent contexts.
+*   Agent permission validation implemented and secure.
+*   Error handling and resilience mechanisms in place.
+*   Audit logging for all authentication-agent interactions.
+*   Unit tests written with >80% coverage for new code.
+*   Integration tests with mocked MCP agents.
+*   Performance testing for agent notification overhead.
+*   No authentication delays due to agent communication.
+*   Circuit breaker and fallback mechanisms tested.
+*   Monitoring and alerting configured.
+*   Documentation updated with agent integration details.
+*   Security review completed for agent authentication.
 
 ## 7. Notes / Questions
 
-*   What are the initial data sources for the RAG knowledge base?
-*   What is the defined policy for handling "medium" risk assessments? (e.g., force email verification, CAPTCHA, flag for review).
-*   How will the RAG knowledge base be kept up-to-date? (Manual process, automated feeds?).
-*   What are the specific data points available from the frontend/backend context during registration to pass to the agent (e.g., can we reliably get IP, user-agent)?
+*   **DEPENDENCY:** Requires Stories 1.2 and 1.3 to be completed
+*   **PERFORMANCE:** Agent notifications should not block authentication flow
+*   **SECURITY:** Ensure agent permissions are properly validated
+*   **SCALABILITY:** Design for handling multiple concurrent user authentications
+*   **MONITORING:** Need comprehensive monitoring for agent communication health
+*   **TESTING:** Will require mocked agents for testing scenarios
+*   **FALLBACK:** Authentication must work even if agent system is down
 
 ## 8. Design / UI Mockup Links (If Applicable)
 
-*   N/A for this agent-focused story directly, but outcomes might influence UI in Story 1.1.
+*   No direct UI components
+*   Agent notification events are backend system integrations
+*   Consider admin dashboard for monitoring agent contexts (future story)
 
 ## Story Progress Notes
 
-### Agent Model Used: `<Agent Model Name/Version>`
+### Agent Model Used: `Claude Sonnet 4 (Architect Agent - Timmy)`
+
+### Architecture Decisions Made:
+- FastAPI-MCP integration for agent communication
+- Event-driven agent notification system
+- Comprehensive user context model for agent personalization
+- Secure agent authentication and permission framework
+- Circuit breaker pattern for resilience
+- Audit trail for all agent authentication events
+
+### Dependencies:
+- Story 1.2: Backend authentication infrastructure
+- Story 1.3: Frontend AuthContext implementation
+- MCP agent ecosystem framework
+- Agent registry and discovery system
+
+### Agent Integration Points:
+- Technical Analysis Agent: Receives user trading preferences
+- Portfolio Optimization Agent: Gets risk profile and constraints
+- Risk Management Agent: Receives risk tolerance settings
+- News Analysis Agent: Gets sector and company preferences
+- User Preference Agent: Manages user-specific configurations
 
 ### Completion Notes List
 
-{Any notes about implementation choices, difficulties, or follow-up needed}
+{Implementation progress will be tracked here}
 
 ### Change Log
 
-``` 
+**2024-01-XX - Story Creation (Timmy):**
+- Created comprehensive MCP agent integration story
+- Defined user context model and agent notification framework
+- Specified security and resilience requirements
+- Outlined agent authentication and permission system
+- Integrated with existing authentication architecture 

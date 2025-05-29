@@ -1,0 +1,14 @@
+# Simplified requirements for testing
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+python-jose[cryptography]
+python-multipart
+bcrypt
+redis
+sqlalchemy[asyncio]
+alembic
+python-dotenv
+slowapi
+pytest
+pytest-asyncio
+httpx 

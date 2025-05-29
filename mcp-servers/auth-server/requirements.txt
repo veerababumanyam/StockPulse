@@ -1,0 +1,20 @@
+# StockPulse MCP Servers Requirements
+# Simplified HTTP server version using FastAPI
+
+# FastAPI framework for HTTP servers
+fastapi>=0.115.0
+uvicorn[standard]>=0.34.0
+
+# Core Python dependencies
+pydantic>=2.8.0
+python-dotenv>=1.0.0
+
+# Authentication dependencies
+PyJWT>=2.8.0
+bcrypt>=4.0.0
+
+# Logging 
+structlog>=23.1.0
+
+# HTTP client for health checks
+requests>=2.31.0 

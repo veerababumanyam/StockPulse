@@ -1,172 +1,279 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { authService } from '../services/authService'; // Import the authService
+/**
+ * Enhanced Authentication Context for StockPulse
+ * Manages authentication state without client-side token storage.
+ * Uses HttpOnly cookies for secure session management.
+ * 
+ * Story 1.3: Frontend AuthContext Implementation
+ */
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
+import { authService } from '../services/authService';
+import { User, AuthContextType, LoginCredentials } from '../types/auth';
 
-interface AuthUser {
-  id: string;
-  email: string;
-  name: string;
-  role: 'user' | 'admin';
-  avatar?: string;
+const AuthContext = createContext<AuthContextType | null>(null);
+
+interface AuthProviderProps {
+  children: React.ReactNode;
 }
 
-interface AuthContextType {
-  user: AuthUser | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<ReturnType<typeof authService.registerUser>>;
-  logout: () => void;
-  forgotPassword: (email: string) => Promise<void>;
-  resetPassword: (token: string, newPassword: string) => Promise<void>;
-}
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const initializationAttempted = useRef<boolean>(false);
+  const sessionCheckInterval = useRef<NodeJS.Timeout | null>(null);
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  // Mock authentication for demo purposes
-  // In a real app, this would connect to a backend API
-  const login = async (email: string, password: string) => {
-    setIsLoading(true);
+  /**
+   * AC1: Check authentication status via API call without accessing client-side tokens
+   * AC6: Provide appropriate loading indicators
+   */
+  const checkAuthStatus = useCallback(async () => {
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      setLoading(true);
+      const userData = await authService.getCurrentUser();
+      setUser(userData);
+      setError(null);
+      console.log('✅ Authentication status verified:', userData.email);
+    } catch (err: any) {
+      setUser(null);
       
-      // Mock successful login
-      setUser({
-        id: '1',
-        email,
-        name: 'Demo User',
-        role: 'user',
-        avatar: 'https://ui-avatars.com/api/?name=Demo+User&background=FF1A6C&color=fff'
-      });
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const register = async (email: string, password: string, name: string): Promise<ReturnType<typeof authService.registerUser>> => {
-    setIsLoading(true);
-    try {
-      // Collect additional data for fraud check
-      const userAgent = navigator.userAgent;
-      // const ipAddress = await getClientIpAddress(); // Placeholder for a real IP fetching mechanism
-      // For now, IP address collection from frontend is unreliable; backend should ideally provide/log it.
-      // Passing undefined, authService should handle optionality.
-
-      const registrationData = { 
-        name, 
-        email, 
-        password, 
-        userAgent, 
-        // Assuming the existing Register.tsx passes all form data eventually
-        // We need to decide how/if tradingExperience etc. from Register.tsx formData flows here
-        // For now, authService.registerUser UserRegistrationData includes them as optional
-        ipAddress: undefined 
-      };
-      
-      const authServiceResponse = await authService.registerUser(registrationData);
-      
-      setUser({
-        id: authServiceResponse.userId,
-        email: email, 
-        name: name, 
-        role: 'user',
-        avatar: `https://ui-avatars.com/api/?name=${name.replace(' ', '+')}&background=FF1A6C&color=fff`
-      });
-      localStorage.setItem('authToken', authServiceResponse.token); // Example: Storing token
-
-      return authServiceResponse;
-
-    } catch (error) {
-      console.error('Registration error in AuthContext:', error);
-      // Re-throw the error so it can be caught and handled by the UI component (Register.tsx)
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const logout = () => {
-    setUser(null);
-  };
-
-  const forgotPassword = async (email: string) => {
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      // In a real app, this would send a reset email
-    } catch (error) {
-      console.error('Forgot password error:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const resetPassword = async (token: string, newPassword: string) => {
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      // In a real app, this would verify the token and update the password
-    } catch (error) {
-      console.error('Reset password error:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Check if user is already logged in (e.g., from localStorage in a real app)
-  React.useEffect(() => {
-    const checkAuth = async () => {
-      setIsLoading(true);
-      try {
-        // Simulate checking auth state
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // For demo, we'll start logged out
-        setUser(null);
-      } catch (error) {
-        console.error('Auth check error:', error);
-        setUser(null);
-      } finally {
-        setIsLoading(false);
+      // Only set error if user was previously authenticated (session expired)
+      if (user !== null) {
+        setError('Session expired. Please log in again.');
+        console.warn('⚠️ Session expired during status check');
+      } else if (initializationAttempted.current) {
+        // Silent failure on initial check - user is not authenticated
+        console.info('ℹ️ No active session found');
       }
-    };
-    
-    checkAuth();
+    } finally {
+      setLoading(false);
+    }
+  }, [user]);
+
+  /**
+   * AC2: Login function that updates AuthContext with user information
+   * AC6: Provide loading states during authentication operations
+   * AC7: Handle authentication errors with appropriate error states
+   */
+  const login = useCallback(async (credentials: LoginCredentials) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      console.log('🔐 Attempting login for:', credentials.email);
+      const response = await authService.login(credentials);
+      setUser(response.user);
+      
+      // Store CSRF token for future requests
+      if (response.csrf_token) {
+        authService.setCsrfToken(response.csrf_token);
+      }
+      
+      console.log('✅ Login successful for:', response.user.email);
+      
+      // Start session monitoring after successful login
+      startSessionMonitoring();
+      
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.error || 
+                          err.response?.data?.detail || 
+                          err.message || 
+                          'Login failed. Please try again.';
+      setError(errorMessage);
+      console.error('❌ Login failed:', errorMessage);
+      throw err; // Re-throw for component error handling
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
+  /**
+   * AC5: Logout function that clears user state and authentication status
+   * AC6: Provide loading states during logout operations
+   */
+  const logout = useCallback(async () => {
+    try {
+      setLoading(true);
+      console.log('🚪 Logging out user:', user?.email);
+      
+      await authService.logout();
+    } catch (err) {
+      // Log error but don't prevent logout UX
+      console.error('⚠️ Logout error (non-blocking):', err);
+    } finally {
+      setUser(null);
+      setError(null);
+      setLoading(false);
+      authService.clearCsrfToken();
+      stopSessionMonitoring();
+      
+      console.log('✅ Logout completed');
+    }
+  }, [user?.email]);
+
+  /**
+   * AC7: Clear error state
+   */
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
+  /**
+   * Start periodic session monitoring for authenticated users
+   * AC3: Maintain authentication state without additional API calls until validation needed
+   */
+  const startSessionMonitoring = useCallback(() => {
+    // Clear existing interval
+    if (sessionCheckInterval.current) {
+      clearInterval(sessionCheckInterval.current);
+    }
+
+    // Check session every 15 minutes
+    sessionCheckInterval.current = setInterval(() => {
+      if (user) {
+        console.log('🔍 Performing periodic session check');
+        checkAuthStatus();
+      }
+    }, 15 * 60 * 1000); // 15 minutes
+  }, [user, checkAuthStatus]);
+
+  /**
+   * Stop session monitoring
+   */
+  const stopSessionMonitoring = useCallback(() => {
+    if (sessionCheckInterval.current) {
+      clearInterval(sessionCheckInterval.current);
+      sessionCheckInterval.current = null;
+    }
+  }, []);
+
+  /**
+   * AC4: Handle 401 unauthorized events from API interceptor
+   * Automatically detect session expiry and update authentication state
+   */
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      console.warn('🚨 Unauthorized event received - clearing session');
+      setUser(null);
+      setError('Your session has expired. Please log in again.');
+      authService.clearCsrfToken();
+      stopSessionMonitoring();
+    };
+
+    // AC8: Listen for unauthorized events from API interceptor
+    window.addEventListener('auth:unauthorized', handleUnauthorized);
+    
+    return () => {
+      window.removeEventListener('auth:unauthorized', handleUnauthorized);
+    };
+  }, [stopSessionMonitoring]);
+
+  /**
+   * AC1: Initial authentication check on app load
+   * Only perform once to avoid infinite loops
+   */
+  useEffect(() => {
+    if (!initializationAttempted.current) {
+      initializationAttempted.current = true;
+      console.log('🚀 Initializing AuthContext - checking authentication status');
+      checkAuthStatus();
+    }
+  }, [checkAuthStatus]);
+
+  /**
+   * Start session monitoring when user becomes authenticated
+   */
+  useEffect(() => {
+    if (user) {
+      startSessionMonitoring();
+    } else {
+      stopSessionMonitoring();
+    }
+
+    // Cleanup on unmount
+    return () => {
+      stopSessionMonitoring();
+    };
+  }, [user, startSessionMonitoring, stopSessionMonitoring]);
+
+  /**
+   * AC2, AC5: Computed authentication status
+   */
+  const isAuthenticated = user !== null;
+
+  /**
+   * Session refresh function for manual session extension
+   */
+  const refreshSession = useCallback(async () => {
+    try {
+      await authService.refreshToken();
+      console.log('✅ Session refreshed successfully');
+    } catch (err) {
+      console.error('❌ Session refresh failed:', err);
+      // Don't throw - let normal session expiry handling take over
+    }
+  }, []);
+
+  const contextValue: AuthContextType = {
+    user,
+    loading,
+    error,
+    login,
+    logout,
+    checkAuthStatus,
+    clearError,
+    isAuthenticated,
+    refreshSession, // Enhanced functionality for Story 1.3
+  };
+
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated: !!user,
-        isLoading,
-        login,
-        register,
-        logout,
-        forgotPassword,
-        resetPassword,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
 };
 
+/**
+ * Enhanced useAuth hook with validation
+ * Throws error if used outside AuthProvider
+ */
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
+  
   return context;
+};
+
+/**
+ * Helper hook for authentication status checking
+ */
+export const useAuthStatus = () => {
+  const { isAuthenticated, loading, user } = useAuth();
+  
+  return {
+    isAuthenticated,
+    isLoading: loading,
+    isAnonymous: !isAuthenticated && !loading,
+    user,
+  };
+};
+
+/**
+ * Helper hook for protected components
+ * Returns null during loading, renders children when authenticated
+ */
+export const useRequireAuth = () => {
+  const { isAuthenticated, loading, error } = useAuth();
+  
+  if (loading) {
+    return { requiresAuth: true, isLoading: true, error: null };
+  }
+  
+  if (!isAuthenticated) {
+    return { requiresAuth: true, isLoading: false, error: error || 'Authentication required' };
+  }
+  
+  return { requiresAuth: false, isLoading: false, error: null };
 };

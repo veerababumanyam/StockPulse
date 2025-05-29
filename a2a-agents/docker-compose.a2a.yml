@@ -1,0 +1,341 @@
+version: '3.8'
+
+services:
+  # A2A Registry Service - Port 9000
+  a2a-registry:
+    build:
+      context: .
+      dockerfile: registry/Dockerfile
+    container_name: stockpulse-a2a-registry
+    ports:
+      - "9000:9000"
+    environment:
+      - REGISTRY_HOST=0.0.0.0
+      - REGISTRY_PORT=9000
+      - HEALTH_CHECK_INTERVAL=30
+      - LOG_LEVEL=info
+    volumes:
+      - ./registry:/app/registry
+      - ./shared:/app/shared
+    networks:
+      - a2a-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "a2a.service=registry"
+      - "a2a.port=9000"
+
+  # User Assistant Agent - Port 9001  
+  a2a-user-assistant:
+    build:
+      context: .
+      dockerfile: user-assistant/Dockerfile
+    container_name: stockpulse-a2a-user-assistant
+    ports:
+      - "9001:9001"
+    environment:
+      - AGENT_HOST=0.0.0.0
+      - AGENT_PORT=9001
+      - REGISTRY_URL=http://a2a-registry:9000
+      - MCP_AUTH_URL=http://mcp-auth-server:8002
+      - MCP_REDIS_URL=http://mcp-redis-server:8005
+      - LOG_LEVEL=info
+    volumes:
+      - ./user-assistant:/app/user-assistant
+      - ./shared:/app/shared
+    networks:
+      - a2a-network
+      - mcp-network
+    depends_on:
+      - a2a-registry
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "a2a.service=user-assistant"
+      - "a2a.port=9001"
+      - "a2a.skills=user_interaction,task_orchestration,multi_agent_coordination,session_management"
+
+  # Portfolio Manager Agent - Port 9002
+  a2a-portfolio-manager:
+    build:
+      context: .
+      dockerfile: portfolio-manager/Dockerfile
+    container_name: stockpulse-a2a-portfolio-manager
+    ports:
+      - "9002:9002"
+    environment:
+      - AGENT_HOST=0.0.0.0
+      - AGENT_PORT=9002
+      - REGISTRY_URL=http://a2a-registry:9000
+      - MCP_POSTGRES_URL=http://mcp-postgres-server:8003
+      - MCP_TIMESCALE_URL=http://mcp-timescale-server:8004
+      - MCP_REDIS_URL=http://mcp-redis-server:8005
+      - LOG_LEVEL=info
+    volumes:
+      - ./portfolio-manager:/app/portfolio-manager
+      - ./shared:/app/shared
+    networks:
+      - a2a-network
+      - mcp-network
+    depends_on:
+      - a2a-registry
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "a2a.service=portfolio-manager"
+      - "a2a.port=9002"
+      - "a2a.skills=portfolio_analysis,performance_tracking,rebalancing_recommendations,position_management,allocation_optimization"
+
+  # Market Research Agent - Port 9003
+  a2a-market-researcher:
+    build:
+      context: .
+      dockerfile: market-researcher/Dockerfile
+    container_name: stockpulse-a2a-market-researcher
+    ports:
+      - "9003:9003"
+    environment:
+      - AGENT_HOST=0.0.0.0
+      - AGENT_PORT=9003
+      - REGISTRY_URL=http://a2a-registry:9000
+      - MCP_GRAPHITI_URL=http://mcp-graphiti-server:8006
+      - MCP_QDRANT_URL=http://mcp-qdrant-server:8007
+      - MCP_TIMESCALE_URL=http://mcp-timescale-server:8004
+      - LOG_LEVEL=info
+    volumes:
+      - ./market-researcher:/app/market-researcher
+      - ./shared:/app/shared
+    networks:
+      - a2a-network
+      - mcp-network
+    depends_on:
+      - a2a-registry
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "a2a.service=market-researcher"
+      - "a2a.port=9003"
+      - "a2a.skills=market_analysis,news_research,company_analysis,trend_identification,sector_analysis,sentiment_analysis"
+
+  # Trading Assistant Agent - Port 9004
+  a2a-trading-assistant:
+    build:
+      context: .
+      dockerfile: trading-assistant/Dockerfile
+    container_name: stockpulse-a2a-trading-assistant
+    ports:
+      - "9004:9004"
+    environment:
+      - AGENT_HOST=0.0.0.0
+      - AGENT_PORT=9004
+      - REGISTRY_URL=http://a2a-registry:9000
+      - MCP_POSTGRES_URL=http://mcp-postgres-server:8003
+      - MCP_REDIS_URL=http://mcp-redis-server:8005
+      - MCP_TIMESCALE_URL=http://mcp-timescale-server:8004
+      - LOG_LEVEL=info
+    volumes:
+      - ./trading-assistant:/app/trading-assistant
+      - ./shared:/app/shared
+    networks:
+      - a2a-network
+      - mcp-network
+    depends_on:
+      - a2a-registry
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "a2a.service=trading-assistant"
+      - "a2a.port=9004"
+      - "a2a.skills=trade_execution,order_management,risk_checking,price_monitoring,execution_analytics"
+
+  # Risk Manager Agent - Port 9005
+  a2a-risk-manager:
+    build:
+      context: .
+      dockerfile: risk-manager/Dockerfile
+    container_name: stockpulse-a2a-risk-manager
+    ports:
+      - "9005:9005"
+    environment:
+      - AGENT_HOST=0.0.0.0
+      - AGENT_PORT=9005
+      - REGISTRY_URL=http://a2a-registry:9000
+      - MCP_POSTGRES_URL=http://mcp-postgres-server:8003
+      - MCP_TIMESCALE_URL=http://mcp-timescale-server:8004
+      - MCP_REDIS_URL=http://mcp-redis-server:8005
+      - MCP_GRAPHITI_URL=http://mcp-graphiti-server:8006
+      - MCP_QDRANT_URL=http://mcp-qdrant-server:8007
+      - LOG_LEVEL=info
+    volumes:
+      - ./risk-manager:/app/risk-manager
+      - ./shared:/app/shared
+    networks:
+      - a2a-network
+      - mcp-network
+    depends_on:
+      - a2a-registry
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9005/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "a2a.service=risk-manager"
+      - "a2a.port=9005"
+      - "a2a.skills=risk_assessment,position_sizing,volatility_analysis,compliance_checking,stress_testing,exposure_monitoring"
+
+  # Technical Analyst Agent - Port 9006
+  a2a-technical-analyst:
+    build:
+      context: .
+      dockerfile: technical-analyst/Dockerfile
+    container_name: stockpulse-a2a-technical-analyst
+    ports:
+      - "9006:9006"
+    environment:
+      - AGENT_HOST=0.0.0.0
+      - AGENT_PORT=9006
+      - REGISTRY_URL=http://a2a-registry:9000
+      - MCP_TIMESCALE_URL=http://mcp-timescale-server:8004
+      - MCP_QDRANT_URL=http://mcp-qdrant-server:8007
+      - MCP_REDIS_URL=http://mcp-redis-server:8005
+      - LOG_LEVEL=info
+    volumes:
+      - ./technical-analyst:/app/technical-analyst
+      - ./shared:/app/shared
+    networks:
+      - a2a-network
+      - mcp-network
+    depends_on:
+      - a2a-registry
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9006/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "a2a.service=technical-analyst"
+      - "a2a.port=9006"
+      - "a2a.skills=technical_indicators,chart_analysis,signal_generation,pattern_recognition,momentum_analysis,support_resistance"
+
+  # A2A Gateway Service - Port 9100 (Optional routing/auth layer)
+  a2a-gateway:
+    build:
+      context: .
+      dockerfile: gateway/Dockerfile
+    container_name: stockpulse-a2a-gateway
+    ports:
+      - "9100:9100"
+    environment:
+      - GATEWAY_HOST=0.0.0.0
+      - GATEWAY_PORT=9100
+      - REGISTRY_URL=http://a2a-registry:9000
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - RATE_LIMIT_REQUESTS=100
+      - RATE_LIMIT_WINDOW=60
+      - LOG_LEVEL=info
+    volumes:
+      - ./gateway:/app/gateway
+      - ./shared:/app/shared
+    networks:
+      - a2a-network
+    depends_on:
+      - a2a-registry
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9100/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "a2a.service=gateway"
+      - "a2a.port=9100"
+
+  # A2A Client SDK Example/Testing Service
+  a2a-client-example:
+    build:
+      context: .
+      dockerfile: client-example/Dockerfile
+    container_name: stockpulse-a2a-client-example
+    ports:
+      - "9200:9200"
+    environment:
+      - CLIENT_HOST=0.0.0.0
+      - CLIENT_PORT=9200
+      - REGISTRY_URL=http://a2a-registry:9000
+      - USER_ASSISTANT_URL=http://a2a-user-assistant:9001
+      - LOG_LEVEL=info
+    volumes:
+      - ./client-example:/app/client-example
+      - ./shared:/app/shared
+    networks:
+      - a2a-network
+    depends_on:
+      - a2a-registry
+      - a2a-user-assistant
+    restart: unless-stopped
+    profiles:
+      - testing
+    labels:
+      - "a2a.service=client-example"
+      - "a2a.port=9200"
+
+networks:
+  a2a-network:
+    driver: bridge
+    name: stockpulse-a2a-network
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+  # Connect to existing MCP network  
+  mcp-network:
+    external: true
+    name: stockpulse-mcp-network
+
+volumes:
+  a2a-logs:
+    driver: local
+    name: stockpulse-a2a-logs
+
+  a2a-data:
+    driver: local
+    name: stockpulse-a2a-data
+
+# Configuration for monitoring and observability
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-restart-policy: &default-restart-policy
+  restart: unless-stopped
+
+x-healthcheck: &default-healthcheck
+  interval: 30s
+  timeout: 10s
+  retries: 3
+  start_period: 40s 

@@ -1,0 +1,194 @@
+name: stockpulse-staging
+
+services:
+  # ================================
+  # FRONTEND APPLICATION (Staging)
+  # ================================
+  
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: stockpulse-frontend-staging
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=staging
+      - REACT_APP_ENV=staging
+      - REACT_APP_MCP_AUTH_URL=http://mcp-auth-server:8002
+      - REACT_APP_MCP_REGISTRY_URL=http://mcp-registry:8001
+      - REACT_APP_API_URL=http://backend:8000/api/v1
+    depends_on:
+      - mcp-auth-server
+      - backend
+    networks:
+      - stockpulse-staging-network
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend-staging.rule=Host(`staging.stockpulse.local`)"
+      - "traefik.http.services.frontend-staging.loadbalancer.server.port=3000"
+
+  # ================================
+  # BACKEND APPLICATION (Staging)
+  # ================================
+  
+  backend:
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile
+    container_name: stockpulse-backend-staging
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=staging
+      - DATABASE_URL=postgresql+asyncpg://stockpulse_user:stockpulse_password@postgres:5432/stockpulse
+      - REDIS_URL=redis://:stockpulse_redis_password@redis:6379
+      - MCP_AUTH_URL=http://mcp-auth-server:8002
+      - JWT_SECRET_KEY=staging-jwt-secret-change-in-production
+      - CORS_ORIGINS=["http://frontend:3000", "http://localhost:3000"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mcp-auth-server:
+        condition: service_started
+    networks:
+      - stockpulse-staging-network
+    restart: unless-stopped
+
+  # ================================
+  # DATABASE LAYER (Staging)
+  # ================================
+  
+  postgres:
+    image: postgres:15
+    container_name: stockpulse-postgres-staging
+    environment:
+      POSTGRES_DB: stockpulse
+      POSTGRES_USER: stockpulse_user
+      POSTGRES_PASSWORD: stockpulse_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_staging_data:/var/lib/postgresql/data
+      - ./services/backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stockpulse_user -d stockpulse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - stockpulse-staging-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: stockpulse-redis-staging
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_staging_data:/data
+    command: redis-server --appendonly yes --requirepass stockpulse_redis_password
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "stockpulse_redis_password", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - stockpulse-staging-network
+
+  # ================================
+  # MCP SERVER LAYER (Staging)
+  # ================================
+
+  mcp-registry:
+    build:
+      context: ./mcp-servers/registry
+      dockerfile: ../Dockerfile.shared
+    container_name: stockpulse-mcp-registry-staging
+    ports:
+      - "8001:8001"
+    environment:
+      - MCP_SERVER_PORT=8001
+      - MCP_SERVER_NAME=stockpulse-registry-staging
+      - REGISTRY_HOST=0.0.0.0
+      - LOG_LEVEL=info
+    networks:
+      - stockpulse-staging-network
+    restart: unless-stopped
+
+  mcp-auth-server:
+    build:
+      context: ./mcp-servers/auth-server
+      dockerfile: Dockerfile
+    container_name: stockpulse-mcp-auth-staging
+    ports:
+      - "8002:8002"
+    environment:
+      - MCP_SERVER_PORT=8002
+      - MCP_SERVER_NAME=stockpulse-auth-staging
+      - DATABASE_URL=postgresql+asyncpg://stockpulse_user:stockpulse_password@postgres:5432/stockpulse
+      - REDIS_URL=redis://:stockpulse_redis_password@redis:6379
+      - JWT_SECRET_KEY=staging-jwt-secret-change-in-production
+      - LOG_LEVEL=info
+      - ENABLE_TEST_USERS=true
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - stockpulse-staging-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ================================
+  # MONITORING & OBSERVABILITY
+  # ================================
+  
+  # Traefik Reverse Proxy for staging
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik-staging
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"  # Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - stockpulse-staging-network
+    restart: unless-stopped
+
+  # Log aggregation for staging
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: loki-staging
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - stockpulse-staging-network
+    restart: unless-stopped
+
+networks:
+  stockpulse-staging-network:
+    driver: bridge
+    name: stockpulse-staging
+
+volumes:
+  postgres_staging_data:
+    name: stockpulse-postgres-staging-data
+  redis_staging_data:
+    name: stockpulse-redis-staging-data 
