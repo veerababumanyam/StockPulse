@@ -52,6 +52,9 @@ import ApiKeyManagement from "@pages/settings/ApiKeyManagement";
 import LlmManagement from "@pages/settings/LlmManagement";
 import MCPServerConfiguration from "@pages/settings/MCPServerConfiguration";
 
+// Admin Pages
+import UserApproval from "@pages/admin/UserApproval";
+
 // Onboarding
 import Onboarding from "@pages/onboarding/Onboarding";
 
@@ -137,6 +140,9 @@ function App() {
             <Route path="/settings/api-keys" element={<ApiKeyManagement />} />
             <Route path="/settings/llm" element={<LlmManagement />} />
             <Route path="/settings/mcp" element={<MCPServerConfiguration />} />
+
+            {/* Admin Routes */}
+            <Route path="/admin/user-approval" element={<UserApproval />} />
 
             {/* Catch-all Not Found Route - Now inside MainLayout for consistent navigation */}
             <Route path="*" element={<NotFoundPage />} />

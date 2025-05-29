@@ -21,6 +21,8 @@ from app.schemas.auth import (
     RegisterRequest,
     RegisterResponse,
     UserResponse,
+    PendingUserResponse,
+    UserApprovalRequest,
 )
 from app.services.auth.jwt_service import csrf_service, jwt_service
 from app.services.auth.security_service import security_service
@@ -115,6 +117,26 @@ async def login(
                 status_code=status.HTTP_403_FORBIDDEN, detail="Account is deactivated"
             )
 
+        # Check if user is approved (NEW SECURITY CHECK)
+        if not user.can_login():
+            status_message = {
+                "pending": "Your account is pending admin approval. Please wait for approval before logging in.",
+                "rejected": "Your account registration was rejected. Please contact support for more information.",
+                "suspended": "Your account has been suspended. Please contact support.",
+            }.get(user.status, "Account access denied")
+            
+            await security_service.log_security_event(
+                "unapproved_user_login_attempt",
+                user_id=str(user.id),
+                ip_address=ip_address,
+                details={"email": credentials.email, "status": user.status},
+                db=db,
+            )
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=status_message
+            )
+
         # Generate tokens
         token_data = {"sub": str(user.id), "email": user.email}
         access_token = jwt_service.create_access_token(token_data)
@@ -192,9 +214,9 @@ async def register(
     - Email/password registration with validation
     - Rate limiting (3 attempts per minute per IP)
     - Duplicate email checking
-    - Automatic login after registration
-    - HttpOnly cookie setting
+    - Creates user in PENDING status awaiting admin approval
     - Security logging
+    - NO automatic login (security improvement)
     """
     ip_address = get_remote_address(request)
     user_agent = request.headers.get("user-agent", "")
@@ -213,7 +235,7 @@ async def register(
                 detail="IP address temporarily blocked due to suspicious activity",
             )
 
-        # Create new user
+        # Create new user in PENDING status
         try:
             user = await user_service.create_user(
                 email=credentials.email, password=credentials.password, db=db
@@ -231,48 +253,26 @@ async def register(
                 detail="User with this email already exists",
             )
 
-        # Generate tokens for automatic login
-        token_data = {"sub": str(user.id), "email": user.email}
-        access_token = jwt_service.create_access_token(token_data)
-        refresh_token = jwt_service.create_refresh_token(token_data)
-
-        # Set authentication cookies
-        jwt_service.set_auth_cookies(response, access_token, refresh_token)
-
-        # Generate and set CSRF token
-        csrf_token = csrf_service.generate_csrf_token()
-        csrf_service.set_csrf_cookie(response, csrf_token)
-
-        # Create user session record
-        await user_service.create_user_session(
-            str(user.id), access_token, refresh_token, ip_address, user_agent, db
-        )
-
-        # Log successful registration
+        # Log successful registration (pending approval)
         await security_service.log_security_event(
-            "registration_success",
+            "registration_pending",
             user_id=str(user.id),
             ip_address=ip_address,
-            details={"email": user.email},
+            details={"email": user.email, "status": "pending_approval"},
             db=db,
         )
 
+        # TODO: Send email notification to admins about new registration
         # TODO: Notify MCP agents when available
         # if hasattr(request.app.state, "agent_notifier"):
-        #     user_context = await user_service.create_user_context(user)
         #     asyncio.create_task(
-        #         request.app.state.agent_notifier.notify_user_registration(user_context)
+        #         request.app.state.agent_notifier.notify_admin_new_registration(user)
         #     )
 
         return RegisterResponse(
-            user=UserResponse(
-                id=str(user.id),
-                email=user.email,
-                created_at=user.created_at,
-                last_login=datetime.utcnow(),
-            ),
-            message="Registration successful",
-            csrf_token=csrf_token,
+            message="Registration submitted successfully. Your account is pending admin approval. You will receive an email once approved.",
+            status="pending",
+            user_id=str(user.id),
         )
 
     except HTTPException:
@@ -427,5 +427,139 @@ async def refresh_token(
         )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Token refresh failed",
+            detail="Token refresh failed. Please log in again.",
+        )
+
+
+# Admin-only endpoints for user approval management
+
+async def get_current_admin_user(
+    request: Request,
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Dependency to ensure current user is an admin."""
+    user = await user_service.get_user_by_id(current_user["sub"], db)
+    if not user or not user.is_admin():
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required"
+        )
+    return user
+
+
+@router.get("/admin/pending-users", response_model=list[PendingUserResponse])
+async def get_pending_users(
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    admin_user: User = Depends(get_current_admin_user),
+):
+    """Get all users pending approval (admin only)."""
+    try:
+        pending_users = await user_service.get_pending_users(db)
+        
+        return [
+            PendingUserResponse(
+                id=str(user.id),
+                email=user.email,
+                created_at=user.created_at,
+                status=user.status
+            )
+            for user in pending_users
+        ]
+        
+    except Exception as e:
+        await security_service.log_security_event(
+            "admin_pending_users_error",
+            user_id=str(admin_user.id),
+            ip_address=get_remote_address(request),
+            details={"error": str(e)},
+            db=db,
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve pending users"
+        )
+
+
+@router.post("/admin/approve-user")
+async def approve_or_reject_user(
+    request: Request,
+    approval_request: UserApprovalRequest,
+    db: AsyncSession = Depends(get_db),
+    admin_user: User = Depends(get_current_admin_user),
+):
+    """Approve or reject a pending user registration (admin only)."""
+    ip_address = get_remote_address(request)
+    
+    try:
+        # Get the user to approve/reject
+        target_user = await user_service.get_user_by_id(approval_request.user_id, db)
+        if not target_user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+        
+        if not target_user.is_pending_approval():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="User is not pending approval"
+            )
+        
+        # Perform approval/rejection
+        if approval_request.action == "approve":
+            await user_service.approve_user(
+                target_user.id, 
+                admin_user.id,
+                db
+            )
+            message = f"User {target_user.email} has been approved"
+            event_type = "user_approved"
+        else:
+            await user_service.reject_user(
+                target_user.id,
+                admin_user.id,
+                approval_request.rejection_reason,
+                db
+            )
+            message = f"User {target_user.email} has been rejected"
+            event_type = "user_rejected"
+        
+        # Log admin action
+        await security_service.log_security_event(
+            event_type,
+            user_id=str(admin_user.id),
+            ip_address=ip_address,
+            details={
+                "target_user_id": str(target_user.id),
+                "target_email": target_user.email,
+                "action": approval_request.action,
+                "rejection_reason": approval_request.rejection_reason
+            },
+            db=db,
+        )
+        
+        # TODO: Send email notification to user about approval/rejection
+        # TODO: Notify MCP agents when available
+        
+        return {"message": message}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        await security_service.log_security_event(
+            "admin_approval_error",
+            user_id=str(admin_user.id),
+            ip_address=ip_address,
+            details={
+                "target_user_id": approval_request.user_id,
+                "action": approval_request.action,
+                "error": str(e)
+            },
+            db=db,
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to process user approval"
         )

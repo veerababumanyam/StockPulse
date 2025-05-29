@@ -128,8 +128,13 @@ class AuthService {
 
   /**
    * Register new user via FastAPI Auth Server
+   * Now creates user in pending approval status
    */
-  async register(credentials: RegisterCredentials): Promise<LoginResponse> {
+  async register(credentials: RegisterCredentials): Promise<{ 
+    message: string; 
+    status: string; 
+    user_id: string; 
+  }> {
     try {
       console.log("🚀 Registration Debug Info:");
       console.log("API Base URL:", apiClient.defaults.baseURL);
@@ -148,16 +153,10 @@ class AuthService {
         confirm_password: credentials.confirmPassword,
       });
 
-      console.log("✅ Registration successful:", response.data);
+      console.log("✅ Registration successful (pending approval):", response.data);
 
-      const registerResponse: LoginResponse = response.data;
-
-      // Store CSRF token if provided
-      if (registerResponse.csrf_token) {
-        this.setCsrfToken(registerResponse.csrf_token);
-      }
-
-      return registerResponse;
+      // Return the registration response (no auto-login anymore)
+      return response.data;
     } catch (error) {
       console.error("❌ Registration error:", error);
       if (error instanceof AxiosError) {

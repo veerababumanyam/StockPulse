@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
 from app.core.database import get_db
-from app.models.user import User, UserRole, UserSession
+from app.models.user import User, UserRole, UserSession, UserStatus
 
 settings = get_settings()
 
@@ -151,6 +151,88 @@ class UserService:
             "is_active": user.is_active,
             "created_at": user.created_at.isoformat(),
         }
+
+    async def get_pending_users(self, db: AsyncSession) -> list[User]:
+        """Get all users pending approval."""
+        result = await db.execute(
+            select(User).filter(User.status == UserStatus.PENDING)
+            .order_by(User.created_at.desc())
+        )
+        return result.scalars().all()
+
+    async def approve_user(self, user_id: str, admin_id: str, db: AsyncSession) -> User:
+        """Approve a pending user."""
+        user = await self.get_user_by_id(user_id, db)
+        if not user:
+            raise ValueError(f"User with ID {user_id} not found")
+        
+        if user.status != UserStatus.PENDING:
+            raise ValueError(f"User {user.email} is not pending approval")
+        
+        user.status = UserStatus.APPROVED
+        user.approved_at = datetime.utcnow()
+        user.approved_by = admin_id
+        user.rejection_reason = None  # Clear any previous rejection reason
+        
+        await db.commit()
+        await db.refresh(user)
+        return user
+
+    async def reject_user(
+        self, 
+        user_id: str, 
+        admin_id: str, 
+        reason: str, 
+        db: AsyncSession
+    ) -> User:
+        """Reject a pending user."""
+        user = await self.get_user_by_id(user_id, db)
+        if not user:
+            raise ValueError(f"User with ID {user_id} not found")
+        
+        if user.status != UserStatus.PENDING:
+            raise ValueError(f"User {user.email} is not pending approval")
+        
+        user.status = UserStatus.REJECTED
+        user.approved_by = admin_id
+        user.rejection_reason = reason
+        
+        await db.commit()
+        await db.refresh(user)
+        return user
+
+    async def suspend_user(
+        self, 
+        user_id: str, 
+        admin_id: str, 
+        reason: str, 
+        db: AsyncSession
+    ) -> User:
+        """Suspend an approved user."""
+        user = await self.get_user_by_id(user_id, db)
+        if not user:
+            raise ValueError(f"User with ID {user_id} not found")
+        
+        user.status = UserStatus.SUSPENDED
+        user.rejection_reason = reason
+        
+        await db.commit()
+        await db.refresh(user)
+        return user
+
+    async def reactivate_user(self, user_id: str, admin_id: str, db: AsyncSession) -> User:
+        """Reactivate a suspended user."""
+        user = await self.get_user_by_id(user_id, db)
+        if not user:
+            raise ValueError(f"User with ID {user_id} not found")
+        
+        user.status = UserStatus.APPROVED
+        user.rejection_reason = None
+        user.approved_by = admin_id
+        
+        await db.commit()
+        await db.refresh(user)
+        return user
 
 
 # Service instance

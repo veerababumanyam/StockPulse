@@ -99,9 +99,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   /**
-   * Register function that creates new user account and logs them in
+   * Register function that creates new user account in pending approval status
    * AC6: Provide loading states during registration operations
    * AC7: Handle registration errors with appropriate error states
+   * SECURITY: No auto-login - users must wait for admin approval
    */
   const register = useCallback(async (credentials: RegisterCredentials) => {
     try {
@@ -110,17 +111,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       console.log("📝 Attempting registration for:", credentials.email);
       const response = await authService.register(credentials);
-      setUser(response.user);
+      
+      console.log("✅ Registration submitted successfully for:", credentials.email);
+      console.log("🔒 Status:", response.status, "- Awaiting admin approval");
 
-      // Store CSRF token for future requests
-      if (response.csrf_token) {
-        authService.setCsrfToken(response.csrf_token);
-      }
-
-      console.log("✅ Registration successful for:", response.user.email);
-
-      // Start session monitoring after successful registration/login
-      startSessionMonitoring();
+      // DO NOT set user or start session monitoring - user needs approval
+      // DO NOT store CSRF token - no session created yet
 
       return response;
     } catch (err: any) {

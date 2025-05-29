@@ -13,6 +13,7 @@ import {
   Shield,
   Eye,
   EyeOff,
+  Clock,
 } from "lucide-react";
 import { debugApiConfig } from "@config/api";
 
@@ -144,17 +145,22 @@ const Register: React.FC = () => {
         confirmPassword: formData.confirmPassword,
       });
 
-      console.log("✅ Registration completed:", response);
+      console.log("✅ Registration submitted:", response);
 
-      if (response.fraudContext?.assessment === "medium-risk") {
+      // Show pending approval message instead of navigating to dashboard
+      if (response.status === "pending") {
         setAdvisoryMessage(
-          response.fraudContext.reason ||
-            "Your account is under review following a security check. You can proceed normally.",
+          response.message || 
+          "Registration submitted successfully! Your account is pending admin approval. You will receive an email once approved."
         );
+        
+        // Set step to show completion message
+        setStep(4); // New completion step
+      } else {
+        // Fallback for other statuses
+        setAdvisoryMessage("Registration completed successfully!");
       }
 
-      // Navigate to dashboard after successful registration
-      navigate("/dashboard");
     } catch (err) {
       console.error("❌ Registration failed:", err);
       if (err instanceof Error) {
@@ -614,6 +620,70 @@ const Register: React.FC = () => {
                         </>
                       )}
                     </button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Step 4: Registration Complete - Pending Approval */}
+              {step === 4 && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-center space-y-6"
+                >
+                  <div className="w-20 h-20 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <Clock className="w-10 h-10 text-white" />
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-2xl font-bold text-text mb-3">
+                      Registration Submitted
+                    </h3>
+                    <p className="text-text/70 text-lg mb-6">
+                      Your account is pending admin approval for security.
+                    </p>
+                  </div>
+
+                  <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+                    <div className="flex items-start space-x-3">
+                      <Shield className="w-6 h-6 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+                      <div className="text-left">
+                        <h4 className="font-semibold text-blue-900 dark:text-blue-200 mb-2">
+                          What happens next?
+                        </h4>
+                        <ul className="space-y-2 text-sm text-blue-800 dark:text-blue-300">
+                          <li className="flex items-center">
+                            <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
+                            Our admin team will review your registration
+                          </li>
+                          <li className="flex items-center">
+                            <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
+                            You'll receive an email notification when approved
+                          </li>
+                          <li className="flex items-center">
+                            <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
+                            Once approved, you can log in to access the platform
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Link
+                      to="/auth/login"
+                      className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
+                    >
+                      Go to Login Page
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Link>
+                    
+                    <Link
+                      to="/"
+                      className="w-full flex items-center justify-center py-3 px-4 border border-border rounded-lg shadow-sm text-sm font-medium text-text bg-surface hover:bg-surface/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
+                    >
+                      Return to Home
+                    </Link>
                   </div>
                 </motion.div>
               )}

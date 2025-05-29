@@ -46,11 +46,47 @@ class UserResponse(BaseModel):
 
     id: str
     email: str
+    role: str
+    status: str
     created_at: datetime
+    approved_at: Optional[datetime] = None
     last_login: Optional[datetime] = None
 
     class Config:
         from_attributes = True
+
+
+class PendingUserResponse(BaseModel):
+    """Pending user response schema for admin approval."""
+
+    id: str
+    email: str
+    name: Optional[str] = None
+    created_at: datetime
+    status: str
+
+    class Config:
+        from_attributes = True
+
+
+class UserApprovalRequest(BaseModel):
+    """User approval/rejection request schema."""
+
+    user_id: str
+    action: str  # "approve" or "reject"
+    rejection_reason: Optional[str] = None
+
+    @validator("action")
+    def validate_action(cls, v):
+        if v not in ["approve", "reject"]:
+            raise ValueError("Action must be 'approve' or 'reject'")
+        return v
+
+    @validator("rejection_reason")
+    def validate_rejection_reason(cls, v, values, **kwargs):
+        if values.get("action") == "reject" and not v:
+            raise ValueError("Rejection reason is required when rejecting a user")
+        return v
 
 
 class LoginResponse(BaseModel):
@@ -64,6 +100,7 @@ class LoginResponse(BaseModel):
 class RegisterResponse(BaseModel):
     """Registration response schema."""
 
-    user: UserResponse
     message: str
-    csrf_token: str
+    status: str
+    user_id: str
+    # No CSRF token since user is not logged in until approved
