@@ -1,215 +1,286 @@
-import React from 'react';
-import Navbar from '@components/layout/Navbar';
-import Footer from '@components/layout/Footer';
+import React from "react";
+// import Navbar from '@components/layout/Navbar'; // REMOVE: MainLayout provides the Navbar
+// import Footer from '@components/layout/Footer'; // REMOVE: MainLayout provides the Footer
 
 const IntradayTrading: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-secondary-900">
-      <Navbar />
-      
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">Intraday Trading</h1>
-        
+    <div className="bg-background">
+      {/* <Navbar /> */}
+      {/* REMOVED */}
+
+      <main className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-6 text-text">Intraday Trading</h1>
+
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
           <div className="lg:col-span-3">
-            <div className="bg-white dark:bg-secondary-800 rounded-lg shadow-md p-6 mb-6">
+            <div className="bg-surface rounded-lg border border-border shadow-sm p-6 mb-6">
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center">
-                  <h2 className="text-xl font-semibold">AAPL</h2>
-                  <span className="ml-2 text-gray-600 dark:text-gray-400">Apple Inc.</span>
+                  <h2 className="text-xl font-semibold text-text">AAPL</h2>
+                  <span className="ml-2 text-text/70">Apple Inc.</span>
                 </div>
                 <div className="flex items-center">
-                  <div className="text-2xl font-bold mr-2">$182.63</div>
-                  <div className="flex items-center text-green-500">
-                    <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  <div className="text-2xl font-bold mr-2 text-text">
+                    $182.63
+                  </div>
+                  <div className="flex items-center text-green-600">
+                    <svg
+                      className="w-5 h-5 mr-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                      />
                     </svg>
                     <span className="font-medium">+2.34%</span>
                   </div>
                 </div>
               </div>
-              
-              <div className="h-96 bg-gray-100 dark:bg-gray-700 rounded-lg mb-4 flex items-center justify-center">
-                <p className="text-gray-500 dark:text-gray-400">Intraday chart visualization</p>
+
+              <div className="h-96 bg-surface/50 border border-border rounded-lg mb-4 flex items-center justify-center">
+                <p className="text-text/60">Intraday chart visualization</p>
               </div>
-              
-              <div className="flex space-x-2 mb-4">
-                <button className="px-3 py-1 text-sm bg-primary text-white rounded">1m</button>
-                <button className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">5m</button>
-                <button className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">15m</button>
-                <button className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">30m</button>
-                <button className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">1h</button>
-                <button className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">4h</button>
+
+              <div className="flex flex-wrap gap-2 mb-4">
+                <button className="px-3 py-1 text-sm bg-primary text-white rounded focus:outline-none focus:ring-2 focus:ring-primary/50">
+                  5m
+                </button>
+                <button className="px-3 py-1 text-sm bg-surface border border-border text-text rounded hover:bg-surface/80 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors duration-200">
+                  15m
+                </button>
+                <button className="px-3 py-1 text-sm bg-surface border border-border text-text rounded hover:bg-surface/80 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors duration-200">
+                  30m
+                </button>
+                <button className="px-3 py-1 text-sm bg-surface border border-border text-text rounded hover:bg-surface/80 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors duration-200">
+                  1h
+                </button>
+                <button className="px-3 py-1 text-sm bg-surface border border-border text-text rounded hover:bg-surface/80 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors duration-200">
+                  4h
+                </button>
               </div>
-              
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+              <div className="grid grid-cols-4 gap-4 text-center">
                 <div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Open</div>
-                  <div className="font-medium">$178.35</div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">High</div>
-                  <div className="font-medium">$183.12</div>
+                  <div className="text-sm text-text/60">Open</div>
+                  <div className="font-semibold text-text">$180.25</div>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Low</div>
-                  <div className="font-medium">$177.90</div>
+                  <div className="text-sm text-text/60">High</div>
+                  <div className="font-semibold text-text">$183.15</div>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Volume</div>
-                  <div className="font-medium">12.4M</div>
+                  <div className="text-sm text-text/60">Low</div>
+                  <div className="font-semibold text-text">$179.88</div>
                 </div>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="bg-white dark:bg-secondary-800 rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold mb-4">Level 2 Order Book</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <div className="flex justify-between text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
-                      <span>Price</span>
-                      <span>Size</span>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex justify-between text-sm text-red-500">
-                        <span>$182.65</span>
-                        <span>1,245</span>
-                      </div>
-                      <div className="flex justify-between text-sm text-red-500">
-                        <span>$182.67</span>
-                        <span>3,782</span>
-                      </div>
-                      <div className="flex justify-between text-sm text-red-500">
-                        <span>$182.70</span>
-                        <span>5,120</span>
-                      </div>
-                      <div className="flex justify-between text-sm text-red-500">
-                        <span>$182.72</span>
-                        <span>2,340</span>
-                      </div>
-                      <div className="flex justify-between text-sm text-red-500">
-                        <span>$182.75</span>
-                        <span>8,765</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
-                      <span>Price</span>
-                      <span>Size</span>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex justify-between text-sm text-green-500">
-                        <span>$182.62</span>
-                        <span>2,345</span>
-                      </div>
-                      <div className="flex justify-between text-sm text-green-500">
-                        <span>$182.60</span>
-                        <span>4,567</span>
-                      </div>
-                      <div className="flex justify-between text-sm text-green-500">
-                        <span>$182.58</span>
-                        <span>3,210</span>
-                      </div>
-                      <div className="flex justify-between text-sm text-green-500">
-                        <span>$182.55</span>
-                        <span>6,789</span>
-                      </div>
-                      <div className="flex justify-between text-sm text-green-500">
-                        <span>$182.52</span>
-                        <span>1,234</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white dark:bg-secondary-800 rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold mb-4">Time & Sales</h3>
-                <div className="flex justify-between text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
-                  <span>Time</span>
-                  <span>Price</span>
-                  <span>Size</span>
-                </div>
-                <div className="space-y-1 max-h-40 overflow-y-auto">
-                  <div className="flex justify-between text-sm">
-                    <span>10:24:35</span>
-                    <span className="text-green-500">$182.63</span>
-                    <span>100</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>10:24:28</span>
-                    <span className="text-red-500">$182.61</span>
-                    <span>250</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>10:24:15</span>
-                    <span className="text-green-500">$182.62</span>
-                    <span>500</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>10:24:08</span>
-                    <span className="text-green-500">$182.64</span>
-                    <span>150</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>10:23:57</span>
-                    <span className="text-red-500">$182.60</span>
-                    <span>300</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>10:23:45</span>
-                    <span className="text-green-500">$182.62</span>
-                    <span>200</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>10:23:32</span>
-                    <span className="text-red-500">$182.59</span>
-                    <span>175</span>
-                  </div>
+                <div>
+                  <div className="text-sm text-text/60">Volume</div>
+                  <div className="font-semibold text-text">48.2M</div>
                 </div>
               </div>
             </div>
-            
-            <div className="bg-white dark:bg-secondary-800 rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold mb-4">Technical Indicators</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+
+            <div className="bg-surface rounded-lg border border-border shadow-sm p-6">
+              <h3 className="text-lg font-semibold mb-4 text-text">
+                Order Book
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">RSI (14)</div>
-                  <div className="font-medium">62.5</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">Neutral</div>
+                  <h4 className="text-sm font-medium mb-2 text-green-600">
+                    Bids
+                  </h4>
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs font-medium text-text/60 mb-2">
+                      <span>Price</span>
+                      <span>Size</span>
+                      <span>Total</span>
+                    </div>
+                    <div className="relative">
+                      <div
+                        className="absolute inset-0 bg-green-500/10 rounded"
+                        style={{ width: "95%" }}
+                      ></div>
+                      <div className="relative flex justify-between text-xs py-1 px-2">
+                        <span className="text-green-600">182.61</span>
+                        <span className="text-text">125</span>
+                        <span className="text-text">22,826</span>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <div
+                        className="absolute inset-0 bg-green-500/10 rounded"
+                        style={{ width: "88%" }}
+                      ></div>
+                      <div className="relative flex justify-between text-xs py-1 px-2">
+                        <span className="text-green-600">182.60</span>
+                        <span className="text-text">98</span>
+                        <span className="text-text">17,895</span>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <div
+                        className="absolute inset-0 bg-green-500/10 rounded"
+                        style={{ width: "76%" }}
+                      ></div>
+                      <div className="relative flex justify-between text-xs py-1 px-2">
+                        <span className="text-green-600">182.59</span>
+                        <span className="text-text">76</span>
+                        <span className="text-text">13,877</span>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <div
+                        className="absolute inset-0 bg-green-500/10 rounded"
+                        style={{ width: "62%" }}
+                      ></div>
+                      <div className="relative flex justify-between text-xs py-1 px-2">
+                        <span className="text-green-600">182.58</span>
+                        <span className="text-text">62</span>
+                        <span className="text-text">11,320</span>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <div
+                        className="absolute inset-0 bg-green-500/10 rounded"
+                        style={{ width: "54%" }}
+                      ></div>
+                      <div className="relative flex justify-between text-xs py-1 px-2">
+                        <span className="text-green-600">182.57</span>
+                        <span className="text-text">45</span>
+                        <span className="text-text">8,216</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
                 <div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">MACD</div>
-                  <div className="font-medium text-green-500">Bullish</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">Crossover</div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Stochastic</div>
-                  <div className="font-medium">78.3</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">Overbought</div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Bollinger Bands</div>
-                  <div className="font-medium">Upper Band</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">Resistance</div>
+                  <h4 className="text-sm font-medium mb-2 text-red-600">
+                    Asks
+                  </h4>
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs font-medium text-text/60 mb-2">
+                      <span>Price</span>
+                      <span>Size</span>
+                      <span>Total</span>
+                    </div>
+                    <div className="relative">
+                      <div
+                        className="absolute inset-0 bg-red-500/10 rounded"
+                        style={{ width: "89%" }}
+                      ></div>
+                      <div className="relative flex justify-between text-xs py-1 px-2">
+                        <span className="text-red-600">182.64</span>
+                        <span className="text-text">89</span>
+                        <span className="text-text">16,255</span>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <div
+                        className="absolute inset-0 bg-red-500/10 rounded"
+                        style={{ width: "72%" }}
+                      ></div>
+                      <div className="relative flex justify-between text-xs py-1 px-2">
+                        <span className="text-red-600">182.65</span>
+                        <span className="text-text">72</span>
+                        <span className="text-text">13,151</span>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <div
+                        className="absolute inset-0 bg-red-500/10 rounded"
+                        style={{ width: "58%" }}
+                      ></div>
+                      <div className="relative flex justify-between text-xs py-1 px-2">
+                        <span className="text-red-600">182.66</span>
+                        <span className="text-text">58</span>
+                        <span className="text-text">10,594</span>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <div
+                        className="absolute inset-0 bg-red-500/10 rounded"
+                        style={{ width: "43%" }}
+                      ></div>
+                      <div className="relative flex justify-between text-xs py-1 px-2">
+                        <span className="text-red-600">182.67</span>
+                        <span className="text-text">43</span>
+                        <span className="text-text">7,855</span>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <div
+                        className="absolute inset-0 bg-red-500/10 rounded"
+                        style={{ width: "34%" }}
+                      ></div>
+                      <div className="relative flex justify-between text-xs py-1 px-2">
+                        <span className="text-red-600">182.68</span>
+                        <span className="text-text">34</span>
+                        <span className="text-text">6,211</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          
-          <div>
-            <div className="bg-white dark:bg-secondary-800 rounded-lg shadow-md p-6 mb-6">
-              <h3 className="text-lg font-semibold mb-4">Order Entry</h3>
+
+          <div className="space-y-6">
+            <div className="bg-surface rounded-lg border border-border shadow-sm p-6">
+              <h3 className="text-lg font-semibold mb-4 text-text">
+                Technical Indicators
+              </h3>
               <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <div className="text-sm text-text/60">RSI (14)</div>
+                    <div className="font-semibold text-text">56.8</div>
+                    <div className="text-xs text-text/60">Neutral</div>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <div className="text-sm text-text/60">MACD</div>
+                    <div className="font-semibold text-green-600">Bullish</div>
+                    <div className="text-xs text-text/60">Crossover</div>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <div className="text-sm text-text/60">Stochastic</div>
+                    <div className="font-semibold text-red-600">82.4</div>
+                    <div className="text-xs text-text/60">Overbought</div>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <div className="text-sm text-text/60">Bollinger Bands</div>
+                    <div className="font-semibold text-yellow-600">
+                      Near Upper
+                    </div>
+                    <div className="text-xs text-text/60">Resistance</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-surface rounded-lg border border-border shadow-sm p-6">
+              <h3 className="text-lg font-semibold mb-4 text-text">
+                Quick Order
+              </h3>
+              <form className="space-y-4">
                 <div>
-                  <label htmlFor="orderType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label htmlFor="orderType" className="form-label">
                     Order Type
                   </label>
                   <select
                     id="orderType"
-                    className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-secondary-700 dark:text-white sm:text-sm"
+                    name="orderType"
+                    className="input-field w-full"
                   >
                     <option>Market</option>
                     <option>Limit</option>
@@ -217,89 +288,108 @@ const IntradayTrading: React.FC = () => {
                     <option>Stop Limit</option>
                   </select>
                 </div>
-                
+
                 <div>
-                  <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label htmlFor="quantity" className="form-label">
                     Quantity
                   </label>
                   <input
                     type="number"
                     id="quantity"
-                    defaultValue={100}
-                    min={1}
-                    className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-secondary-700 dark:text-white sm:text-sm"
+                    name="quantity"
+                    placeholder="0"
+                    className="input-field w-full"
                   />
                 </div>
-                
+
                 <div>
-                  <label htmlFor="price" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Price
+                  <label htmlFor="price" className="form-label">
+                    Price (if limit/stop)
                   </label>
                   <input
                     type="number"
                     id="price"
-                    defaultValue={182.63}
-                    step={0.01}
-                    className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-secondary-700 dark:text-white sm:text-sm"
+                    name="price"
+                    placeholder="0.00"
+                    step="0.01"
+                    className="input-field w-full"
                   />
                 </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <button className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                  >
                     Buy
                   </button>
-                  <button className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                  <button
+                    type="button"
+                    className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  >
                     Sell
                   </button>
                 </div>
-              </div>
+              </form>
             </div>
-            
-            <div className="bg-white dark:bg-secondary-800 rounded-lg shadow-md p-6 mb-6">
-              <h3 className="text-lg font-semibold mb-4">Hotkeys</h3>
+
+            <div className="bg-surface rounded-lg border border-border shadow-sm p-6">
+              <h3 className="text-lg font-semibold mb-4 text-text">Hotkeys</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-700 dark:text-gray-300">Buy Market</span>
-                  <span className="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">Shift+B</span>
+                  <span className="text-text/70">Buy Market</span>
+                  <span className="font-mono bg-surface/80 border border-border px-2 py-0.5 rounded text-text">
+                    Shift+B
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-700 dark:text-gray-300">Sell Market</span>
-                  <span className="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">Shift+S</span>
+                  <span className="text-text/70">Sell Market</span>
+                  <span className="font-mono bg-surface/80 border border-border px-2 py-0.5 rounded text-text">
+                    Shift+S
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-700 dark:text-gray-300">Cancel All</span>
-                  <span className="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">Esc</span>
+                  <span className="text-text/70">Cancel All</span>
+                  <span className="font-mono bg-surface/80 border border-border px-2 py-0.5 rounded text-text">
+                    Esc
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-700 dark:text-gray-300">Increase Qty</span>
-                  <span className="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">Ctrl+Up</span>
+                  <span className="text-text/70">Increase Qty</span>
+                  <span className="font-mono bg-surface/80 border border-border px-2 py-0.5 rounded text-text">
+                    Ctrl+Up
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-700 dark:text-gray-300">Decrease Qty</span>
-                  <span className="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">Ctrl+Down</span>
+                  <span className="text-text/70">Decrease Qty</span>
+                  <span className="font-mono bg-surface/80 border border-border px-2 py-0.5 rounded text-text">
+                    Ctrl+Down
+                  </span>
                 </div>
               </div>
             </div>
-            
-            <div className="bg-white dark:bg-secondary-800 rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold mb-4">Open Orders</h3>
+
+            <div className="bg-surface rounded-lg border border-border shadow-sm p-6">
+              <h3 className="text-lg font-semibold mb-4 text-text">
+                Open Positions
+              </h3>
               <div className="space-y-3">
-                <div className="p-3 border border-gray-200 dark:border-gray-700 rounded-md">
+                <div className="p-3 border border-border rounded-md">
                   <div className="flex justify-between items-center">
-                    <div className="font-medium">Buy AAPL</div>
-                    <button className="text-xs text-red-500 hover:text-red-700">Cancel</button>
+                    <span className="font-medium text-text">AAPL +100</span>
+                    <span className="text-green-600 font-medium">+$234.50</span>
                   </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Limit: $182.50 × 100
+                  <div className="text-sm text-text/60">
+                    Avg: $180.15 | Current: $182.63
                   </div>
                 </div>
-                <div className="p-3 border border-gray-200 dark:border-gray-700 rounded-md">
+                <div className="p-3 border border-border rounded-md">
                   <div className="flex justify-between items-center">
-                    <div className="font-medium">Sell AAPL</div>
-                    <button className="text-xs text-red-500 hover:text-red-700">Cancel</button>
+                    <span className="font-medium text-text">MSFT -50</span>
+                    <span className="text-red-600 font-medium">-$67.25</span>
                   </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Limit: $183.00 × 50
+                  <div className="text-sm text-text/60">
+                    Avg: $337.89 | Current: $336.54
                   </div>
                 </div>
               </div>
@@ -307,8 +397,9 @@ const IntradayTrading: React.FC = () => {
           </div>
         </div>
       </main>
-      
-      <Footer />
+
+      {/* <Footer /> */}
+      {/* REMOVED */}
     </div>
   );
 };

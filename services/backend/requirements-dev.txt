@@ -1,0 +1,33 @@
+# Development and Code Quality Tools for StockPulse Backend
+
+# Code Quality & Formatting
+black==23.12.1              # Code formatting
+isort==5.13.2               # Import sorting
+flake8==7.0.0               # Linting and style guide enforcement
+flake8-docstrings==1.7.0    # Docstring linting
+flake8-import-order==0.18.2 # Import order checking
+
+# Type Checking
+mypy==1.8.0                 # Static type checking
+types-redis==4.6.0.20250106 # Type stubs for Redis
+
+# Security Tools
+bandit==1.7.5               # Security vulnerability scanner
+safety==3.0.1               # Dependency vulnerability scanner
+semgrep==1.50.0             # Static analysis for security patterns
+
+# Testing & Coverage
+pytest-cov==4.0.0           # Coverage reporting for pytest
+pytest-xdist==3.5.0         # Parallel test execution
+pytest-mock==3.12.0         # Mocking utilities
+
+# Documentation
+sphinx==7.2.6               # Documentation generation
+sphinx-rtd-theme==2.0.0     # Read the Docs theme
+
+# Pre-commit Hooks
+pre-commit==3.6.0           # Git hooks for automated quality checks
+
+# Development Utilities
+ipython==8.18.1             # Enhanced Python shell
+rich==13.7.0                # Rich text and beautiful formatting

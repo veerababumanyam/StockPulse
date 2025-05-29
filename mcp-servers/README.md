@@ -5,6 +5,7 @@ This directory contains the MCP (Model Context Protocol) servers that provide a 
 ## 🏗️ **Architecture Overview**
 
 The MCP layer creates a unified, type-safe interface for AI agents to access:
+
 - **Authentication** services (login, sessions, user management)
 - **PostgreSQL** database (portfolios, trades, user data)
 - **TimescaleDB** (historical market data, time-series analytics)
@@ -46,6 +47,7 @@ pip install -r requirements.txt
 ### 2. Environment Setup
 
 Copy environment variables from the main backend:
+
 ```bash
 cp ../services/backend/.env .env
 ```
@@ -76,10 +78,12 @@ curl http://localhost:8001/tools
 ## 🛠️ **Available MCP Servers**
 
 ### 1. **Authentication Server** (`mcp-auth-server`)
-**Port:** Internal only  
+
+**Port:** Internal only
 **Purpose:** User authentication and session management
 
 **Available Tools:**
+
 - `authenticate_user` - Login with email/password
 - `validate_token` - JWT token validation
 - `create_user` - New user registration
@@ -89,6 +93,7 @@ curl http://localhost:8001/tools
 - `get_user_sessions` - Active session management
 
 **Example Usage:**
+
 ```python
 # Authenticate user
 await mcp_client.call_tool("authenticate_user", {
@@ -98,10 +103,12 @@ await mcp_client.call_tool("authenticate_user", {
 ```
 
 ### 2. **PostgreSQL Server** (`mcp-postgres-server`)
-**Port:** Internal only  
+
+**Port:** Internal only
 **Purpose:** Relational data operations
 
 **Available Tools:**
+
 - `execute_query` - Safe SELECT query execution
 - `get_user_portfolios` - Portfolio information
 - `get_user_trades` - Trading history
@@ -112,6 +119,7 @@ await mcp_client.call_tool("authenticate_user", {
 - `get_table_stats` - Database statistics
 
 **Example Usage:**
+
 ```python
 # Get user portfolios
 await mcp_client.call_tool("get_user_portfolios", {
@@ -126,10 +134,12 @@ await mcp_client.call_tool("execute_query", {
 ```
 
 ### 3. **TimescaleDB Server** (`mcp-timescale-server`)
-**Port:** Internal only  
+
+**Port:** Internal only
 **Purpose:** Time-series data and market analytics
 
 **Available Tools:**
+
 - `get_stock_prices` - Historical price data
 - `get_real_time_prices` - Current market prices
 - `get_technical_indicators` - SMA, RSI, MACD, Bollinger Bands
@@ -141,28 +151,31 @@ await mcp_client.call_tool("execute_query", {
 - `aggregate_market_data` - Continuous aggregates
 
 **Example Usage:**
+
 ```python
 # Get stock price history
 await mcp_client.call_tool("get_stock_prices", {
     "symbol": "AAPL",
-    "start_date": "2024-01-01",
-    "end_date": "2024-05-29",
+    "start_date": "2025-01-01",
+    "end_date": "2025-05-29",
     "interval": "1d"
 })
 
 # Get technical indicators
 await mcp_client.call_tool("get_technical_indicators", {
-    "symbol": "AAPL", 
+    "symbol": "AAPL",
     "indicators": ["sma", "rsi", "macd"],
     "period": "30d"
 })
 ```
 
 ### 4. **Redis Server** (`mcp-redis-server`)
-**Port:** Internal only  
+
+**Port:** Internal only
 **Purpose:** Caching and real-time operations
 
 **Available Tools:**
+
 - `cache_set/get/delete/exists` - Cache operations
 - `session_set/get/delete` - Session management
 - `real_time_price_set/get` - Live price data
@@ -172,6 +185,7 @@ await mcp_client.call_tool("get_technical_indicators", {
 - `get_redis_info` - Server statistics
 
 **Example Usage:**
+
 ```python
 # Cache stock data
 await mcp_client.call_tool("cache_set", {
@@ -190,10 +204,12 @@ await mcp_client.call_tool("user_alerts_set", {
 ```
 
 ### 5. **Graphiti Server** (`mcp-graphiti-server`)
-**Port:** Internal only  
+
+**Port:** Internal only
 **Purpose:** Knowledge graph and RAG operations
 
 **Available Tools:**
+
 - `add_financial_news` - News ingestion
 - `add_company_filing` - SEC filing processing
 - `add_user_interaction` - Behavior tracking
@@ -203,6 +219,7 @@ await mcp_client.call_tool("user_alerts_set", {
 - `health_check` - Service status
 
 **Example Usage:**
+
 ```python
 # Add financial news
 await mcp_client.call_tool("add_financial_news", {
@@ -210,7 +227,7 @@ await mcp_client.call_tool("add_financial_news", {
     "content": "Apple Inc. reported...",
     "source": "Reuters",
     "symbols": ["AAPL"],
-    "published_at": "2024-05-29T15:30:00Z"
+    "published_at": "2025-05-29T15:30:00Z"
 })
 
 # Search knowledge graph
@@ -222,10 +239,12 @@ await mcp_client.call_tool("search_knowledge", {
 ```
 
 ### 6. **Qdrant Server** (`mcp-qdrant-server`)
-**Port:** Internal only  
+
+**Port:** Internal only
 **Purpose:** Vector database operations
 
 **Available Tools:**
+
 - `create_collection` - Vector collection management
 - `insert_vectors` - Document embedding storage
 - `search_similar` - Semantic similarity search
@@ -233,10 +252,12 @@ await mcp_client.call_tool("search_knowledge", {
 - `get_collection_info` - Collection statistics
 
 ### 7. **Registry Service** (`mcp-registry`)
-**Port:** 8001  
+
+**Port:** 8001
 **Purpose:** Service discovery and health monitoring
 
 **API Endpoints:**
+
 - `GET /servers` - List all registered MCP servers
 - `GET /tools` - List all available tools across servers
 - `GET /health` - Overall system health
@@ -267,7 +288,7 @@ async def test_mcp_tool():
         # List available tools
         tools = await client.list_tools()
         print("Available tools:", [tool.name for tool in tools])
-        
+
         # Call a tool
         result = await client.call_tool("get_user_portfolios", {
             "user_id": "test_user"
@@ -286,6 +307,7 @@ asyncio.run(test_mcp_tool())
 4. **Update documentation** and tests
 
 Example:
+
 ```python
 # In server.py
 Tool(
@@ -374,28 +396,31 @@ curl http://localhost:8001/servers/stockpulse-postgres/health
 ### Common Issues
 
 1. **Server Won't Start**
+
    ```bash
    # Check logs
    docker-compose -f docker-compose.mcp.yml logs mcp-auth-server
-   
+
    # Check network connectivity
    docker network ls | grep stockpulse
    ```
 
 2. **Database Connection Errors**
+
    ```bash
    # Verify main databases are running
    docker-compose ps
-   
+
    # Check database URLs in environment
    docker-compose -f docker-compose.mcp.yml exec mcp-postgres-server env | grep DATABASE_URL
    ```
 
 3. **Tool Call Failures**
+
    ```bash
    # Check registry for available tools
    curl http://localhost:8001/tools
-   
+
    # Verify tool schema
    curl http://localhost:8001/servers/stockpulse-postgres/tools
    ```
@@ -433,25 +458,25 @@ MCP servers are designed to be consumed by AI agents:
 class TradingAgent:
     def __init__(self, mcp_client):
         self.mcp = mcp_client
-    
+
     async def analyze_portfolio(self, user_id: str):
         # Get portfolio data via MCP
         portfolios = await self.mcp.call_tool("get_user_portfolios", {
             "user_id": user_id
         })
-        
+
         # Get market data via MCP
         for portfolio in portfolios:
             prices = await self.mcp.call_tool("get_real_time_prices", {
                 "symbols": portfolio["symbols"]
             })
-            
+
         # Perform analysis using knowledge graph
         insights = await self.mcp.call_tool("search_knowledge", {
             "query": f"market analysis for {portfolio['symbols']}",
             "group_id": "market_analysis"
         })
-        
+
         return analysis_result
 ```
 
@@ -464,4 +489,4 @@ class TradingAgent:
 
 ---
 
-**Ready to build AI-powered financial intelligence with standardized database access! 🚀** 
+**Ready to build AI-powered financial intelligence with standardized database access! 🚀**

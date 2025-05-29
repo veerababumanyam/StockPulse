@@ -1,41 +1,41 @@
-import React, { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
-} from '../ui/card';
-import { 
-  Form, 
-  FormControl, 
-  FormDescription, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
-  FormMessage 
-} from '../ui/form';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
-import { 
-  AlertCircle, 
-  Shield, 
-  Sliders, 
+import React, { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import {
+  AlertCircle,
+  Shield,
+  Sliders,
   BarChart4,
   Lock,
   Save,
-  RefreshCw
-} from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { useToast } from '../../hooks/useToast';
-import { Switch } from '../ui/switch';
-import { Slider } from '../ui/slider';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+  RefreshCw,
+} from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useToast } from "../../hooks/useToast";
+import { Switch } from "../ui/switch";
+import { Slider } from "../ui/slider";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 // Form schema for risk management settings
 const riskManagementSchema = z.object({
@@ -47,13 +47,13 @@ const riskManagementSchema = z.object({
   enableEmergencyShutdown: z.boolean(),
   enableMcpRiskMonitoring: z.boolean(),
   enableAuditLogging: z.boolean(),
-  riskLevel: z.enum(['conservative', 'moderate', 'aggressive']),
+  riskLevel: z.enum(["conservative", "moderate", "aggressive"]),
 });
 
 type RiskManagementValues = z.infer<typeof riskManagementSchema>;
 
 const RiskManagementFramework: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('general');
+  const [activeTab, setActiveTab] = useState("general");
   const { toast } = useToast();
 
   const form = useForm<RiskManagementValues>({
@@ -67,13 +67,13 @@ const RiskManagementFramework: React.FC = () => {
       enableEmergencyShutdown: true,
       enableMcpRiskMonitoring: true,
       enableAuditLogging: true,
-      riskLevel: 'moderate',
+      riskLevel: "moderate",
     },
   });
 
   const handleSaveSettings = (values: RiskManagementValues) => {
-    console.log('Risk management settings saved:', values);
-    
+    console.log("Risk management settings saved:", values);
+
     toast({
       title: "Risk Settings Saved",
       description: "Your risk management settings have been updated.",
@@ -91,9 +91,9 @@ const RiskManagementFramework: React.FC = () => {
       enableEmergencyShutdown: true,
       enableMcpRiskMonitoring: true,
       enableAuditLogging: true,
-      riskLevel: 'moderate',
+      riskLevel: "moderate",
     });
-    
+
     toast({
       title: "Settings Reset",
       description: "Risk management settings have been reset to defaults.",
@@ -104,7 +104,8 @@ const RiskManagementFramework: React.FC = () => {
   const handleEmergencyStop = () => {
     toast({
       title: "Emergency Stop Activated",
-      description: "All automated trading has been halted. Please review your positions.",
+      description:
+        "All automated trading has been halted. Please review your positions.",
       variant: "destructive",
     });
   };
@@ -113,13 +114,15 @@ const RiskManagementFramework: React.FC = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Risk Management Framework</h2>
+          <h2 className="text-2xl font-bold tracking-tight">
+            Risk Management Framework
+          </h2>
           <p className="text-muted-foreground mt-1">
             Configure risk parameters for automated trading with MCP integration
           </p>
         </div>
-        <Button 
-          variant="destructive" 
+        <Button
+          variant="destructive"
           className="gap-2"
           onClick={handleEmergencyStop}
         >
@@ -127,14 +130,18 @@ const RiskManagementFramework: React.FC = () => {
           Emergency Stop
         </Button>
       </div>
-      
-      <Tabs defaultValue="general" value={activeTab} onValueChange={setActiveTab}>
+
+      <Tabs
+        defaultValue="general"
+        value={activeTab}
+        onValueChange={setActiveTab}
+      >
         <TabsList>
           <TabsTrigger value="general">General Settings</TabsTrigger>
           <TabsTrigger value="mcp">MCP Risk Controls</TabsTrigger>
           <TabsTrigger value="advanced">Advanced Settings</TabsTrigger>
         </TabsList>
-        
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSaveSettings)}>
             <TabsContent value="general" className="mt-6 space-y-6">
@@ -163,25 +170,30 @@ const RiskManagementFramework: React.FC = () => {
                                 max={50}
                                 step={0.5}
                                 value={[field.value]}
-                                onValueChange={(value) => field.onChange(value[0])}
+                                onValueChange={(value) =>
+                                  field.onChange(value[0])
+                                }
                                 className="flex-1"
                               />
                             </FormControl>
                             <Input
                               type="number"
                               value={field.value}
-                              onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                              onChange={(e) =>
+                                field.onChange(parseFloat(e.target.value))
+                              }
                               className="w-16"
                             />
                           </div>
                           <FormDescription>
-                            Maximum allowed portfolio drawdown before halting all automations
+                            Maximum allowed portfolio drawdown before halting
+                            all automations
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="dailyLossLimitPercent"
@@ -195,26 +207,31 @@ const RiskManagementFramework: React.FC = () => {
                                 max={20}
                                 step={0.1}
                                 value={[field.value]}
-                                onValueChange={(value) => field.onChange(value[0])}
+                                onValueChange={(value) =>
+                                  field.onChange(value[0])
+                                }
                                 className="flex-1"
                               />
                             </FormControl>
                             <Input
                               type="number"
                               value={field.value}
-                              onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                              onChange={(e) =>
+                                field.onChange(parseFloat(e.target.value))
+                              }
                               className="w-16"
                             />
                           </div>
                           <FormDescription>
-                            Maximum allowed daily loss as percentage of portfolio value
+                            Maximum allowed daily loss as percentage of
+                            portfolio value
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
@@ -229,25 +246,30 @@ const RiskManagementFramework: React.FC = () => {
                                 max={100}
                                 step={1}
                                 value={[field.value]}
-                                onValueChange={(value) => field.onChange(value[0])}
+                                onValueChange={(value) =>
+                                  field.onChange(value[0])
+                                }
                                 className="flex-1"
                               />
                             </FormControl>
                             <Input
                               type="number"
                               value={field.value}
-                              onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                              onChange={(e) =>
+                                field.onChange(parseFloat(e.target.value))
+                              }
                               className="w-16"
                             />
                           </div>
                           <FormDescription>
-                            Maximum position size as percentage of portfolio value
+                            Maximum position size as percentage of portfolio
+                            value
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="consecutiveLossesThreshold"
@@ -261,26 +283,31 @@ const RiskManagementFramework: React.FC = () => {
                                 max={20}
                                 step={1}
                                 value={[field.value]}
-                                onValueChange={(value) => field.onChange(value[0])}
+                                onValueChange={(value) =>
+                                  field.onChange(value[0])
+                                }
                                 className="flex-1"
                               />
                             </FormControl>
                             <Input
                               type="number"
                               value={field.value}
-                              onChange={(e) => field.onChange(parseInt(e.target.value))}
+                              onChange={(e) =>
+                                field.onChange(parseInt(e.target.value))
+                              }
                               className="w-16"
                             />
                           </div>
                           <FormDescription>
-                            Number of consecutive losing trades before pausing an automation
+                            Number of consecutive losing trades before pausing
+                            an automation
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
-                  
+
                   <FormField
                     control={form.control}
                     name="riskLevel"
@@ -292,53 +319,63 @@ const RiskManagementFramework: React.FC = () => {
                             <FormControl>
                               <input
                                 type="radio"
-                                checked={field.value === 'conservative'}
-                                onChange={() => field.onChange('conservative')}
+                                checked={field.value === "conservative"}
+                                onChange={() => field.onChange("conservative")}
                                 className="h-4 w-4 text-primary"
                               />
                             </FormControl>
-                            <FormLabel className="font-normal">Conservative</FormLabel>
+                            <FormLabel className="font-normal">
+                              Conservative
+                            </FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-2 space-y-0">
                             <FormControl>
                               <input
                                 type="radio"
-                                checked={field.value === 'moderate'}
-                                onChange={() => field.onChange('moderate')}
+                                checked={field.value === "moderate"}
+                                onChange={() => field.onChange("moderate")}
                                 className="h-4 w-4 text-primary"
                               />
                             </FormControl>
-                            <FormLabel className="font-normal">Moderate</FormLabel>
+                            <FormLabel className="font-normal">
+                              Moderate
+                            </FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-2 space-y-0">
                             <FormControl>
                               <input
                                 type="radio"
-                                checked={field.value === 'aggressive'}
-                                onChange={() => field.onChange('aggressive')}
+                                checked={field.value === "aggressive"}
+                                onChange={() => field.onChange("aggressive")}
                                 className="h-4 w-4 text-primary"
                               />
                             </FormControl>
-                            <FormLabel className="font-normal">Aggressive</FormLabel>
+                            <FormLabel className="font-normal">
+                              Aggressive
+                            </FormLabel>
                           </FormItem>
                         </div>
                         <FormDescription>
-                          This setting affects multiple risk parameters simultaneously
+                          This setting affects multiple risk parameters
+                          simultaneously
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="enableEmergencyShutdown"
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                         <div className="space-y-0.5">
-                          <FormLabel className="text-base">Emergency Shutdown</FormLabel>
+                          <FormLabel className="text-base">
+                            Emergency Shutdown
+                          </FormLabel>
                           <FormDescription>
-                            Automatically halt all trading when risk thresholds are exceeded
+                            Automatically halt all trading when risk thresholds
+                            are exceeded
                           </FormDescription>
                         </div>
                         <FormControl>
@@ -353,7 +390,7 @@ const RiskManagementFramework: React.FC = () => {
                 </CardContent>
               </Card>
             </TabsContent>
-            
+
             <TabsContent value="mcp" className="mt-6 space-y-6">
               <Card>
                 <CardHeader>
@@ -362,7 +399,8 @@ const RiskManagementFramework: React.FC = () => {
                     MCP Risk Controls
                   </CardTitle>
                   <CardDescription>
-                    Configure risk management for Model Context Protocol integrations
+                    Configure risk management for Model Context Protocol
+                    integrations
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -372,9 +410,12 @@ const RiskManagementFramework: React.FC = () => {
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                         <div className="space-y-0.5">
-                          <FormLabel className="text-base">MCP Risk Monitoring</FormLabel>
+                          <FormLabel className="text-base">
+                            MCP Risk Monitoring
+                          </FormLabel>
                           <FormDescription>
-                            Enable real-time monitoring of MCP server operations and risk metrics
+                            Enable real-time monitoring of MCP server operations
+                            and risk metrics
                           </FormDescription>
                         </div>
                         <FormControl>
@@ -386,43 +427,55 @@ const RiskManagementFramework: React.FC = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <div className="space-y-4">
-                    <h3 className="text-sm font-semibold">MCP Tool Access Controls</h3>
+                    <h3 className="text-sm font-semibold">
+                      MCP Tool Access Controls
+                    </h3>
                     <div className="border rounded-lg divide-y">
                       <div className="p-4 flex justify-between items-center">
                         <div>
                           <h4 className="font-medium">Market Data Tools</h4>
-                          <p className="text-sm text-muted-foreground">Read-only access to market data</p>
+                          <p className="text-sm text-muted-foreground">
+                            Read-only access to market data
+                          </p>
                         </div>
                         <Badge variant="outline">Low Risk</Badge>
                       </div>
                       <div className="p-4 flex justify-between items-center">
                         <div>
                           <h4 className="font-medium">Analysis Tools</h4>
-                          <p className="text-sm text-muted-foreground">Technical and fundamental analysis</p>
+                          <p className="text-sm text-muted-foreground">
+                            Technical and fundamental analysis
+                          </p>
                         </div>
                         <Badge variant="outline">Low Risk</Badge>
                       </div>
                       <div className="p-4 flex justify-between items-center">
                         <div>
                           <h4 className="font-medium">Portfolio Management</h4>
-                          <p className="text-sm text-muted-foreground">View and manage portfolio allocations</p>
+                          <p className="text-sm text-muted-foreground">
+                            View and manage portfolio allocations
+                          </p>
                         </div>
                         <Badge variant="outline">Medium Risk</Badge>
                       </div>
                       <div className="p-4 flex justify-between items-center">
                         <div>
                           <h4 className="font-medium">Order Execution</h4>
-                          <p className="text-sm text-muted-foreground">Place and manage trading orders</p>
+                          <p className="text-sm text-muted-foreground">
+                            Place and manage trading orders
+                          </p>
                         </div>
                         <Badge variant="destructive">High Risk</Badge>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
-                    <h3 className="text-sm font-semibold">MCP Server Risk Limits</h3>
+                    <h3 className="text-sm font-semibold">
+                      MCP Server Risk Limits
+                    </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="border rounded-lg p-4">
                         <h4 className="font-medium">StockData MCP Server</h4>
@@ -460,18 +513,20 @@ const RiskManagementFramework: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <Alert variant="warning">
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>MCP Security Notice</AlertTitle>
                     <AlertDescription>
-                      MCP servers have access to execute operations within StockPulse. Always verify server authenticity and maintain strict access controls.
+                      MCP servers have access to execute operations within
+                      StockPulse. Always verify server authenticity and maintain
+                      strict access controls.
                     </AlertDescription>
                   </Alert>
                 </CardContent>
               </Card>
             </TabsContent>
-            
+
             <TabsContent value="advanced" className="mt-6 space-y-6">
               <Card>
                 <CardHeader>
@@ -497,25 +552,30 @@ const RiskManagementFramework: React.FC = () => {
                               max={5}
                               step={0.1}
                               value={[field.value]}
-                              onValueChange={(value) => field.onChange(value[0])}
+                              onValueChange={(value) =>
+                                field.onChange(value[0])
+                              }
                               className="flex-1"
                             />
                           </FormControl>
                           <Input
                             type="number"
                             value={field.value}
-                            onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                            onChange={(e) =>
+                              field.onChange(parseFloat(e.target.value))
+                            }
                             className="w-16"
                           />
                         </div>
                         <FormDescription>
-                          Adjusts position sizing based on market volatility (higher = smaller positions in volatile markets)
+                          Adjusts position sizing based on market volatility
+                          (higher = smaller positions in volatile markets)
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="enableAuditLogging"
@@ -527,7 +587,8 @@ const RiskManagementFramework: React.FC = () => {
                             Comprehensive Audit Logging
                           </FormLabel>
                           <FormDescription>
-                            Enable detailed logging of all trading activities and risk events
+                            Enable detailed logging of all trading activities
+                            and risk events
                           </FormDescription>
                         </div>
                         <FormControl>
@@ -539,49 +600,61 @@ const RiskManagementFramework: React.FC = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <div className="space-y-4">
-                    <h3 className="text-sm font-semibold">Market Condition Overrides</h3>
+                    <h3 className="text-sm font-semibold">
+                      Market Condition Overrides
+                    </h3>
                     <div className="border rounded-lg divide-y">
                       <div className="p-4 flex justify-between items-center">
                         <div>
-                          <h4 className="font-medium">High Volatility Markets</h4>
-                          <p className="text-sm text-muted-foreground">When VIX > 30</p>
+                          <h4 className="font-medium">
+                            High Volatility Markets
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            When VIX &gt; 30
+                          </p>
                         </div>
                         <Badge>Reduce Position Size by 50%</Badge>
                       </div>
                       <div className="p-4 flex justify-between items-center">
                         <div>
                           <h4 className="font-medium">Earnings Season</h4>
-                          <p className="text-sm text-muted-foreground">During major earnings weeks</p>
+                          <p className="text-sm text-muted-foreground">
+                            During major earnings weeks
+                          </p>
                         </div>
                         <Badge>Increase Stop Loss Buffers</Badge>
                       </div>
                       <div className="p-4 flex justify-between items-center">
                         <div>
                           <h4 className="font-medium">Fed Announcement Days</h4>
-                          <p className="text-sm text-muted-foreground">FOMC meeting days</p>
+                          <p className="text-sm text-muted-foreground">
+                            FOMC meeting days
+                          </p>
                         </div>
                         <Badge variant="destructive">Pause All Trading</Badge>
                       </div>
                     </div>
                   </div>
-                  
+
                   <Alert>
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>Advanced Settings Warning</AlertTitle>
                     <AlertDescription>
-                      These settings are intended for experienced traders only. Improper configuration may significantly impact trading performance.
+                      These settings are intended for experienced traders only.
+                      Improper configuration may significantly impact trading
+                      performance.
                     </AlertDescription>
                   </Alert>
                 </CardContent>
               </Card>
             </TabsContent>
-            
+
             <div className="flex justify-between mt-6">
-              <Button 
-                type="button" 
-                variant="outline" 
+              <Button
+                type="button"
+                variant="outline"
                 onClick={handleResetToDefaults}
                 className="gap-2"
               >

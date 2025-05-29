@@ -3,18 +3,25 @@
  * Handles API communication for authentication with MCP Auth Server
  * Adapted to work with MCP protocol while maintaining REST interface
  */
-import axios, { AxiosError } from 'axios';
-import { LoginCredentials, LoginResponse, User, RegisterCredentials } from '../types/auth';
+import axios, { AxiosError } from "axios";
+import {
+  LoginCredentials,
+  LoginResponse,
+  User,
+  RegisterCredentials,
+} from "../types/auth";
+import { API_CONFIG, debugApiConfig } from "../config/api";
 
 // API Client Configuration - Updated for MCP Auth Server
 const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_MCP_AUTH_URL || 'http://localhost:8002',
-  withCredentials: true, // Essential for HttpOnly cookies
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: API_CONFIG.BASE_URL,
+  withCredentials: API_CONFIG.WITH_CREDENTIALS, // Essential for HttpOnly cookies
+  timeout: API_CONFIG.TIMEOUT,
+  headers: API_CONFIG.DEFAULT_HEADERS,
 });
+
+// Debug configuration on service initialization
+debugApiConfig();
 
 // CSRF Token Management
 let csrfToken: string | null = null;
@@ -42,45 +49,23 @@ class AuthService {
   }
 
   /**
-   * Login user with email and password via MCP Auth Server
+   * Login user with email and password via FastAPI Auth Server
    */
   async login(credentials: LoginCredentials): Promise<LoginResponse> {
     try {
-      // Call MCP auth server using tools/call endpoint
-      const response = await apiClient.post('/tools/call', {
-        tool: 'authenticate_user',
-        parameters: {
-          email: credentials.email,
-          password: credentials.password
-        },
-        timestamp: new Date().toISOString()
+      // Call FastAPI auth endpoint
+      const response = await apiClient.post("/auth/login", {
+        email: credentials.email,
+        password: credentials.password,
       });
 
-      // Extract user data from MCP response
-      const mcpResult = response.data;
-      
-      if (!mcpResult.success) {
-        throw new Error(mcpResult.error || 'Authentication failed');
-      }
+      const loginResponse: LoginResponse = response.data;
 
-      // Transform MCP response to expected LoginResponse format
-      const loginResponse: LoginResponse = {
-        user: {
-          id: mcpResult.user_id,
-          email: credentials.email,
-          name: mcpResult.email, // Use email as name for now
-          createdAt: mcpResult.created_at || new Date().toISOString(),
-          lastLogin: new Date().toISOString()
-        },
-        message: 'Login successful',
-        csrf_token: mcpResult.session_token // Use session token as CSRF token
-      };
-
-      // Store session token as CSRF token
+      // Store CSRF token if provided
       if (loginResponse.csrf_token) {
         this.setCsrfToken(loginResponse.csrf_token);
       }
-      
+
       return loginResponse;
     } catch (error) {
       this.handleAuthError(error as AxiosError);
@@ -89,51 +74,21 @@ class AuthService {
   }
 
   /**
-   * Get current authenticated user information via MCP server
+   * Get current authenticated user information via FastAPI server
    */
   async getCurrentUser(): Promise<User> {
     try {
-      // First validate the current session token
-      if (!csrfToken) {
-        throw new Error('No active session');
-      }
+      const response = await apiClient.get("/auth/me");
+      const userData = response.data;
 
-      const response = await apiClient.post('/tools/call', {
-        tool: 'validate_token',
-        parameters: {
-          token: csrfToken
-        },
-        timestamp: new Date().toISOString()
-      });
-
-      const mcpResult = response.data;
-      
-      if (!mcpResult.success || !mcpResult.valid) {
-        throw new Error('Invalid session');
-      }
-
-      // Get user profile using the validated user ID
-      const profileResponse = await apiClient.post('/tools/call', {
-        tool: 'get_user_profile',
-        parameters: {
-          user_id: mcpResult.user_id
-        },
-        timestamp: new Date().toISOString()
-      });
-
-      const profileResult = profileResponse.data;
-      
-      if (!profileResult.success) {
-        throw new Error('Failed to get user profile');
-      }
-
-      // Transform MCP response to User format
+      // Transform FastAPI response to User format
       const user: User = {
-        id: profileResult.user_id || mcpResult.user_id,
-        email: profileResult.email,
-        name: profileResult.email, // Use email as name for now
-        createdAt: profileResult.created_at || new Date().toISOString(),
-        lastLogin: new Date().toISOString()
+        id: userData.id,
+        email: userData.email,
+        name: userData.email, // Use email as name for now
+        role: userData.role, // Include role for authorization
+        createdAt: userData.created_at,
+        lastLogin: userData.last_login || new Date().toISOString(),
       };
 
       return user;
@@ -144,23 +99,15 @@ class AuthService {
   }
 
   /**
-   * Logout current user via MCP server
+   * Logout current user via FastAPI server
    */
   async logout(): Promise<void> {
     try {
-      if (csrfToken) {
-        await apiClient.post('/tools/call', {
-          tool: 'invalidate_session',
-          parameters: {
-            session_token: csrfToken
-          },
-          timestamp: new Date().toISOString()
-        });
-      }
+      await apiClient.post("/auth/logout");
       this.clearCsrfToken();
     } catch (error) {
       // Don't throw logout errors to prevent UX issues
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
       this.clearCsrfToken();
     }
   }
@@ -170,21 +117,9 @@ class AuthService {
    */
   async refreshToken(): Promise<void> {
     try {
-      // MCP server handles token refresh automatically
-      // Just validate current token
-      if (csrfToken) {
-        const response = await apiClient.post('/tools/call', {
-          tool: 'validate_token',
-          parameters: {
-            token: csrfToken
-          },
-          timestamp: new Date().toISOString()
-        });
-
-        if (!response.data.success || !response.data.valid) {
-          throw new Error('Token refresh failed');
-        }
-      }
+      const response = await apiClient.post("/auth/refresh");
+      // Token refresh is handled via HTTP-only cookies
+      // No need to manually store tokens
     } catch (error) {
       this.handleAuthError(error as AxiosError);
       throw error;
@@ -192,32 +127,48 @@ class AuthService {
   }
 
   /**
-   * Register new user via MCP server
+   * Register new user via FastAPI Auth Server
    */
   async register(credentials: RegisterCredentials): Promise<LoginResponse> {
     try {
-      const response = await apiClient.post('/tools/call', {
-        tool: 'create_user',
-        parameters: {
-          email: credentials.email,
-          password: credentials.password,
-          name: credentials.name
-        },
-        timestamp: new Date().toISOString()
+      console.log("🚀 Registration Debug Info:");
+      console.log("API Base URL:", apiClient.defaults.baseURL);
+      console.log("Full URL:", `${apiClient.defaults.baseURL}/auth/register`);
+      console.log("Credentials:", {
+        ...credentials,
+        password: "[HIDDEN]",
+        confirmPassword: "[HIDDEN]",
       });
 
-      const mcpResult = response.data;
-      
-      if (!mcpResult.success) {
-        throw new Error(mcpResult.error || 'Registration failed');
+      // Call FastAPI auth registration endpoint
+      const response = await apiClient.post("/auth/register", {
+        email: credentials.email,
+        password: credentials.password,
+        name: credentials.name,
+        confirm_password: credentials.confirmPassword,
+      });
+
+      console.log("✅ Registration successful:", response.data);
+
+      const registerResponse: LoginResponse = response.data;
+
+      // Store CSRF token if provided
+      if (registerResponse.csrf_token) {
+        this.setCsrfToken(registerResponse.csrf_token);
       }
 
-      // After successful registration, authenticate the user
-      return this.login({
-        email: credentials.email,
-        password: credentials.password
-      });
+      return registerResponse;
     } catch (error) {
+      console.error("❌ Registration error:", error);
+      if (error instanceof AxiosError) {
+        console.error("Response data:", error.response?.data);
+        console.error("Response status:", error.response?.status);
+        console.error("Request URL:", error.config?.url);
+        console.error(
+          "Full Request URL:",
+          `${error.config?.baseURL || apiClient.defaults.baseURL}${error.config?.url}`,
+        );
+      }
       this.handleAuthError(error as AxiosError);
       throw error;
     }
@@ -228,11 +179,11 @@ class AuthService {
    */
   private getAuthHeaders(): Record<string, string> {
     const headers: Record<string, string> = {};
-    
+
     if (csrfToken) {
-      headers['X-Session-Token'] = csrfToken;
+      headers["X-Session-Token"] = csrfToken;
     }
-    
+
     return headers;
   }
 
@@ -243,9 +194,9 @@ class AuthService {
     if (error.response?.status === 401) {
       // Clear session token on authentication failure
       this.clearCsrfToken();
-      
+
       // Dispatch event for AuthContext to handle
-      window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+      window.dispatchEvent(new CustomEvent("auth:unauthorized"));
     }
   }
 }
@@ -254,25 +205,36 @@ class AuthService {
 apiClient.interceptors.request.use(
   (config) => {
     // Add session token to MCP tool calls that need authentication
-    if (config.url === '/tools/call' && csrfToken) {
+    if (config.url === "/tools/call" && csrfToken) {
       // For MCP calls that need authentication, add token to parameters
-      if (config.data?.tool && ['get_user_profile', 'update_user_profile', 'invalidate_session'].includes(config.data.tool)) {
+      if (
+        config.data?.tool &&
+        [
+          "get_user_profile",
+          "update_user_profile",
+          "invalidate_session",
+        ].includes(config.data.tool)
+      ) {
         config.data.parameters = config.data.parameters || {};
         config.data.parameters.session_token = csrfToken;
       }
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Response Interceptor - Handle MCP authentication errors
 apiClient.interceptors.response.use(
   (response) => {
     // Check for MCP-level authentication failures
-    if (response.data && !response.data.success && response.data.error?.includes('Invalid token')) {
+    if (
+      response.data &&
+      !response.data.success &&
+      response.data.error?.includes("Invalid token")
+    ) {
       csrfToken = null;
-      window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+      window.dispatchEvent(new CustomEvent("auth:unauthorized"));
     }
     return response;
   },
@@ -280,15 +242,15 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       // Clear session token
       csrfToken = null;
-      
+
       // Dispatch unauthorized event
-      window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+      window.dispatchEvent(new CustomEvent("auth:unauthorized"));
     }
-    
+
     return Promise.reject(error);
-  }
+  },
 );
 
 // Export singleton instance
 export const authService = new AuthService();
-export default authService; 
+export default authService;

@@ -1,620 +1,799 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Navbar from '@components/layout/Navbar';
-import Footer from '@components/layout/Footer';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  ArrowRight,
+  BarChart3,
+  Brain,
+  TrendingUp,
+  Shield,
+  Zap,
+  Users,
+  CheckCircle,
+  Star,
+  Play,
+  ChevronDown,
+  Activity,
+  PieChart,
+  Target,
+  Globe,
+  Smartphone,
+  Lock,
+} from "lucide-react";
 
 const LandingPage: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 300], [0, -50]);
+  const y2 = useTransform(scrollY, [0, 300], [0, -100]);
+
+  // SEO Meta Tags Effect
+  useEffect(() => {
+    document.title =
+      "StockPulse - AGI-Powered Stock Analysis & Trading Platform";
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute(
+        "content",
+        "Transform your trading with StockPulse's AGI-powered stock analysis platform. Real-time data, smart analytics, and professional trading tools for modern investors.",
+      );
+    } else {
+      const meta = document.createElement("meta");
+      meta.name = "description";
+      meta.content =
+        "Transform your trading with StockPulse's AGI-powered stock analysis platform. Real-time data, smart analytics, and professional trading tools for modern investors.";
+      document.getElementsByTagName("head")[0].appendChild(meta);
+    }
+
+    // Add structured data for SEO
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "StockPulse",
+      description: "AGI-powered stock analysis and trading platform",
+      url: "https://stockpulse.com",
+      applicationCategory: "FinanceApplication",
+      operatingSystem: "Web",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+      },
+    };
+
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.text = JSON.stringify(structuredData);
+    document.getElementsByTagName("head")[0].appendChild(script);
+
+    return () => {
+      // Cleanup
+      const existingScript = document.querySelector(
+        'script[type="application/ld+json"]',
+      );
+      if (existingScript) {
+        existingScript.remove();
+      }
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar transparent={true} />
-      
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-40 bg-gradient-to-b from-secondary-900 to-secondary-800">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:30px_30px]"></div>
-          <div className="absolute h-full w-full bg-[radial-gradient(circle_at_center,rgba(255,26,108,0.15),transparent_65%)]"></div>
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-            <motion.div 
-              className="lg:w-1/2 text-center lg:text-left"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+    <div className="min-h-screen bg-background">
+      {/* Modern Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-2">
+              <img src="/logo.png" alt="StockPulse" className="w-8 h-8" />
+              <span className="text-xl font-bold text-text">StockPulse</span>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              <Link
+                to="/features"
+                className="text-text/70 hover:text-text transition-colors"
+              >
+                Features
+              </Link>
+              <Link
+                to="/pricing"
+                className="text-text/70 hover:text-text transition-colors"
+              >
+                Pricing
+              </Link>
+              <Link
+                to="/about"
+                className="text-text/70 hover:text-text transition-colors"
+              >
+                About
+              </Link>
+              <Link
+                to="/contact"
+                className="text-text/70 hover:text-text transition-colors"
+              >
+                Contact
+              </Link>
+            </div>
+
+            {/* Auth Buttons */}
+            <div className="hidden md:flex items-center space-x-4">
+              <Link
+                to="/auth/login"
+                className="text-text/70 hover:text-text transition-colors font-medium"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/auth/register"
+                className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+              >
+                Get Started
+              </Link>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-                AI-Powered <span className="text-primary">Stock Analysis</span> Platform
+              <div className="w-6 h-6 flex flex-col justify-center space-y-1">
+                <span
+                  className={`block w-6 h-0.5 bg-text transition-transform ${isMenuOpen ? "rotate-45 translate-y-1.5" : ""}`}
+                ></span>
+                <span
+                  className={`block w-6 h-0.5 bg-text transition-opacity ${isMenuOpen ? "opacity-0" : ""}`}
+                ></span>
+                <span
+                  className={`block w-6 h-0.5 bg-text transition-transform ${isMenuOpen ? "-rotate-45 -translate-y-1.5" : ""}`}
+                ></span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="md:hidden bg-background border-t border-border"
+          >
+            <div className="px-4 py-6 space-y-4">
+              <Link
+                to="/features"
+                className="block text-text/70 hover:text-text"
+              >
+                Features
+              </Link>
+              <Link
+                to="/pricing"
+                className="block text-text/70 hover:text-text"
+              >
+                Pricing
+              </Link>
+              <Link to="/about" className="block text-text/70 hover:text-text">
+                About
+              </Link>
+              <Link
+                to="/contact"
+                className="block text-text/70 hover:text-text"
+              >
+                Contact
+              </Link>
+              <hr className="border-border" />
+              <Link
+                to="/auth/login"
+                className="block text-text/70 hover:text-text"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/auth/register"
+                className="block bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium text-center"
+              >
+                Get Started
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </nav>
+
+      {/* Hero Section with Advanced Graphics */}
+      <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-background via-primary-50/10 to-secondary-50/10"></div>
+          <motion.div
+            style={{ y: y1 }}
+            className="absolute top-0 left-0 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl"
+          ></motion.div>
+          <motion.div
+            style={{ y: y2 }}
+            className="absolute bottom-0 right-0 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl"
+          ></motion.div>
+
+          {/* Floating Elements */}
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 bg-primary-400/30 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0.3, 1, 0.3],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Hero Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center lg:text-left"
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 px-4 py-2 rounded-full text-sm font-medium mb-6"
+              >
+                <Zap className="w-4 h-4 mr-2" />
+                AGI-Powered Trading Intelligence
+              </motion.div>
+
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-text mb-6 leading-tight">
+                Transform Your Trading with{" "}
+                <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
+                  Smart Analytics
+                </span>
               </h1>
-              <p className="text-lg text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0">
-                Harness the power of AI to analyze markets, optimize your trading strategies, and make data-driven investment decisions.
+
+              <p className="text-lg text-text/70 mb-8 max-w-2xl mx-auto lg:mx-0">
+                Leverage cutting-edge AGI technology to analyze markets,
+                identify opportunities, and make data-driven investment
+                decisions with confidence.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Link to="/auth/register" className="px-8 py-3 bg-primary hover:bg-primary-600 text-white font-medium rounded-md transition-colors">
-                  Get Started
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
+                <Link
+                  to="/auth/register"
+                  className="group bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center"
+                >
+                  Start Free Trial
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <Link to="/dashboard" className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-md transition-colors">
-                  Live Demo
-                </Link>
+                <button className="group bg-surface hover:bg-surface/80 text-text px-8 py-4 rounded-lg font-semibold transition-all duration-300 border border-border hover:border-primary-300 flex items-center justify-center">
+                  <Play className="w-5 h-5 mr-2" />
+                  Watch Demo
+                </button>
+              </div>
+
+              {/* Trust Indicators */}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-sm text-text/60">
+                <div className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                  Free 14-day trial
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                  No credit card required
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                  Cancel anytime
+                </div>
               </div>
             </motion.div>
-            
-            <motion.div 
-              className="lg:w-1/2"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+
+            {/* Hero Visual */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="relative"
             >
-              <div className="relative bg-secondary-800 p-4 rounded-xl border border-gray-700 shadow-glow">
-                <div className="absolute -top-3 -left-3 bg-primary rounded-full w-6 h-6"></div>
-                <div className="absolute -bottom-3 -right-3 bg-accent rounded-full w-6 h-6"></div>
-                <img 
-                  src="/dashboard-preview.png" 
-                  alt="StockPulse Dashboard Preview" 
-                  className="rounded-lg w-full shadow-lg"
-                />
+              {/* MAGIn Dashboard Mockup */}
+              <div className="relative bg-surface rounded-2xl border border-border shadow-2xl overflow-hidden">
+                {/* Browser Bar */}
+                <div className="flex items-center px-4 py-3 bg-background border-b border-border">
+                  <div className="flex space-x-2">
+                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  </div>
+                  <div className="flex-1 mx-4">
+                    <div className="bg-surface rounded-md px-3 py-1 text-xs text-text/60">
+                      stockpulse.com/dashboard
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dashboard Content */}
+                <div className="p-6 space-y-4">
+                  {/* Stats Cards */}
+                  <div className="grid grid-cols-3 gap-4">
+                    {[
+                      {
+                        label: "Portfolio",
+                        value: "$124.5K",
+                        change: "+12.5%",
+                        color: "text-green-500",
+                      },
+                      {
+                        label: "Today P&L",
+                        value: "+$2.4K",
+                        change: "+1.9%",
+                        color: "text-green-500",
+                      },
+                      {
+                        label: "Win Rate",
+                        value: "87.3%",
+                        change: "+5.2%",
+                        color: "text-blue-500",
+                      },
+                    ].map((stat, i) => (
+                      <div key={i} className="bg-background rounded-lg p-3">
+                        <div className="text-xs text-text/60">{stat.label}</div>
+                        <div className="font-bold text-text">{stat.value}</div>
+                        <div className={`text-xs ${stat.color}`}>
+                          {stat.change}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Chart Area */}
+                  <div className="bg-background rounded-lg p-4 h-32 relative overflow-hidden">
+                    <div className="absolute inset-0 flex items-end justify-between px-4 pb-4">
+                      {[...Array(12)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="bg-primary-500 rounded-t"
+                          style={{ width: "8px" }}
+                          initial={{ height: "20%" }}
+                          animate={{ height: `${20 + Math.random() * 60}%` }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            repeatType: "reverse",
+                            delay: i * 0.1,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Holdings */}
+                  <div className="space-y-2">
+                    {["AAPL", "MSFT", "GOOGL"].map((symbol, i) => (
+                      <div
+                        key={symbol}
+                        className="flex items-center justify-between bg-background rounded-lg p-3"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <div
+                            className={`w-8 h-8 rounded-full bg-primary-${(i + 1) * 200} flex items-center justify-center text-white text-xs font-bold`}
+                          >
+                            {symbol[0]}
+                          </div>
+                          <div>
+                            <div className="font-medium text-text">
+                              {symbol}
+                            </div>
+                            <div className="text-xs text-text/60">
+                              {
+                                [
+                                  "Apple Inc.",
+                                  "Microsoft Corp.",
+                                  "Alphabet Inc.",
+                                ][i]
+                              }
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-medium text-text">
+                            ${[182.63, 415.32, 175.98][i]}
+                          </div>
+                          <div className="text-xs text-green-500">
+                            +{[2.34, 1.12, 0.87][i]}%
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
+
+              {/* Floating Elements */}
+              <motion.div
+                className="absolute -top-4 -right-4 bg-primary-500 text-white p-3 rounded-xl shadow-lg"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <TrendingUp className="w-6 h-6" />
+              </motion.div>
+
+              <motion.div
+                className="absolute -bottom-4 -left-4 bg-secondary-500 text-white p-3 rounded-xl shadow-lg"
+                animate={{ y: [0, 10, 0] }}
+                transition={{ duration: 2.5, repeat: Infinity }}
+              >
+                <Brain className="w-6 h-6" />
+              </motion.div>
             </motion.div>
           </div>
         </div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          <ChevronDown className="w-6 h-6 text-text/40" />
+        </motion.div>
       </section>
-      
+
       {/* Features Section */}
+      <section id="features" className="py-20 bg-surface/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold text-text mb-4">
+              Everything You Need to Trade Smarter
+            </h2>
+            <p className="text-lg text-text/70 max-w-3xl mx-auto">
+              Comprehensive tools and AGI-powered insights designed for modern
+              traders and investors
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                icon: Activity,
+                title: "Real-Time Market Data",
+                description:
+                  "Access live market data, price movements, and volume analysis with millisecond precision.",
+                color: "from-blue-500 to-blue-600",
+              },
+              {
+                icon: Brain,
+                title: "AGI Trading Signals",
+                description:
+                  "Advanced machine learning algorithms analyze patterns and generate actionable trading signals.",
+                color: "from-purple-500 to-purple-600",
+              },
+              {
+                icon: PieChart,
+                title: "Portfolio Analytics",
+                description:
+                  "Comprehensive portfolio tracking with performance metrics and risk analysis.",
+                color: "from-green-500 to-green-600",
+              },
+              {
+                icon: Target,
+                title: "Smart Screeners",
+                description:
+                  "Find the best opportunities with customizable stock screeners and filters.",
+                color: "from-orange-500 to-orange-600",
+              },
+              {
+                icon: Shield,
+                title: "Risk Management",
+                description:
+                  "Built-in risk management tools to protect your capital and optimize returns.",
+                color: "from-red-500 to-red-600",
+              },
+              {
+                icon: Zap,
+                title: "Lightning Fast",
+                description:
+                  "Optimized for speed with instant order execution and real-time updates.",
+                color: "from-yellow-500 to-yellow-600",
+              },
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -5 }}
+                className="group bg-background rounded-xl p-6 shadow-lg border border-border hover:border-primary-300 transition-all duration-300"
+              >
+                <div
+                  className={`w-12 h-12 bg-gradient-to-r ${feature.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}
+                >
+                  <feature.icon className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold text-text mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-text/70">{feature.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof Section */}
       <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Powerful Trading Features</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              StockPulse combines cutting-edge technology with intuitive design to deliver a comprehensive trading experience.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <motion.div 
-              className="bg-white dark:bg-secondary-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700"
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            >
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Real-time Analytics</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Access real-time market data, price movements, and volume analysis to make informed trading decisions.
-              </p>
-            </motion.div>
-            
-            {/* Feature 2 */}
-            <motion.div 
-              className="bg-white dark:bg-secondary-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700"
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            >
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">AI Trading Agents</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Leverage AI-powered trading agents that analyze patterns and suggest optimal entry and exit points.
-              </p>
-            </motion.div>
-            
-            {/* Feature 3 */}
-            <motion.div 
-              className="bg-white dark:bg-secondary-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700"
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            >
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Advanced Screeners</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Find the best trading opportunities with customizable stock screeners based on technical and fundamental criteria.
-              </p>
-            </motion.div>
-            
-            {/* Feature 4 */}
-            <motion.div 
-              className="bg-white dark:bg-secondary-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700"
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            >
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Portfolio Management</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Track your investments, analyze performance, and optimize your portfolio allocation for better returns.
-              </p>
-            </motion.div>
-            
-            {/* Feature 5 */}
-            <motion.div 
-              className="bg-white dark:bg-secondary-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700"
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            >
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Technical Analysis</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Access over 50+ technical indicators and drawing tools to perform comprehensive chart analysis.
-              </p>
-            </motion.div>
-            
-            {/* Feature 6 */}
-            <motion.div 
-              className="bg-white dark:bg-secondary-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700"
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            >
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Customizable Workspace</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Personalize your trading environment with drag-and-drop widgets and multiple layout options.
-              </p>
-            </motion.div>
-          </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <h2 className="text-3xl font-bold text-text mb-12">
+              Trusted by Traders Worldwide
+            </h2>
+
+            <div className="grid md:grid-cols-4 gap-8 mb-12">
+              {[
+                { number: "50K+", label: "Active Traders" },
+                { number: "$2.5B+", label: "Assets Managed" },
+                { number: "99.9%", label: "Uptime" },
+                { number: "4.9/5", label: "User Rating" },
+              ].map((stat, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="text-center"
+                >
+                  <div className="text-3xl font-bold text-primary-600 mb-2">
+                    {stat.number}
+                  </div>
+                  <div className="text-text/70">{stat.label}</div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Testimonials */}
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                {
+                  name: "Sarah Chen",
+                  role: "Day Trader",
+                  content:
+                    "StockPulse's AGI signals have improved my win rate by 35%. The platform is incredibly intuitive.",
+                  rating: 5,
+                },
+                {
+                  name: "Michael Rodriguez",
+                  role: "Portfolio Manager",
+                  content:
+                    "The real-time analytics and risk management tools are game-changers for institutional trading.",
+                  rating: 5,
+                },
+                {
+                  name: "Emily Johnson",
+                  role: "RetAGIl Investor",
+                  content:
+                    "Finally, a platform that makes professional-grade tools accessible to individual investors.",
+                  rating: 5,
+                },
+              ].map((testimonial, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.2 }}
+                  viewport={{ once: true }}
+                  className="bg-surface rounded-xl p-6 border border-border"
+                >
+                  <div className="flex mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className="w-5 h-5 text-yellow-400 fill-current"
+                      />
+                    ))}
+                  </div>
+                  <p className="text-text/70 mb-4">"{testimonial.content}"</p>
+                  <div>
+                    <div className="font-semibold text-text">
+                      {testimonial.name}
+                    </div>
+                    <div className="text-sm text-text/60">
+                      {testimonial.role}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
-      
-      {/* Trading Modules Preview */}
-      <section className="py-20 bg-gray-50 dark:bg-secondary-900">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Specialized Trading Modules</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              StockPulse offers tailored trading interfaces for every type of trader and investment strategy.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Intraday Trading */}
-            <motion.div 
-              className="bg-white dark:bg-secondary-800 rounded-xl overflow-hidden shadow-md"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-            >
-              <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">Intraday Trading</div>
-                  <div className="text-gray-500 dark:text-gray-400">Ultra-responsive interface for day traders</div>
-                </div>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-2">
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Real-time Level 2 order book</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Time & sales feed</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Hotkey trading setup</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Momentum scanners</span>
-                  </li>
-                </ul>
-                <div className="mt-6">
-                  <Link to="/trading/intraday" className="inline-flex items-center text-primary hover:text-primary-600">
-                    Explore Intraday Trading
-                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-            
-            {/* Options Trading */}
-            <motion.div 
-              className="bg-white dark:bg-secondary-800 rounded-xl overflow-hidden shadow-md"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              viewport={{ once: true }}
-            >
-              <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">Options Trading</div>
-                  <div className="text-gray-500 dark:text-gray-400">Multi-leg strategy builder</div>
-                </div>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-2">
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Options chain visualization</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Greeks analysis</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Strategy payoff diagrams</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Volatility surface analysis</span>
-                  </li>
-                </ul>
-                <div className="mt-6">
-                  <Link to="/trading/options" className="inline-flex items-center text-primary hover:text-primary-600">
-                    Explore Options Trading
-                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-            
-            {/* Positional Trading */}
-            <motion.div 
-              className="bg-white dark:bg-secondary-800 rounded-xl overflow-hidden shadow-md"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">Positional Trading</div>
-                  <div className="text-gray-500 dark:text-gray-400">Multi-timeframe analysis</div>
-                </div>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-2">
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Trend alignment indicators</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Support/resistance detection</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Pattern recognition</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Sector rotation analysis</span>
-                  </li>
-                </ul>
-                <div className="mt-6">
-                  <Link to="/trading/positional" className="inline-flex items-center text-primary hover:text-primary-600">
-                    Explore Positional Trading
-                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-            
-            {/* Long-term Investment */}
-            <motion.div 
-              className="bg-white dark:bg-secondary-800 rounded-xl overflow-hidden shadow-md"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">Long-term Investment</div>
-                  <div className="text-gray-500 dark:text-gray-400">Fundamental analysis focused</div>
-                </div>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-2">
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Financial statement analysis</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Valuation models</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Dividend analysis</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Economic cycle indicators</span>
-                  </li>
-                </ul>
-                <div className="mt-6">
-                  <Link to="/trading/long-term" className="inline-flex items-center text-primary hover:text-primary-600">
-                    Explore Long-term Investment
-                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-      
-      {/* Pricing Section */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Simple, Transparent Pricing</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Choose the plan that fits your trading needs and scale as you grow.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Basic Plan */}
-            <motion.div 
-              className="bg-white dark:bg-secondary-800 rounded-xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700"
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            >
-              <div className="p-6 border-b border-gray-100 dark:border-gray-700">
-                <h3 className="text-xl font-bold mb-2">Basic</h3>
-                <div className="flex items-baseline mb-4">
-                  <span className="text-3xl font-bold">$29</span>
-                  <span className="text-gray-500 dark:text-gray-400 ml-1">/month</span>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Perfect for beginners and casual traders.
-                </p>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-3">
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Real-time market data</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Basic technical indicators</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Portfolio tracking</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>1 AI trading agent</span>
-                  </li>
-                  <li className="flex items-center text-gray-400">
-                    <svg className="w-5 h-5 text-gray-300 dark:text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                    <span>Advanced screeners</span>
-                  </li>
-                  <li className="flex items-center text-gray-400">
-                    <svg className="w-5 h-5 text-gray-300 dark:text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                    <span>Options analysis tools</span>
-                  </li>
-                </ul>
-                <div className="mt-6">
-                  <Link to="/auth/register" className="block w-full py-2 px-4 bg-primary hover:bg-primary-600 text-white text-center font-medium rounded-md transition-colors">
-                    Get Started
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-            
-            {/* Pro Plan */}
-            <motion.div 
-              className="bg-white dark:bg-secondary-800 rounded-xl overflow-hidden shadow-lg border-2 border-primary relative transform scale-105"
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            >
-              <div className="absolute top-0 right-0 bg-primary text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
-                POPULAR
-              </div>
-              <div className="p-6 border-b border-gray-100 dark:border-gray-700">
-                <h3 className="text-xl font-bold mb-2">Pro</h3>
-                <div className="flex items-baseline mb-4">
-                  <span className="text-3xl font-bold">$79</span>
-                  <span className="text-gray-500 dark:text-gray-400 ml-1">/month</span>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400">
-                  For active traders seeking an edge.
-                </p>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-3">
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Everything in Basic</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Advanced technical indicators</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Options analysis tools</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>3 AI trading agents</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Advanced screeners</span>
-                  </li>
-                  <li className="flex items-center text-gray-400">
-                    <svg className="w-5 h-5 text-gray-300 dark:text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                    <span>Automated trading strategies</span>
-                  </li>
-                </ul>
-                <div className="mt-6">
-                  <Link to="/auth/register" className="block w-full py-2 px-4 bg-primary hover:bg-primary-600 text-white text-center font-medium rounded-md transition-colors">
-                    Get Started
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-            
-            {/* Enterprise Plan */}
-            <motion.div 
-              className="bg-white dark:bg-secondary-800 rounded-xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700"
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            >
-              <div className="p-6 border-b border-gray-100 dark:border-gray-700">
-                <h3 className="text-xl font-bold mb-2">Enterprise</h3>
-                <div className="flex items-baseline mb-4">
-                  <span className="text-3xl font-bold">$199</span>
-                  <span className="text-gray-500 dark:text-gray-400 ml-1">/month</span>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400">
-                  For professional traders and institutions.
-                </p>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-3">
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Everything in Pro</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Unlimited AI trading agents</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Automated trading strategies</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>API access</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Dedicated support</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Custom integrations</span>
-                  </li>
-                </ul>
-                <div className="mt-6">
-                  <Link to="/auth/register" className="block w-full py-2 px-4 bg-primary hover:bg-primary-600 text-white text-center font-medium rounded-md transition-colors">
-                    Get Started
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-      
+
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary to-accent text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Trading?</h2>
-          <p className="text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of traders who are already using StockPulse to make smarter, data-driven investment decisions.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/auth/register" className="px-8 py-3 bg-white text-primary hover:bg-gray-100 font-medium rounded-md transition-colors">
-              Start Free Trial
-            </Link>
-            <Link to="/dashboard" className="px-8 py-3 bg-transparent border border-white hover:bg-white/10 text-white font-medium rounded-md transition-colors">
-              View Demo
-            </Link>
-          </div>
+      <section className="py-20 bg-gradient-to-r from-primary-600 to-secondary-600 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-black/10"></div>
+          {[...Array(3)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-64 h-64 bg-white/5 rounded-full blur-3xl"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                x: [0, 100, 0],
+                y: [0, -100, 0],
+              }}
+              transition={{
+                duration: 20 + Math.random() * 10,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center text-white"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              Ready to Transform Your Trading?
+            </h2>
+            <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+              Join thousands of successful traders using StockPulse to maximize
+              their returns
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                to="/auth/register"
+                className="bg-white text-primary-600 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
+              >
+                Start Your Free Trial
+              </Link>
+              <Link
+                to="/auth/login"
+                className="border-2 border-white text-white hover:bg-white hover:text-primary-600 px-8 py-4 rounded-lg font-semibold transition-all duration-300"
+              >
+                Sign In
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </section>
-      
-      <Footer />
+
+      {/* Footer */}
+      <footer className="bg-background border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
+                  <BarChart3 className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xl font-bold text-text">StockPulse</span>
+              </div>
+              <p className="text-text/70 mb-4">
+                AGI-powered trading platform for modern investors.
+              </p>
+              <div className="flex space-x-4">
+                <Globe className="w-5 h-5 text-text/40 hover:text-primary-600 cursor-pointer" />
+                <Smartphone className="w-5 h-5 text-text/40 hover:text-primary-600 cursor-pointer" />
+                <Lock className="w-5 h-5 text-text/40 hover:text-primary-600 cursor-pointer" />
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-text mb-4">Product</h3>
+              <ul className="space-y-2 text-text/70">
+                <li>
+                  <Link to="/features" className="hover:text-text">
+                    Features
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/pricing" className="hover:text-text">
+                    Pricing
+                  </Link>
+                </li>
+                <li>
+                  <Link to="#" className="hover:text-text">
+                    API
+                  </Link>
+                </li>
+                <li>
+                  <Link to="#" className="hover:text-text">
+                    Mobile App
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-text mb-4">Company</h3>
+              <ul className="space-y-2 text-text/70">
+                <li>
+                  <Link to="/about" className="hover:text-text">
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link to="#" className="hover:text-text">
+                    Careers
+                  </Link>
+                </li>
+                <li>
+                  <Link to="#" className="hover:text-text">
+                    Press
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/contact" className="hover:text-text">
+                    Contact
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-text mb-4">Support</h3>
+              <ul className="space-y-2 text-text/70">
+                <li>
+                  <Link to="#" className="hover:text-text">
+                    Help Center
+                  </Link>
+                </li>
+                <li>
+                  <Link to="#" className="hover:text-text">
+                    Documentation
+                  </Link>
+                </li>
+                <li>
+                  <Link to="#" className="hover:text-text">
+                    Security
+                  </Link>
+                </li>
+                <li>
+                  <Link to="#" className="hover:text-text">
+                    Privacy
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-border mt-8 pt-8 text-center text-text/60">
+            <p>&copy; 2025 StockPulse. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

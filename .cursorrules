@@ -1,6 +1,53 @@
 # StockPulse Development Rules - Enterprise Grade Production Standards
 # 🚀 ALWAYS APPLY THESE RULES - NO EXCEPTIONS
 start every chat with  🚀
+
+## CRITICAL: PORT & SESSION MANAGEMENT (HIGHEST PRIORITY)
+# These rules MUST be followed to prevent port conflicts and duplicate sessions
+
+### PORT MANAGEMENT RULES (MANDATORY - NO EXCEPTIONS)
+- NEVER change port numbers without explicit user approval
+- ALWAYS check for existing processes before starting new services
+- ALWAYS use netstat/lsof to identify port conflicts before changing ports
+- STANDARD PORTS: Frontend (3000/3001), Backend (8000), Postgres (5432), Redis (6379)
+- BEFORE changing ANY port: ALWAYS check `netstat -tulpn | grep :PORT` or `lsof -i :PORT`
+- ALWAYS kill existing conflicting processes instead of changing ports
+- NEVER modify config files to change ports without investigating root cause
+- ALWAYS document WHY a port needs to be changed if absolutely necessary
+
+### SESSION MANAGEMENT RULES (MANDATORY - NO EXCEPTIONS)
+- NEVER start duplicate development servers without checking existing ones
+- ALWAYS check for running processes before starting new services
+- ALWAYS use `ps aux | grep` to check for existing processes
+- ALWAYS terminate existing processes before starting new ones
+- NEVER run multiple instances of the same service simultaneously
+- ALWAYS use background processes (`&` or `nohup`) for long-running services
+- ALWAYS provide clear process management commands (start/stop/restart)
+
+### CONFLICT RESOLUTION PROTOCOL (MANDATORY)
+1. FIRST: Check what's using the port: `netstat -tulpn | grep :PORT`
+2. SECOND: Identify the process: `ps aux | grep PROCESS_NAME`
+3. THIRD: Determine if it's legitimate or leftover
+4. FOURTH: Kill the conflicting process if appropriate
+5. FIFTH: Only then proceed with starting the service
+6. LAST RESORT: Change port only with explicit user approval and documentation
+
+### DEVELOPMENT ENVIRONMENT RULES
+- ALWAYS use consistent port assignments across team
+- ALWAYS document all services and their assigned ports
+- ALWAYS implement health checks for all services
+- ALWAYS provide graceful shutdown mechanisms
+- ALWAYS clean up processes on exit/restart
+- NEVER leave orphaned processes running
+
+### CURSOR IDE SPECIFIC RULES
+- NEVER open multiple terminal sessions for the same service
+- ALWAYS check existing terminals before creating new ones
+- ALWAYS use single terminal per service type (frontend, backend, database)
+- ALWAYS terminate previous sessions before starting new ones
+- ALWAYS check running processes with `jobs` command in bash
+- NEVER assume ports are available without verification
+
 ## CRITICAL: PROJECT STRUCTURE ENFORCEMENT
 # These rules MUST be followed strictly. Never deviate from the established structure.
 
@@ -338,4 +385,4 @@ Any deviation must be justified and documented with clear reasoning.
 Quality gates will enforce these standards automatically.
 Cursor AI will help enforce these rules during development.
 
-# 🚀 ALWAYS END WITH ROCKET EMOJI AS SPECIFIED IN CUSTOM INSTRUCTIONS 🚀 
+# 🚀 ALWAYS END WITH ROCKET EMOJI AS SPECIFIED IN CUSTOM INSTRUCTIONS 🚀

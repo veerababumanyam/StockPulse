@@ -1,1 +1,1 @@
-# StockPulse Authentication Service 
+# StockPulse Authentication Service

@@ -2,12 +2,24 @@
  * Enhanced Authentication Context for StockPulse
  * Manages authentication state without client-side token storage.
  * Uses HttpOnly cookies for secure session management.
- * 
+ *
  * Story 1.3: Frontend AuthContext Implementation
  */
-import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
-import { authService } from '../services/authService';
-import { User, AuthContextType, LoginCredentials } from '../types/auth';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+} from "react";
+import { authService } from "../services/authService";
+import {
+  User,
+  AuthContextType,
+  LoginCredentials,
+  RegisterCredentials,
+} from "../types/auth";
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -32,17 +44,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const userData = await authService.getCurrentUser();
       setUser(userData);
       setError(null);
-      console.log('✅ Authentication status verified:', userData.email);
+      console.log("✅ Authentication status verified:", userData.email);
     } catch (err: any) {
       setUser(null);
-      
+
       // Only set error if user was previously authenticated (session expired)
       if (user !== null) {
-        setError('Session expired. Please log in again.');
-        console.warn('⚠️ Session expired during status check');
+        setError("Session expired. Please log in again.");
+        console.warn("⚠️ Session expired during status check");
       } else if (initializationAttempted.current) {
         // Silent failure on initial check - user is not authenticated
-        console.info('ℹ️ No active session found');
+        console.info("ℹ️ No active session found");
       }
     } finally {
       setLoading(false);
@@ -58,28 +70,67 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      
-      console.log('🔐 Attempting login for:', credentials.email);
+
+      console.log("🔐 Attempting login for:", credentials.email);
       const response = await authService.login(credentials);
       setUser(response.user);
-      
+
       // Store CSRF token for future requests
       if (response.csrf_token) {
         authService.setCsrfToken(response.csrf_token);
       }
-      
-      console.log('✅ Login successful for:', response.user.email);
-      
+
+      console.log("✅ Login successful for:", response.user.email);
+
       // Start session monitoring after successful login
       startSessionMonitoring();
-      
     } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 
-                          err.response?.data?.detail || 
-                          err.message || 
-                          'Login failed. Please try again.';
+      const errorMessage =
+        err.response?.data?.error ||
+        err.response?.data?.detail ||
+        err.message ||
+        "Login failed. Please try again.";
       setError(errorMessage);
-      console.error('❌ Login failed:', errorMessage);
+      console.error("❌ Login failed:", errorMessage);
+      throw err; // Re-throw for component error handling
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  /**
+   * Register function that creates new user account and logs them in
+   * AC6: Provide loading states during registration operations
+   * AC7: Handle registration errors with appropriate error states
+   */
+  const register = useCallback(async (credentials: RegisterCredentials) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      console.log("📝 Attempting registration for:", credentials.email);
+      const response = await authService.register(credentials);
+      setUser(response.user);
+
+      // Store CSRF token for future requests
+      if (response.csrf_token) {
+        authService.setCsrfToken(response.csrf_token);
+      }
+
+      console.log("✅ Registration successful for:", response.user.email);
+
+      // Start session monitoring after successful registration/login
+      startSessionMonitoring();
+
+      return response;
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.error ||
+        err.response?.data?.detail ||
+        err.message ||
+        "Registration failed. Please try again.";
+      setError(errorMessage);
+      console.error("❌ Registration failed:", errorMessage);
       throw err; // Re-throw for component error handling
     } finally {
       setLoading(false);
@@ -93,20 +144,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = useCallback(async () => {
     try {
       setLoading(true);
-      console.log('🚪 Logging out user:', user?.email);
-      
+      console.log("🚪 Logging out user:", user?.email);
+
       await authService.logout();
     } catch (err) {
       // Log error but don't prevent logout UX
-      console.error('⚠️ Logout error (non-blocking):', err);
+      console.error("⚠️ Logout error (non-blocking):", err);
     } finally {
       setUser(null);
       setError(null);
       setLoading(false);
       authService.clearCsrfToken();
       stopSessionMonitoring();
-      
-      console.log('✅ Logout completed');
+
+      console.log("✅ Logout completed");
     }
   }, [user?.email]);
 
@@ -128,12 +179,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
 
     // Check session every 15 minutes
-    sessionCheckInterval.current = setInterval(() => {
-      if (user) {
-        console.log('🔍 Performing periodic session check');
-        checkAuthStatus();
-      }
-    }, 15 * 60 * 1000); // 15 minutes
+    sessionCheckInterval.current = setInterval(
+      () => {
+        if (user) {
+          console.log("🔍 Performing periodic session check");
+          checkAuthStatus();
+        }
+      },
+      15 * 60 * 1000,
+    ); // 15 minutes
   }, [user, checkAuthStatus]);
 
   /**
@@ -152,18 +206,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
    */
   useEffect(() => {
     const handleUnauthorized = () => {
-      console.warn('🚨 Unauthorized event received - clearing session');
+      console.warn("🚨 Unauthorized event received - clearing session");
       setUser(null);
-      setError('Your session has expired. Please log in again.');
+      setError("Your session has expired. Please log in again.");
       authService.clearCsrfToken();
       stopSessionMonitoring();
     };
 
     // AC8: Listen for unauthorized events from API interceptor
-    window.addEventListener('auth:unauthorized', handleUnauthorized);
-    
+    window.addEventListener("auth:unauthorized", handleUnauthorized);
+
     return () => {
-      window.removeEventListener('auth:unauthorized', handleUnauthorized);
+      window.removeEventListener("auth:unauthorized", handleUnauthorized);
     };
   }, [stopSessionMonitoring]);
 
@@ -174,7 +228,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     if (!initializationAttempted.current) {
       initializationAttempted.current = true;
-      console.log('🚀 Initializing AuthContext - checking authentication status');
+      console.log(
+        "🚀 Initializing AuthContext - checking authentication status",
+      );
       checkAuthStatus();
     }
   }, [checkAuthStatus]);
@@ -198,37 +254,36 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   /**
    * AC2, AC5: Computed authentication status
    */
-  const isAuthenticated = user !== null;
+  const isAuthenticated = Boolean(user);
 
   /**
-   * Session refresh function for manual session extension
+   * Refresh session function for enhanced session management
    */
   const refreshSession = useCallback(async () => {
     try {
       await authService.refreshToken();
-      console.log('✅ Session refreshed successfully');
+      await checkAuthStatus();
     } catch (err) {
-      console.error('❌ Session refresh failed:', err);
-      // Don't throw - let normal session expiry handling take over
+      console.error("⚠️ Session refresh failed:", err);
+      throw err;
     }
-  }, []);
+  }, [checkAuthStatus]);
 
   const contextValue: AuthContextType = {
     user,
     loading,
     error,
     login,
+    register,
     logout,
     checkAuthStatus,
+    refreshSession,
     clearError,
     isAuthenticated,
-    refreshSession, // Enhanced functionality for Story 1.3
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
 
@@ -238,11 +293,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
  */
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  
+
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
-  
+
   return context;
 };
 
@@ -251,7 +306,7 @@ export const useAuth = (): AuthContextType => {
  */
 export const useAuthStatus = () => {
   const { isAuthenticated, loading, user } = useAuth();
-  
+
   return {
     isAuthenticated,
     isLoading: loading,
@@ -266,14 +321,18 @@ export const useAuthStatus = () => {
  */
 export const useRequireAuth = () => {
   const { isAuthenticated, loading, error } = useAuth();
-  
+
   if (loading) {
     return { requiresAuth: true, isLoading: true, error: null };
   }
-  
+
   if (!isAuthenticated) {
-    return { requiresAuth: true, isLoading: false, error: error || 'Authentication required' };
+    return {
+      requiresAuth: true,
+      isLoading: false,
+      error: error || "Authentication required",
+    };
   }
-  
+
   return { requiresAuth: false, isLoading: false, error: null };
 };

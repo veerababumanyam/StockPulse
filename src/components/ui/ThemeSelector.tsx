@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { useTheme, ThemeMode, ColorTheme } from '../../contexts/ThemeContext';
-import { Sun, Moon, Monitor, Check, ChevronDown } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Sun, Moon, Monitor, Check, ChevronDown } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
+import type { ThemeMode, ColorTheme } from "@/types/theme";
 
 interface ThemeSelectorProps {
   className?: string;
 }
 
-const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) => {
-  const { mode, colorTheme, setMode, setColorTheme } = useTheme();
+const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = "" }) => {
+  const { mode, setMode, colorTheme, setColorTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [isColorOpen, setIsColorOpen] = useState(false);
 
@@ -27,60 +28,60 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) => {
 
   const getModeIcon = () => {
     switch (mode) {
-      case 'light':
-        return <Sun className="w-5 h-5" />;
-      case 'dark':
-        return <Moon className="w-5 h-5" />;
-      case 'system':
-        return <Monitor className="w-5 h-5" />;
+      case "light":
+        return <Sun className="w-4 h-4" />;
+      case "dark":
+        return <Moon className="w-4 h-4" />;
+      case "system":
+        return <Monitor className="w-4 h-4" />;
       default:
-        return <Sun className="w-5 h-5" />;
+        return <Monitor className="w-4 h-4" />;
     }
   };
 
   const getModeName = () => {
     switch (mode) {
-      case 'light':
-        return 'Light';
-      case 'dark':
-        return 'Dark';
-      case 'system':
-        return 'System';
+      case "light":
+        return "Light";
+      case "dark":
+        return "Dark";
+      case "system":
+        return "System";
       default:
-        return 'Light';
+        return "System";
     }
   };
 
   const getColorThemeName = () => {
     switch (colorTheme) {
-      case 'default':
-        return 'Default';
-      case 'tropical-jungle':
-        return 'Tropical Jungle';
-      case 'ocean-sunset':
-        return 'Ocean Sunset';
-      case 'desert-storm':
-        return 'Desert Storm';
-      case 'berry-fields':
-        return 'Berry Fields';
-      case 'arctic-moss':
-        return 'Arctic Moss';
+      case "default":
+        return "Default";
+      case "tropical-jungle":
+        return "Tropical Jungle";
+      case "ocean-sunset":
+        return "Ocean Sunset";
+      case "desert-storm":
+        return "Desert Storm";
+      case "berry-fields":
+        return "Berry Fields";
+      case "arctic-moss":
+        return "Arctic Moss";
       default:
-        return 'Default';
+        return "Default";
     }
   };
 
   const getColorThemePreview = (theme: ColorTheme) => {
     switch (theme) {
-      case 'default':
+      case "default":
         return (
           <div className="flex space-x-1">
-            <div className="w-4 h-4 rounded-full bg-[#FF1493]"></div>
-            <div className="w-4 h-4 rounded-full bg-black"></div>
-            <div className="w-4 h-4 rounded-full bg-white border border-gray-200"></div>
+            <div className="w-4 h-4 rounded-full bg-primary-500"></div>
+            <div className="w-4 h-4 rounded-full bg-secondary-500"></div>
+            <div className="w-4 h-4 rounded-full bg-accent-500 border border-border"></div>
           </div>
         );
-      case 'tropical-jungle':
+      case "tropical-jungle":
         return (
           <div className="flex space-x-1">
             <div className="w-4 h-4 rounded-full bg-[#29A329]"></div>
@@ -88,7 +89,7 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) => {
             <div className="w-4 h-4 rounded-full bg-[#FFFF00]"></div>
           </div>
         );
-      case 'ocean-sunset':
+      case "ocean-sunset":
         return (
           <div className="flex space-x-1">
             <div className="w-4 h-4 rounded-full bg-[#008B8B]"></div>
@@ -96,7 +97,7 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) => {
             <div className="w-4 h-4 rounded-full bg-[#FFCBA4]"></div>
           </div>
         );
-      case 'desert-storm':
+      case "desert-storm":
         return (
           <div className="flex space-x-1">
             <div className="w-4 h-4 rounded-full bg-[#C19A6B]"></div>
@@ -104,7 +105,7 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) => {
             <div className="w-4 h-4 rounded-full bg-[#F4A460]"></div>
           </div>
         );
-      case 'berry-fields':
+      case "berry-fields":
         return (
           <div className="flex space-x-1">
             <div className="w-4 h-4 rounded-full bg-[#8E4585]"></div>
@@ -112,7 +113,7 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) => {
             <div className="w-4 h-4 rounded-full bg-[#E6E6FA]"></div>
           </div>
         );
-      case 'arctic-moss':
+      case "arctic-moss":
         return (
           <div className="flex space-x-1">
             <div className="w-4 h-4 rounded-full bg-[#4682B4]"></div>
@@ -123,9 +124,9 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) => {
       default:
         return (
           <div className="flex space-x-1">
-            <div className="w-4 h-4 rounded-full bg-[#FF1493]"></div>
-            <div className="w-4 h-4 rounded-full bg-black"></div>
-            <div className="w-4 h-4 rounded-full bg-white border border-gray-200"></div>
+            <div className="w-4 h-4 rounded-full bg-primary-500"></div>
+            <div className="w-4 h-4 rounded-full bg-secondary-500"></div>
+            <div className="w-4 h-4 rounded-full bg-accent-500 border border-border"></div>
           </div>
         );
     }
@@ -138,13 +139,13 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) => {
         <div className="relative">
           <button
             onClick={toggleDropdown}
-            className="flex items-center space-x-2 bg-background-100 dark:bg-background-800 hover:bg-background-200 dark:hover:bg-background-700 text-text-800 dark:text-text-200 px-3 py-2 rounded-md transition-colors duration-200"
+            className="flex items-center space-x-1 p-2 bg-surface hover:bg-surface/80 text-text rounded-md transition-colors duration-200 border border-border focus:outline-none focus:ring-2 focus:ring-primary/50"
             aria-haspopup="true"
             aria-expanded={isOpen}
           >
             {getModeIcon()}
-            <span className="hidden sm:inline">{getModeName()} Mode</span>
             <ChevronDown className="w-4 h-4" />
+            <span className="sr-only">{getModeName()} Mode</span>
           </button>
 
           {isOpen && (
@@ -153,37 +154,39 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-10 py-1"
+              className="absolute right-0 mt-2 w-48 bg-surface border border-border rounded-md shadow-lg z-10 py-1"
             >
               <button
-                onClick={() => handleModeChange('light')}
-                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => handleModeChange("light")}
+                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <div className="flex items-center">
                   <Sun className="w-4 h-4 mr-2" />
                   <span>Light</span>
                 </div>
-                {mode === 'light' && <Check className="w-4 h-4 text-primary-500" />}
+                {mode === "light" && <Check className="w-4 h-4 text-primary" />}
               </button>
               <button
-                onClick={() => handleModeChange('dark')}
-                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => handleModeChange("dark")}
+                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <div className="flex items-center">
                   <Moon className="w-4 h-4 mr-2" />
                   <span>Dark</span>
                 </div>
-                {mode === 'dark' && <Check className="w-4 h-4 text-primary-500" />}
+                {mode === "dark" && <Check className="w-4 h-4 text-primary" />}
               </button>
               <button
-                onClick={() => handleModeChange('system')}
-                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => handleModeChange("system")}
+                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <div className="flex items-center">
                   <Monitor className="w-4 h-4 mr-2" />
                   <span>System</span>
                 </div>
-                {mode === 'system' && <Check className="w-4 h-4 text-primary-500" />}
+                {mode === "system" && (
+                  <Check className="w-4 h-4 text-primary" />
+                )}
               </button>
             </motion.div>
           )}
@@ -193,13 +196,13 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) => {
         <div className="relative">
           <button
             onClick={toggleColorDropdown}
-            className="flex items-center space-x-2 bg-background-100 dark:bg-background-800 hover:bg-background-200 dark:hover:bg-background-700 text-text-800 dark:text-text-200 px-3 py-2 rounded-md transition-colors duration-200"
+            className="flex items-center space-x-1 p-2 bg-surface hover:bg-surface/80 text-text rounded-md transition-colors duration-200 border border-border focus:outline-none focus:ring-2 focus:ring-primary/50"
             aria-haspopup="true"
             aria-expanded={isColorOpen}
           >
             {getColorThemePreview(colorTheme)}
-            <span className="hidden sm:inline">{getColorThemeName()}</span>
             <ChevronDown className="w-4 h-4" />
+            <span className="sr-only">{getColorThemeName()} Theme</span>
           </button>
 
           {isColorOpen && (
@@ -208,67 +211,79 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-md shadow-lg z-10 py-1"
+              className="absolute right-0 mt-2 w-56 bg-surface border border-border rounded-md shadow-lg z-10 py-1"
             >
               <button
-                onClick={() => handleColorThemeChange('default')}
-                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => handleColorThemeChange("default")}
+                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <div className="flex items-center">
-                  {getColorThemePreview('default')}
+                  {getColorThemePreview("default")}
                   <span className="ml-2">Default</span>
                 </div>
-                {colorTheme === 'default' && <Check className="w-4 h-4 text-primary-500" />}
+                {colorTheme === "default" && (
+                  <Check className="w-4 h-4 text-primary" />
+                )}
               </button>
               <button
-                onClick={() => handleColorThemeChange('tropical-jungle')}
-                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => handleColorThemeChange("tropical-jungle")}
+                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <div className="flex items-center">
-                  {getColorThemePreview('tropical-jungle')}
+                  {getColorThemePreview("tropical-jungle")}
                   <span className="ml-2">Tropical Jungle</span>
                 </div>
-                {colorTheme === 'tropical-jungle' && <Check className="w-4 h-4 text-primary-500" />}
+                {colorTheme === "tropical-jungle" && (
+                  <Check className="w-4 h-4 text-primary" />
+                )}
               </button>
               <button
-                onClick={() => handleColorThemeChange('ocean-sunset')}
-                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => handleColorThemeChange("ocean-sunset")}
+                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <div className="flex items-center">
-                  {getColorThemePreview('ocean-sunset')}
+                  {getColorThemePreview("ocean-sunset")}
                   <span className="ml-2">Ocean Sunset</span>
                 </div>
-                {colorTheme === 'ocean-sunset' && <Check className="w-4 h-4 text-primary-500" />}
+                {colorTheme === "ocean-sunset" && (
+                  <Check className="w-4 h-4 text-primary" />
+                )}
               </button>
               <button
-                onClick={() => handleColorThemeChange('desert-storm')}
-                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => handleColorThemeChange("desert-storm")}
+                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <div className="flex items-center">
-                  {getColorThemePreview('desert-storm')}
+                  {getColorThemePreview("desert-storm")}
                   <span className="ml-2">Desert Storm</span>
                 </div>
-                {colorTheme === 'desert-storm' && <Check className="w-4 h-4 text-primary-500" />}
+                {colorTheme === "desert-storm" && (
+                  <Check className="w-4 h-4 text-primary" />
+                )}
               </button>
               <button
-                onClick={() => handleColorThemeChange('berry-fields')}
-                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => handleColorThemeChange("berry-fields")}
+                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <div className="flex items-center">
-                  {getColorThemePreview('berry-fields')}
+                  {getColorThemePreview("berry-fields")}
                   <span className="ml-2">Berry Fields</span>
                 </div>
-                {colorTheme === 'berry-fields' && <Check className="w-4 h-4 text-primary-500" />}
+                {colorTheme === "berry-fields" && (
+                  <Check className="w-4 h-4 text-primary" />
+                )}
               </button>
               <button
-                onClick={() => handleColorThemeChange('arctic-moss')}
-                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => handleColorThemeChange("arctic-moss")}
+                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <div className="flex items-center">
-                  {getColorThemePreview('arctic-moss')}
+                  {getColorThemePreview("arctic-moss")}
                   <span className="ml-2">Arctic Moss</span>
                 </div>
-                {colorTheme === 'arctic-moss' && <Check className="w-4 h-4 text-primary-500" />}
+                {colorTheme === "arctic-moss" && (
+                  <Check className="w-4 h-4 text-primary" />
+                )}
               </button>
             </motion.div>
           )}
