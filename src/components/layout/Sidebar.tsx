@@ -918,7 +918,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <div className="p-4 border-t border-border/50 shrink-0 bg-gradient-to-r from-surface/50 to-surface/80">
               <div className="text-center space-y-1">
                 <div className="text-xs text-text/60 font-medium">
-                  StockPulse v0.1.0
+                  StockPulse v0.2.1
                 </div>
                 {isCustomizing && (
                   <div className="flex items-center justify-center space-x-1 text-xs text-text/60">

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "stockpulse-backend"
-version = "0.1.0"
+version = "0.2.1"
 description = "StockPulse Backend API with Enterprise Security"
 authors = [{name = "StockPulse Team", email = "dev@stockpulse.com"}]
 license = {text = "Apache-2.0"}
