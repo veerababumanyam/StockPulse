@@ -1,3 +1,9 @@
+<div align="center">
+  <img src="public/logo.png" alt="StockPulse Logo" width="150" height="150" />
+</div>
+
+<div align="center">
+
 # StockPulse - AI-Powered Financial Platform
 
 [![Production-Grade](https://img.shields.io/badge/Production-Grade-green.svg)](https://github.com/user/stockpulse)
@@ -6,18 +12,20 @@
 [![MCP](https://img.shields.io/badge/MCP-Enabled-purple.svg)](https://modelcontextprotocol.io/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> **Enterprise-grade AI-powered financial platform with hybrid Agent-to-Agent (A2A) and Model Context Protocol (MCP) architecture for institutional-grade portfolio management and trading intelligence.**
+</div>
+
+> **Enterprise-grade Agentic AI (AGI)-powered financial platform with hybrid Agent-to-Agent (A2A) and Model Context Protocol (MCP) architecture for institutional-grade portfolio management and trading intelligence.**
 
 ## 🚀 Revolutionary Hybrid AI Architecture
 
-StockPulse implements a cutting-edge **A2A + MCP hybrid architecture** following Google's vision for complementary AI protocols:
+StockPulse implements a cutting-edge **A2A + MCP hybrid architecture + RAG ** following Google's vision for complementary AI protocols:
 
 - **🤝 A2A Protocol**: High-level agent collaboration and multi-agent workflows
 - **🔧 MCP Protocol**: Structured tool and resource access to databases and services
 - **🌉 Cross-Protocol Integration**: A2A skills automatically exposed as MCP tools
 - **🔄 Real-time Integration**: Live data flows between agents and specialized tools
-
-[📖 **Comprehensive A2A+MCP Documentation**](docs/ai/a2a-mcp-integration.md)
+- ** [📖 **Comprehensive A2A+MCP Documentation**](docs/ai/a2a-mcp-integration.md)
+- ** RAG** :
 
 ## ⚡ Quick Start
 
@@ -33,6 +41,9 @@ StockPulse implements a cutting-edge **A2A + MCP hybrid architecture** following
 # Start all backend services (databases, MCP servers, A2A agents)
 docker-compose -f docker-compose.dev.yml up -d
 
+# Check service health
+docker-compose -f docker-compose.dev.yml ps
+
 # Initialize the database and create super admin user
 cd services/backend
 python init_admin.py
@@ -45,6 +56,17 @@ curl http://localhost:8000/health  # FastAPI Backend
 curl http://localhost:9001/health  # User Assistant Agent (A2A)
 curl http://localhost:9002/health  # Portfolio Manager Agent (A2A)
 curl http://localhost:8003/health  # PostgreSQL MCP Server
+```
+```
+
+### Production Deployment
+
+```bash
+# Production deployment
+docker-compose -f docker-compose.yml up -d
+
+# Staging environment
+docker-compose -f docker-compose.yml -f docker-compose.staging.yml up -d
 ```
 
 ### 🌐 Start Frontend (Local Development)
@@ -76,46 +98,6 @@ curl -X POST http://localhost:9002/jsonrpc \
 
 # Test MCP Integration (A2A skills as MCP tools)
 curl http://localhost:9002/mcp/capabilities
-```
-
-## 🏗️ System Architecture
-
-### 🔄 Hybrid A2A+MCP Integration
-
-```mermaid
-graph TB
-    subgraph "Frontend"
-        FE[React Frontend<br/>Port 3000/5173]
-    end
-
-    subgraph "A2A Agent Layer"
-        UA[User Assistant<br/>Port 9001<br/>4 Skills]
-        PM[Portfolio Manager<br/>Port 9002<br/>5 Skills]
-        AR[A2A Registry<br/>Port 9000]
-    end
-
-    subgraph "MCP Tool Layer"
-        MCP1[PostgreSQL MCP<br/>Port 8003]
-        MCP2[TimescaleDB MCP<br/>Port 8004]
-        MCP3[Redis MCP<br/>Port 8005]
-        MCP4[Auth MCP<br/>Port 8002]
-    end
-
-    subgraph "Database Layer"
-        PG[(PostgreSQL)]
-        TS[(TimescaleDB)]
-        RD[(Redis)]
-        N4[(Neo4j)]
-    end
-
-    FE --> UA
-    UA ↔ PM
-    UA -.-> MCP3
-    PM -.-> MCP1
-    PM -.-> MCP2
-    MCP1 --> PG
-    MCP2 --> TS
-    MCP3 --> RD
 ```
 
 ## 🎯 Core Features
@@ -324,32 +306,6 @@ npm run test:performance
 - **🔒 Security Scanning** with automated vulnerability detection
 - **♿ Accessibility Testing** for WCAG 2.1 AA+ compliance
 
-## 🐳 Docker Infrastructure & Deployment
-
-### Development Environment
-
-```bash
-# Start all backend services
-docker-compose -f docker-compose.dev.yml up -d
-
-# Check service health
-docker-compose -f docker-compose.dev.yml ps
-
-# Monitor all services
-for port in 8000 8001 8002 8003 8004 8005 8006 8007 9000 9001 9002; do
-  echo "Port $port: $(curl -s -o /dev/null -w "%{http_code}" http://localhost:$port/health)"
-done
-```
-
-### Production Deployment
-
-```bash
-# Production deployment
-docker-compose -f docker-compose.yml up -d
-
-# Staging environment
-docker-compose -f docker-compose.yml -f docker-compose.staging.yml up -d
-```
 
 ## 🤝 Contributing
 
