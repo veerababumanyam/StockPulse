@@ -24,7 +24,7 @@ StockPulse implements a cutting-edge **A2A + MCP hybrid architecture + RAG ** fo
 - **🔧 MCP Protocol**: Structured tool and resource access to databases and services
 - **🌉 Cross-Protocol Integration**: A2A skills automatically exposed as MCP tools
 - **🔄 Real-time Integration**: Live data flows between agents and specialized tools
-- ** [📖 **Comprehensive A2A+MCP Documentation**](docs/ai/a2a-mcp-integration.md)
+- ** [📖 **Comprehensive A2A+MCP Documentation\*\*](docs/ai/a2a-mcp-integration.md)
 - ** RAG** :
 
 ## ⚡ Quick Start
@@ -57,7 +57,8 @@ curl http://localhost:9001/health  # User Assistant Agent (A2A)
 curl http://localhost:9002/health  # Portfolio Manager Agent (A2A)
 curl http://localhost:8003/health  # PostgreSQL MCP Server
 ```
-```
+
+````
 
 ### Production Deployment
 
@@ -67,7 +68,7 @@ docker-compose -f docker-compose.yml up -d
 
 # Staging environment
 docker-compose -f docker-compose.yml -f docker-compose.staging.yml up -d
-```
+````
 
 ### 🌐 Start Frontend (Local Development)
 
@@ -305,7 +306,6 @@ npm run test:performance
 - **⚡ Performance Testing** with sub-second response times
 - **🔒 Security Scanning** with automated vulnerability detection
 - **♿ Accessibility Testing** for WCAG 2.1 AA+ compliance
-
 
 ## 🤝 Contributing
 

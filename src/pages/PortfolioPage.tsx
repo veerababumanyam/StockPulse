@@ -3,16 +3,22 @@
  * Complete portfolio management interface with real-time data, analytics,
  * advanced filtering, mobile responsiveness, and accessibility features
  */
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Button } from '../components/ui/button';
-import { Badge } from '../components/ui/badge';
-import { Alert, AlertDescription } from '../components/ui/alert';
-import { 
-  Settings, 
-  RefreshCw, 
-  Download, 
-  BarChart3, 
+import React, { useCallback, useMemo, useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
+import { Alert, AlertDescription } from "../components/ui/alert";
+import {
+  Settings,
+  RefreshCw,
+  Download,
+  BarChart3,
   TrendingUp,
   AlertCircle,
   Activity,
@@ -28,32 +34,35 @@ import {
   DollarSign,
   Target,
   Shield,
-  MoreVertical
-} from 'lucide-react';
+  MoreVertical,
+} from "lucide-react";
 
 // Custom hooks and components
-import { usePortfolioData } from '../hooks/usePortfolioData';
-import { PortfolioSummaryCard } from '../components/portfolio/PortfolioSummaryCard';
-import { HoldingsTable } from '../components/portfolio/HoldingsTable';
-import { 
+import { usePortfolioData } from "../hooks/usePortfolioData";
+import { PortfolioSummaryCard } from "../components/portfolio/PortfolioSummaryCard";
+import { HoldingsTable } from "../components/portfolio/HoldingsTable";
+import {
   PortfolioPageSkeleton,
   PortfolioSummarySkeleton,
   HoldingsTableSkeleton,
   PortfolioAnalyticsSkeleton,
-  NewsAndAlertsSkeleton
-} from '../components/portfolio/PortfolioSkeletonLoader';
+  NewsAndAlertsSkeleton,
+} from "../components/portfolio/PortfolioSkeletonLoader";
 
 // Types
-import { 
-  PositionAction, 
-  ExportOptions, 
+import {
+  PositionAction,
+  ExportOptions,
   PortfolioPageConfig,
   PortfolioAnalytics,
   StockNews,
-  PriceAlert
-} from '../types/portfolio';
-import { formatCurrency, formatPercentage } from '../utils/portfolioCalculations';
-import { cn } from '../utils/tailwind';
+  PriceAlert,
+} from "../types/portfolio";
+import {
+  formatCurrency,
+  formatPercentage,
+} from "../utils/portfolioCalculations";
+import { cn } from "../utils/tailwind";
 
 // Enhanced Portfolio Analytics Component
 const PortfolioAnalyticsSection: React.FC<{
@@ -63,16 +72,24 @@ const PortfolioAnalyticsSection: React.FC<{
   className?: string;
 }> = React.memo(({ analytics, isLoading, compactMode, className }) => {
   if (isLoading || !analytics) {
-    return <PortfolioAnalyticsSkeleton className={className} compactMode={compactMode} />;
+    return (
+      <PortfolioAnalyticsSkeleton
+        className={className}
+        compactMode={compactMode}
+      />
+    );
   }
 
   return (
     <div className={cn("space-y-6", className)}>
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Portfolio Analytics</h2>
+          <h2 className="text-2xl font-bold tracking-tight">
+            Portfolio Analytics
+          </h2>
           <p className="text-muted-foreground">
-            Comprehensive analysis of your portfolio performance and risk metrics
+            Comprehensive analysis of your portfolio performance and risk
+            metrics
           </p>
         </div>
         {!compactMode && (
@@ -84,17 +101,23 @@ const PortfolioAnalyticsSection: React.FC<{
       </div>
 
       {/* Performance metrics grid */}
-      <div className={cn(
-        "grid gap-4",
-        compactMode ? "grid-cols-2 lg:grid-cols-3" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-      )}>
+      <div
+        className={cn(
+          "grid gap-4",
+          compactMode
+            ? "grid-cols-2 lg:grid-cols-3"
+            : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
+        )}
+      >
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Total Return</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formatPercentage(analytics.performanceMetrics.total_return_percentage)}
+              {formatPercentage(
+                analytics.performanceMetrics.total_return_percentage,
+              )}
             </div>
             <p className="text-xs text-muted-foreground">
               {formatCurrency(analytics.performanceMetrics.total_return)}
@@ -124,9 +147,7 @@ const PortfolioAnalyticsSection: React.FC<{
             <div className="text-2xl font-bold">
               {analytics.riskMetrics.beta.toFixed(2)}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Market correlation
-            </p>
+            <p className="text-xs text-muted-foreground">Market correlation</p>
           </CardContent>
         </Card>
 
@@ -149,11 +170,15 @@ const PortfolioAnalyticsSection: React.FC<{
             <CardTitle className="text-sm font-medium">Alpha</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={cn(
-              "text-2xl font-bold",
-              analytics.comparisonData.alpha >= 0 ? "text-green-600" : "text-red-600"
-            )}>
-              {analytics.comparisonData.alpha >= 0 ? '+' : ''}
+            <div
+              className={cn(
+                "text-2xl font-bold",
+                analytics.comparisonData.alpha >= 0
+                  ? "text-green-600"
+                  : "text-red-600",
+              )}
+            >
+              {analytics.comparisonData.alpha >= 0 ? "+" : ""}
               {analytics.comparisonData.alpha.toFixed(2)}%
             </div>
             <p className="text-xs text-muted-foreground">
@@ -187,20 +212,29 @@ const PortfolioAnalyticsSection: React.FC<{
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {analytics.diversificationMetrics.sectorAllocation.map((sector) => (
-                  <div key={sector.sector} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-primary rounded-full" />
-                      <span className="text-sm font-medium">{sector.sector}</span>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm font-medium">{sector.percentage.toFixed(1)}%</div>
-                      <div className="text-xs text-muted-foreground">
-                        {formatCurrency(sector.value)}
+                {analytics.diversificationMetrics.sectorAllocation.map(
+                  (sector) => (
+                    <div
+                      key={sector.sector}
+                      className="flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-primary rounded-full" />
+                        <span className="text-sm font-medium">
+                          {sector.sector}
+                        </span>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm font-medium">
+                          {sector.percentage.toFixed(1)}%
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {formatCurrency(sector.value)}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ),
+                )}
               </div>
             </CardContent>
           </Card>
@@ -214,11 +248,18 @@ const PortfolioAnalyticsSection: React.FC<{
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-sm">Concentration Risk</span>
-                  <span className={cn(
-                    "text-sm font-medium",
-                    analytics.diversificationMetrics.concentrationRisk > 0.3 ? "text-red-600" : "text-green-600"
-                  )}>
-                    {(analytics.diversificationMetrics.concentrationRisk * 100).toFixed(1)}%
+                  <span
+                    className={cn(
+                      "text-sm font-medium",
+                      analytics.diversificationMetrics.concentrationRisk > 0.3
+                        ? "text-red-600"
+                        : "text-green-600",
+                    )}
+                  >
+                    {(
+                      analytics.diversificationMetrics.concentrationRisk * 100
+                    ).toFixed(1)}
+                    %
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -230,7 +271,9 @@ const PortfolioAnalyticsSection: React.FC<{
                 <div className="flex justify-between">
                   <span className="text-sm">Herfindahl Index</span>
                   <span className="text-sm font-medium">
-                    {analytics.diversificationMetrics.herfindahlIndex.toFixed(3)}
+                    {analytics.diversificationMetrics.herfindahlIndex.toFixed(
+                      3,
+                    )}
                   </span>
                 </div>
               </div>
@@ -242,7 +285,7 @@ const PortfolioAnalyticsSection: React.FC<{
   );
 });
 
-PortfolioAnalyticsSection.displayName = 'PortfolioAnalyticsSection';
+PortfolioAnalyticsSection.displayName = "PortfolioAnalyticsSection";
 
 // News and Alerts Section Component
 const NewsAndAlertsSection: React.FC<{
@@ -253,11 +296,19 @@ const NewsAndAlertsSection: React.FC<{
   className?: string;
 }> = React.memo(({ news, alerts, isLoading, compactMode, className }) => {
   if (isLoading) {
-    return <NewsAndAlertsSkeleton className={className} compactMode={compactMode} />;
+    return (
+      <NewsAndAlertsSkeleton className={className} compactMode={compactMode} />
+    );
   }
 
   return (
-    <div className={cn("grid gap-6", compactMode ? "lg:grid-cols-1" : "lg:grid-cols-2", className)}>
+    <div
+      className={cn(
+        "grid gap-6",
+        compactMode ? "lg:grid-cols-1" : "lg:grid-cols-2",
+        className,
+      )}
+    >
       {/* News section */}
       <Card>
         <CardHeader>
@@ -279,19 +330,30 @@ const NewsAndAlertsSection: React.FC<{
           ) : (
             <div className="space-y-4">
               {news.slice(0, 3).map((article) => (
-                <div key={article.id} className="flex gap-3 p-3 border rounded hover:bg-muted/50 transition-colors">
+                <div
+                  key={article.id}
+                  className="flex gap-3 p-3 border rounded hover:bg-muted/50 transition-colors"
+                >
                   <div className="flex-1 space-y-1">
-                    <h4 className="text-sm font-medium line-clamp-2">{article.headline}</h4>
-                    <p className="text-xs text-muted-foreground line-clamp-2">{article.summary}</p>
+                    <h4 className="text-sm font-medium line-clamp-2">
+                      {article.headline}
+                    </h4>
+                    <p className="text-xs text-muted-foreground line-clamp-2">
+                      {article.summary}
+                    </p>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <span>{article.source}</span>
                       <span>•</span>
-                      <span>{new Date(article.publishedAt).toLocaleDateString()}</span>
-                      <Badge 
+                      <span>
+                        {new Date(article.publishedAt).toLocaleDateString()}
+                      </span>
+                      <Badge
                         variant={
-                          article.sentiment === 'POSITIVE' ? 'default' : 
-                          article.sentiment === 'NEGATIVE' ? 'destructive' : 
-                          'secondary'
+                          article.sentiment === "POSITIVE"
+                            ? "default"
+                            : article.sentiment === "NEGATIVE"
+                              ? "destructive"
+                              : "secondary"
                         }
                         className="text-xs"
                       >
@@ -328,15 +390,21 @@ const NewsAndAlertsSection: React.FC<{
           ) : (
             <div className="space-y-3">
               {alerts.slice(0, 4).map((alert) => (
-                <div key={alert.id} className="flex items-center gap-3 p-2 border rounded">
-                  <div className={cn(
-                    "w-2 h-2 rounded-full",
-                    alert.isActive ? "bg-green-500" : "bg-gray-400"
-                  )} />
+                <div
+                  key={alert.id}
+                  className="flex items-center gap-3 p-2 border rounded"
+                >
+                  <div
+                    className={cn(
+                      "w-2 h-2 rounded-full",
+                      alert.isActive ? "bg-green-500" : "bg-gray-400",
+                    )}
+                  />
                   <div className="flex-1">
                     <div className="text-sm font-medium">{alert.symbol}</div>
                     <div className="text-xs text-muted-foreground">
-                      {alert.alertType.replace('_', ' ').toLowerCase()} {alert.threshold}
+                      {alert.alertType.replace("_", " ").toLowerCase()}{" "}
+                      {alert.threshold}
                     </div>
                   </div>
                   <Button variant="ghost" size="sm">
@@ -352,7 +420,7 @@ const NewsAndAlertsSection: React.FC<{
   );
 });
 
-NewsAndAlertsSection.displayName = 'NewsAndAlertsSection';
+NewsAndAlertsSection.displayName = "NewsAndAlertsSection";
 
 // Main Portfolio Page Component
 export default function PortfolioPage() {
@@ -382,92 +450,106 @@ export default function PortfolioPage() {
     setAlert,
     updateConfig,
   } = usePortfolioData({
-    portfolioId: '1',
+    portfolioId: "1",
     enableRealTime: true,
     autoLoad: true,
   });
 
   // Local state
-  const [selectedAction, setSelectedAction] = useState<PositionAction | null>(null);
+  const [selectedAction, setSelectedAction] = useState<PositionAction | null>(
+    null,
+  );
   const [showConfigModal, setShowConfigModal] = useState(false);
 
   // Handle position actions
-  const handlePositionAction = useCallback(async (action: PositionAction) => {
-    setSelectedAction(action);
-    
-    switch (action.type) {
-      case 'BUY_MORE':
-        // Mock buy more action
-        console.log(`Buy more ${action.symbol}`);
-        break;
-      case 'SELL':
-        // Mock sell action
-        console.log(`Sell ${action.symbol}`);
-        break;
-      case 'SET_ALERT':
-        // Mock set alert action
-        await setAlert({
-          symbol: action.symbol,
-          alertType: 'PRICE_ABOVE',
-          threshold: action.data?.currentPrice * 1.1 || 100,
-          isActive: true,
-        });
-        break;
-      case 'VIEW_DETAILS':
-        // Navigate to position details
-        console.log(`View details for ${action.symbol}`);
-        break;
-      case 'VIEW_NEWS':
-        // Navigate to stock news
-        console.log(`View news for ${action.symbol}`);
-        break;
-      case 'ANALYZE':
-        // Navigate to analysis page
-        console.log(`Analyze ${action.symbol}`);
-        break;
-    }
-  }, [setAlert]);
+  const handlePositionAction = useCallback(
+    async (action: PositionAction) => {
+      setSelectedAction(action);
+
+      switch (action.type) {
+        case "BUY_MORE":
+          // Mock buy more action
+          console.log(`Buy more ${action.symbol}`);
+          break;
+        case "SELL":
+          // Mock sell action
+          console.log(`Sell ${action.symbol}`);
+          break;
+        case "SET_ALERT":
+          // Mock set alert action
+          await setAlert({
+            symbol: action.symbol,
+            alertType: "PRICE_ABOVE",
+            threshold: action.data?.currentPrice * 1.1 || 100,
+            isActive: true,
+          });
+          break;
+        case "VIEW_DETAILS":
+          // Navigate to position details
+          console.log(`View details for ${action.symbol}`);
+          break;
+        case "VIEW_NEWS":
+          // Navigate to stock news
+          console.log(`View news for ${action.symbol}`);
+          break;
+        case "ANALYZE":
+          // Navigate to analysis page
+          console.log(`Analyze ${action.symbol}`);
+          break;
+      }
+    },
+    [setAlert],
+  );
 
   // Handle export
   const handleExport = useCallback(async () => {
     const exportOptions: ExportOptions = {
-      format: 'CSV',
+      format: "CSV",
       includeTransactions: true,
       includeAnalytics: true,
     };
-    
+
     try {
       await exportData(exportOptions);
     } catch (err) {
-      console.error('Export failed:', err);
+      console.error("Export failed:", err);
     }
   }, [exportData]);
 
   // Handle configuration changes
-  const handleConfigChange = useCallback((key: keyof PortfolioPageConfig, value: any) => {
-    updateConfig({ [key]: value });
-  }, [updateConfig]);
+  const handleConfigChange = useCallback(
+    (key: keyof PortfolioPageConfig, value: any) => {
+      updateConfig({ [key]: value });
+    },
+    [updateConfig],
+  );
 
   // Memoized page calculations
   const pageMetrics = useMemo(() => {
     if (!summary || !filteredPositions) return null;
 
     const totalPositions = filteredPositions.length;
-    const profitablePositions = filteredPositions.filter(p => p.gainLoss > 0).length;
-    const biggestGainer = filteredPositions.reduce((max, pos) => 
-      pos.gainLossPercentage > max.gainLossPercentage ? pos : max, 
-      filteredPositions[0] || { gainLossPercentage: 0 }
+    const profitablePositions = filteredPositions.filter(
+      (p) => p.gainLoss > 0,
+    ).length;
+    const biggestGainer = filteredPositions.reduce(
+      (max, pos) =>
+        pos.gainLossPercentage > max.gainLossPercentage ? pos : max,
+      filteredPositions[0] || { gainLossPercentage: 0 },
     );
-    const biggestLoser = filteredPositions.reduce((min, pos) => 
-      pos.gainLossPercentage < min.gainLossPercentage ? pos : min, 
-      filteredPositions[0] || { gainLossPercentage: 0 }
+    const biggestLoser = filteredPositions.reduce(
+      (min, pos) =>
+        pos.gainLossPercentage < min.gainLossPercentage ? pos : min,
+      filteredPositions[0] || { gainLossPercentage: 0 },
     );
 
     return {
       totalPositions,
       profitablePositions,
-      profitabilityRate: totalPositions > 0 ? (profitablePositions / totalPositions) * 100 : 0,
-      biggestGainer: biggestGainer.gainLossPercentage > 0 ? biggestGainer : null,
+      profitabilityRate:
+        totalPositions > 0 ? (profitablePositions / totalPositions) * 100 : 0,
+      biggestGainer:
+        biggestGainer.gainLossPercentage > 0 ? biggestGainer : null,
       biggestLoser: biggestLoser.gainLossPercentage < 0 ? biggestLoser : null,
     };
   }, [summary, filteredPositions]);
@@ -508,7 +590,8 @@ export default function PortfolioPage() {
         <div className="space-y-1">
           <h1 className="text-3xl font-bold tracking-tight">Portfolio</h1>
           <p className="text-muted-foreground">
-            Monitor and manage your investment portfolio with real-time data and analytics
+            Monitor and manage your investment portfolio with real-time data and
+            analytics
           </p>
           {lastUpdated && (
             <p className="text-xs text-muted-foreground">
@@ -516,7 +599,7 @@ export default function PortfolioPage() {
             </p>
           )}
         </div>
-        
+
         <div className="flex items-center gap-2">
           {/* Real-time indicator */}
           {realtimeData && (
@@ -525,25 +608,31 @@ export default function PortfolioPage() {
               Live Data
             </Badge>
           )}
-          
+
           {/* Action buttons */}
           <Button variant="outline" size="sm" onClick={handleExport}>
             <Download className="w-4 h-4 mr-2" />
             Export
           </Button>
-          
-          <Button 
-            variant="outline" 
-            size="sm" 
+
+          <Button
+            variant="outline"
+            size="sm"
             onClick={refreshData}
             disabled={isRefreshing}
           >
-            <RefreshCw className={cn("w-4 h-4 mr-2", isRefreshing && "animate-spin")} />
+            <RefreshCw
+              className={cn("w-4 h-4 mr-2", isRefreshing && "animate-spin")}
+            />
             Refresh
           </Button>
-          
+
           {/* Configuration menu */}
-          <Button variant="outline" size="sm" onClick={() => setShowConfigModal(true)}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowConfigModal(true)}
+          >
             <Settings className="w-4 h-4" />
           </Button>
         </div>
@@ -556,8 +645,12 @@ export default function PortfolioPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Positions</p>
-                  <p className="text-2xl font-bold">{pageMetrics.totalPositions}</p>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Positions
+                  </p>
+                  <p className="text-2xl font-bold">
+                    {pageMetrics.totalPositions}
+                  </p>
                   <p className="text-xs text-muted-foreground">
                     {pageMetrics.profitabilityRate.toFixed(1)}% profitable
                   </p>
@@ -571,8 +664,12 @@ export default function PortfolioPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total Value</p>
-                  <p className="text-2xl font-bold">{summary ? formatCurrency(summary.totalValue) : '---'}</p>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Total Value
+                  </p>
+                  <p className="text-2xl font-bold">
+                    {summary ? formatCurrency(summary.totalValue) : "---"}
+                  </p>
                   <p className="text-xs text-muted-foreground">
                     Portfolio worth
                   </p>
@@ -587,10 +684,15 @@ export default function PortfolioPage() {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Top Performer</p>
-                    <p className="text-lg font-bold">{pageMetrics.biggestGainer.symbol}</p>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Top Performer
+                    </p>
+                    <p className="text-lg font-bold">
+                      {pageMetrics.biggestGainer.symbol}
+                    </p>
                     <p className="text-xs text-green-600">
-                      +{pageMetrics.biggestGainer.gainLossPercentage.toFixed(2)}%
+                      +{pageMetrics.biggestGainer.gainLossPercentage.toFixed(2)}
+                      %
                     </p>
                   </div>
                   <TrendingUp className="h-8 w-8 text-green-600" />
@@ -604,8 +706,12 @@ export default function PortfolioPage() {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Biggest Loser</p>
-                    <p className="text-lg font-bold">{pageMetrics.biggestLoser.symbol}</p>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Biggest Loser
+                    </p>
+                    <p className="text-lg font-bold">
+                      {pageMetrics.biggestLoser.symbol}
+                    </p>
                     <p className="text-xs text-red-600">
                       {pageMetrics.biggestLoser.gainLossPercentage.toFixed(2)}%
                     </p>

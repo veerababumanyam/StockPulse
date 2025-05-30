@@ -20,9 +20,7 @@ from app.middleware.security import security_headers_middleware
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.StreamHandler(sys.stdout)
-    ]
+    handlers=[logging.StreamHandler(sys.stdout)],
 )
 logger = logging.getLogger(__name__)
 
@@ -34,12 +32,12 @@ async def lifespan(app: FastAPI):
     """Application lifespan manager for startup and shutdown."""
     try:
         logger.info("Starting StockPulse backend...")
-        
+
         # Startup
         logger.info("Initializing database...")
         await init_database()
         logger.info("Database initialization completed")
-        
+
         # TODO: Re-enable Redis when ready
         # logger.info("Initializing Redis...")
         # await init_redis()
@@ -49,13 +47,13 @@ async def lifespan(app: FastAPI):
         # mcp = FastApiMCP(app)
         # app.state.mcp = mcp
         # app.state.agent_notifier = AgentNotificationService(mcp)
-        
+
         logger.info("StockPulse backend startup completed successfully")
         yield
 
         # Shutdown - cleanup resources
         logger.info("Shutting down StockPulse backend...")
-        
+
     except Exception as e:
         logger.error(f"Startup failed: {e}")
         raise
@@ -97,7 +95,11 @@ async def health_check():
 @app.get("/", tags=["Health"])
 async def read_root():
     """Health check endpoint with API information"""
-    return {"message": "StockPulse Backend API", "version": "0.2.1", "status": "running"}
+    return {
+        "message": "StockPulse Backend API",
+        "version": "0.2.1",
+        "status": "running",
+    }
 
 
 if __name__ == "__main__":

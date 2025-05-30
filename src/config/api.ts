@@ -4,30 +4,98 @@
  */
 import axios from "axios";
 
-// Environment-based API configuration
+// API Base URL - use environment variable or default to localhost
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+// API Configuration object
 export const API_CONFIG = {
-  // Base URL for the FastAPI backend
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api/v1",
-
-  // Request timeout in milliseconds
-  TIMEOUT: 10000,
-
-  // Enable credentials for cookie-based auth
-  WITH_CREDENTIALS: true,
-
-  // Default headers
+  BASE_URL: API_BASE_URL,
+  TIMEOUT: 30000, // 30 seconds
+  RETRY_ATTEMPTS: 3,
+  RETRY_DELAY: 1000, // 1 second
+  WITH_CREDENTIALS: true, // Essential for HttpOnly cookies
   DEFAULT_HEADERS: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
   },
+};
 
-  // Auth endpoints
-  AUTH_ENDPOINTS: {
-    LOGIN: "/auth/login",
-    REGISTER: "/auth/register",
-    LOGOUT: "/auth/logout",
-    REFRESH: "/auth/refresh",
-    ME: "/auth/me",
+// API Endpoints
+export const API_ENDPOINTS = {
+  // Authentication
+  AUTH: {
+    LOGIN: '/api/v1/auth/login',
+    LOGOUT: '/api/v1/auth/logout',
+    REGISTER: '/api/v1/auth/register',
+    REFRESH: '/api/v1/auth/refresh',
+    ME: '/api/v1/auth/me',
   },
+  
+  // Portfolio Management
+  PORTFOLIO: {
+    LIST: '/api/v1/portfolio',
+    CREATE: '/api/v1/portfolio',
+    DETAIL: (id: string) => `/api/v1/portfolio/${id}`,
+    UPDATE: (id: string) => `/api/v1/portfolio/${id}`,
+    DELETE: (id: string) => `/api/v1/portfolio/${id}`,
+    DASHBOARD: '/api/v1/portfolio/dashboard',
+    POSITIONS: (id: string) => `/api/v1/portfolio/${id}/positions`,
+    TRANSACTIONS: (id: string) => `/api/v1/portfolio/${id}/transactions`,
+    AI_INSIGHTS: (id: string) => `/api/v1/portfolio/${id}/insights`,
+  },
+  
+  // API Key Management
+  API_KEYS: {
+    LIST: '/api/v1/api-keys',
+    CREATE: '/api/v1/api-keys',
+    UPDATE: (id: string) => `/api/v1/api-keys/${id}`,
+    DELETE: (id: string) => `/api/v1/api-keys/${id}`,
+    VALIDATE: (id: string) => `/api/v1/api-keys/${id}/validate`,
+    PROVIDERS: '/api/v1/api-keys/providers',
+    STATS: '/api/v1/api-keys/stats',
+  },
+  
+  // Market Data
+  MARKET: {
+    QUOTE: '/api/v1/market/quote',
+    SEARCH: '/api/v1/market/search',
+    HISTORY: '/api/v1/market/history',
+  },
+};
+
+// HTTP Status Codes
+export const HTTP_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  NO_CONTENT: 204,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  CONFLICT: 409,
+  UNPROCESSABLE_ENTITY: 422,
+  INTERNAL_SERVER_ERROR: 500,
+  BAD_GATEWAY: 502,
+  SERVICE_UNAVAILABLE: 503,
+} as const;
+
+// Request timeout configurations
+export const TIMEOUTS = {
+  DEFAULT: 10000, // 10 seconds
+  UPLOAD: 60000,  // 1 minute
+  LONG_RUNNING: 120000, // 2 minutes
+} as const;
+
+// Error message mappings
+export const ERROR_MESSAGES = {
+  NETWORK_ERROR: 'Network error. Please check your connection and try again.',
+  TIMEOUT_ERROR: 'Request timeout. Please try again.',
+  UNAUTHORIZED: 'You are not authorized to perform this action.',
+  FORBIDDEN: 'Access forbidden. Please check your permissions.',
+  NOT_FOUND: 'The requested resource was not found.',
+  VALIDATION_ERROR: 'Please check your input and try again.',
+  SERVER_ERROR: 'Server error. Please try again later.',
+  UNKNOWN_ERROR: 'An unexpected error occurred. Please try again.',
 } as const;
 
 // API Client Configuration - Axios instance for API calls
@@ -79,10 +147,10 @@ export const debugApiConfig = (): void => {
   console.log("Environment Variable:", import.meta.env.VITE_API_BASE_URL);
   console.log("Current Origin:", window.location.origin);
   console.log("Auth Endpoints:", {
-    login: getApiUrl(API_CONFIG.AUTH_ENDPOINTS.LOGIN),
-    register: getApiUrl(API_CONFIG.AUTH_ENDPOINTS.REGISTER),
-    logout: getApiUrl(API_CONFIG.AUTH_ENDPOINTS.LOGOUT),
-    me: getApiUrl(API_CONFIG.AUTH_ENDPOINTS.ME),
+    login: getApiUrl(API_ENDPOINTS.AUTH.LOGIN),
+    register: getApiUrl(API_ENDPOINTS.AUTH.REGISTER),
+    logout: getApiUrl(API_ENDPOINTS.AUTH.LOGOUT),
+    me: getApiUrl(API_ENDPOINTS.AUTH.ME),
   });
 };
 

@@ -10,7 +10,7 @@ import {
   User,
   RegisterCredentials,
 } from "../types/auth";
-import { API_CONFIG, debugApiConfig } from "../config/api";
+import { API_CONFIG, API_ENDPOINTS, debugApiConfig } from "../config/api";
 
 // API Client Configuration - Updated for MCP Auth Server
 const apiClient = axios.create({
@@ -53,8 +53,8 @@ class AuthService {
    */
   async login(credentials: LoginCredentials): Promise<LoginResponse> {
     try {
-      // Call FastAPI auth endpoint
-      const response = await apiClient.post("/auth/login", {
+      // Call FastAPI auth endpoint using proper API endpoint
+      const response = await apiClient.post(API_ENDPOINTS.AUTH.LOGIN, {
         email: credentials.email,
         password: credentials.password,
       });
@@ -78,7 +78,7 @@ class AuthService {
    */
   async getCurrentUser(): Promise<User> {
     try {
-      const response = await apiClient.get("/auth/me");
+      const response = await apiClient.get(API_ENDPOINTS.AUTH.ME);
       const userData = response.data;
 
       // Transform FastAPI response to User format
@@ -103,7 +103,7 @@ class AuthService {
    */
   async logout(): Promise<void> {
     try {
-      await apiClient.post("/auth/logout");
+      await apiClient.post(API_ENDPOINTS.AUTH.LOGOUT);
       this.clearCsrfToken();
     } catch (error) {
       // Don't throw logout errors to prevent UX issues
@@ -117,7 +117,7 @@ class AuthService {
    */
   async refreshToken(): Promise<void> {
     try {
-      const response = await apiClient.post("/auth/refresh");
+      const response = await apiClient.post(API_ENDPOINTS.AUTH.REFRESH);
       // Token refresh is handled via HTTP-only cookies
       // No need to manually store tokens
     } catch (error) {
@@ -138,15 +138,15 @@ class AuthService {
     try {
       console.log("🚀 Registration Debug Info:");
       console.log("API Base URL:", apiClient.defaults.baseURL);
-      console.log("Full URL:", `${apiClient.defaults.baseURL}/auth/register`);
+      console.log("Full URL:", `${apiClient.defaults.baseURL}${API_ENDPOINTS.AUTH.REGISTER}`);
       console.log("Credentials:", {
         ...credentials,
         password: "[HIDDEN]",
         confirmPassword: "[HIDDEN]",
       });
 
-      // Call FastAPI auth registration endpoint
-      const response = await apiClient.post("/auth/register", {
+      // Call FastAPI auth registration endpoint using proper API endpoint
+      const response = await apiClient.post(API_ENDPOINTS.AUTH.REGISTER, {
         email: credentials.email,
         password: credentials.password,
         name: credentials.name,

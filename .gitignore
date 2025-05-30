@@ -4,7 +4,6 @@ bmad-agent/
 
 # Environment variables
 
-
 # Build artifacts
 dist/
 build/

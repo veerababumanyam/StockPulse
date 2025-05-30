@@ -4,6 +4,7 @@ Configuration settings for the StockPulse backend application.
 
 from functools import lru_cache
 from typing import List, Optional
+import os
 
 from pydantic_settings import BaseSettings
 
@@ -60,10 +61,31 @@ class Settings(BaseSettings):
     agent_jwt_secret_key: str = "default_secret_key"
     agent_token_expire_minutes: int = 60
 
-    model_config = {"env_file": ".env", "case_sensitive": False, "extra": "ignore"}
+    # API Keys for market data providers
+    ALPHA_VANTAGE_API_KEY: Optional[str] = None
+    FMP_API_KEY: Optional[str] = None
+    POLYGON_API_KEY: Optional[str] = None
+    TAAPI_API_KEY: Optional[str] = None
+    OPENAI_API_KEY: Optional[str] = None
+    
+    # API Key encryption
+    API_KEY_ENCRYPTION_KEY: Optional[str] = None
+
+    model_config = {
+        "env_file": [
+            ".env",  # Default environment file
+            "local.env"  # Local development overrides
+        ], 
+        "case_sensitive": False, 
+        "extra": "ignore"
+    }
 
 
 @lru_cache()
 def get_settings() -> Settings:
     """Get cached settings instance."""
     return Settings()
+
+
+# Global settings instance
+settings = get_settings()

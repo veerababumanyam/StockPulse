@@ -10,10 +10,9 @@ from sqlalchemy import Boolean, Column, DateTime
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy import ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.postgresql import INET, UUID
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+from .base import Base
 
 
 class UserRole(str, Enum):
@@ -64,6 +63,9 @@ class User(Base):
     )
     audit_logs = relationship(
         "AuthAuditLog", back_populates="user", cascade="all, delete-orphan"
+    )
+    api_keys = relationship(
+        "APIKey", back_populates="user", cascade="all, delete-orphan"
     )
 
     def __repr__(self):

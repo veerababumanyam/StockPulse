@@ -926,5 +926,110 @@ $$ LANGUAGE plpgsql;
 ```
 
 ---
+graph TB
+    %% User Interface Layer
+    subgraph "Frontend Layer"
+        UI["🖥️ React Frontend<br/>(StockPulse UI)"]
+        Dashboard["📊 Dashboard"]
+        Trading["💹 Trading Interface"]
+        Admin["⚙️ Admin Panel"]
+    end
+
+    %% Backend Services Layer
+    subgraph "Backend Services Layer"
+        API["🔧 FastAPI Backend<br/>(Python)"]
+        Auth["🔐 Authentication Service"]
+        Session["📋 Session Management"]
+    end
+
+    %% AI Agents Layer
+    subgraph "AI Agents Layer (A2A Protocol)"
+        UA["🤖 User Assistant Agent<br/>(Port: 8001)"]
+        PM["💼 Portfolio Manager Agent<br/>(Port: 8002)"]
+        Registry["📋 Agent Registry<br/>(Service Discovery)"]
+    end
+
+    %% MCP Services Layer
+    subgraph "MCP Services Layer"
+        AuthMCP["🔐 MCP Auth Server<br/>(Authentication Context)"]
+        PostgresMCP["🐘 MCP Postgres Server<br/>(Relational Data Context)"]
+        RedisMCP["🔴 MCP Redis Server<br/>(Cache Context)"]
+        QdrantMCP["🔍 MCP Qdrant Server<br/>(Vector Search Context)"]
+        TimescaleMCP["📈 MCP Timescale Server<br/>(Time Series Context)"]
+        GraphitiMCP["🕸️ MCP Graphiti Server<br/>(Knowledge Graph Context)"]
+    end
+
+    %% Data Storage Layer
+    subgraph "Data Storage Layer"
+        Postgres[("🐘 PostgreSQL<br/>(User Data, Transactions)")]
+        Redis[("🔴 Redis<br/>(Sessions, Cache)")]
+        Qdrant[("🔍 Qdrant<br/>(Vector Embeddings)")]
+        Timescale[("📈 TimescaleDB<br/>(Market Data)")]
+        Graphiti[("🕸️ Graphiti<br/>(Knowledge Graph)")]
+    end
+
+    %% External Services
+    subgraph "External Services"
+        MarketAPI["📊 Market Data APIs"]
+        LLMProviders["🧠 LLM Providers<br/>(OpenAI, Claude, etc.)"]
+    end
+
+    %% Frontend to Backend Communications (HTTP/REST)
+    UI -.->|"HTTP/REST"| API
+    Dashboard -.->|"HTTP/REST"| API
+    Trading -.->|"HTTP/REST"| API
+    Admin -.->|"HTTP/REST"| API
+
+    %% Backend to Auth and Session
+    API <-.->|"Internal API"| Auth
+    API <-.->|"Internal API"| Session
+
+    %% Backend to AI Agents Communications
+    API <-.->|"A2A Protocol<br/>(JSON-RPC 2.0)"| UA
+    API <-.->|"A2A Protocol<br/>(JSON-RPC 2.0)"| PM
+
+    %% Agent-to-Agent Communications (A2A Protocol)
+    UA <-.->|"A2A Protocol<br/>(Agent Cards, Task Delegation)"| PM
+    UA <-.->|"Service Discovery"| Registry
+    PM <-.->|"Service Discovery"| Registry
+
+    %% AI Agents to MCP Services Communications (MCP Protocol)
+    UA -.->|"MCP Protocol<br/>(Tool Calls)"| AuthMCP
+    UA -.->|"MCP Protocol<br/>(Tool Calls)"| PostgresMCP
+    UA -.->|"MCP Protocol<br/>(Tool Calls)"| RedisMCP
+    UA -.->|"MCP Protocol<br/>(Tool Calls)"| QdrantMCP
+
+    PM -.->|"MCP Protocol<br/>(Tool Calls)"| PostgresMCP
+    PM -.->|"MCP Protocol<br/>(Tool Calls)"| TimescaleMCP
+    PM -.->|"MCP Protocol<br/>(Tool Calls)"| QdrantMCP
+    PM -.->|"MCP Protocol<br/>(Tool Calls)"| GraphitiMCP
+
+    %% MCP Services to Data Storage (Database Connections)
+    AuthMCP -.->|"Database Connection"| Postgres
+    PostgresMCP -.->|"Database Connection"| Postgres
+    RedisMCP -.->|"Database Connection"| Redis
+    QdrantMCP -.->|"Vector API"| Qdrant
+    TimescaleMCP -.->|"Database Connection"| Timescale
+    GraphitiMCP -.->|"Graph API"| Graphiti
+
+    %% External Communications
+    PM -.->|"REST API"| MarketAPI
+    UA -.->|"API Calls"| LLMProviders
+    PM -.->|"API Calls"| LLMProviders
+
+    %% Styling
+    classDef frontend fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+    classDef backend fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef agents fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef mcp fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef storage fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    classDef external fill:#f1f8e9,stroke:#33691e,stroke-width:2px,color:#000
+
+    class UI,Dashboard,Trading,Admin frontend
+    class API,Auth,Session backend
+    class UA,PM,Registry agents
+    class AuthMCP,PostgresMCP,RedisMCP,QdrantMCP,TimescaleMCP,GraphitiMCP mcp
+    class Postgres,Redis,Qdrant,Timescale,Graphiti storage
+    class MarketAPI,LLMProviders external
 
 _This architecture document is a living document that evolves with the platform's growth and technological advancements. Version 1.0 - Created on [Current Date]_

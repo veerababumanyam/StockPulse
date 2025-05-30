@@ -2,9 +2,9 @@
  * Portfolio Page Skeleton Loaders
  * Specialized skeleton loading components for portfolio page sections
  */
-import React from 'react';
-import { Card, CardContent, CardHeader } from '../ui/card';
-import { cn } from '../../utils/tailwind';
+import React from "react";
+import { Card, CardContent, CardHeader } from "../ui/card";
+import { cn } from "../../utils/tailwind";
 
 // Portfolio Summary Skeleton
 export const PortfolioSummarySkeleton: React.FC<{
@@ -23,10 +23,14 @@ export const PortfolioSummarySkeleton: React.FC<{
       </div>
 
       {/* Metrics Grid */}
-      <div className={cn(
-        "grid gap-4",
-        compactMode ? "grid-cols-2 lg:grid-cols-4" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
-      )}>
+      <div
+        className={cn(
+          "grid gap-4",
+          compactMode
+            ? "grid-cols-2 lg:grid-cols-4"
+            : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
+        )}
+      >
         {[...Array(4)].map((_, index) => (
           <Card key={index} className="animate-pulse">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -96,11 +100,14 @@ export const HoldingsTableSkeleton: React.FC<{
           <div className="bg-muted/30 px-6 py-3">
             <div className="grid grid-cols-6 gap-4">
               {[...Array(compactMode ? 6 : 7)].map((_, index) => (
-                <div key={index} className="h-4 bg-muted/50 rounded animate-pulse" />
+                <div
+                  key={index}
+                  className="h-4 bg-muted/50 rounded animate-pulse"
+                />
               ))}
             </div>
           </div>
-          
+
           <div className="divide-y divide-border">
             {[...Array(rowCount)].map((_, index) => (
               <div key={index} className="px-6 py-4">
@@ -164,10 +171,14 @@ export const PortfolioAnalyticsSkeleton: React.FC<{
       </div>
 
       {/* Performance metrics grid */}
-      <div className={cn(
-        "grid gap-4",
-        compactMode ? "grid-cols-2 lg:grid-cols-3" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-      )}>
+      <div
+        className={cn(
+          "grid gap-4",
+          compactMode
+            ? "grid-cols-2 lg:grid-cols-3"
+            : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
+        )}
+      >
         {[...Array(6)].map((_, index) => (
           <Card key={index} className="animate-pulse">
             <CardHeader className="pb-2">
@@ -234,7 +245,13 @@ export const NewsAndAlertsSkeleton: React.FC<{
   compactMode?: boolean;
 }> = ({ className, compactMode = false }) => {
   return (
-    <div className={cn("grid gap-6", compactMode ? "lg:grid-cols-1" : "lg:grid-cols-2", className)}>
+    <div
+      className={cn(
+        "grid gap-6",
+        compactMode ? "lg:grid-cols-1" : "lg:grid-cols-2",
+        className,
+      )}
+    >
       {/* News section */}
       <Card className="animate-pulse">
         <CardHeader>
@@ -270,7 +287,10 @@ export const NewsAndAlertsSkeleton: React.FC<{
         <CardContent>
           <div className="space-y-3">
             {[...Array(4)].map((_, index) => (
-              <div key={index} className="flex items-center gap-3 p-2 border rounded">
+              <div
+                key={index}
+                className="flex items-center gap-3 p-2 border rounded"
+              >
                 <div className="w-8 h-8 bg-muted rounded" />
                 <div className="flex-1 space-y-1">
                   <div className="h-4 w-2/3 bg-muted rounded" />
@@ -292,11 +312,11 @@ export const PortfolioPageSkeleton: React.FC<{
   compactMode?: boolean;
   showAnalytics?: boolean;
   showNews?: boolean;
-}> = ({ 
-  className, 
-  compactMode = false, 
-  showAnalytics = true, 
-  showNews = true 
+}> = ({
+  className,
+  compactMode = false,
+  showAnalytics = true,
+  showNews = true,
 }) => {
   return (
     <div className={cn("space-y-8 p-6", className)}>
@@ -325,9 +345,7 @@ export const PortfolioPageSkeleton: React.FC<{
       )}
 
       {/* News and alerts */}
-      {showNews && (
-        <NewsAndAlertsSkeleton compactMode={compactMode} />
-      )}
+      {showNews && <NewsAndAlertsSkeleton compactMode={compactMode} />}
     </div>
   );
 };
@@ -339,4 +357,4 @@ export default {
   PortfolioAnalyticsSkeleton,
   NewsAndAlertsSkeleton,
   PortfolioPageSkeleton,
-}; 
+};
