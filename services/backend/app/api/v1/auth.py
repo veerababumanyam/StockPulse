@@ -19,11 +19,11 @@ from app.models.user import User
 from app.schemas.auth import (
     LoginRequest,
     LoginResponse,
+    PendingUserResponse,
     RegisterRequest,
     RegisterResponse,
-    UserResponse,
-    PendingUserResponse,
     UserApprovalRequest,
+    UserResponse,
 )
 from app.services.auth.jwt_service import csrf_service, jwt_service
 from app.services.auth.security_service import security_service
@@ -125,7 +125,7 @@ async def login(
                 "rejected": "Your account registration was rejected. Please contact support for more information.",
                 "suspended": "Your account has been suspended. Please contact support.",
             }.get(user.status, "Account access denied")
-            
+
             await security_service.log_security_event(
                 "unapproved_user_login_attempt",
                 user_id=str(user.id),
@@ -134,8 +134,7 @@ async def login(
                 db=db,
             )
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=status_message
+                status_code=status.HTTP_403_FORBIDDEN, detail=status_message
             )
 
         # Generate tokens
@@ -178,6 +177,8 @@ async def login(
             user=UserResponse(
                 id=str(user.id),
                 email=user.email,
+                role=user.role.value,
+                status=user.status.value,
                 created_at=user.created_at,
                 last_login=datetime.utcnow(),
             ),
@@ -310,6 +311,8 @@ async def get_current_user_info(
     return UserResponse(
         id=str(user.id),
         email=user.email,
+        role=user.role.value,
+        status=user.status.value,
         created_at=user.created_at,
         last_login=user.updated_at,
     )
@@ -434,6 +437,7 @@ async def refresh_token(
 
 # Admin-only endpoints for user approval management
 
+
 async def get_current_admin_user(
     request: Request,
     current_user: dict = Depends(get_current_user),
@@ -443,8 +447,7 @@ async def get_current_admin_user(
     user = await user_service.get_user_by_id(current_user["sub"], db)
     if not user or not user.is_admin():
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Admin access required"
+            status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required"
         )
     return user
 
@@ -458,17 +461,17 @@ async def get_pending_users(
     """Get all users pending approval (admin only)."""
     try:
         pending_users = await user_service.get_pending_users(db)
-        
+
         return [
             PendingUserResponse(
                 id=str(user.id),
                 email=user.email,
                 created_at=user.created_at,
-                status=user.status
+                status=user.status,
             )
             for user in pending_users
         ]
-        
+
     except Exception as e:
         await security_service.log_security_event(
             "admin_pending_users_error",
@@ -479,7 +482,7 @@ async def get_pending_users(
         )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve pending users"
+            detail="Failed to retrieve pending users",
         )
 
 
@@ -492,41 +495,33 @@ async def approve_or_reject_user(
 ):
     """Approve or reject a pending user registration (admin only)."""
     ip_address = get_remote_address(request)
-    
+
     try:
         # Get the user to approve/reject
         target_user = await user_service.get_user_by_id(approval_request.user_id, db)
         if not target_user:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
             )
-        
+
         if not target_user.is_pending_approval():
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="User is not pending approval"
+                detail="User is not pending approval",
             )
-        
+
         # Perform approval/rejection
         if approval_request.action == "approve":
-            await user_service.approve_user(
-                target_user.id, 
-                admin_user.id,
-                db
-            )
+            await user_service.approve_user(target_user.id, admin_user.id, db)
             message = f"User {target_user.email} has been approved"
             event_type = "user_approved"
         else:
             await user_service.reject_user(
-                target_user.id,
-                admin_user.id,
-                approval_request.rejection_reason,
-                db
+                target_user.id, admin_user.id, approval_request.rejection_reason, db
             )
             message = f"User {target_user.email} has been rejected"
             event_type = "user_rejected"
-        
+
         # Log admin action
         await security_service.log_security_event(
             event_type,
@@ -536,16 +531,16 @@ async def approve_or_reject_user(
                 "target_user_id": str(target_user.id),
                 "target_email": target_user.email,
                 "action": approval_request.action,
-                "rejection_reason": approval_request.rejection_reason
+                "rejection_reason": approval_request.rejection_reason,
             },
             db=db,
         )
-        
+
         # TODO: Send email notification to user about approval/rejection
         # TODO: Notify MCP agents when available
-        
+
         return {"message": message}
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -556,11 +551,11 @@ async def approve_or_reject_user(
             details={
                 "target_user_id": approval_request.user_id,
                 "action": approval_request.action,
-                "error": str(e)
+                "error": str(e),
             },
             db=db,
         )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to process user approval"
+            detail="Failed to process user approval",
         )

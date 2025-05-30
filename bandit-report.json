@@ -1,6 +1,6 @@
 {
   "errors": [],
-  "generated_at": "2025-05-29T22:34:02Z",
+  "generated_at": "2025-05-30T09:39:34Z",
   "metrics": {
     "_totals": {
       "CONFIDENCE.HIGH": 0,
@@ -11,7 +11,7 @@
       "SEVERITY.LOW": 1,
       "SEVERITY.MEDIUM": 1,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 5571,
+      "loc": 5807,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -63,7 +63,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 331,
+      "loc": 443,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -284,7 +284,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 75,
+      "loc": 105,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -310,7 +310,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 50,
+      "loc": 77,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -375,7 +375,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 123,
+      "loc": 190,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -576,9 +576,7 @@
       "issue_severity": "MEDIUM",
       "issue_text": "Possible binding to all interfaces.",
       "line_number": 16,
-      "line_range": [
-        16
-      ],
+      "line_range": [16],
       "more_info": "https://bandit.readthedocs.io/en/0.0.0/plugins/b104_hardcoded_bind_all_interfaces.html",
       "test_id": "B104",
       "test_name": "hardcoded_bind_all_interfaces"
@@ -596,9 +594,7 @@
       "issue_severity": "LOW",
       "issue_text": "Possible hardcoded password: 'password_change'",
       "line_number": 29,
-      "line_range": [
-        29
-      ],
+      "line_range": [29],
       "more_info": "https://bandit.readthedocs.io/en/0.0.0/plugins/b105_hardcoded_password_string.html",
       "test_id": "B105",
       "test_name": "hardcoded_password_string"

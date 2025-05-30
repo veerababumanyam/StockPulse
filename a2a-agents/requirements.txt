@@ -5,12 +5,12 @@ uvicorn[standard]>=0.24.0
 pydantic>=2.5.0
 httpx>=0.25.0
 
-# A2A Protocol implementation
-python-json-rpc>=1.15.0
+# A2A Protocol implementation - using compatible version with Python 3.11
+jsonrpc-py>=4.2.3,<5.0.0
 sse-starlette>=1.8.2
 websockets>=12.0
 
-# MCP Client dependencies  
+# MCP Client dependencies
 mcp>=1.0.0
 aiohttp>=3.9.0
 aiofiles>=23.2.0
@@ -38,7 +38,7 @@ prometheus-client>=0.19.0
 pytest>=7.4.3
 pytest-asyncio>=0.21.1
 pytest-httpx>=0.26.0
-httpx-sse>=0.4.0
+httpretty>=1.1.4
 
 # Environment and configuration
 python-dotenv>=1.0.0
@@ -51,4 +51,4 @@ scikit-learn>=1.3.0
 
 # Optional: Advanced AI capabilities
 openai>=1.3.0
-anthropic>=0.8.0 
+anthropic>=0.8.0

@@ -2,6 +2,7 @@
  * API Configuration
  * Centralized configuration for API endpoints and settings
  */
+import axios from "axios";
 
 // Environment-based API configuration
 export const API_CONFIG = {
@@ -28,6 +29,43 @@ export const API_CONFIG = {
     ME: "/auth/me",
   },
 } as const;
+
+// API Client Configuration - Axios instance for API calls
+const apiClient = axios.create({
+  baseURL: API_CONFIG.BASE_URL,
+  withCredentials: API_CONFIG.WITH_CREDENTIALS, // Essential for HttpOnly cookies
+  timeout: API_CONFIG.TIMEOUT,
+  headers: API_CONFIG.DEFAULT_HEADERS,
+});
+
+// Request interceptor for adding authentication headers
+apiClient.interceptors.request.use(
+  (config) => {
+    // Add any request modifications here (e.g., auth tokens)
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
+// Response interceptor for handling common errors
+apiClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    // Handle 401 unauthorized responses
+    if (error.response?.status === 401) {
+      // Dispatch event for AuthContext to handle
+      window.dispatchEvent(new CustomEvent("auth:unauthorized"));
+    }
+    return Promise.reject(error);
+  },
+);
+
+// Export apiClient as default export
+export default apiClient;
 
 // Helper function to get full API URL
 export const getApiUrl = (endpoint: string): string => {

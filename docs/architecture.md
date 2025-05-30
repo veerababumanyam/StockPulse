@@ -4,16 +4,20 @@
 
 ### 1.1 System Vision
 
-StockPulse is designed as a cloud-native, microservices-based trading platform that leverages AI/ML capabilities through the Model Context Protocol (MCP) for intelligent trading decisions. The architecture emphasizes scalability, real-time performance, security, and maintainability.
+StockPulse is designed as a cloud-native, microservices-based trading platform that leverages AI/ML capabilities through the Model Context Protocol (MCP) and AG-UI (Agent-Generated User Interface) protocol for intelligent trading decisions and dynamic user experiences. The architecture emphasizes scalability, real-time performance, security, maintainability, and adaptive user interfaces driven by AI agents.
 
 ### 1.2 Architectural Principles
 
 - **Microservices Architecture**: Loosely coupled services for scalability and maintainability
 - **Event-Driven Design**: Responsive and scalable, featuring asynchronous communication between components, utilizing an event bus for decoupled messaging and message queues for background processing
+- **AG-UI Protocol Integration**: Dynamic user interface generation based on agent analysis and user context
+- **Conversational Computing**: Natural language interfaces integrated throughout the platform
+- **Voice-First Design**: Comprehensive voice control capabilities with Chatterbox TTS integration
+- **Hardware Acceleration**: WebGL and GPU-accelerated visualizations for real-time data processing
 - **Cloud-Native**: Containerized deployments with auto-scaling capabilities, supporting Blue/Green deployments for zero-downtime updates and automated rollbacks on failed deployments
 - **API-First**: RESTful and GraphQL APIs for all service interactions, with real-time updates via WebSockets
 - **Security by Design**: Zero-trust security model with encryption at all levels
-- **Data-Driven**: Real-time analytics and machine learning integration
+- **Data-Driven**: Real-time analytics and machine learning integration with LightRAG enhancement
 - **Plugin System**: Supports a plugin architecture, enabling third-party developers to contribute new agents, data connectors, and UI components. Plugins are sandboxed for security and can be managed via an integrated marketplace
 - **Service Mesh Integration**: Incorporates a service mesh (e.g., Istio) for advanced traffic management, security, and observability between microservices
 - **Quality-Driven Development**: Employing Test-Driven Development (TDD) for quality from the start and Behavior-Driven Development (BDD) for a user-centered approach
@@ -29,17 +33,19 @@ StockPulse is designed as a cloud-native, microservices-based trading platform t
 ├─────────────────────────────────────────────────────────────┤
 │ Market Data │ News APIs │ Social Media │ Broker APIs │ AI/ML│
 │ Providers   │           │              │             │ APIs │
+│             │           │              │             │ TTS  │
 └─────────────┬───────────┬──────────────┬─────────────┬─────┘
               │           │              │             │
               ▼           ▼              ▼             ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                    StockPulse Platform                      │
 ├─────────────────────────────────────────────────────────────┤
-│  Web App  │  Mobile App  │  API Gateway  │  Admin Portal   │
+│ AG-UI Renderer │ Conversational UI │ Voice Control │ Admin │
+│ Web App        │ Mobile App        │ API Gateway   │ Portal│
 ├─────────────────────────────────────────────────────────────┤
-│           Core Trading Engine & AI Services                │
+│    Core Trading Engine & AI Services with AG-UI Support    │
 ├─────────────────────────────────────────────────────────────┤
-│              Data Storage & Processing                      │
+│         Data Storage & Processing with LightRAG            │
 └─────────────────────────────────────────────────────────────┘
               │           │              │             │
               ▼           ▼              ▼             ▼
@@ -47,64 +53,105 @@ StockPulse is designed as a cloud-native, microservices-based trading platform t
 │                  Infrastructure Layer                       │
 ├─────────────────────────────────────────────────────────────┤
 │   AWS/Azure   │  Kubernetes  │  Monitoring  │  Security    │
+│               │  WebGL/GPU   │  Voice/TTS   │  AG-UI       │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 2.2 Component Architecture
+### 2.2 Enhanced Component Architecture
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│                    Presentation Layer                        │
+│                Enhanced Presentation Layer                   │
 ├──────────────────────────────────────────────────────────────┤
-│ React Web App │ React Native App │ Admin Dashboard │ API Docs│
-└──────────────┬───────────────────┬───────────────────┬───────┘
-               │                   │                   │
-               ▼                   ▼                   ▼
+│ AG-UI React  │ Conversational │ Voice Control │ Admin        │
+│ Components   │ Interface      │ Interface     │ Dashboard    │
+└──────────────┬─────────────────┬───────────────┬──────────────┘
+               │                 │               │
+               ▼                 ▼               ▼
 ┌──────────────────────────────────────────────────────────────┐
 │                    API Gateway Layer                         │
 ├──────────────────────────────────────────────────────────────┤
-│  Load Balancer │ API Gateway │ Authentication │ Rate Limiting│
+│ Load Balancer │ API Gateway │ AG-UI Protocol │ Voice Gateway │
+│              │            │ Handler        │              │
 └──────────────┬─────────────┬─────────────────┬──────────────┘
                │             │                 │
                ▼             ▼                 ▼
 ┌──────────────────────────────────────────────────────────────┐
-│                   Application Services                       │
+│                 Enhanced Application Services                │
 ├──────────────────────────────────────────────────────────────┤
-│ Trading │ AI/ML │ Risk Mgmt │ Portfolio │ Analytics │ User   │
-│ Engine  │Service│ Service   │ Service   │ Service   │Service │
-└─────────┬───────┬───────────┬───────────┬───────────┬────────┘
-          │       │           │           │           │
-          ▼       ▼           ▼           ▼           ▼
+│ Trading │ AG-UI │ Voice  │ Conversation │ Analytics │ User   │
+│ Engine  │Engine │Service │ Service      │ Service   │Service │
+│         │       │        │ (LightRAG)   │           │        │
+└─────────┬───────┬────────┬──────────────┬───────────┬────────┘
+          │       │        │              │           │
+          ▼       ▼        ▼              ▼           ▼
 ┌──────────────────────────────────────────────────────────────┐
-│                   Data & Integration Layer                   │
+│              Data & Integration Layer with LightRAG         │
 ├──────────────────────────────────────────────────────────────┤
-│ PostgreSQL │ InfluxDB │ Redis │ Kafka │ External APIs │ MCP │
+│ PostgreSQL │ Vector DB │ Redis │ Kafka │ External APIs │ MCP │
+│ (pgvector) │ (LightRAG)│       │       │ (Chatterbox)  │ A2A │
 └──────────────────────────────────────────────────────────────┘
 ```
 
-## 3. Core Components
+### 2.3 AG-UI Protocol Architecture
 
-### 3.1 Frontend Architecture
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    AG-UI Request Flow                        │
+└──────────────────────────────────────────────────────────────┘
 
-#### 3.1.1 Web Application (React + TypeScript)
+Agent Analysis → AG-UI Schema → UI Components → User Interaction
+      ↓              ↓              ↓              ↓
+Market Data    Widget Definition  Dynamic Render  Action Feedback
+      ↓              ↓              ↓              ↓
+Context        Component Props   State Update    Agent Response
+      ↓              ↓              ↓              ↓
+Recommendations    Layout Rules   Re-render       New AG-UI
+
+┌──────────────────────────────────────────────────────────────┐
+│                  Conversational Flow                         │
+└──────────────────────────────────────────────────────────────┘
+
+User Message → NLP Processing → Agent Collaboration → Response
+     ↓               ↓                ↓                 ↓
+Voice/Text     Intent Analysis   Data Retrieval   AG-UI + TTS
+     ↓               ↓                ↓                 ↓
+Context        Entity Extract   LightRAG Query    Audio + Visual
+     ↓               ↓                ↓                 ↓
+History        Action Plan      Result Synthesis  User Experience
+```
+
+## 3. Enhanced Core Components
+
+### 3.1 Frontend Architecture with AG-UI Support
+
+#### 3.1.1 Web Application (React + TypeScript + AG-UI)
 
 ```typescript
-// Architecture Structure
+// Enhanced Architecture Structure
 StockPulse/
 ├── public/             # Static assets
 ├── src/
 │   ├── api/            # API services and utilities
+│   ├── ag-ui/          # AG-UI protocol implementation
+│   │   ├── renderer/   # Dynamic component renderer
+│   │   ├── schemas/    # AG-UI schema definitions
+│   │   ├── components/ # AG-UI compatible components
+│   │   └── store/      # AG-UI state management
+│   ├── voice/          # Voice control integration
+│   │   ├── recognition/ # Speech-to-text processing
+│   │   ├── synthesis/  # Chatterbox TTS integration
+│   │   └── commands/   # Voice command handlers
+│   ├── conversation/   # Conversational interface
+│   │   ├── chat/       # Chat UI components
+│   │   ├── nlp/        # Natural language processing
+│   │   └── context/    # Conversation context management
 │   ├── assets/         # Images, fonts, etc.
 │   ├── components/     # Reusable UI components
 │   │   ├── automation/ # Agent automation components
 │   │   ├── layout/     # Layout components
-│   │   ├── trading/    # Trading-specific components
-│   │   │   ├── intraday/   # Intraday trading components
-│   │   │   ├── options/    # Options trading components
-│   │   │   ├── positional/ # Positional trading components
-│   │   │   └── longterm/   # Long-term investing components
-│   │   ├── ui/         # Generic UI components
-│   │   └── performance/ # Performance-optimized components
+│   │   ├── webgl/      # WebGL accelerated components
+│   │   └── dynamic/    # AG-UI dynamic components
 │   ├── contexts/       # React context providers
 │   ├── hooks/          # Custom React hooks
 │   ├── layouts/        # Page layout components

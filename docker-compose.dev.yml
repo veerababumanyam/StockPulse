@@ -1,0 +1,380 @@
+name: stockpulse-dev
+
+services:
+  # ================================
+  # DATABASE LAYER
+  # ================================
+  postgres:
+    image: postgres:15
+    container_name: stockpulse-postgres-dev
+    environment:
+      POSTGRES_DB: stockpulse
+      POSTGRES_USER: stockpulse_user
+      POSTGRES_PASSWORD: stockpulse_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./services/backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stockpulse_user -d stockpulse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - stockpulse-dev-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: stockpulse-redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_dev_data:/data
+    command: redis-server --appendonly yes --requirepass stockpulse_redis_password
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "stockpulse_redis_password", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - stockpulse-dev-network
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg15
+    container_name: stockpulse-timescaledb-dev
+    environment:
+      POSTGRES_DB: stockpulse_timeseries
+      POSTGRES_USER: timescale_user
+      POSTGRES_PASSWORD: timescale_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - timescaledb_dev_data:/var/lib/postgresql/data
+      - ./services/backend/timescale_init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U timescale_user -d stockpulse_timeseries"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - stockpulse-dev-network
+
+  neo4j:
+    image: neo4j:5.15-community
+    container_name: stockpulse-neo4j-dev
+    environment:
+      NEO4J_AUTH: neo4j/stockpulse_neo4j_password
+      NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
+      NEO4J_dbms_security_procedures_unrestricted: apoc.*,gds.*
+      NEO4J_dbms_security_procedures_allowlist: apoc.*,gds.*
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_dev_data:/data
+      - neo4j_dev_logs:/logs
+      - neo4j_dev_plugins:/plugins
+      - ./services/backend/neo4j_init.cypher:/docker-entrypoint-initdb.d/init.cypher
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "stockpulse_neo4j_password", "RETURN 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - stockpulse-dev-network
+
+  qdrant:
+    image: qdrant/qdrant:v1.7.4
+    container_name: stockpulse-qdrant-dev
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_dev_data:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__HTTP_PORT: 6333
+      QDRANT__SERVICE__GRPC_PORT: 6334
+    networks:
+      - stockpulse-dev-network
+
+  # ================================
+  # BACKEND APPLICATION
+  # ================================
+  backend:
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile
+    container_name: stockpulse-backend-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=development
+      - DATABASE_URL=postgresql+asyncpg://stockpulse_user:stockpulse_password@postgres:5432/stockpulse
+      - REDIS_URL=redis://:stockpulse_redis_password@redis:6379
+      - MCP_AUTH_URL=http://mcp-auth-server:8002
+      - JWT_SECRET_KEY=dev-jwt-secret-change-in-production
+      - CORS_ORIGINS=["http://localhost:3000", "http://localhost:5173"] # Added 5173 for Vite dev server
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mcp-auth-server:
+        condition: service_started
+    networks:
+      - stockpulse-dev-network
+    volumes:
+      - ./services/backend:/app # Mount backend code for live reload
+    restart: unless-stopped
+
+  # ================================
+  # MCP SERVER LAYER
+  # ================================
+  mcp-registry:
+    build:
+      context: ./mcp-servers/registry
+      dockerfile: Dockerfile
+    container_name: stockpulse-mcp-registry-dev
+    ports:
+      - "8001:8001"
+    environment:
+      - MCP_SERVER_PORT=8001
+      - MCP_SERVER_NAME=stockpulse-registry-dev
+      - REGISTRY_HOST=0.0.0.0
+    networks:
+      - stockpulse-dev-network
+    restart: unless-stopped
+
+  mcp-auth-server:
+    build:
+      context: ./mcp-servers/auth-server
+      dockerfile: Dockerfile
+    container_name: stockpulse-mcp-auth-dev
+    ports:
+      - "8002:8002"
+    environment:
+      - MCP_SERVER_PORT=8002
+      - MCP_SERVER_NAME=stockpulse-auth-dev
+      - DATABASE_URL=postgresql+asyncpg://stockpulse_user:stockpulse_password@postgres:5432/stockpulse
+      - REDIS_URL=redis://:stockpulse_redis_password@redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - stockpulse-dev-network
+    restart: unless-stopped
+
+  mcp-postgres-server:
+    build:
+      context: ./mcp-servers/postgres-server
+      dockerfile: Dockerfile
+    container_name: stockpulse-mcp-postgres-dev
+    ports:
+      - "8003:8003"
+    environment:
+      - MCP_SERVER_PORT=8003
+      - MCP_SERVER_NAME=stockpulse-postgres-dev
+      - DATABASE_URL=postgresql+asyncpg://stockpulse_user:stockpulse_password@postgres:5432/stockpulse
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - stockpulse-dev-network
+    restart: unless-stopped
+
+  mcp-timescale-server:
+    build:
+      context: ./mcp-servers/timescale-server
+      dockerfile: Dockerfile
+    container_name: stockpulse-mcp-timescale-dev
+    ports:
+      - "8004:8004"
+    environment:
+      - MCP_SERVER_PORT=8004
+      - MCP_SERVER_NAME=stockpulse-timescale-dev
+      - TIMESCALE_URL=postgresql+asyncpg://timescale_user:timescale_password@timescaledb:5432/stockpulse_timeseries
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+    networks:
+      - stockpulse-dev-network
+    restart: unless-stopped
+
+  mcp-redis-server:
+    build:
+      context: ./mcp-servers/redis-server
+      dockerfile: Dockerfile
+    container_name: stockpulse-mcp-redis-dev
+    ports:
+      - "8005:8005"
+    environment:
+      - MCP_SERVER_PORT=8005
+      - MCP_SERVER_NAME=stockpulse-redis-dev
+      - REDIS_URL=redis://:stockpulse_redis_password@redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - stockpulse-dev-network
+    restart: unless-stopped
+
+  mcp-graphiti-server:
+    build:
+      context: ./mcp-servers/graphiti-server
+      dockerfile: Dockerfile
+    container_name: stockpulse-mcp-graphiti-dev
+    ports:
+      - "8006:8006"
+    environment:
+      - MCP_SERVER_PORT=8006
+      - MCP_SERVER_NAME=stockpulse-graphiti-dev
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=stockpulse_neo4j_password
+      - NEO4J_DATABASE=neo4j
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-""}
+      - GRAPHITI_LLM_MODEL=gpt-4o-mini
+      - GRAPHITI_EMBEDDING_MODEL=text-embedding-3-small
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    networks:
+      - stockpulse-dev-network
+    restart: unless-stopped
+
+  mcp-qdrant-server:
+    build:
+      context: ./mcp-servers/qdrant-server
+      dockerfile: Dockerfile
+    container_name: stockpulse-mcp-qdrant-dev
+    ports:
+      - "8007:8007"
+    environment:
+      - MCP_SERVER_PORT=8007
+      - MCP_SERVER_NAME=stockpulse-qdrant-dev
+      - QDRANT_URL=http://qdrant:6333
+      - QDRANT_API_KEY=${QDRANT_API_KEY:-""}
+    depends_on:
+      - qdrant
+    networks:
+      - stockpulse-dev-network
+    restart: unless-stopped
+
+  # ================================
+  # A2A AGENT LAYER
+  # ================================
+  a2a-registry:
+    build:
+      context: ./a2a-agents
+      dockerfile: registry/Dockerfile
+    container_name: stockpulse-a2a-registry-dev
+    ports:
+      - "9000:9000"
+    environment:
+      - REGISTRY_HOST=0.0.0.0
+      - REGISTRY_PORT=9000
+      - LOG_LEVEL=info
+    volumes:
+      - ./a2a-agents/registry:/app/registry # For live reload if needed
+      - ./a2a-agents/shared:/app/shared
+    networks:
+      - stockpulse-dev-network
+    restart: unless-stopped
+
+  a2a-user-assistant:
+    build:
+      context: ./a2a-agents
+      dockerfile: user-assistant/Dockerfile
+    container_name: stockpulse-a2a-user-assistant-dev
+    ports:
+      - "9001:9001"
+    environment:
+      - AGENT_HOST=0.0.0.0
+      - AGENT_PORT=9001
+      - REGISTRY_URL=http://a2a-registry:9000
+      - MCP_AUTH_URL=http://mcp-auth-server:8002
+      - MCP_REDIS_URL=http://mcp-redis-server:8005
+      - LOG_LEVEL=info
+    volumes:
+      - ./a2a-agents/user-assistant:/app/user-assistant
+      - ./a2a-agents/shared:/app/shared
+    networks:
+      - stockpulse-dev-network
+    depends_on:
+      - a2a-registry
+      - mcp-auth-server
+      - mcp-redis-server
+    restart: unless-stopped
+
+  a2a-portfolio-manager:
+    build:
+      context: ./a2a-agents
+      dockerfile: portfolio-manager/Dockerfile
+    container_name: stockpulse-a2a-portfolio-manager-dev
+    ports:
+      - "9002:9002"
+    environment:
+      - AGENT_HOST=0.0.0.0
+      - AGENT_PORT=9002
+      - REGISTRY_URL=http://a2a-registry:9000
+      - MCP_POSTGRES_URL=http://mcp-postgres-server:8003
+      - MCP_TIMESCALE_URL=http://mcp-timescale-server:8004
+      - MCP_REDIS_URL=http://mcp-redis-server:8005
+      - LOG_LEVEL=info
+    volumes:
+      - ./a2a-agents/portfolio-manager:/app/portfolio-manager
+      - ./a2a-agents/shared:/app/shared
+    networks:
+      - stockpulse-dev-network
+    depends_on:
+      - a2a-registry
+      - mcp-postgres-server
+      - mcp-timescale-server
+      - mcp-redis-server
+    restart: unless-stopped
+
+  # Add other A2A agents similarly if needed:
+  # a2a-market-researcher, a2a-trading-assistant, a2a-risk-manager, a2a-technical-analyst
+
+  # ================================
+  # MANAGEMENT TOOLS (Optional)
+  # ================================
+  adminer:
+    image: adminer
+    container_name: stockpulse-adminer-dev
+    ports:
+      - "8081:8080" # Changed port to 8081 to avoid conflict if 8080 is used by Traefik in staging
+    depends_on:
+      - postgres
+      - timescaledb
+    networks:
+      - stockpulse-dev-network
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: stockpulse-redis-commander-dev
+    environment:
+      REDIS_HOSTS: local:redis:6379:0:stockpulse_redis_password
+    ports:
+      - "8082:8081"
+    depends_on:
+      - redis
+    networks:
+      - stockpulse-dev-network
+
+volumes:
+  postgres_dev_data:
+  redis_dev_data:
+  timescaledb_dev_data:
+  neo4j_dev_data:
+  neo4j_dev_logs:
+  neo4j_dev_plugins:
+  qdrant_dev_data:
+
+networks:
+  stockpulse-dev-network:
+    driver: bridge
+    name: stockpulse-dev-network

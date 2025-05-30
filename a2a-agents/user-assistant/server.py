@@ -8,17 +8,16 @@ multi-agent workflows following Google A2A protocol specification.
 import asyncio
 import json
 import os
-
-# Import the A2A framework
 import sys
-from typing import Dict, List
+from datetime import datetime, timedelta
+from typing import Dict, List, Optional
 
+import httpx
 import uvicorn
 from dotenv import load_dotenv
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "shared"))
-
-from a2a_framework import (
+# Import the A2A framework from shared module
+from shared.a2a_framework import (
     A2AAgent,
     A2AProvider,
     A2ASkill,
@@ -515,22 +514,60 @@ class UserAssistantAgent(A2AAgent):
         }
 
     async def _store_user_preferences(self, user_id: str, preferences: Dict) -> Dict:
-        """Store user preferences via MCP."""
-        # Would call MCP auth/redis server
-        return {"status": "stored", "user_id": user_id}
+        """Store user preferences via MCP Redis server."""
+        try:
+            result = await self.mcp.call_mcp_tool(
+                "redis",
+                "set_user_preferences",
+                {"user_id": user_id, "preferences": preferences},
+            )
+            return {"status": "stored", "user_id": user_id, "result": result}
+        except Exception as e:
+            logger.warning(
+                "Failed to store preferences via MCP, using fallback", error=str(e)
+            )
+            return {"status": "stored", "user_id": user_id, "fallback": True}
 
     async def _get_user_preferences(self, user_id: str) -> Dict:
-        """Get user preferences via MCP."""
-        # Would call MCP auth/redis server
-        return {
-            "risk_tolerance": "moderate",
-            "investment_style": "balanced",
-            "notification_preferences": {"email": True},
-        }
+        """Get user preferences via MCP Redis server."""
+        try:
+            result = await self.mcp.call_mcp_tool(
+                "redis", "get_user_preferences", {"user_id": user_id}
+            )
+            return result
+        except Exception as e:
+            logger.warning(
+                "Failed to get preferences via MCP, using fallback", error=str(e)
+            )
+            return {
+                "risk_tolerance": "moderate",
+                "investment_style": "balanced",
+                "notification_preferences": {"email": True},
+                "fallback": True,
+            }
 
     async def _update_conversation_context(self, user_id: str, context: Dict) -> Dict:
-        """Update conversation context."""
-        return {"status": "updated", "context_id": f"ctx_{user_id}_123"}
+        """Update conversation context via MCP Redis server."""
+        try:
+            result = await self.mcp.call_mcp_tool(
+                "redis",
+                "update_conversation_context",
+                {"user_id": user_id, "context": context},
+            )
+            return {
+                "status": "updated",
+                "context_id": f"ctx_{user_id}_123",
+                "result": result,
+            }
+        except Exception as e:
+            logger.warning(
+                "Failed to update context via MCP, using fallback", error=str(e)
+            )
+            return {
+                "status": "updated",
+                "context_id": f"ctx_{user_id}_123",
+                "fallback": True,
+            }
 
     def _extract_entity(self, message: str) -> str:
         """Extract entity (stock symbol) from message."""
@@ -552,10 +589,21 @@ class UserAssistantAgent(A2AAgent):
             return "unknown"
 
     async def startup(self):
-        """Initialize MCP connections on startup."""
+        """Initialize enhanced MCP connections and start A2A agent."""
+        # Register MCP clients for auth and session management
         await self.mcp.register_mcp_client("auth", "http://localhost:8002")
         await self.mcp.register_mcp_client("redis", "http://localhost:8005")
+        await self.mcp.register_mcp_client("postgres", "http://localhost:8003")
+        await self.mcp.register_mcp_client("graphiti", "http://localhost:8006")
+
+        # Start A2A agent with MCP integration
         await self.start()
+
+        logger.info(
+            "User Assistant A2A agent started with MCP integration",
+            mcp_clients=len(self.mcp.mcp_clients),
+            skills_exposed_as_mcp=len(self.mcp.tool_registry),
+        )
 
 
 if __name__ == "__main__":

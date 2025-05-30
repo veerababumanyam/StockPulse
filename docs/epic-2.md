@@ -1,74 +1,147 @@
-# Epic 2: Dashboard Core Functionality
+# Epic 2: Dashboard Core Functionality & Dynamic AG-UI Experience
 
 **Status:** To Do
 
-**Parent PRD Sections:** 
-*   3.5.1 Dashboard (Customizable widgets, Real-time market data, AI insights panel, Portfolio overview, Alert management)
-*   3.2 AI and Analysis Engine (Display of AI insights)
-*   3.4 Performance Monitoring (Real-time analytics on dashboard)
+**Parent PRD Sections:**
 
-**Goal:** To provide users with a comprehensive, customizable, and real-time dashboard that serves as their central hub for monitoring their portfolio, tracking market data, receiving AI-driven insights, and managing alerts.
+- 3.5.1 Dashboard (Customizable widgets, Real-time market data, AI insights panel, Portfolio overview, Alert management)
+- 3.2 AI and Analysis Engine (Display of AI insights)
+- 3.4 Performance Monitoring (Real-time analytics on dashboard)
+- **NEW: 3.5.4 Dynamic AG-UI Framework**
+
+**Goal:** To provide users with a comprehensive, adaptive, and AI-driven dashboard experience featuring dynamic agent-generated UI components, conversational interfaces, and innovative visualizations that respond intelligently to market conditions and user interactions.
 
 **Scope:**
-*   Display of core portfolio summary (e.g., total value, today's P&L).
-    *   **AI Consideration:** Potential for an AI Portfolio Analysis Agent to provide textual summaries or context.
-*   Implementation of a customizable widget system (add, remove, rearrange widgets).
-*   Development of initial standard widgets:
-    *   Portfolio Value Chart (AI context from Portfolio Analysis Agent).
-    *   Watchlist (AI monitoring and insights from a dedicated Watchlist AI Agent).
-    *   Top Market Movers (Potential for AI to explain *why* they are moving).
-    *   AI Insights Panel (Primary interface for a dedicated Market Insights AI Agent using RAG).
-    *   Active Alerts Summary (Potential for AI Alert Suggestion Agent to help create alerts).
-*   Integration of real-time data streams for relevant widgets.
-*   Mechanism for managing user-specific widget configurations.
+
+- Display of core portfolio summary (e.g., total value, today's P&L).
+  - **AI Consideration:** Portfolio Analysis Agent provides textual summaries and contextual AG-UI payloads.
+- Implementation of a customizable widget system (add, remove, rearrange widgets).
+- **NEW: Dynamic AG-UI Widget Framework:**
+  - Agent-defined widgets that render custom panels based on AG-UI payloads
+  - Interactive overlays triggered by agent insights
+  - Context-sensitive UI elements that adapt to market conditions
+- **NEW: Conversational Dashboard Interface:**
+  - Real-time chat-style UI with integrated visualizations
+  - Clickable insights that trigger dynamic charts
+  - Hybrid conversation-visualization model
+- **NEW: Innovative Visualization Components:**
+  - Multi-dimensional data explorers (heat maps, radar charts, correlation matrices)
+  - Story-driven market exploration with timeline controls
+  - Interactive bubble charts for liquidity hotspots
+  - WebGL-accelerated visualizations
+- **NEW: Cross-Device and Customizable Features:**
+  - Drag-and-drop dashboard builder
+  - Voice and gesture controls
+  - Plugin architecture for third-party modules
+- Development of enhanced standard widgets:
+  - Portfolio Value Chart with AI context overlays
+  - Watchlist with real-time agent monitoring
+  - Market Pulse heat map (sector sentiment visualization)
+  - AI Insights Panel with conversational interface
+  - Active Alerts with predictive analytics
+  - **NEW: Agent Activity Stream widget**
+  - **NEW: Multi-Asset Correlation Matrix**
+  - **NEW: Liquidity Flow Visualizer**
+- Integration of real-time data streams for all widgets.
+- Mechanism for managing user-specific widget configurations.
 
 **AI Integration Points:**
-*   **Market Insights AI Agent:** Powers the AI Insights Panel, providing proactive and reactive (NLQ-based) financial information, news summaries, and market analysis using RAG.
-*   **Portfolio Analysis AI Agent:** Provides contextual explanations and summaries for portfolio snapshots and value charts. May use RAG for financial literacy explanations.
-*   **Watchlist Monitoring AI Agent:** Actively monitors watchlist items, providing smart notifications and RAG-based insights for specific stocks.
-*   **Alert Suggestion AI Agent:** Assists users in creating relevant alerts based on their holdings, watchlist, or common strategies, potentially using RAG.
 
-**Key Business Value:** 
-*   Enhances user engagement by providing a personalized and relevant overview.
-*   Improves decision-making through readily available real-time data and AI insights.
-*   Increases platform utility by centralizing key information.
+- **Market Insights AI Agent:** Powers the AI Insights Panel and conversational interface
+- **Portfolio Analysis AI Agent:** Provides contextual explanations with AG-UI payloads
+- **Watchlist Monitoring AI Agent:** Generates dynamic visualizations for monitored assets
+- **Alert Suggestion AI Agent:** Creates interactive alert configuration interfaces
+- **NEW: Visualization Orchestrator Agent:** Coordinates multi-agent UI updates and ensures consistent visual narratives
+
+**Key Business Value:**
+
+- Revolutionary user experience through adaptive, AI-driven interfaces
+- Increased engagement via conversational and interactive visualizations
+- Improved decision-making through multi-dimensional data exploration
+- Platform differentiation through cutting-edge UI/UX innovation
 
 ## Stories Under this Epic:
 
 1.  **2.1: Implement Basic Dashboard Layout and Portfolio Snapshot**
-    *   **User Story:** As an authenticated user, when I navigate to the dashboard, I want to see a basic, non-customizable layout that includes a snapshot of my current portfolio value and today's performance, so I can quickly understand my financial standing.
-    *   **Status:** To Do
+
+    - **User Story:** As an authenticated user, when I navigate to the dashboard, I want to see a basic, non-customizable layout that includes a snapshot of my current portfolio value and today's performance, so I can quickly understand my financial standing.
+    - **Status:** To Do
 
 2.  **2.2: Implement Customizable Widget System for Dashboard**
-    *   **User Story:** As a user, I want to be able to add, remove, and rearrange widgets on my Dashboard, so that I can personalize my workspace and prioritize the information most relevant to me.
-    *   **Status:** To Do
+
+    - **User Story:** As a user, I want to be able to add, remove, and rearrange widgets on my Dashboard, so that I can personalize my workspace and prioritize the information most relevant to me.
+    - **Status:** To Do
 
 3.  **2.3: Develop Portfolio Value Chart Widget**
-    *   **User Story:** As a user, I want a "Portfolio Value Chart" widget on my dashboard that displays a historical chart of my total portfolio value over different timeframes (e.g., 1D, 1W, 1M, YTD), so I can track my investment performance visually.
-    *   **Status:** To Do
+
+    - **User Story:** As a user, I want a "Portfolio Value Chart" widget on my dashboard that displays a historical chart of my total portfolio value over different timeframes (e.g., 1D, 1W, 1M, YTD), so I can track my investment performance visually.
+    - **Status:** To Do
 
 4.  **2.4: Develop Watchlist Widget**
-    *   **User Story:** As a user, I want a "Watchlist" widget where I can add, view, and remove stocks I'm interested in, displaying key real-time metrics (e.g., current price, today's change), so I can easily track potential investments.
-    *   **Status:** To Do
+
+    - **User Story:** As a user, I want a "Watchlist" widget where I can add, view, and remove stocks I'm interested in, displaying key real-time metrics (e.g., current price, today's change), so I can easily track potential investments.
+    - **Status:** To Do
 
 5.  **2.5: Develop AI Insights Panel Widget**
-    *   **User Story:** As a user, I want an "AI Insights Panel" widget on my Dashboard that provides concise, actionable insights and explanations generated by the AI, so that I can stay informed about market trends and potential opportunities.
-    *   **Status:** To Do
+
+    - **User Story:** As a user, I want an "AI Insights Panel" widget on my Dashboard that provides concise, actionable insights and explanations generated by the AI, so that I can stay informed about market trends and potential opportunities.
+    - **Status:** To Do
 
 6.  **2.6: Develop Alert Management and Display Widget**
-    *   **User Story:** As a user, I want to be able to define custom alerts and see a summary of my active alerts in an "Active Alerts" widget on my dashboard, so that I am promptly notified of important market events relevant to my interests.
-    *   **Status:** To Do
 
-*More stories for other specific widgets (e.g., Top Movers, News Feed) or advanced dashboard features can be added later.*
+    - **User Story:** As a user, I want to be able to define custom alerts and see a summary of my active alerts in an "Active Alerts" widget on my dashboard, so that I am promptly notified of important market events relevant to my interests.
+    - **Status:** To Do
+
+7.  **2.7: Implement Dynamic AG-UI Widget Framework**
+
+    - **User Story:** As a user, I want agents to dynamically generate custom UI widgets that appear when relevant market events occur, providing interactive visualizations that I can manipulate in real-time.
+    - **Status:** To Do
+
+8.  **2.8: Develop Conversational Dashboard Interface**
+
+    - **User Story:** As a user, I want a chat-style interface where AI agents explain their analysis with embedded interactive visualizations that I can click to explore deeper.
+    - **Status:** To Do
+
+9.  **2.9: Create Multi-Dimensional Market Pulse Dashboard**
+
+    - **User Story:** As a user, I want an innovative dashboard featuring heat maps, bubble charts, and correlation matrices that aggregate insights from multiple agents to show market dynamics.
+    - **Status:** To Do
+
+10. **2.10: Implement Story-Driven Market Explorer**
+
+    - **User Story:** As a user, I want to explore market events through guided narratives with timeline controls and predictive overlays that help me understand past and future trends.
+    - **Status:** To Do
+
+11. **2.11: Build Drag-and-Drop Dashboard Builder**
+
+    - **User Story:** As a user, I want to customize my dashboard by dragging and dropping modules, including third-party widgets that follow the AG-UI protocol.
+    - **Status:** To Do
+
+12. **2.12: Integrate Voice and Gesture Controls**
+
+    - **User Story:** As a user, I want to interact with my dashboard using voice commands and gestures to quickly access information and control visualizations.
+    - **Status:** To Do
+
+13. **2.13: Develop WebGL-Accelerated Visualization Engine**
+    - **User Story:** As a developer, I need to implement WebGL/WebGPU acceleration for complex visualizations to ensure smooth performance with large datasets.
+    - **Status:** To Do
+
+_More stories for advanced dashboard features and AG-UI capabilities will be added iteratively._
 
 ## Dependencies:
 
-*   Core User Authentication (Epic 1) must be complete.
-*   Backend APIs for portfolio data, market data, AI insights, alert management, and user widget configuration.
-*   UI component library for charts, grids, and other display elements.
+- Core User Authentication (Epic 1) must be complete. ✓
+- Backend APIs for portfolio data, market data, AI insights, alert management, and user widget configuration.
+- AG-UI protocol specification and implementation
+- WebGL/WebGPU rendering libraries
+- Voice recognition and gesture detection APIs
+- Real-time WebSocket infrastructure for agent communication
+- Plugin architecture for extensibility
 
 ## Notes & Assumptions:
 
-*   The dashboard will be the default landing page after login.
-*   Real-time data updates will leverage WebSocket connections as defined in the architecture.
-*   Initial widget set is defined; more can be added in future iterations. 
+- The dashboard will be the default landing page after login.
+- Real-time data updates will leverage WebSocket connections as defined in the architecture.
+- AG-UI protocol will be standardized across all agents for consistency
+- Performance optimization will be critical for complex visualizations
+- Accessibility features must be maintained despite advanced interactions

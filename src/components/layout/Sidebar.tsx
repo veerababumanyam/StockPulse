@@ -35,11 +35,13 @@ import {
   Layers,
   MoreHorizontal,
   UserPlus,
+  Users,
 } from "lucide-react";
 import Logo from "../ui/Logo";
 import { Button } from "../ui/button";
 import { Switch } from "../ui/switch";
 import { cn } from "../../utils/cn";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface NavigationItem {
   id: string;
@@ -53,7 +55,8 @@ interface NavigationItem {
     | "ai"
     | "mcp"
     | "settings"
-    | "other";
+    | "other"
+    | "admin";
   roleRequired?: "user" | "trader" | "admin" | "analyst";
   badge?: string;
   isNew?: boolean;
@@ -94,6 +97,7 @@ const iconMap = {
   brain: () => <Brain className="w-5 h-5" />,
   server: () => <Server className="w-5 h-5" />,
   userPlus: () => <UserPlus className="w-5 h-5" />,
+  users: () => <Users className="w-5 h-5" />,
 } as const;
 
 type IconName = keyof typeof iconMap;
@@ -296,6 +300,16 @@ const defaultNavigationItems: (Omit<
     category: "settings",
   },
 
+  // Admin
+  {
+    id: "user-approval",
+    label: "User Approval",
+    iconName: "users",
+    path: "/admin/user-approval",
+    category: "admin",
+    roleRequired: "admin",
+  },
+
   // Other
   {
     id: "onboarding",
@@ -344,6 +358,12 @@ const categoryConfig = {
     bgColor: "bg-gradient-to-r from-surface to-surface/80",
     icon: <Settings className="w-4 h-4" />,
   },
+  admin: {
+    label: "Admin",
+    color: "from-accent to-accent-600",
+    bgColor: "bg-gradient-to-r from-accent/10 to-accent/20",
+    icon: <Shield className="w-4 h-4" />,
+  },
   other: {
     label: "Other",
     color: "from-accent to-secondary",
@@ -360,10 +380,29 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [navigationItems, setNavigationItems] = useState<NavigationItem[]>([]);
   const [isCustomizing, setIsCustomizing] = useState(false);
-  const [userRole] = useState<"user" | "trader" | "admin" | "analyst">("admin");
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  // Map user role from auth context to navigation role type
+  const getUserRole = (): "user" | "trader" | "admin" | "analyst" => {
+    if (!user?.role) return "user";
+
+    switch (user.role.toLowerCase()) {
+      case "admin":
+      case "administrator":
+        return "admin";
+      case "trader":
+        return "trader";
+      case "analyst":
+        return "analyst";
+      default:
+        return "user";
+    }
+  };
+
+  const userRole = getUserRole();
 
   const initializeDefaultItems = React.useCallback(() => {
     const items = defaultNavigationItems
@@ -373,7 +412,9 @@ const Sidebar: React.FC<SidebarProps> = ({
         visible:
           !item.roleRequired ||
           item.roleRequired === userRole ||
-          userRole === "admin",
+          userRole === "admin" ||
+          // Show admin items when user data isn't loaded yet (temporary fix)
+          (item.roleRequired === "admin" && !user),
         order: index,
       }))
       .sort((a, b) => a.order - b.order);
@@ -391,31 +432,58 @@ const Sidebar: React.FC<SidebarProps> = ({
       };
     });
 
-    localStorage.setItem("sidebar-navigation", JSON.stringify(storableItems));
-  }, [userRole]);
+    // Include version to force cache refresh when navigation structure changes
+    const navigationData = {
+      version: "1.1", // Increment this when navigation structure changes
+      items: storableItems,
+    };
+
+    localStorage.setItem("sidebar-navigation", JSON.stringify(navigationData));
+  }, [userRole, user]);
 
   useEffect(() => {
-    const savedItems = localStorage.getItem("sidebar-navigation");
-    if (savedItems) {
+    const savedData = localStorage.getItem("sidebar-navigation");
+    if (savedData) {
       try {
-        const parsedItems = JSON.parse(savedItems);
-        const isValid =
-          Array.isArray(parsedItems) &&
-          parsedItems.every(
-            (item: any) => item.iconName && iconMap[item.iconName as IconName],
-          );
-        if (!isValid) {
+        const parsedData = JSON.parse(savedData);
+
+        // Check if we have new versioned format
+        if (parsedData.version && parsedData.items) {
+          // Check version compatibility
+          if (parsedData.version !== "1.1") {
+            console.warn(
+              "Navigation cache version mismatch, resetting to defaults.",
+            );
+            initializeDefaultItems();
+            return;
+          }
+
+          const parsedItems = parsedData.items;
+          const isValid =
+            Array.isArray(parsedItems) &&
+            parsedItems.every(
+              (item: any) =>
+                item.iconName && iconMap[item.iconName as IconName],
+            );
+          if (!isValid) {
+            console.warn(
+              "Invalid saved navigation schema, resetting to defaults.",
+            );
+            initializeDefaultItems();
+            return;
+          }
+          const itemsWithIcons = parsedItems.map((item: any) => ({
+            ...item,
+            icon: iconMap[item.iconName as IconName](),
+          }));
+          setNavigationItems(itemsWithIcons);
+        } else {
+          // Old format without version, reset to defaults
           console.warn(
-            "Invalid saved navigation schema, resetting to defaults.",
+            "Old navigation cache format detected, resetting to defaults.",
           );
           initializeDefaultItems();
-          return;
         }
-        const itemsWithIcons = parsedItems.map((item: any) => ({
-          ...item,
-          icon: iconMap[item.iconName as IconName](),
-        }));
-        setNavigationItems(itemsWithIcons);
       } catch (error) {
         console.warn("Failed to parse saved navigation items:", error);
         initializeDefaultItems();
@@ -427,18 +495,20 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const saveNavigationItems = (items: NavigationItem[]) => {
     setNavigationItems(items);
-    localStorage.setItem(
-      "sidebar-navigation",
-      JSON.stringify(
-        items.map((item) => ({
-          ...item,
-          icon: undefined,
-          iconName: defaultNavigationItems.find(
-            (defaultItem) => defaultItem.id === item.id,
-          )?.iconName,
-        })),
-      ),
-    );
+    const storableItems = items.map((item) => ({
+      ...item,
+      icon: undefined,
+      iconName: defaultNavigationItems.find(
+        (defaultItem) => defaultItem.id === item.id,
+      )?.iconName,
+    }));
+
+    const navigationData = {
+      version: "1.1",
+      items: storableItems,
+    };
+
+    localStorage.setItem("sidebar-navigation", JSON.stringify(navigationData));
   };
 
   const toggleItemVisibility = (itemId: string) => {

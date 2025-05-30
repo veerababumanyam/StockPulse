@@ -1,18 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { PageLayout, Card } from "../components/layout/PageLayout";
 
 const Dashboard: React.FC = () => {
   return (
-    <>
+    <PageLayout>
       <div className="flex flex-col md:flex-row justify-between items-start mb-6">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <h1 className="text-3xl font-bold text-text">Dashboard</h1>
+          <p className="text-text/60">
             Welcome back! Here's your market overview.
           </p>
         </div>
         <div className="mt-4 md:mt-0 flex space-x-2">
-          <button className="px-4 py-2 bg-white dark:bg-secondary-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-secondary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+          <button className="px-4 py-2 bg-surface border border-border rounded-md shadow-sm text-sm font-medium text-text hover:bg-surface/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
             <svg
               className="w-4 h-4 mr-1 inline-block"
               fill="none"
@@ -29,7 +30,7 @@ const Dashboard: React.FC = () => {
             </svg>
             Filter
           </button>
-          <button className="px-4 py-2 bg-primary border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+          <button className="px-4 py-2 bg-primary border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
             <svg
               className="w-4 h-4 mr-1 inline-block"
               fill="none"
@@ -51,21 +52,21 @@ const Dashboard: React.FC = () => {
 
       {/* Dashboard content grid - all the cards, tables, etc. */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white dark:bg-secondary-800 rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold mb-2">Market Status</h2>
+        <Card>
+          <h2 className="text-lg font-semibold mb-2 text-text">
+            Market Status
+          </h2>
           <div className="flex items-center">
-            <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-            <span className="text-green-500 font-medium">Market Open</span>
+            <div className="w-3 h-3 bg-accent rounded-full mr-2"></div>
+            <span className="text-accent font-medium">Market Open</span>
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Closes in 3h 45m
-          </div>
-        </div>
+          <div className="text-sm text-text/60 mt-1">Closes in 3h 45m</div>
+        </Card>
 
-        <div className="bg-white dark:bg-secondary-800 rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold mb-2">S&P 500</h2>
-          <div className="text-2xl font-bold">4,782.36</div>
-          <div className="flex items-center text-green-500 text-sm">
+        <Card>
+          <h2 className="text-lg font-semibold mb-2 text-text">S&P 500</h2>
+          <div className="text-2xl font-bold text-text">4,782.36</div>
+          <div className="flex items-center text-accent text-sm">
             <svg
               className="w-4 h-4 mr-1"
               fill="none"
@@ -82,12 +83,14 @@ const Dashboard: React.FC = () => {
             </svg>
             <span>+1.23% (+58.12)</span>
           </div>
-        </div>
+        </Card>
 
-        <div className="bg-white dark:bg-secondary-800 rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold mb-2">Portfolio Value</h2>
-          <div className="text-2xl font-bold">$124,568.92</div>
-          <div className="flex items-center text-green-500 text-sm">
+        <Card>
+          <h2 className="text-lg font-semibold mb-2 text-text">
+            Portfolio Value
+          </h2>
+          <div className="text-2xl font-bold text-text">$124,568.92</div>
+          <div className="flex items-center text-accent text-sm">
             <svg
               className="w-4 h-4 mr-1"
               fill="none"
@@ -104,15 +107,13 @@ const Dashboard: React.FC = () => {
             </svg>
             <span>+2.34% (+$2,845.67)</span>
           </div>
-        </div>
+        </Card>
 
-        <div className="bg-white dark:bg-secondary-800 rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold mb-2">AI Signals</h2>
-          <div className="text-2xl font-bold">8</div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">
-            5 buy, 2 sell, 1 hold
-          </div>
-        </div>
+        <Card>
+          <h2 className="text-lg font-semibold mb-2 text-text">AI Signals</h2>
+          <div className="text-2xl font-bold text-text">8</div>
+          <div className="text-sm text-text/60">5 buy, 2 sell, 1 hold</div>
+        </Card>
       </div>
 
       {/* Rest of dashboard content continues... */}
@@ -287,7 +288,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </div>
-    </>
+    </PageLayout>
   );
 };
 
