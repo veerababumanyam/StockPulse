@@ -1,0 +1,208 @@
+/* Dashboard Design Tokens */
+/* Defines reusable values for colors, spacing, typography, etc. */
+
+:root {
+  /* Primary Colors */
+  --dashboard-primary-color: #3b82f6; /* Blue 500 */
+  --dashboard-primary-color-hover: #2563eb; /* Blue 600 */
+  --dashboard-primary-color-active: #1d4ed8; /* Blue 700 */
+  --dashboard-primary-color-text: #ffffff; /* White */
+
+  /* Secondary Colors */
+  --dashboard-secondary-color: #6b7280; /* Gray 500 */
+  --dashboard-secondary-color-hover: #4b5563; /* Gray 600 */
+  --dashboard-secondary-color-active: #374151; /* Gray 700 */
+  --dashboard-secondary-color-text: #ffffff; /* White */
+
+  /* Accent Colors (for charts, highlights, etc.) */
+  --dashboard-accent-color-1: #10b981; /* Emerald 500 */
+  --dashboard-accent-color-2: #ef4444; /* Red 500 */
+  --dashboard-accent-color-3: #f59e0b; /* Amber 500 */
+  --dashboard-accent-color-4: #8b5cf6; /* Violet 500 */
+
+  /* Background Colors */
+  --dashboard-background-light: #f9fafb; /* Gray 50 */
+  --dashboard-background-main: #ffffff; /* White */
+  --dashboard-background-dark: #1f2937; /* Gray 800 */
+  --dashboard-widget-background: #ffffff;
+  --dashboard-sidebar-background: #f3f4f6; /* Gray 100 */
+  --dashboard-header-background: #ffffff;
+
+  /* Text Colors */
+  --dashboard-text-primary: #111827; /* Gray 900 */
+  --dashboard-text-secondary: #374151; /* Gray 700 */
+  --dashboard-text-light: #6b7280; /* Gray 500 */
+  --dashboard-text-on-dark-bg: #f9fafb; /* Gray 50 */
+  --dashboard-text-link: var(--dashboard-primary-color);
+
+  /* Border Colors */
+  --dashboard-border-color-light: #e5e7eb; /* Gray 200 */
+  --dashboard-border-color-medium: #d1d5db; /* Gray 300 */
+  --dashboard-border-color-dark: #9ca3af; /* Gray 400 */
+
+  /* Spacing & Sizing */
+  --dashboard-spacing-xs: 0.25rem; /* 4px */
+  --dashboard-spacing-sm: 0.5rem;  /* 8px */
+  --dashboard-spacing-md: 1rem;    /* 16px */
+  --dashboard-spacing-lg: 1.5rem;  /* 24px */
+  --dashboard-spacing-xl: 2rem;    /* 32px */
+  --dashboard-spacing-xxl: 3rem;   /* 48px */
+
+  /* Border Radius */
+  --dashboard-radius-sm: 0.25rem; /* 4px */
+  --dashboard-radius-md: 0.5rem;  /* 8px */
+  --dashboard-radius-lg: 0.75rem; /* 12px */
+  --dashboard-radius-full: 9999px;
+
+  /* Box Shadows */
+  --dashboard-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --dashboard-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --dashboard-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --dashboard-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* Typography */
+  --dashboard-font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --dashboard-font-family-mono: 'JetBrains Mono', Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --dashboard-font-size-xs: 0.75rem;  /* 12px */
+  --dashboard-font-size-sm: 0.875rem; /* 14px */
+  --dashboard-font-size-base: 1rem;    /* 16px */
+  --dashboard-font-size-lg: 1.125rem; /* 18px */
+  --dashboard-font-size-xl: 1.25rem;  /* 20px */
+  --dashboard-font-size-2xl: 1.5rem;   /* 24px */
+  --dashboard-font-size-3xl: 1.875rem; /* 30px */
+
+  --dashboard-font-weight-light: 300;
+  --dashboard-font-weight-normal: 400;
+  --dashboard-font-weight-medium: 500;
+  --dashboard-font-weight-semibold: 600;
+  --dashboard-font-weight-bold: 700;
+
+  /* Transitions */
+  --dashboard-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --dashboard-transition-medium: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --dashboard-transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-index */
+  --dashboard-z-index-dropdown: 1000;
+  --dashboard-z-index-modal: 1050;
+  --dashboard-z-index-tooltip: 1100;
+  --dashboard-z-index-overlay: 900;
+
+  /* Specific Widget Tokens (examples) */
+  --dashboard-widget-header-height: 3rem; /* 48px */
+  --dashboard-widget-padding: var(--dashboard-spacing-md);
+  --dashboard-widget-border-color: var(--dashboard-border-color-medium);
+  --dashboard-widget-border-radius: var(--dashboard-radius-lg);
+  --dashboard-widget-shadow: var(--dashboard-shadow-md);
+
+  /* Chart Specific Tokens */
+  --dashboard-chart-grid-color: var(--dashboard-border-color-light);
+  --dashboard-chart-tooltip-background: var(--dashboard-background-dark);
+  --dashboard-chart-tooltip-text: var(--dashboard-text-on-dark-bg);
+}
+
+/* Dark Theme Overrides */
+/* These can be activated by adding a 'dark' class to a parent element (e.g., <body> or a specific container) */
+.dark {
+  /* Primary Colors */
+  --dashboard-primary-color: #60a5fa; /* Blue 400 */
+  --dashboard-primary-color-hover: #3b82f6; /* Blue 500 */
+  --dashboard-primary-color-active: #2563eb; /* Blue 600 */
+  /* --dashboard-primary-color-text: #ffffff; (remains white or very light gray) */
+
+  /* Secondary Colors */
+  --dashboard-secondary-color: #9ca3af; /* Gray 400 */
+  --dashboard-secondary-color-hover: #6b7280; /* Gray 500 */
+  --dashboard-secondary-color-active: #4b5563; /* Gray 600 */
+  /* --dashboard-secondary-color-text: #ffffff; (remains white or very light gray) */
+  
+  /* Accent Colors (adjust if needed for better contrast on dark bg) */
+  /* --dashboard-accent-color-1: #34d399; Emerald 400 */
+  /* --dashboard-accent-color-2: #f87171; Red 400 */
+  /* --dashboard-accent-color-3: #fbbf24; Amber 400 */
+  /* --dashboard-accent-color-4: #a78bfa; Violet 400 */
+
+  /* Background Colors */
+  --dashboard-background-light: #374151; /* Gray 700 */
+  --dashboard-background-main: #1f2937; /* Gray 800 */
+  --dashboard-background-dark: #111827; /* Gray 900 */
+  --dashboard-widget-background: #374151; /* Gray 700 */
+  --dashboard-sidebar-background: #1f2937; /* Gray 800 */
+  --dashboard-header-background: #1f2937; /* Gray 800 */
+
+  /* Text Colors */
+  --dashboard-text-primary: #f9fafb; /* Gray 50 */
+  --dashboard-text-secondary: #e5e7eb; /* Gray 200 */
+  --dashboard-text-light: #d1d5db; /* Gray 300 */
+  --dashboard-text-on-dark-bg: #111827; /* Gray 900 (for tooltips etc on light elements in dark mode) */
+  --dashboard-text-link: var(--dashboard-primary-color);
+
+  /* Border Colors */
+  --dashboard-border-color-light: #4b5563; /* Gray 600 */
+  --dashboard-border-color-medium: #6b7280; /* Gray 500 */
+  --dashboard-border-color-dark: #9ca3af; /* Gray 400 */
+
+  /* Box Shadows (adjust for dark theme for subtlety) */
+  --dashboard-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+  --dashboard-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.2);
+  --dashboard-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
+  --dashboard-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
+
+  /* Widget Specific Tokens */
+  --dashboard-widget-header-height: 3rem;
+  --dashboard-widget-padding: var(--dashboard-spacing-md);
+  --dashboard-widget-border-color: var(--dashboard-border-color-medium);
+  --dashboard-widget-shadow: var(--dashboard-shadow-md);
+
+  /* Chart Specific Tokens */
+  --dashboard-chart-grid-color: var(--dashboard-border-color-light);
+  --dashboard-chart-tooltip-background: var(--dashboard-background-light); /* Lighter for dark mode tooltips */
+  --dashboard-chart-tooltip-text: var(--dashboard-text-primary);
+}
+
+/* Utility classes (optional, if not using Tailwind/other utility CSS for these) */
+.dashboard-container {
+  padding: var(--dashboard-spacing-lg);
+  background-color: var(--dashboard-background-main);
+  color: var(--dashboard-text-primary);
+}
+
+.widget {
+  background-color: var(--dashboard-widget-background);
+  border-radius: var(--dashboard-widget-border-radius);
+  padding: var(--dashboard-widget-padding);
+  box-shadow: var(--dashboard-widget-shadow);
+  border: 1px solid var(--dashboard-widget-border-color);
+}
+
+.widget-header {
+  height: var(--dashboard-widget-header-height);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--dashboard-widget-padding);
+  border-bottom: 1px solid var(--dashboard-widget-border-color);
+  margin-bottom: var(--dashboard-widget-padding);
+  font-size: var(--dashboard-font-size-lg);
+  font-weight: var(--dashboard-font-weight-semibold);
+}
+
+/* Example of using tokens for a button */
+.btn-dashboard-primary {
+  background-color: var(--dashboard-primary-color);
+  color: var(--dashboard-primary-color-text);
+  padding: var(--dashboard-spacing-sm) var(--dashboard-spacing-md);
+  border-radius: var(--dashboard-radius-md);
+  border: none;
+  cursor: pointer;
+  font-weight: var(--dashboard-font-weight-medium);
+  transition: background-color var(--dashboard-transition-fast);
+}
+
+.btn-dashboard-primary:hover {
+  background-color: var(--dashboard-primary-color-hover);
+}
+
+.btn-dashboard-primary:active {
+  background-color: var(--dashboard-primary-color-active);
+} 

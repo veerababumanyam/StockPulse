@@ -4,8 +4,29 @@
  */
 import axios from "axios";
 
+// Helper function to safely access import.meta.env
+const getEnvVar = (key: string, defaultValue: string = ''): string => {
+  try {
+    // Check if we're in a Vite environment
+    if (typeof window !== 'undefined' && (window as any).import?.meta?.env) {
+      return (window as any).import.meta.env[key] || defaultValue;
+    }
+    // Check for global import.meta (set by setupTests.ts)
+    if (typeof globalThis !== 'undefined' && (globalThis as any).import?.meta?.env) {
+      return (globalThis as any).import.meta.env[key] || defaultValue;
+    }
+    // Fallback for Jest/Node environment
+    if (typeof process !== 'undefined' && process.env) {
+      return process.env[key] || defaultValue;
+    }
+    return defaultValue;
+  } catch (error) {
+    return defaultValue;
+  }
+};
+
 // API Base URL - use environment variable or default to localhost
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+export const API_BASE_URL = getEnvVar('VITE_API_BASE_URL', 'http://localhost:8000');
 
 // API Configuration object
 export const API_CONFIG = {
@@ -144,7 +165,7 @@ export const getApiUrl = (endpoint: string): string => {
 export const debugApiConfig = (): void => {
   console.log("🔧 API Configuration:");
   console.log("Base URL:", API_CONFIG.BASE_URL);
-  console.log("Environment Variable:", import.meta.env.VITE_API_BASE_URL);
+  console.log("Environment Variable:", getEnvVar('VITE_API_BASE_URL'));
   console.log("Current Origin:", window.location.origin);
   console.log("Auth Endpoints:", {
     login: getApiUrl(API_ENDPOINTS.AUTH.LOGIN),
@@ -157,16 +178,16 @@ export const debugApiConfig = (): void => {
 // API configuration for Financial Modeling Prep
 // Use environment variables in production
 export const FMP_API_KEY =
-  import.meta.env.VITE_FMP_API_KEY || "YOUR_FMP_API_KEY";
+  getEnvVar('VITE_FMP_API_KEY', "YOUR_FMP_API_KEY");
 export const FMP_BASE_URL = "https://financialmodelingprep.com/api/v3";
 
 // API configuration for TAAPI.IO
 // Use environment variables in production
 export const TAAPI_API_KEY =
-  import.meta.env.VITE_TAAPI_API_KEY || "YOUR_TAAPI_API_KEY";
+  getEnvVar('VITE_TAAPI_API_KEY', "YOUR_TAAPI_API_KEY");
 export const TAAPI_BASE_URL = "https://api.taapi.io";
 
 // GitHub configuration
 // These should be configured in your CI/CD pipeline, not in source code
 export const GITHUB_REPO = "https://github.com/veerababumanyam/StockPulse.git";
-export const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN || ""; // Never hardcode tokens
+export const GITHUB_TOKEN = getEnvVar('VITE_GITHUB_TOKEN', "") || ""; // Never hardcode tokens

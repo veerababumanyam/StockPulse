@@ -14,7 +14,7 @@ from slowapi.util import get_remote_address
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, CurrentUser
 from app.models.user import User, UserStatus
 from app.schemas.auth import (
     LoginRequest,
@@ -295,14 +295,14 @@ async def register(
 @router.get("/me", response_model=UserResponse)
 async def get_current_user_info(
     request: Request,
-    current_user: dict = Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
     """
     Get current authenticated user information.
     Used by frontend to check authentication status.
     """
-    user = await user_service.get_user_by_id(current_user["sub"], db)
+    user = await user_service.get_user_by_id(str(current_user.id), db)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
@@ -322,14 +322,14 @@ async def get_current_user_info(
 async def logout(
     request: Request,
     response: Response,
-    current_user: dict = Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
     """
     User logout endpoint.
     Clears authentication cookies and invalidates session.
     """
-    user_id = current_user["sub"]
+    user_id = str(current_user.id)
     ip_address = get_remote_address(request)
 
     try:
@@ -440,11 +440,11 @@ async def refresh_token(
 
 async def get_current_admin_user(
     request: Request,
-    current_user: dict = Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
     """Dependency to ensure current user is an admin."""
-    user = await user_service.get_user_by_id(current_user["sub"], db)
+    user = await user_service.get_user_by_id(str(current_user.id), db)
     if not user or not user.is_admin():
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required"

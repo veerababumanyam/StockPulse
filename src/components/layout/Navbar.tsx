@@ -15,10 +15,12 @@ import {
   Monitor,
   Sun,
   Moon,
+  Check,
 } from "lucide-react";
 import ThemeSelector from "../ui/ThemeSelector";
 import { useTheme } from "../../contexts/ThemeContext";
-import { colorPalettes, ColorTheme } from "../../theme/colorPalettes";
+import { THEME_METADATA } from "../../types/theme";
+import type { ColorTheme } from "../../types/theme";
 import { cn } from "../../utils/cn";
 import Logo from "../ui/Logo";
 
@@ -37,7 +39,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
   const [isColorPaletteMenuOpen, setIsColorPaletteMenuOpen] = useState(false);
-  const { mode, setMode, colorTheme, setColorTheme } = useTheme();
+  const { mode, setMode, colorTheme, setColorTheme, getThemeMetadata } = useTheme();
 
   const navClassName = cn(
     transparent
@@ -89,6 +91,12 @@ const Navbar: React.FC<NavbarProps> = ({
       .toUpperCase()
       .slice(0, 2);
   };
+
+  // Get all available themes from metadata
+  const allThemes = Object.values(THEME_METADATA);
+
+  // Get current theme metadata
+  const currentThemeMetadata = getThemeMetadata(colorTheme);
 
   return (
     <nav className={navClassName}>
@@ -197,12 +205,15 @@ const Navbar: React.FC<NavbarProps> = ({
                             setIsThemeMenuOpen(false);
                           }}
                           className={cn(
-                            "w-full flex items-center px-3 py-2.5 text-sm text-text hover:bg-surface rounded-xl transition-all duration-200 group",
+                            "w-full flex items-center justify-between px-3 py-2.5 text-sm text-text hover:bg-surface rounded-xl transition-all duration-200 group",
                             mode === "light" && "bg-surface",
                           )}
                         >
-                          <Sun className="w-4 h-4 mr-3 group-hover:text-yellow-500 transition-colors duration-200" />
-                          Light Mode
+                          <div className="flex items-center">
+                            <Sun className="w-4 h-4 mr-3 group-hover:text-yellow-500 transition-colors duration-200" />
+                            Light Mode
+                          </div>
+                          {mode === "light" && <Check className="w-4 h-4 text-primary" />}
                         </button>
                         <button
                           onClick={() => {
@@ -210,12 +221,15 @@ const Navbar: React.FC<NavbarProps> = ({
                             setIsThemeMenuOpen(false);
                           }}
                           className={cn(
-                            "w-full flex items-center px-3 py-2.5 text-sm text-text hover:bg-surface rounded-xl transition-all duration-200 group",
+                            "w-full flex items-center justify-between px-3 py-2.5 text-sm text-text hover:bg-surface rounded-xl transition-all duration-200 group",
                             mode === "dark" && "bg-surface",
                           )}
                         >
-                          <Moon className="w-4 h-4 mr-3 group-hover:text-blue-500 transition-colors duration-200" />
-                          Dark Mode
+                          <div className="flex items-center">
+                            <Moon className="w-4 h-4 mr-3 group-hover:text-blue-500 transition-colors duration-200" />
+                            Dark Mode
+                          </div>
+                          {mode === "dark" && <Check className="w-4 h-4 text-primary" />}
                         </button>
                         <button
                           onClick={() => {
@@ -223,12 +237,15 @@ const Navbar: React.FC<NavbarProps> = ({
                             setIsThemeMenuOpen(false);
                           }}
                           className={cn(
-                            "w-full flex items-center px-3 py-2.5 text-sm text-text hover:bg-surface rounded-xl transition-all duration-200 group",
+                            "w-full flex items-center justify-between px-3 py-2.5 text-sm text-text hover:bg-surface rounded-xl transition-all duration-200 group",
                             mode === "system" && "bg-surface",
                           )}
                         >
-                          <Monitor className="w-4 h-4 mr-3 group-hover:text-purple-500 transition-colors duration-200" />
-                          System
+                          <div className="flex items-center">
+                            <Monitor className="w-4 h-4 mr-3 group-hover:text-purple-500 transition-colors duration-200" />
+                            System
+                          </div>
+                          {mode === "system" && <Check className="w-4 h-4 text-primary" />}
                         </button>
                       </div>
                     </div>
@@ -236,14 +253,14 @@ const Navbar: React.FC<NavbarProps> = ({
                 )}
               </div>
 
-              {/* Color Palette Selector - Triggered by Palette Icon */}
+              {/* Enhanced Color Palette Selector - Triggered by Palette Icon */}
               <div className="relative">
                 <button
                   onClick={() =>
                     setIsColorPaletteMenuOpen(!isColorPaletteMenuOpen)
                   }
                   className="p-2.5 rounded-xl hover:bg-surface transition-all duration-200 hover:scale-105 group"
-                  title="Color theme"
+                  title={`Current theme: ${currentThemeMetadata.emoji} ${currentThemeMetadata.name}`}
                 >
                   <Palette className="w-5 h-5 text-text/60 group-hover:text-primary transition-colors duration-200" />
                 </button>
@@ -253,51 +270,69 @@ const Navbar: React.FC<NavbarProps> = ({
                       className="fixed inset-0 z-30"
                       onClick={() => setIsColorPaletteMenuOpen(false)}
                     />
-                    <div className="absolute right-0 mt-2 w-64 bg-background rounded-2xl shadow-xl border border-border z-40 overflow-hidden backdrop-blur-xl">
+                    <div className="absolute right-0 mt-2 w-80 bg-background rounded-2xl shadow-xl border border-border z-40 overflow-hidden backdrop-blur-xl">
+                      <div className="p-3 border-b border-border bg-gradient-to-r from-primary/10 to-accent/10">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="text-sm font-semibold text-text">Color Themes</h3>
+                            <p className="text-xs text-text/60">
+                              Current: {currentThemeMetadata.emoji} {currentThemeMetadata.name}
+                            </p>
+                          </div>
+                          <div className="flex space-x-1">
+                            {currentThemeMetadata.primaryColors.map((color, index) => (
+                              <div 
+                                key={index}
+                                className="w-4 h-4 rounded-full border border-border/20" 
+                                style={{ backgroundColor: color }}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
                       <div className="p-2 space-y-1">
-                        <p className="px-3 py-2 text-xs font-semibold text-text/60">
-                          Color Theme
-                        </p>
-                        <div className="max-h-48 overflow-y-auto scrollbar-thin pr-1">
-                          {(Object.keys(colorPalettes) as ColorTheme[]).map(
-                            (themeKey) => (
-                              <button
-                                key={themeKey}
-                                onClick={() => {
-                                  setColorTheme(themeKey);
-                                  setIsColorPaletteMenuOpen(false);
-                                }}
-                                className={cn(
-                                  "w-full flex items-center justify-between px-3 py-2.5 text-sm text-text hover:bg-surface rounded-xl transition-all duration-200 group",
-                                  colorTheme === themeKey && "bg-surface",
-                                )}
-                              >
-                                <span className="capitalize">
-                                  {themeKey.replace(/-/g, " ")}
-                                </span>
-                                <div className="flex space-x-1">
-                                  <div
-                                    className="w-3 h-3 rounded-full"
-                                    style={{
-                                      backgroundColor:
-                                        colorPalettes[themeKey].light[
-                                          "--color-primary"
-                                        ],
-                                    }}
-                                  />
-                                  <div
-                                    className="w-3 h-3 rounded-full"
-                                    style={{
-                                      backgroundColor:
-                                        colorPalettes[themeKey].dark[
-                                          "--color-primary"
-                                        ],
-                                    }}
-                                  />
+                        <div className="max-h-80 overflow-y-auto scrollbar-thin pr-1">
+                          {allThemes.map((theme) => (
+                            <button
+                              key={theme.key}
+                              onClick={() => {
+                                setColorTheme(theme.key);
+                                setIsColorPaletteMenuOpen(false);
+                              }}
+                              className={cn(
+                                "w-full flex items-center justify-between px-3 py-3 text-sm text-text hover:bg-surface rounded-xl transition-all duration-200 group border-b border-border/30 last:border-b-0",
+                                colorTheme === theme.key && "bg-surface ring-2 ring-primary/20",
+                              )}
+                            >
+                              <div className="flex items-center">
+                                <div className="flex space-x-1 mr-3">
+                                  {theme.primaryColors.map((color, index) => (
+                                    <div 
+                                      key={index}
+                                      className="w-3 h-3 rounded-full border border-border/20" 
+                                      style={{ backgroundColor: color }}
+                                    />
+                                  ))}
                                 </div>
-                              </button>
-                            ),
-                          )}
+                                <div className="text-left">
+                                  <div className="font-medium">
+                                    {theme.emoji} {theme.name}
+                                  </div>
+                                  <div className="text-xs text-text/60">
+                                    {theme.description}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <span className="text-xs px-2 py-1 bg-surface-secondary rounded-full text-text/60">
+                                  {theme.category}
+                                </span>
+                                {colorTheme === theme.key && (
+                                  <Check className="w-4 h-4 text-primary" />
+                                )}
+                              </div>
+                            </button>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -459,4 +494,4 @@ const Navbar: React.FC<NavbarProps> = ({
   );
 };
 
-export { Navbar };
+export default Navbar;

@@ -17,7 +17,7 @@ import ForgotPassword from "@pages/auth/ForgotPassword";
 import ResetPassword from "@pages/auth/ResetPassword";
 
 // Main App Pages
-import Dashboard from "@pages/Dashboard";
+import Dashboard from "@/pages/Dashboard";
 import PortfolioPage from "@pages/PortfolioPage";
 import StockDetailPage from "@pages/StockDetailPage";
 import ScreenerPage from "@pages/ScreenerPage";

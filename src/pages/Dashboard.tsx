@@ -1,585 +1,337 @@
-/**
- * Optimized Dashboard Component
- * High-performance dashboard with memoized calculations, extracted components,
- * real-time updates, accessibility features, and comprehensive error handling
- */
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
-import { Button } from '../components/ui/button';
+'use client';
+
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { Layout, Layouts as RGLPrimitiveLayouts } from 'react-grid-layout';
+import WidgetLibrary from '../components/dashboard/WidgetLibrary';
+import EnterpriseWidgetGrid from '../components/dashboard/WidgetGrid';
+import { dashboardService } from '../services/dashboardService';
 import { 
-  TrendingUp, 
-  DollarSign, 
-  PieChart, 
-  Brain, 
-  Activity, 
-  Plus,
-  Settings,
-  RefreshCw,
-  AlertTriangle,
-  Wifi,
-  WifiOff
-} from 'lucide-react';
-import { usePortfolio } from '../hooks/usePortfolio';
-import LoadingSpinner from '../components/ui/LoadingSpinner';
-import ErrorMessage from '../components/ui/ErrorMessage';
-import ValueChangeDisplay from '../components/ui/ValueChangeDisplay';
-import { DashboardMainSkeleton } from '../components/ui/SkeletonLoader';
+  DashboardConfig, 
+  WidgetConfig, 
+  WidgetType, 
+  DashboardBreakpoints, 
+  DASHBOARD_BREAKPOINTS,
+  DEFAULT_DASHBOARD_CONFIG,
+  WidgetMetadata,
+  WIDGET_LIBRARY,
+  DashboardLayout
+} from '../types/dashboard';
+import { useTheme } from '../contexts/ThemeContext';
+import { PlusCircle, Edit, Save, XCircle, Layers, RefreshCw, Settings2, Columns, Rows, Maximize, Minimize } from 'lucide-react';
 
-// Optimized sub-components
-import PortfolioOverview from '../components/dashboard/PortfolioOverview';
-import RecentTransactions from '../components/dashboard/RecentTransactions';
-import MarketSummary from '../components/dashboard/MarketSummary';
-
-// Utility functions
-import {
-  formatCurrency,
-  formatPercentage,
-  createCalculationKey,
-  validatePortfolioData,
-  sanitizeNumericInput
-} from '../utils/portfolioCalculations';
-import { cn } from '../utils/tailwind';
-
-// Dashboard layout configuration
-interface DashboardConfig {
-  showPortfolioCards: boolean;
-  showPortfolioOverview: boolean;
-  showRecentTransactions: boolean;
-  showMarketSummary: boolean;
-  showAIInsights: boolean;
-  showPerformanceMetrics: boolean;
-  autoRefresh: boolean;
-  refreshInterval: number;
-  compactMode: boolean;
-}
-
-// Default dashboard configuration
-const DEFAULT_CONFIG: DashboardConfig = {
-  showPortfolioCards: true,
-  showPortfolioOverview: true,
-  showRecentTransactions: true,
-  showMarketSummary: true,
-  showAIInsights: true,
-  showPerformanceMetrics: true,
-  autoRefresh: true,
-  refreshInterval: 30000,
-  compactMode: false,
+// Helper to get current breakpoint
+const getCurrentBreakpoint = (): keyof DashboardBreakpoints => {
+  const width = window.innerWidth;
+  
+  if (width >= DASHBOARD_BREAKPOINTS.xl) {
+    return 'xl';
+  } else if (width >= DASHBOARD_BREAKPOINTS.lg) {
+    return 'lg';
+  } else if (width >= DASHBOARD_BREAKPOINTS.md) {
+    return 'md';
+  } else if (width >= DASHBOARD_BREAKPOINTS.sm) {
+    return 'sm';
+  } else if (width >= DASHBOARD_BREAKPOINTS.xs) {
+    return 'xs';
+  } else {
+    return 'xxs';
+  }
 };
 
-// Memoized Portfolio Overview Cards Component
-const PortfolioOverviewCards = React.memo<{
-  portfolio: any;
-  isLoading?: boolean;
-  onRefresh?: () => void;
-}>(({ portfolio, isLoading, onRefresh }) => {
-  // Memoized metrics calculations
-  const metrics = useMemo(() => {
-    if (!portfolio) return null;
 
-    return {
-      totalValue: sanitizeNumericInput(portfolio.total_value),
-      totalPnL: sanitizeNumericInput(portfolio.total_pnl),
-      totalPnLPercentage: sanitizeNumericInput(portfolio.total_pnl_percentage),
-      dayPnL: sanitizeNumericInput(portfolio.day_pnl),
-      dayPnLPercentage: sanitizeNumericInput(portfolio.day_pnl_percentage),
-      cashBalance: sanitizeNumericInput(portfolio.cash_balance),
-    };
-  }, [portfolio]);
+const DashboardPage: React.FC = () => {
+  const { isDarkMode } = useTheme();
+  const [dashboardConfig, setDashboardConfig] = useState<DashboardConfig | null>(null);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [isWidgetLibraryOpen, setIsWidgetLibraryOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentBreakpoint, setCurrentBreakpoint] = useState<keyof DashboardBreakpoints>(getCurrentBreakpoint());
+  const [unsavedChanges, setUnsavedChanges] = useState<boolean>(false);
 
-  if (isLoading || !metrics) {
-    return (
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {[...Array(4)].map((_, index) => (
-          <div key={index} className="bg-card rounded-lg border p-6 space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="h-4 w-24 bg-muted rounded animate-pulse" />
-              <div className="h-4 w-4 bg-muted rounded animate-pulse" />
-            </div>
-            <div className="space-y-2">
-              <div className="h-8 w-32 bg-muted rounded animate-pulse" />
-              <div className="h-3 w-20 bg-muted rounded animate-pulse" />
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  }
+  const loadDashboard = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const config = await dashboardService.initializeDashboard();
+      setDashboardConfig(config);
+      const updatedLayouts = { ...config.layouts };
+      (Object.keys(DASHBOARD_BREAKPOINTS) as Array<keyof DashboardBreakpoints>).forEach(bp => {
+        if (!updatedLayouts[bp]) {
+          const defaultBpLayout = DEFAULT_DASHBOARD_CONFIG.layouts[bp] || { 
+            breakpoint: bp, 
+            cols: 12, 
+            rowHeight: 60, 
+            margin: [10,10], 
+            containerPadding: [10,10], 
+            widgets: [] 
+          };
+          updatedLayouts[bp] = defaultBpLayout;
+        }
+      });
+      setDashboardConfig(prev => prev ? ({ ...prev, layouts: updatedLayouts }) : null);
 
-  return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Value</CardTitle>
-          <DollarSign className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <ValueChangeDisplay
-            value={metrics.totalValue}
-            change={metrics.dayPnL}
-            changePercentage={metrics.dayPnLPercentage}
-            currency={true}
-            size="lg"
-            aria-label={`Total portfolio value: ${formatCurrency(metrics.totalValue)}`}
-          />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total P&L</CardTitle>
-          <TrendingUp className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <ValueChangeDisplay
-            value={metrics.totalPnL}
-            changePercentage={metrics.totalPnLPercentage}
-            currency={true}
-            size="lg"
-            aria-label={`Total profit and loss: ${formatCurrency(metrics.totalPnL)}`}
-          />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Cash Balance</CardTitle>
-          <DollarSign className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold" aria-label={`Cash balance: ${formatCurrency(metrics.cashBalance)}`}>
-            {formatCurrency(metrics.cashBalance)}
-          </div>
-          <p className="text-xs text-muted-foreground">Available for trading</p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Performance</CardTitle>
-          <Activity className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <ValueChangeDisplay
-            value={0}
-            changePercentage={metrics.dayPnLPercentage}
-            size="lg"
-            aria-label={`Day performance: ${formatPercentage(metrics.dayPnLPercentage)}`}
-          />
-          <p className="text-xs text-muted-foreground">Today's change</p>
-        </CardContent>
-      </Card>
-    </div>
-  );
-});
-
-PortfolioOverviewCards.displayName = 'PortfolioOverviewCards';
-
-// Memoized AI Insights Component
-const AIInsightsSection = React.memo<{
-  insights: any[];
-  isLoading?: boolean;
-  onInsightClick?: (insight: any) => void;
-}>(({ insights, isLoading, onInsightClick }) => {
-  const handleInsightClick = useCallback((insight: any) => {
-    onInsightClick?.(insight);
-  }, [onInsightClick]);
-
-  if (isLoading) {
-    return (
-      <Card>
-        <CardHeader>
-          <div className="space-y-2">
-            <div className="h-6 w-32 bg-muted rounded animate-pulse" />
-            <div className="h-4 w-48 bg-muted rounded animate-pulse" />
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {[...Array(2)].map((_, index) => (
-              <div key={index} className="border rounded-lg p-3">
-                <div className="flex items-start justify-between mb-2">
-                  <div className="h-4 w-32 bg-muted rounded animate-pulse" />
-                  <div className="h-4 w-12 bg-muted rounded-full animate-pulse" />
-                </div>
-                <div className="h-4 w-full bg-muted rounded animate-pulse mb-2" />
-                <div className="h-4 w-3/4 bg-muted rounded animate-pulse mb-2" />
-                <div className="h-3 w-20 bg-muted rounded animate-pulse" />
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Brain className="h-4 w-4" />
-          AI Insights
-        </CardTitle>
-        <CardDescription>
-          Personalized recommendations and analysis
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {!insights || insights.length === 0 ? (
-          <div className="text-center py-6">
-            <Brain className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground">
-              AI insights will appear here as your portfolio develops
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {insights.map((insight) => (
-              <div 
-                key={insight.id} 
-                className={cn(
-                  "border rounded-lg p-3 transition-all",
-                  onInsightClick && "cursor-pointer hover:bg-muted/50",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                )}
-                onClick={() => handleInsightClick(insight)}
-                onKeyDown={(e) => {
-                  if ((e.key === 'Enter' || e.key === ' ') && onInsightClick) {
-                    e.preventDefault();
-                    handleInsightClick(insight);
-                  }
-                }}
-                tabIndex={onInsightClick ? 0 : -1}
-                role={onInsightClick ? "button" : undefined}
-                aria-label={`AI insight: ${insight.title}`}
-              >
-                <div className="flex items-start justify-between mb-2">
-                  <h4 className="text-sm font-medium">{insight.title}</h4>
-                  <Badge 
-                    variant={insight.priority === 'HIGH' || insight.priority === 'CRITICAL' ? 'destructive' : 
-                           insight.priority === 'MEDIUM' ? 'default' : 'secondary'}
-                    className="text-xs"
-                  >
-                    {insight.priority}
-                  </Badge>
-                </div>
-                <p className="text-sm text-muted-foreground">{insight.content}</p>
-                <div className="mt-2 text-xs text-muted-foreground">
-                  Confidence: {Math.round(insight.confidence_score * 100)}%
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-});
-
-AIInsightsSection.displayName = 'AIInsightsSection';
-
-// Main Dashboard Component
-const Dashboard: React.FC = () => {
-  // Configuration state
-  const [config, setConfig] = useState<DashboardConfig>(DEFAULT_CONFIG);
-  const [isConfigOpen, setIsConfigOpen] = useState(false);
-
-  // Portfolio data hook
-  const { 
-    dashboardSummary, 
-    isLoading, 
-    error, 
-    refreshData,
-    lastUpdated
-  } = usePortfolio({
-    autoLoad: true,
-    refreshInterval: config.autoRefresh ? config.refreshInterval : 0,
-  });
-
-  // Memoized data validation and processing
-  const validatedData = useMemo(() => {
-    if (!dashboardSummary) return null;
-
-    const portfolio = dashboardSummary.portfolio;
-    const isValid = validatePortfolioData(portfolio);
-
-    return {
-      isValid,
-      portfolio,
-      positions: dashboardSummary.positions || [],
-      transactions: dashboardSummary.recent_transactions || [],
-      aiInsights: dashboardSummary.ai_insights || [],
-      marketSummary: dashboardSummary.market_summary,
-      performanceMetrics: dashboardSummary.performance_metrics,
-    };
-  }, [dashboardSummary]);
-
-  // Memoized calculation key for performance optimization
-  const calculationKey = useMemo(() => {
-    if (!validatedData) return '';
-    return createCalculationKey(validatedData.positions, validatedData.portfolio?.id);
-  }, [validatedData]);
-
-  // Configuration handlers
-  const updateConfig = useCallback(<K extends keyof DashboardConfig>(
-    key: K,
-    value: DashboardConfig[K]
-  ) => {
-    setConfig(prev => ({ ...prev, [key]: value }));
-    
-    // Save to localStorage
-    const newConfig = { ...config, [key]: value };
-    localStorage.setItem('dashboard-config', JSON.stringify(newConfig));
-  }, [config]);
-
-  // Load configuration from localStorage on mount
-  useEffect(() => {
-    const savedConfig = localStorage.getItem('dashboard-config');
-    if (savedConfig) {
-      try {
-        const parsed = JSON.parse(savedConfig);
-        setConfig({ ...DEFAULT_CONFIG, ...parsed });
-      } catch (error) {
-        console.warn('Failed to load dashboard configuration:', error);
-      }
+    } catch (err) {
+      console.error("Failed to load dashboard:", err);
+      setError("Failed to load dashboard. Please try again.");
+      setDashboardConfig(DEFAULT_DASHBOARD_CONFIG);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
-  // Handle refresh with rate limiting
-  const handleRefresh = useCallback(() => {
-    refreshData();
-  }, [refreshData]);
+  useEffect(() => {
+    loadDashboard();
+  }, [loadDashboard]);
 
-  // Handle position click
-  const handlePositionClick = useCallback((position: any) => {
-    console.log('Position clicked:', position);
-    // TODO: Navigate to position detail page
+  useEffect(() => {
+    const handleResize = () => {
+      setCurrentBreakpoint(getCurrentBreakpoint());
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Handle transaction click
-  const handleTransactionClick = useCallback((transaction: any) => {
-    console.log('Transaction clicked:', transaction);
-    // TODO: Navigate to transaction detail page
-  }, []);
+  const handleSaveDashboard = async () => {
+    if (!dashboardConfig) return;
+    setIsLoading(true);
+    try {
+      await dashboardService.saveDashboard(dashboardConfig);
+      dashboardService._saveConfigToLocalStorage(dashboardConfig);
+      setUnsavedChanges(false);
+      alert('Dashboard saved successfully!');
+    } catch (err) {
+      console.error("Failed to save dashboard:", err);
+      setError("Failed to save dashboard. Changes might not be persisted.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  // Handle insight click
-  const handleInsightClick = useCallback((insight: any) => {
-    console.log('Insight clicked:', insight);
-    // TODO: Show insight detail modal
-  }, []);
+  const rglLayoutsProp = useMemo((): RGLPrimitiveLayouts => {
+    if (!dashboardConfig) return {};
+    const newRglLayouts: RGLPrimitiveLayouts = {};
+    for (const bpKey in dashboardConfig.layouts) {
+      const breakpoint = bpKey as keyof DashboardBreakpoints;
+      if (dashboardConfig.layouts[breakpoint]) {
+        const widgets = dashboardConfig.layouts[breakpoint].widgets;
+        newRglLayouts[breakpoint] = widgets.map(widget => ({
+          i: widget.id,
+          x: widget.position.x,
+          y: widget.position.y,
+          w: widget.position.w,
+          h: widget.position.h,
+        }));
+      }
+    }
+    return newRglLayouts;
+  }, [dashboardConfig]);
 
-  // Handle add position
-  const handleAddPosition = useCallback(() => {
-    console.log('Add position clicked');
-    // TODO: Open add position modal
-  }, []);
+  const handleLayoutChange = useCallback((newRglLayout: Layout[], allRglLayouts: RGLPrimitiveLayouts) => {
+    if (!dashboardConfig) return;
 
-  // Loading state
-  if (isLoading && !validatedData) {
-    return <DashboardMainSkeleton />;
+    setDashboardConfig(prevConfig => {
+      if (!prevConfig) return null;
+      const newAppLayouts = { ...prevConfig.layouts };
+
+      for (const bpKey in allRglLayouts) {
+        const breakpoint = bpKey as keyof DashboardBreakpoints;
+        if (allRglLayouts[breakpoint]) {
+          let currentAppBpLayout = newAppLayouts[breakpoint];
+          if (!currentAppBpLayout) {
+            currentAppBpLayout = DEFAULT_DASHBOARD_CONFIG.layouts[breakpoint] || 
+                                 { breakpoint: breakpoint, cols: 12, rowHeight: 60, margin: [10,10], containerPadding: [10,10], widgets: [] };
+          }
+
+          const updatedWidgets = allRglLayouts[breakpoint]!.map(item => {
+            const existingWidget = currentAppBpLayout.widgets.find(w => w.id === item.i);
+            if (existingWidget) {
+              return { 
+                ...existingWidget, 
+                position: { x: item.x, y: item.y, w: item.w, h: item.h } 
+              };
+            }
+            const widgetMeta = WIDGET_LIBRARY.find(w => w.type === (item.i.split('-')[0] as WidgetType));
+            return {
+              id: item.i,
+              type: widgetMeta?.type || 'portfolio-overview', 
+              position: { x: item.x, y: item.y, w: item.w, h: item.h },
+              isVisible: true,
+              isLocked: false,
+            } as WidgetConfig;
+          });
+          newAppLayouts[breakpoint] = { 
+            ...currentAppBpLayout,
+            breakpoint: breakpoint,
+            widgets: updatedWidgets 
+          };
+        }
+      }
+      return { ...prevConfig, layouts: newAppLayouts };
+    });
+    setUnsavedChanges(true);
+  }, [dashboardConfig]);
+
+  const handleAddWidget = useCallback((widgetType: WidgetType) => {
+    if (!dashboardConfig) return;
+    const newConfig = dashboardService.addWidget(dashboardConfig, widgetType, currentBreakpoint);
+    if (newConfig) {
+        setDashboardConfig(newConfig);
+        setIsWidgetLibraryOpen(false);
+        setUnsavedChanges(true);
+    } else {
+        console.error("[DashboardPage] Failed to add widget, addWidget returned null");
+        setError("Failed to add widget. Please try again.")
+    }
+  }, [dashboardConfig, currentBreakpoint]);
+
+  const handleRemoveWidget = useCallback((widgetId: string) => {
+    if (!dashboardConfig) return;
+    const newConfig = dashboardService.removeWidget(dashboardConfig, widgetId);
+    setDashboardConfig(newConfig);
+    setUnsavedChanges(true);
+  }, [dashboardConfig]);
+
+  const getWidgetConfig = useCallback((widgetId: string): WidgetConfig | undefined => {
+    if (!dashboardConfig || !dashboardConfig.layouts[currentBreakpoint]) return undefined;
+    return dashboardConfig.layouts[currentBreakpoint].widgets.find(w => w.id === widgetId);
+  }, [dashboardConfig, currentBreakpoint]);
+
+  const currentWidgetsOnDashboard = useMemo(() => {
+    if (!dashboardConfig || !dashboardConfig.layouts[currentBreakpoint]) {
+      return [];
+    }
+    const widgets = dashboardConfig.layouts[currentBreakpoint].widgets;
+    return widgets;
+  }, [dashboardConfig, currentBreakpoint]);
+  
+  const toolbarButtonStyle: React.CSSProperties = {
+    background: 'var(--color-surface)',
+    color: 'var(--color-text-secondary)',
+    border: `1px solid var(--color-border-muted)`,
+    padding: 'var(--spacing-sm) var(--spacing-md)',
+    borderRadius: 'var(--border-radius-md)',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--spacing-xs)',
+    fontSize: 'var(--font-size-sm)',
+    fontWeight: 'var(--font-weight-medium)',
+    transition: 'background-color 0.2s, color 0.2s'
+  };
+
+  const activeToolbarButtonStyle: React.CSSProperties = {
+    ...toolbarButtonStyle,
+    background: 'var(--color-primary-muted)',
+    color: 'var(--color-primary-fg)',
+    borderColor: 'var(--color-primary)'
+  };
+  
+  if (isLoading && !dashboardConfig) {
+    return <div style={pageStyle(isDarkMode)}><div style={centeredMessageStyle}>Loading Dashboard... <RefreshCw className="animate-spin ml-2" /></div></div>;
   }
 
-  // Error state
-  if (error && !validatedData) {
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8">
-          <ErrorMessage 
-            error={error} 
-            onRetry={handleRefresh}
-            showDetails={true}
-            className="max-w-md mx-auto"
-          />
-        </div>
-      </div>
-    );
+  if (error && !dashboardConfig) {
+    return <div style={pageStyle(isDarkMode)}><div style={centeredMessageStyle}>Error: {error}</div></div>;
   }
-
-  // Empty state - no portfolio
-  if (!validatedData || !validatedData.isValid) {
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center py-12">
-            <PieChart className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No Portfolios Yet</h3>
-            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-              Get started by creating your first portfolio to track your investments and get AI-powered insights.
-            </p>
-            <Button className="gap-2">
-              <Plus size={16} />
-              Create Portfolio
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
+  
+  if (!dashboardConfig) {
+    return <div style={pageStyle(isDarkMode)}><div style={centeredMessageStyle}>No dashboard data.</div></div>;
   }
-
-  const { portfolio, positions, transactions, aiInsights, marketSummary, performanceMetrics } = validatedData;
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 space-y-8">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Portfolio Dashboard</h1>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <span>Track your investments and get AI-powered insights</span>
-              {lastUpdated && (
-                <>
-                  <span>•</span>
-                  <div className="flex items-center gap-1 text-xs">
-                    <Wifi className="w-3 h-3 text-green-600" />
-                    <span>Updated {lastUpdated.toLocaleTimeString()}</span>
-                  </div>
-                </>
-              )}
+    <div style={pageStyle(isDarkMode)}>
+      <header style={headerStyle(isDarkMode)}>
+        <h1 style={{ fontSize: 'var(--font-size-2xl)', color: 'var(--color-text-primary)', fontWeight: 'var(--font-weight-semibold)'}}>
+          {dashboardConfig.name || 'Trading Dashboard'}
+        </h1>
+        <div style={{ display: 'flex', gap: 'var(--spacing-sm)', alignItems: 'center' }}>
+          {isLoading && <RefreshCw className="animate-spin text-primary" size={20}/>}
+          {error && <span style={{color: 'var(--color-danger-fg)', fontSize: 'var(--font-size-sm)'}}>{error}</span>}
+
+          <button 
+            onClick={() => setIsWidgetLibraryOpen(true)} 
+            style={toolbarButtonStyle}
+            title="Add new widget"
+          >
+            <PlusCircle size={18} /> Add Widget
+          </button>
+          <button 
+            onClick={() => setIsEditMode(!isEditMode)} 
+            style={isEditMode ? activeToolbarButtonStyle : toolbarButtonStyle}
+            title={isEditMode ? "Exit Edit Mode" : "Enter Edit Mode"}
+          >
+            {isEditMode ? <XCircle size={18} /> : <Edit size={18} />} 
+            {isEditMode ? 'Exit Edit' : 'Edit Layout'}
+          </button>
+          <button 
+            onClick={handleSaveDashboard} 
+            disabled={!unsavedChanges || isLoading}
+            style={{...toolbarButtonStyle, ...(unsavedChanges && !isLoading ? {background: 'var(--color-success-muted)', color: 'var(--color-success-fg)', borderColor: 'var(--color-success)'} : {})}}
+            title={unsavedChanges ? "Save Changes" : "No changes to save"}
+          >
+            <Save size={18} /> Save
+          </button>
+        </div>
+      </header>
+
+      <main style={{ flexGrow: 1, overflow: 'auto', padding: 'var(--spacing-md)' }}>
+        {dashboardConfig.layouts[currentBreakpoint] ? (
+            <EnterpriseWidgetGrid
+                layouts={rglLayoutsProp}
+                isEditMode={isEditMode}
+                onLayoutChange={handleLayoutChange}
+                onWidgetRemove={handleRemoveWidget}
+                onWidgetSettings={(widgetId) => alert(`Settings for ${widgetId}`)}
+                getWidgetConfig={getWidgetConfig}
+                currentBreakpoint={currentBreakpoint}
+            />
+        ) : (
+            <div style={centeredMessageStyle}>
+                No layout defined for this screen size ({currentBreakpoint}).
+                {isEditMode && " Try adding widgets or resizing your window."}
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button 
-              onClick={handleRefresh} 
-              variant="outline" 
-              className="gap-2"
-              disabled={isLoading}
-              aria-label="Refresh dashboard data"
-            >
-              <RefreshCw className={cn("w-4 h-4", isLoading && "animate-spin")} />
-              Refresh Data
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsConfigOpen(!isConfigOpen)}
-              aria-label="Dashboard settings"
-            >
-              <Settings className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Portfolio Overview Cards */}
-        {config.showPortfolioCards && (
-          <PortfolioOverviewCards
-            portfolio={portfolio}
-            isLoading={isLoading}
-            onRefresh={handleRefresh}
-          />
         )}
+      </main>
 
-        {/* Main Content Grid */}
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Left Column - Portfolio Overview & Transactions */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Portfolio Overview */}
-            {config.showPortfolioOverview && (
-              <PortfolioOverview
-                portfolio={portfolio}
-                positions={positions}
-                isLoading={isLoading}
-                onPositionClick={handlePositionClick}
-                onAddPosition={handleAddPosition}
-              />
-            )}
-
-            {/* Recent Transactions */}
-            {config.showRecentTransactions && (
-              <RecentTransactions
-                transactions={transactions}
-                isLoading={isLoading}
-                onTransactionClick={handleTransactionClick}
-                onRefresh={handleRefresh}
-                showPagination={true}
-                itemsPerPage={config.compactMode ? 5 : 10}
-              />
-            )}
-          </div>
-
-          {/* Right Column - Sidebar */}
-          <div className="space-y-6">
-            {/* Market Summary */}
-            {config.showMarketSummary && (
-              <MarketSummary
-                marketData={marketSummary}
-                isLoading={isLoading}
-                useRealTimeData={true}
-                onRefresh={handleRefresh}
-              />
-            )}
-
-            {/* AI Insights */}
-            {config.showAIInsights && (
-              <AIInsightsSection
-                insights={aiInsights}
-                isLoading={isLoading}
-                onInsightClick={handleInsightClick}
-              />
-            )}
-
-            {/* Performance Metrics */}
-            {config.showPerformanceMetrics && performanceMetrics && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Performance Metrics</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex justify-between text-sm">
-                    <span>Total Return</span>
-                    <ValueChangeDisplay
-                      value={0}
-                      changePercentage={performanceMetrics.total_return_percentage}
-                      size="sm"
-                    />
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Day Return</span>
-                    <ValueChangeDisplay
-                      value={0}
-                      changePercentage={performanceMetrics.day_return_percentage}
-                      size="sm"
-                    />
-                  </div>
-                  {performanceMetrics.sharpe_ratio && (
-                    <div className="flex justify-between text-sm">
-                      <span>Sharpe Ratio</span>
-                      <span className="font-medium">
-                        {performanceMetrics.sharpe_ratio.toFixed(2)}
-                      </span>
-                    </div>
-                  )}
-                  {performanceMetrics.volatility && (
-                    <div className="flex justify-between text-sm">
-                      <span>Volatility</span>
-                      <span className="font-medium">
-                        {performanceMetrics.volatility.toFixed(1)}%
-                      </span>
-                    </div>
-                  )}
-                  {performanceMetrics.beta && (
-                    <div className="flex justify-between text-sm">
-                      <span>Beta</span>
-                      <span className="font-medium">
-                        {performanceMetrics.beta.toFixed(2)}
-                      </span>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
-
-        {/* Hidden calculation key for debugging */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="text-xs text-muted-foreground opacity-50">
-            Calculation key: {calculationKey}
-          </div>
-        )}
-      </div>
+      <WidgetLibrary
+        isOpen={isWidgetLibraryOpen}
+        onClose={() => setIsWidgetLibraryOpen(false)}
+        onAddWidget={handleAddWidget}
+        currentWidgets={currentWidgetsOnDashboard}
+      />
     </div>
   );
 };
 
-export default Dashboard;
+const pageStyle = (isDarkMode: boolean): React.CSSProperties => ({
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100vh',
+  width: '100vw',
+  overflow: 'hidden',
+  backgroundColor: 'var(--color-background)',
+  color: 'var(--color-text-primary)',
+  fontFamily: 'var(--font-family-primary)'
+});
+
+const headerStyle = (isDarkMode: boolean): React.CSSProperties => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: 'var(--spacing-md) var(--spacing-lg)',
+  backgroundColor: 'var(--color-surface)',
+  borderBottom: `1px solid var(--color-border-subtle)`,
+  boxShadow: 'var(--shadow-sm)'
+});
+
+const centeredMessageStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '100%',
+  fontSize: 'var(--font-size-lg)',
+  color: 'var(--color-text-secondary)',
+};
+
+export default DashboardPage; 

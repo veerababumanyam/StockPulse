@@ -234,7 +234,7 @@ class APIKeyError(BaseModel):
     details: Optional[Dict[str, Any]] = None
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "error_code": "INVALID_API_KEY",
                 "message": "The provided API key is invalid or has been revoked",

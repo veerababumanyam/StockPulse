@@ -36,6 +36,9 @@ import {
   MoreHorizontal,
   UserPlus,
   Users,
+  Menu,
+  Minimize2,
+  Maximize2,
 } from "lucide-react";
 import Logo from "../ui/Logo";
 import { Button } from "../ui/button";
@@ -51,11 +54,9 @@ interface NavigationItem {
   category:
     | "core"
     | "trading"
-    | "analysis"
     | "ai"
     | "mcp"
     | "settings"
-    | "other"
     | "admin";
   roleRequired?: "user" | "trader" | "admin" | "analyst";
   badge?: string;
@@ -129,6 +130,14 @@ const defaultNavigationItems: (Omit<
     path: "/screener",
     category: "core",
   },
+  {
+    id: "stock-analysis",
+    label: "Stock Analysis",
+    iconName: "pieChart",
+    path: "/analysis/stocks",
+    category: "core",
+    roleRequired: "analyst",
+  },
 
   // Trading
   {
@@ -177,16 +186,6 @@ const defaultNavigationItems: (Omit<
     path: "/trading/workspace",
     category: "trading",
     roleRequired: "trader",
-  },
-
-  // Analysis
-  {
-    id: "stock-analysis",
-    label: "Stock Analysis",
-    iconName: "pieChart",
-    path: "/analysis/stocks",
-    category: "analysis",
-    roleRequired: "analyst",
   },
 
   // AI & Agents
@@ -309,14 +308,12 @@ const defaultNavigationItems: (Omit<
     category: "admin",
     roleRequired: "admin",
   },
-
-  // Other
   {
     id: "onboarding",
     label: "Onboarding",
     iconName: "userPlus",
     path: "/onboarding",
-    category: "other",
+    category: "admin",
   },
 ];
 
@@ -324,51 +321,27 @@ const defaultNavigationItems: (Omit<
 const categoryConfig = {
   core: {
     label: "Core",
-    color: "from-primary to-primary-600",
-    bgColor: "bg-gradient-to-r from-primary/10 to-primary/20",
     icon: <Layers className="w-4 h-4" />,
   },
   trading: {
     label: "Trading",
-    color: "from-secondary to-secondary-600",
-    bgColor: "bg-gradient-to-r from-secondary/10 to-secondary/20",
     icon: <TrendingUp className="w-4 h-4" />,
-  },
-  analysis: {
-    label: "Analysis",
-    color: "from-accent to-accent-600",
-    bgColor: "bg-gradient-to-r from-accent/10 to-accent/20",
-    icon: <BarChart3 className="w-4 h-4" />,
   },
   ai: {
     label: "AI & Agents",
-    color: "from-primary to-accent",
-    bgColor: "bg-gradient-to-r from-primary/10 to-accent/20",
     icon: <Bot className="w-4 h-4" />,
   },
   mcp: {
     label: "MCP Services",
-    color: "from-secondary to-primary",
-    bgColor: "bg-gradient-to-r from-secondary/10 to-primary/20",
     icon: <Server className="w-4 h-4" />,
   },
   settings: {
     label: "Settings",
-    color: "from-text/60 to-text/80",
-    bgColor: "bg-gradient-to-r from-surface to-surface/80",
     icon: <Settings className="w-4 h-4" />,
   },
   admin: {
     label: "Admin",
-    color: "from-accent to-accent-600",
-    bgColor: "bg-gradient-to-r from-accent/10 to-accent/20",
     icon: <Shield className="w-4 h-4" />,
-  },
-  other: {
-    label: "Other",
-    color: "from-accent to-secondary",
-    bgColor: "bg-gradient-to-r from-accent/10 to-secondary/20",
-    icon: <MoreHorizontal className="w-4 h-4" />,
   },
 };
 
@@ -381,6 +354,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [navigationItems, setNavigationItems] = useState<NavigationItem[]>([]);
   const [isCustomizing, setIsCustomizing] = useState(false);
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
+  const [focusedItemId, setFocusedItemId] = useState<string | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -434,7 +408,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
     // Include version to force cache refresh when navigation structure changes
     const navigationData = {
-      version: "1.1", // Increment this when navigation structure changes
+      version: "1.2", // Increment this when navigation structure changes
       items: storableItems,
     };
 
@@ -450,7 +424,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         // Check if we have new versioned format
         if (parsedData.version && parsedData.items) {
           // Check version compatibility
-          if (parsedData.version !== "1.1") {
+          if (parsedData.version !== "1.2") {
             console.warn(
               "Navigation cache version mismatch, resetting to defaults.",
             );
@@ -504,7 +478,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     }));
 
     const navigationData = {
-      version: "1.1",
+      version: "1.2",
       items: storableItems,
     };
 
@@ -562,6 +536,16 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
   };
 
+  // Keyboard navigation handlers
+  const handleKeyDown = (e: React.KeyboardEvent, item: NavigationItem) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      if (!isCustomizing) {
+        handleNavigation(item.path);
+      }
+    }
+  };
+
   const resetToDefaults = () => {
     localStorage.removeItem("sidebar-navigation");
     initializeDefaultItems();
@@ -587,195 +571,210 @@ const Sidebar: React.FC<SidebarProps> = ({
     {} as Record<string, NavigationItem[]>,
   );
 
-  const sidebarWidth = isCollapsed ? "w-16" : "w-72";
+  const sidebarWidth = isCollapsed ? "w-16" : "w-80";
 
   return (
     <>
+      {/* Mobile backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 lg:hidden bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-40 lg:hidden bg-black/50 backdrop-blur-sm transition-opacity duration-300"
           onClick={onClose}
+          aria-hidden="true"
         />
       )}
 
-      <div
+      {/* Sidebar */}
+      <aside
         className={cn(
           "fixed top-0 left-0 z-50 h-full",
           "bg-background/95 backdrop-blur-xl",
           "border-r border-border/50",
-          "shadow-2xl shadow-black/10",
-          "transform transition-all duration-300 ease-in-out",
+          "shadow-xl",
+          "transform transition-all duration-300 ease-out",
           "lg:translate-x-0 lg:static lg:inset-0",
           sidebarWidth,
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         )}
+        role="navigation"
+        aria-label="Main navigation"
       >
-        <div className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-accent opacity-10" />
-          <div className="relative flex items-center justify-between h-16 px-4 border-b border-border/30">
-            {!isCollapsed && (
-              <div
-                className="flex items-center space-x-3 cursor-pointer group"
+        {/* Header */}
+        <header
+          className={cn(
+            "relative flex items-center justify-between h-16 px-4",
+            "border-b border-border/30 bg-surface/30"
+          )}
+        >
+          {!isCollapsed && (
+            <button
+              className="flex items-center space-x-3 cursor-pointer group p-2 -m-2 rounded-lg transition-all duration-200 hover:bg-surface/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
+              onClick={() => handleNavigation("/dashboard")}
+              aria-label="Go to dashboard"
+            >
+              <div className="relative">
+                <Logo className="h-8 w-8 flex-shrink-0 transition-transform group-hover:scale-105" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-lg font-bold text-foreground leading-tight">
+                  StockPulse
+                </span>
+                <span className="text-xs text-muted-foreground font-medium">
+                  Pro Trading Suite
+                </span>
+              </div>
+            </button>
+          )}
+
+          {isCollapsed && (
+            <div className="flex justify-center w-full">
+              <button
+                className="relative group p-2 rounded-lg transition-all duration-200 hover:bg-surface/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
                 onClick={() => handleNavigation("/dashboard")}
+                aria-label="Go to dashboard"
               >
-                <div className="relative">
-                  <Logo className="h-9 w-9 flex-shrink-0 transition-transform group-hover:scale-110" />
-                  <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-full opacity-20 blur-sm group-hover:opacity-30 transition-opacity" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xl font-bold bg-gradient-to-r from-text to-text/70 bg-clip-text text-transparent">
-                    StockPulse
-                  </span>
-                  <span className="text-xs text-text/60 font-medium">
-                    Pro Trading Suite
-                  </span>
-                </div>
-              </div>
-            )}
+                <Logo className="h-8 w-8 transition-transform group-hover:scale-105" />
+              </button>
+            </div>
+          )}
 
-            {isCollapsed && (
-              <div className="flex justify-center w-full">
-                <div className="relative group">
-                  <Logo className="h-9 w-9 transition-transform group-hover:scale-110" />
-                  <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-full opacity-20 blur-sm group-hover:opacity-30 transition-opacity" />
-                </div>
-              </div>
-            )}
+          {/* Action buttons */}
+          <div className="flex items-center space-x-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onToggleCollapse}
+              className="hidden lg:flex p-2 h-auto w-auto rounded-lg transition-all duration-200 focus:ring-2 focus:ring-primary/50"
+              aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {isCollapsed ? (
+                <ChevronRight className="w-4 h-4" />
+              ) : (
+                <ChevronLeft className="w-4 h-4" />
+              )}
+            </Button>
 
-            <div className="flex items-center space-x-1">
+            {!isCollapsed && (
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={onToggleCollapse}
-                className="hidden lg:flex p-2 hover:bg-surface/80 transition-all duration-200 rounded-lg"
-                title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                onClick={() => setIsCustomizing(!isCustomizing)}
+                className={cn(
+                  "p-2 h-auto w-auto rounded-lg transition-all duration-200 focus:ring-2 focus:ring-primary/50",
+                  isCustomizing && "bg-accent/20 text-accent"
+                )}
+                aria-label={isCustomizing ? "Exit customization" : "Customize sidebar"}
+                aria-pressed={isCustomizing}
               >
-                {isCollapsed ? (
-                  <ChevronRight className="w-4 h-4 text-text/60" />
+                {isCustomizing ? (
+                  <X className="w-4 h-4" />
                 ) : (
-                  <ChevronLeft className="w-4 h-4 text-text/60" />
+                  <Edit3 className="w-4 h-4" />
                 )}
               </Button>
-
-              {!isCollapsed && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsCustomizing(!isCustomizing)}
-                  className={cn(
-                    "p-2 rounded-lg transition-all duration-200",
-                    isCustomizing
-                      ? "bg-accent/20 text-accent"
-                      : "hover:bg-surface/80 text-text/60",
-                  )}
-                  title="Customize sidebar"
-                >
-                  {isCustomizing ? (
-                    <X className="w-4 h-4" />
-                  ) : (
-                    <Edit3 className="w-4 h-4" />
-                  )}
-                </Button>
-              )}
-
-              <button
-                onClick={onClose}
-                className="lg:hidden p-2 rounded-lg hover:bg-surface/80 text-text/60 transition-all duration-200"
-                title="Close sidebar"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col flex-1 h-[calc(100vh-4rem)]">
-          <nav className="flex-1 px-3 py-4 overflow-y-auto scrollbar-thin scrollbar-thumb-text/20 scrollbar-track-transparent hover:scrollbar-thumb-text/30">
-            {isCustomizing && !isCollapsed && (
-              <div className="mb-6 p-4 bg-gradient-to-br from-accent/10 to-accent/20 rounded-xl border border-accent/30 shadow-sm">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-2">
-                    <Sparkles className="w-4 h-4 text-accent" />
-                    <h3 className="text-sm font-semibold text-text">
-                      Customize Sidebar
-                    </h3>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={resetToDefaults}
-                    className="text-xs px-3 py-1 h-auto border-accent/30 hover:bg-accent/10"
-                  >
-                    Reset
-                  </Button>
-                </div>
-                <p className="text-xs text-text/60 mb-4 leading-relaxed">
-                  Drag items to reorder • Toggle visibility with switches
-                </p>
-
-                {hiddenItems.length > 0 && (
-                  <div className="space-y-2">
-                    <h4 className="text-xs font-medium text-text/80 flex items-center">
-                      <EyeOff className="w-3 h-3 mr-1" />
-                      Hidden Items ({hiddenItems.length})
-                    </h4>
-                    <div className="space-y-1 max-h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-accent/30">
-                      {hiddenItems.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex items-center justify-between text-xs p-2 bg-surface/60 rounded-lg"
-                        >
-                          <span className="text-text/60 truncate">
-                            {item.label}
-                          </span>
-                          <Switch
-                            checked={false}
-                            onCheckedChange={() =>
-                              toggleItemVisibility(item.id)
-                            }
-                            className="scale-75"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
             )}
 
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="lg:hidden p-2 h-auto w-auto rounded-lg transition-all duration-200 focus:ring-2 focus:ring-primary/50"
+              aria-label="Close sidebar"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
+        </header>
+
+        {/* Main content */}
+        <div className="flex flex-col flex-1 h-[calc(100vh-4rem)] overflow-hidden">
+          {/* Customization panel */}
+          {isCustomizing && !isCollapsed && (
+            <div className="mx-4 mt-4 mb-2 p-4 bg-accent/5 border border-accent/20 rounded-xl">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <Sparkles className="w-4 h-4 text-accent" />
+                  <h3 className="text-sm font-semibold text-foreground">
+                    Customize Navigation
+                  </h3>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={resetToDefaults}
+                  className="text-xs h-7 px-3 border-accent/30 hover:bg-accent/10 focus:ring-2 focus:ring-accent/50"
+                >
+                  Reset
+                </Button>
+              </div>
+              
+              <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
+                Drag items to reorder • Toggle visibility with switches
+              </p>
+
+              {hiddenItems.length > 0 && (
+                <div className="space-y-2">
+                  <h4 className="text-xs font-medium text-foreground flex items-center">
+                    <EyeOff className="w-3 h-3 mr-1.5" />
+                    Hidden Items ({hiddenItems.length})
+                  </h4>
+                  <div className="space-y-1 max-h-24 overflow-y-auto">
+                    {hiddenItems.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex items-center justify-between text-xs p-2 bg-surface/60 rounded-lg"
+                      >
+                        <span className="text-muted-foreground truncate">
+                          {item.label}
+                        </span>
+                        <Switch
+                          checked={false}
+                          onCheckedChange={() => toggleItemVisibility(item.id)}
+                          className="scale-75"
+                          aria-label={`Show ${item.label}`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Navigation */}
+          <nav 
+            className="flex-1 px-4 py-2 overflow-y-auto"
+            role="list"
+            aria-label="Navigation items"
+          >
             <div className="space-y-6">
               {Object.entries(groupedItems).map(([category, items]) => {
-                const config =
-                  categoryConfig[category as keyof typeof categoryConfig];
+                const config = categoryConfig[category as keyof typeof categoryConfig];
                 if (!config || items.length === 0) return null;
 
                 return (
-                  <div key={category} className="space-y-2">
+                  <div key={category} className="space-y-2" role="group" aria-labelledby={`category-${category}`}>
+                    {/* Category header */}
                     {!isCollapsed && (
-                      <div
-                        className={cn(
-                          "flex items-center space-x-2 px-3 py-2 rounded-lg",
-                          config.bgColor,
-                        )}
+                      <div 
+                        className="flex items-center space-x-3 px-4 py-3 mb-2 bg-muted/50 border border-border/30 rounded-lg"
+                        id={`category-${category}`}
                       >
-                        <div
-                          className={cn(
-                            "flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-r text-white shadow-sm",
-                            config.color,
-                          )}
-                        >
+                        <div className="flex items-center justify-center w-6 h-6 rounded-lg bg-foreground text-background">
                           {config.icon}
                         </div>
-                        <span className="text-xs font-semibold text-text/80 uppercase tracking-wider">
+                        <span className="text-sm font-bold text-foreground uppercase tracking-wider">
                           {config.label}
                         </span>
-                        <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
+                        <div className="flex-1 h-px bg-border/50" />
                       </div>
                     )}
 
-                    <div className="space-y-1">
+                    {/* Navigation items */}
+                    <div className="space-y-2 px-1">
                       {items.map((item) => {
                         const isActive = isActiveLink(item.path);
+                        const isFocused = focusedItemId === item.id;
 
                         return (
                           <div
@@ -785,54 +784,62 @@ const Sidebar: React.FC<SidebarProps> = ({
                             onDragOver={handleDragOver}
                             onDrop={(e) => handleDrop(e, item.id)}
                             className={cn(
-                              "group relative",
-                              isCustomizing && !isCollapsed
-                                ? "cursor-move"
-                                : "",
-                              draggedItem === item.id ? "opacity-50" : "",
+                              "relative group",
+                              isCustomizing && !isCollapsed && "cursor-move",
+                              draggedItem === item.id && "opacity-50 scale-95",
                             )}
+                            role="listitem"
                           >
                             <div
-                              onClick={() =>
-                                !isCustomizing && handleNavigation(item.path)
-                              }
+                              onClick={() => !isCustomizing && handleNavigation(item.path)}
+                              onKeyDown={(e) => handleKeyDown(e, item)}
+                              onFocus={() => setFocusedItemId(item.id)}
+                              onBlur={() => setFocusedItemId(null)}
+                              tabIndex={0}
+                              role="button"
+                              aria-label={`Navigate to ${item.label}${item.badge ? ` (${item.badge})` : ''}`}
+                              aria-current={isActive ? 'page' : undefined}
                               className={cn(
-                                "flex items-center w-full px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 cursor-pointer relative overflow-hidden",
-                                "backdrop-blur-sm",
+                                "flex items-center w-full px-3 py-3 text-sm font-medium rounded-xl transition-all duration-200 cursor-pointer relative overflow-hidden min-h-[44px]",
+                                "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1",
                                 isActive
-                                  ? "bg-gradient-to-r from-primary to-primary-600 text-white shadow-lg shadow-primary/25 scale-[0.98] border border-primary/50"
-                                  : "text-text hover:bg-surface/70 hover:shadow-md hover:scale-[0.99] border border-transparent hover:border-border/50",
-                                isCustomizing && !isCollapsed
-                                  ? "hover:bg-accent/10 hover:border-accent/20"
-                                  : "",
-                                isCollapsed ? "justify-center" : "",
+                                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25 scale-[0.98] border-2 border-primary/30"
+                                  : cn(
+                                      "text-foreground border-2 border-transparent bg-background/50",
+                                      "hover:bg-muted hover:text-foreground hover:border-border hover:shadow-md hover:scale-[0.99] hover:bg-muted/80",
+                                      "active:scale-[0.97] active:bg-muted",
+                                      "transition-all duration-150 ease-out"
+                                    ),
+                                isCustomizing && !isCollapsed && "hover:bg-destructive/10 hover:border-destructive/30 hover:text-destructive-foreground",
+                                isCollapsed && "justify-center px-2",
+                                isFocused && !isActive && "ring-2 ring-primary/40 bg-muted/70 border-primary/20",
+                                draggedItem === item.id && "shadow-xl shadow-primary/20",
                               )}
-                              title={isCollapsed ? item.label : undefined}
                             >
+                              {/* Drag handle */}
                               {isCustomizing && !isCollapsed && (
-                                <GripVertical className="w-4 h-4 mr-2 text-text/40 flex-shrink-0 opacity-60" />
+                                <GripVertical 
+                                  className="w-4 h-4 mr-3 text-muted-foreground opacity-60" 
+                                  aria-hidden="true"
+                                />
                               )}
 
-                              <div
-                                className={cn(
-                                  "flex-shrink-0 w-5 h-5 flex items-center justify-center transition-all duration-200",
-                                  isActive
-                                    ? "text-white"
-                                    : "text-text/60 group-hover:text-text",
-                                )}
-                              >
+                              {/* Icon */}
+                              <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
                                 {React.isValidElement(item.icon) ? (
                                   React.cloneElement(
                                     item.icon as React.ReactElement,
                                     {
                                       className: "w-5 h-5",
+                                      "aria-hidden": true,
                                     },
                                   )
                                 ) : (
-                                  <Home className="w-5 h-5" />
+                                  <Home className="w-5 h-5" aria-hidden="true" />
                                 )}
                               </div>
 
+                              {/* Label and badges */}
                               {!isCollapsed && (
                                 <>
                                   <span className="ml-3 flex-1 text-left truncate font-medium">
@@ -843,51 +850,56 @@ const Sidebar: React.FC<SidebarProps> = ({
                                     {item.badge && (
                                       <span
                                         className={cn(
-                                          "px-2 py-0.5 text-xs rounded-full font-medium shadow-sm",
+                                          "px-2 py-0.5 text-xs rounded-full font-semibold",
                                           isActive
-                                            ? "bg-white/20 text-white"
-                                            : "bg-gradient-to-r from-primary/10 to-primary/20 text-primary",
+                                            ? "bg-primary-foreground/20 text-primary-foreground"
+                                            : "bg-accent text-accent-foreground",
                                         )}
+                                        aria-label={`Badge: ${item.badge}`}
                                       >
                                         {item.badge}
                                       </span>
                                     )}
 
                                     {item.isNew && (
-                                      <div className="relative">
-                                        <span className="w-2 h-2 bg-gradient-to-r from-secondary to-accent rounded-full shadow-sm" />
-                                        <span className="absolute inset-0 w-2 h-2 bg-gradient-to-r from-secondary to-accent rounded-full animate-ping opacity-75" />
+                                      <div className="relative" aria-label="New feature">
+                                        <span className="w-2 h-2 bg-accent rounded-full" />
+                                        <span className="absolute inset-0 w-2 h-2 bg-accent rounded-full animate-ping opacity-75" />
                                       </div>
                                     )}
 
                                     {isCustomizing && (
                                       <Switch
                                         checked={item.visible}
-                                        onCheckedChange={() =>
-                                          toggleItemVisibility(item.id)
-                                        }
+                                        onCheckedChange={() => toggleItemVisibility(item.id)}
                                         className="scale-75 flex-shrink-0"
+                                        aria-label={`Toggle visibility of ${item.label}`}
                                       />
                                     )}
                                   </div>
                                 </>
                               )}
 
+                              {/* Active indicator */}
                               {isActive && (
-                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-r-full shadow-sm" />
+                                <div 
+                                  className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary-foreground rounded-r-full"
+                                  aria-hidden="true"
+                                />
                               )}
 
+                              {/* Tooltip for collapsed state */}
                               {isCollapsed && (
-                                <div className="absolute left-full ml-3 px-3 py-2 bg-surface text-text text-sm rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-all duration-200 z-50 whitespace-nowrap shadow-xl">
+                                <div className="absolute left-full ml-3 px-3 py-2 bg-popover text-popover-foreground text-sm rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-all duration-200 z-50 whitespace-nowrap shadow-xl border border-border">
                                   <div className="flex items-center space-x-2">
                                     <span>{item.label}</span>
                                     {item.badge && (
-                                      <span className="px-1.5 py-0.5 bg-primary rounded text-xs font-medium text-white">
+                                      <span className="px-1.5 py-0.5 bg-accent rounded text-xs font-medium text-accent-foreground">
                                         {item.badge}
                                       </span>
                                     )}
                                   </div>
-                                  <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 bg-surface rotate-45" />
+                                  <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 bg-popover rotate-45 border-l border-t border-border" />
                                 </div>
                               )}
                             </div>
@@ -900,11 +912,12 @@ const Sidebar: React.FC<SidebarProps> = ({
               })}
             </div>
 
+            {/* Save button for customization */}
             {isCustomizing && !isCollapsed && (
               <div className="pt-6">
                 <Button
                   onClick={() => setIsCustomizing(false)}
-                  className="w-full bg-gradient-to-r from-secondary to-accent hover:from-secondary-600 hover:to-accent-600 text-white shadow-lg shadow-secondary/25 transition-all duration-200 hover:scale-[0.99]"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-200 focus:ring-2 focus:ring-primary/50"
                   size="sm"
                 >
                   <Save className="w-4 h-4 mr-2" />
@@ -914,25 +927,26 @@ const Sidebar: React.FC<SidebarProps> = ({
             )}
           </nav>
 
+          {/* Footer */}
           {!isCollapsed && (
-            <div className="p-4 border-t border-border/50 shrink-0 bg-gradient-to-r from-surface/50 to-surface/80">
+            <footer className="p-4 border-t border-border/30 bg-surface/30">
               <div className="text-center space-y-1">
-                <div className="text-xs text-text/60 font-medium">
+                <div className="text-xs text-muted-foreground font-medium">
                   StockPulse v0.2.1
                 </div>
                 {isCustomizing && (
-                  <div className="flex items-center justify-center space-x-1 text-xs text-text/60">
+                  <div className="flex items-center justify-center space-x-1 text-xs text-muted-foreground">
                     <span>Role:</span>
-                    <span className="px-2 py-0.5 bg-gradient-to-r from-primary/10 to-primary/20 text-primary rounded-full font-medium">
+                    <span className="px-2 py-0.5 bg-accent/20 text-accent rounded-full font-medium">
                       {userRole}
                     </span>
                   </div>
                 )}
               </div>
-            </div>
+            </footer>
           )}
         </div>
-      </div>
+      </aside>
     </>
   );
 };

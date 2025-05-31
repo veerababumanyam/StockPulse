@@ -1,3 +1,16 @@
+import axios from 'axios';
+import { 
+  AIAgent, 
+  AgentCapability, 
+  AgentStatus, 
+  AgentMetrics,
+  CreateAgentRequest,
+  UpdateAgentRequest,
+  AgentExecutionRequest,
+  AgentExecutionResult
+} from '../types/aiAgent';
+import { getEnvVar } from '../utils/env';
+
 // TODO: Define precise request and response types based on AI Agent API contract
 interface FraudAssessmentRequest {
   email: string;
@@ -13,7 +26,8 @@ interface FraudAssessmentResponse {
   transactionId?: string; // For tracking/logging
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+// API Configuration
+const API_BASE_URL = getEnvVar('VITE_API_BASE_URL', '/api/v1');
 
 export const aiAgentService = {
   assessRegistrationFraud: async (

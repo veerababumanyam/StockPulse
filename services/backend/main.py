@@ -64,16 +64,16 @@ app = FastAPI(
     title="StockPulse API",
     description="Enterprise-grade financial portfolio management API with comprehensive security",
     version="0.2.1",
-    docs_url="/docs" if not settings.PRODUCTION_MODE else None,
-    redoc_url="/redoc" if not settings.PRODUCTION_MODE else None,
-    openapi_url="/openapi.json" if not settings.PRODUCTION_MODE else None,
+    docs_url="/docs" if settings.DEBUG else None,
+    redoc_url="/redoc" if settings.DEBUG else None,
+    openapi_url="/openapi.json" if settings.DEBUG else None,
     lifespan=lifespan,
 )
 
 # CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Temporarily allow all origins for debugging
+    allow_origins=settings.CORS_ORIGINS,  # Use proper origins from settings instead of wildcard
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],

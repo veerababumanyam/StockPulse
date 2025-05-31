@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Sun, Moon, Monitor, Check, ChevronDown } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
-import type { ThemeMode, ColorTheme } from "@/types/theme";
+import type { ThemeMode, ColorTheme, THEME_METADATA } from "@/types/theme";
 
 interface ThemeSelectorProps {
   className?: string;
 }
 
 const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = "" }) => {
-  const { mode, setMode, colorTheme, setColorTheme } = useTheme();
+  const { mode, setMode, colorTheme, setColorTheme, getThemeMetadata } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [isColorOpen, setIsColorOpen] = useState(false);
 
@@ -53,84 +53,27 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = "" }) => {
   };
 
   const getColorThemeName = () => {
-    switch (colorTheme) {
-      case "default":
-        return "Default";
-      case "tropical-jungle":
-        return "Tropical Jungle";
-      case "ocean-sunset":
-        return "Ocean Sunset";
-      case "desert-storm":
-        return "Desert Storm";
-      case "berry-fields":
-        return "Berry Fields";
-      case "arctic-moss":
-        return "Arctic Moss";
-      default:
-        return "Default";
-    }
+    const metadata = getThemeMetadata(colorTheme);
+    return `${metadata.emoji} ${metadata.name}`;
   };
 
   const getColorThemePreview = (theme: ColorTheme) => {
-    switch (theme) {
-      case "default":
-        return (
-          <div className="flex space-x-1">
-            <div className="w-4 h-4 rounded-full bg-primary-500"></div>
-            <div className="w-4 h-4 rounded-full bg-secondary-500"></div>
-            <div className="w-4 h-4 rounded-full bg-accent-500 border border-border"></div>
-          </div>
-        );
-      case "tropical-jungle":
-        return (
-          <div className="flex space-x-1">
-            <div className="w-4 h-4 rounded-full bg-[#29A329]"></div>
-            <div className="w-4 h-4 rounded-full bg-[#32CD32]"></div>
-            <div className="w-4 h-4 rounded-full bg-[#FFFF00]"></div>
-          </div>
-        );
-      case "ocean-sunset":
-        return (
-          <div className="flex space-x-1">
-            <div className="w-4 h-4 rounded-full bg-[#008B8B]"></div>
-            <div className="w-4 h-4 rounded-full bg-[#FF7F50]"></div>
-            <div className="w-4 h-4 rounded-full bg-[#FFCBA4]"></div>
-          </div>
-        );
-      case "desert-storm":
-        return (
-          <div className="flex space-x-1">
-            <div className="w-4 h-4 rounded-full bg-[#C19A6B]"></div>
-            <div className="w-4 h-4 rounded-full bg-[#B7410E]"></div>
-            <div className="w-4 h-4 rounded-full bg-[#F4A460]"></div>
-          </div>
-        );
-      case "berry-fields":
-        return (
-          <div className="flex space-x-1">
-            <div className="w-4 h-4 rounded-full bg-[#8E4585]"></div>
-            <div className="w-4 h-4 rounded-full bg-[#FF1493]"></div>
-            <div className="w-4 h-4 rounded-full bg-[#E6E6FA]"></div>
-          </div>
-        );
-      case "arctic-moss":
-        return (
-          <div className="flex space-x-1">
-            <div className="w-4 h-4 rounded-full bg-[#4682B4]"></div>
-            <div className="w-4 h-4 rounded-full bg-[#9CAF88]"></div>
-            <div className="w-4 h-4 rounded-full bg-[#B0E0E6]"></div>
-          </div>
-        );
-      default:
-        return (
-          <div className="flex space-x-1">
-            <div className="w-4 h-4 rounded-full bg-primary-500"></div>
-            <div className="w-4 h-4 rounded-full bg-secondary-500"></div>
-            <div className="w-4 h-4 rounded-full bg-accent-500 border border-border"></div>
-          </div>
-        );
-    }
+    const metadata = getThemeMetadata(theme);
+    return (
+      <div className="flex space-x-1">
+        {metadata.primaryColors.map((color, index) => (
+          <div 
+            key={index}
+            className="w-4 h-4 rounded-full border border-border/20" 
+            style={{ backgroundColor: color }}
+          />
+        ))}
+      </div>
+    );
   };
+
+  // Define all available themes with their metadata
+  const allThemes = Object.values(THEME_METADATA);
 
   return (
     <div className={`relative ${className}`}>
@@ -211,80 +154,33 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = "" }) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="absolute right-0 mt-2 w-56 bg-surface border border-border rounded-md shadow-lg z-10 py-1"
+              className="absolute right-0 mt-2 w-80 bg-surface border border-border rounded-md shadow-lg z-10 py-1 max-h-96 overflow-y-auto"
             >
-              <button
-                onClick={() => handleColorThemeChange("default")}
-                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
-              >
-                <div className="flex items-center">
-                  {getColorThemePreview("default")}
-                  <span className="ml-2">Default</span>
-                </div>
-                {colorTheme === "default" && (
-                  <Check className="w-4 h-4 text-primary" />
-                )}
-              </button>
-              <button
-                onClick={() => handleColorThemeChange("tropical-jungle")}
-                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
-              >
-                <div className="flex items-center">
-                  {getColorThemePreview("tropical-jungle")}
-                  <span className="ml-2">Tropical Jungle</span>
-                </div>
-                {colorTheme === "tropical-jungle" && (
-                  <Check className="w-4 h-4 text-primary" />
-                )}
-              </button>
-              <button
-                onClick={() => handleColorThemeChange("ocean-sunset")}
-                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
-              >
-                <div className="flex items-center">
-                  {getColorThemePreview("ocean-sunset")}
-                  <span className="ml-2">Ocean Sunset</span>
-                </div>
-                {colorTheme === "ocean-sunset" && (
-                  <Check className="w-4 h-4 text-primary" />
-                )}
-              </button>
-              <button
-                onClick={() => handleColorThemeChange("desert-storm")}
-                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
-              >
-                <div className="flex items-center">
-                  {getColorThemePreview("desert-storm")}
-                  <span className="ml-2">Desert Storm</span>
-                </div>
-                {colorTheme === "desert-storm" && (
-                  <Check className="w-4 h-4 text-primary" />
-                )}
-              </button>
-              <button
-                onClick={() => handleColorThemeChange("berry-fields")}
-                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
-              >
-                <div className="flex items-center">
-                  {getColorThemePreview("berry-fields")}
-                  <span className="ml-2">Berry Fields</span>
-                </div>
-                {colorTheme === "berry-fields" && (
-                  <Check className="w-4 h-4 text-primary" />
-                )}
-              </button>
-              <button
-                onClick={() => handleColorThemeChange("arctic-moss")}
-                className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
-              >
-                <div className="flex items-center">
-                  {getColorThemePreview("arctic-moss")}
-                  <span className="ml-2">Arctic Moss</span>
-                </div>
-                {colorTheme === "arctic-moss" && (
-                  <Check className="w-4 h-4 text-primary" />
-                )}
-              </button>
+              {allThemes.map((theme) => (
+                <button
+                  key={theme.key}
+                  onClick={() => handleColorThemeChange(theme.key)}
+                  className="flex items-center justify-between w-full px-4 py-3 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 border-b border-border/50 last:border-b-0"
+                >
+                  <div className="flex items-center">
+                    {getColorThemePreview(theme.key)}
+                    <div className="ml-3">
+                      <div className="font-medium">{theme.emoji} {theme.name}</div>
+                      <div className="text-xs text-text-secondary opacity-75">
+                        {theme.description}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs px-2 py-1 bg-surface-secondary rounded-full text-text-tertiary">
+                      {theme.category}
+                    </span>
+                    {colorTheme === theme.key && (
+                      <Check className="w-4 h-4 text-primary" />
+                    )}
+                  </div>
+                </button>
+              ))}
             </motion.div>
           )}
         </div>

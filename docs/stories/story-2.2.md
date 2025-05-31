@@ -1,114 +1,178 @@
 # Story 2.2: Implement Customizable Widget System for Dashboard
 
 **Epic:** [Dashboard Core Functionality](../epic-2.md)
-**Status:** Draft
+**Status:** Not Started
 **Priority:** High
-**Points:** (Estimate)
-**Assigned To:** 
-**Sprint:** 
+**Points:** 8 (Estimate)
+**Assigned To:** Frontend Dev Agent (Rodney)
+**Sprint:** TBD
 
-## 1. User Story
+## Summary
 
-> As a user,
-> I want to be able to add, remove, and rearrange widgets on my Dashboard,
-> So that I can personalize my workspace and prioritize the information most relevant to me.
+Implement a customizable widget system for the dashboard that allows users to add, remove, and rearrange widgets according to their preferences. The system should support drag-and-drop functionality, persist user configurations, and provide a default layout for new users.
 
-## 2. Requirements
+## Acceptance Criteria
 
-*   The dashboard must support a dynamic grid-based layout where widgets can be placed.
-*   Users must be able to enter an "edit mode" or similar to manage dashboard widgets.
-*   In edit mode, users can:
-    *   Add new widgets from a predefined library of available widget types.
-    *   Remove existing widgets from their dashboard.
-    *   Drag and drop widgets to different positions on the grid.
-    *   Potentially resize widgets (if supported by the chosen grid library and design).
-*   The user's widget configuration (which widgets are active, their positions, and sizes) must be persisted on the backend per user.
-*   When the dashboard loads, it should retrieve and render the user's saved widget configuration.
-*   The system should be designed to allow new widget types to be added to the library in the future with minimal changes to the core widget system.
-*   A default set of widgets and layout should be provided for first-time users or if no configuration exists.
+- [ ] **AC1:** Users can enter an "edit mode" to customize their dashboard
+- [ ] **AC2:** Users can select from a library of available widgets to add to their dashboard
+- [ ] **AC3:** Users can drag and drop widgets to different positions on the dashboard
+- [ ] **AC4:** Users can resize widgets (where applicable)
+- [ ] **AC5:** Users can remove widgets from their dashboard
+- [ ] **AC6:** Widget configurations are persisted to the backend and associated with the user account
+- [ ] **AC7:** When users load the dashboard, their saved configuration is loaded and rendered
+- [ ] **AC8:** New users receive a sensible default layout
 
-## 3. Acceptance Criteria (ACs)
+## Technical Requirements
 
-1.  **AC1:** Given a user is on the dashboard, when they activate "edit mode", then an interface is presented allowing them to add widgets from a widget library.
-2.  **AC2:** Given a user is in "edit mode", when they select a widget from the library, then the widget is added to their dashboard grid.
-3.  **AC3:** Given a user is in "edit mode", when they drag a widget on the dashboard, then its position in the grid is updated visually.
-4.  **AC4:** (If resizing is implemented) Given a user is in "edit mode", when they resize a widget, then its dimensions on the grid are updated visually.
-5.  **AC5:** Given a user is in "edit mode", when they choose to remove a widget, then the widget is removed from their dashboard display.
-6.  **AC6:** Given a user makes changes to their widget layout (add, remove, move, resize) and saves or exits "edit mode", then their new configuration is persisted via a backend API call.
-7.  **AC7:** Given a user loads the dashboard, then their previously saved widget configuration is fetched and rendered, maintaining widget types, positions, and sizes.
-8.  **AC8:** Given a first-time user (or user with no saved configuration) loads the dashboard, then a default set and layout of widgets are displayed.
-
-## 4. Technical Guidance for Developer Agent
-
-*   **Relevant PRD Sections:**
-    *   `PRD.md#3.5.1` (Dashboard - Customizable widgets)
-*   **Relevant Architecture Sections:**
-    *   `architecture.md#3.1.1` (Frontend Architecture - `src/pages/Dashboard.tsx`)
-    *   `architecture.md#1.2` (Architectural Principles - may guide choices for widget system design, e.g., extensibility)
-    *   `docs/infrastructure_design.md#5.2` (AI Agent Architecture - this widget system will host outputs from various AI Agents)
-*   **Key Components/Modules to be affected/created:**
-    *   Page: `src/pages/Dashboard.tsx` (will need significant updates to host the widget system).
-    *   Components:
-        *   `src/components/dashboard/WidgetGrid.tsx` (or similar, to manage the grid layout and widgets).
-        *   `src/components/dashboard/WidgetPlaceholder.tsx` (for empty grid cells or while widgets load).
-        *   `src/components/dashboard/WidgetLibraryModal.tsx` (or panel, for users to select widgets to add).
-        *   `src/components/widgets/` (directory for individual widget components - this story focuses on the *system*, subsequent stories will build individual widgets like Story 2.3, 2.4 etc.).
-    *   Service: `src/services/userService.ts` or `dashboardService.ts` for fetching and saving user's widget configurations.
-    *   State Management: For managing edit mode, widget list, layout configuration (e.g., Zustand or React Context).
-*   **Libraries:**
-    *   Consider using a well-maintained library for drag-and-drop grid layouts, e.g., `React Grid Layout` (react-grid-layout) or `Gridstack.js` (if a wrapper exists or is simple to create), or `dnd-kit` for more custom solution.
-*   **API Endpoints Involved:**
-    *   `GET /api/v1/users/me/dashboard-configuration` (To fetch user's saved widget layout).
-        *   Expected Response: `{ "layout": [ { "i": "widgetA-id", "x": 0, "y": 0, "w": 4, "h": 2 }, ... ], "widgets": [ { "id": "widgetA-id", "type": "PortfolioChartWidget" }, ... ] }` (Structure TBD, depends on grid library).
-    *   `PUT /api/v1/users/me/dashboard-configuration` (To save user's widget layout).
-        *   Expected Request Body: Same structure as GET response.
-*   **Styling/UI Notes:**
-    *   Refer to `StockPulse_Design.md` for overall dashboard aesthetic and any specific designs for edit mode or widget controls.
-    *   Ensure clear visual cues for draggable areas, resize handles (if applicable), and remove widget controls.
-*   **Data Structure for Widget Configuration:**
-    *   Define a clear JSON structure for storing widget type, ID, grid position (x, y, w, h), and any widget-specific settings.
-*   **AI Context:** While this story builds the widget *system*, many of the individual widgets developed in subsequent stories (e.g., 2.3, 2.4, 2.5) will integrate AI agents and RAG capabilities. This system must be robust enough to host such dynamic content.
-
-## 5. Tasks / Subtasks
-
-1.  **Task 1 (Research & Setup):** Research and select a suitable grid layout library. Install and configure it.
-2.  **Task 2 (AC1, AC2):** Implement "edit mode" toggle on the dashboard. Create `WidgetLibraryModal.tsx` to display available (placeholder) widget types.
-3.  **Task 3 (AC2):** Implement logic to add a selected widget type (initially a placeholder widget component) to the dashboard grid state when chosen from the library.
-4.  **Task 4 (AC3, AC4):** Integrate the chosen grid library into `Dashboard.tsx` or a `WidgetGrid.tsx` component. Enable drag-and-drop and resizing (if supported/scoped).
-5.  **Task 5 (AC5):** Implement functionality to remove a widget from the dashboard grid state.
-6.  **Task 6 (AC6):** Implement service functions to fetch and save the dashboard configuration (layout and active widgets) using the defined API endpoints.
-7.  **Task 7 (AC6, AC7):** Integrate save/load functionality: save on exiting edit mode (or explicit save action), load on dashboard mount.
-8.  **Task 8 (AC8):** Implement logic for a default widget layout if no user configuration is found.
-9.  **Task 9 (N/A):** Write unit/integration tests for the widget management system, an_Mpd service calls.
-
-## 6. Definition of Done (DoD)
-
-*   All Acceptance Criteria (AC1-AC8) met.
-*   Users can enter an edit mode on the dashboard.
-*   In edit mode, users can add predefined (placeholder) widget types to the dashboard.
-*   Users can drag, drop, and remove widgets.
-*   Widget layout and configuration are persisted per user and loaded correctly.
-*   A default layout is shown for new users.
-*   The system is architected to easily accommodate new actual widget components later.
-*   Code reviewed, merged, tests passing.
-
-## 7. Notes / Questions
-
-*   Final decision on grid layout library is crucial early on.
-*   Exact structure of the `dashboard-configuration` API payload needs to be agreed with backend.
-*   This story focuses on the *framework*. Individual widget implementations (like chart, watchlist) are separate stories (2.3, 2.4, etc.). For this story, adding a widget means adding a generic placeholder or a very simple sample widget.
-*   Widget resizing can be a V2 for this story if it complicates initial implementation significantly, but the grid should ideally support it.
-
-## 8. Design / UI Mockup Links (If Applicable)
-
-*   Refer to `docs/StockPulse_Design.md` for dashboard concepts, and any specific mockups for widget edit mode or widget controls.
+- [ ] Use React Grid Layout for the grid system
+- [ ] Implement responsive design that works on mobile and desktop
+- [ ] Store widget configurations in the backend database
+- [ ] Support for future widget types with minimal code changes
+- [ ] Proper error handling and loading states
+- [ ] TypeScript implementation with proper type safety
 
 ## Story Progress Notes
 
-### Agent Model Used: `<Agent Model Name/Version>`
+### Agent Model Used: Frontend Dev Agent (Rodney) - NextJS, React, TypeScript, Tailwind specialist
 
-### Completion Notes List
+### Tasks to Complete
 
-{Any notes about implementation choices, difficulties, or follow-up needed}
+**Task 1: Research & Setup**
+- [ ] Research available grid layout libraries for React
+- [ ] Evaluate react-grid-layout vs alternatives
+- [ ] Install required dependencies
+- [ ] Create comprehensive type system in `src/types/dashboard.ts`
+- [ ] Define widget types and interfaces
+- [ ] Set up responsive breakpoints configuration
+- [ ] Create default widget library structure
 
-### Change Log 
+**Task 2: Edit Mode & Widget Library (AC1, AC2)**
+- [ ] Implement dashboard edit mode toggle functionality
+- [ ] Create WidgetLibraryModal component
+- [ ] Add search and filter functionality for widgets
+- [ ] Implement category-based widget organization
+- [ ] Add grid/list view modes for widget selection
+- [ ] Ensure responsive design for modal
+- [ ] Add widget preview and descriptions
+
+**Task 3: Drag & Drop Implementation (AC3, AC4)**
+- [ ] Create WidgetGrid component with react-grid-layout
+- [ ] Implement drag and drop functionality for widget positioning
+- [ ] Add widget resizing capabilities
+- [ ] Configure responsive breakpoints (xxs, xs, sm, md, lg)
+- [ ] Implement mobile-first design approach
+- [ ] Add visual feedback during drag operations
+
+**Task 4: Widget Removal (AC5)**
+- [ ] Add widget removal functionality
+- [ ] Create WidgetPlaceholder components with remove buttons
+- [ ] Implement confirmation dialogs for widget removal
+- [ ] Ensure proper cleanup of widget data and layout positions
+- [ ] Add undo functionality for accidental removals
+
+**Task 5: Backend Integration (AC6)**
+- [ ] Create dashboard service with API integration
+- [ ] Implement CRUD operations for widget configurations
+- [ ] Add authentication integration with existing auth system
+- [ ] Implement error handling and retry mechanisms
+- [ ] Add auto-save capability
+- [ ] Create data validation and error handling
+
+**Task 6: Configuration Loading (AC7)**
+- [ ] Create useDashboard hook for state management
+- [ ] Implement configuration loading on dashboard mount
+- [ ] Add real-time layout updates
+- [ ] Implement optimistic UI updates
+- [ ] Create error boundaries and fallback states
+- [ ] Add loading indicators and skeleton screens
+
+**Task 7: Dashboard Integration**
+- [ ] Update main Dashboard.tsx component to use new widget system
+- [ ] Replace static layout with dynamic WidgetGrid component
+- [ ] Integrate edit mode controls and widget library
+- [ ] Add proper error boundaries and loading states
+- [ ] Implement save/load functionality with auto-save
+- [ ] Add unsaved changes indicator and manual save option
+- [ ] Ensure mobile-first responsive design
+
+**Task 8: Default Layout (AC8)**
+- [ ] Implement default layout logic for new users
+- [ ] Create fallback to default configuration on API errors
+- [ ] Define default dashboard layout with essential widgets
+- [ ] Add graceful handling of missing or invalid configurations
+- [ ] Test default layout across all breakpoints
+
+**Task 9: Testing Implementation**
+- [ ] Create comprehensive unit tests for individual widget components
+- [ ] Implement integration tests for complete widget system functionality
+- [ ] Develop E2E tests for user workflows and accessibility
+- [ ] Add performance tests for grid rendering and widget loading
+- [ ] Test error handling and edge cases
+- [ ] Ensure accessibility compliance testing (WCAG 2.1 AA+)
+- [ ] Test mobile responsiveness across devices
+- [ ] Achieve target test coverage: Unit (95%+), Integration (90%+), E2E (85%+)
+
+**Task 10: Individual Widget Components**
+- [ ] Create PortfolioOverviewWidget with real-time metrics
+- [ ] Implement PortfolioChartWidget with interactive charts
+- [ ] Build WatchlistWidget with search and filtering
+- [ ] Develop AIInsightsWidget with expandable insights
+- [ ] Update WidgetPlaceholder to use individual components
+- [ ] Add lazy loading for widget components
+- [ ] Create fallback components for unsupported widget types
+- [ ] Ensure consistent error handling across all widgets
+- [ ] Implement mobile-first responsive design for all components
+
+### Technical Implementation Plan
+
+**Architecture Decisions:**
+- React-grid-layout for drag-and-drop functionality
+- TypeScript for type safety and developer experience
+- Tailwind CSS for consistent styling and responsive design
+- Framer Motion for smooth animations and transitions
+- Recharts for financial data visualization
+- Comprehensive error boundaries and loading states
+
+**Performance Considerations:**
+- Lazy loading of individual widget components
+- React.memo and useMemo for preventing unnecessary re-renders
+- Efficient grid layout calculations
+- Optimized bundle splitting for widget components
+- Responsive image loading and asset optimization
+
+**Accessibility Requirements:**
+- Full keyboard navigation support
+- Screen reader compatibility with proper ARIA labels
+- High contrast mode support
+- Focus management in edit mode
+- Semantic HTML structure throughout
+
+**Mobile-First Design:**
+- Responsive breakpoints: xxs(0), xs(480), sm(768), md(996), lg(1200)
+- Touch-friendly interface with appropriate sizing
+- Optimized layouts for all screen sizes
+- Progressive enhancement approach
+
+**Testing Strategy:**
+- Unit Tests: Target 95%+ coverage for all components and hooks
+- Integration Tests: Target 90%+ coverage for widget system flows
+- E2E Tests: Target 85%+ coverage for user workflows
+- Performance Tests: Grid rendering and widget loading benchmarks
+- Accessibility Tests: WCAG 2.1 AA+ compliance verification
+
+### Definition of Done
+
+- [ ] All Acceptance Criteria (AC1-AC8) implemented and tested
+- [ ] All Technical Requirements met
+- [ ] Code review completed and approved
+- [ ] Unit tests written with 95%+ coverage
+- [ ] Integration tests written with 90%+ coverage
+- [ ] E2E tests written with 85%+ coverage
+- [ ] Accessibility compliance verified (WCAG 2.1 AA+)
+- [ ] Performance benchmarks met
+- [ ] Documentation updated
+- [ ] Ready for production deployment
+
+### Change Log
+
+**2024-12-19:** Story created and structured. Tasks defined and ready for implementation. Status set to "Not Started". Agent assignment pending sprint planning. 

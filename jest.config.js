@@ -19,10 +19,14 @@ module.exports = {
         moduleResolution: 'node',
         esModuleInterop: true,
         allowSyntheticDefaultImports: true,
+        target: 'es2020',
       }
     }]
   },
   transformIgnorePatterns: [
     'node_modules/(?!(msw)/)'
+  ],
+  testPathIgnorePatterns: [
+    '<rootDir>/tests/.*\\.spec\\.ts$', // Ignore Playwright tests
   ],
 }; 

@@ -265,7 +265,6 @@ export interface Holdings {
   lastUpdated: string;
 }
 
-// Sort and filter options for holdings table
 export type HoldingsSortBy =
   | "symbol"
   | "companyName"
@@ -290,7 +289,6 @@ export interface HoldingsFilter {
   sortDirection: SortDirection;
 }
 
-// Portfolio analytics and performance
 export interface PortfolioAnalytics {
   performanceMetrics: PerformanceMetrics;
   riskMetrics: RiskMetrics;
@@ -339,7 +337,6 @@ export interface BenchmarkComparison {
   informationRatio: number;
 }
 
-// Real-time price updates
 export interface PriceUpdate {
   symbol: string;
   currentPrice: number;
@@ -357,7 +354,6 @@ export interface RealtimeData {
   lastUpdated: string;
 }
 
-// Export and reporting
 export interface ExportOptions {
   format: "CSV" | "PDF" | "EXCEL";
   includeTransactions: boolean;
@@ -369,7 +365,6 @@ export interface ExportOptions {
   customFields?: string[];
 }
 
-// Quick actions for positions
 export interface PositionAction {
   type:
     | "BUY_MORE"
@@ -382,7 +377,6 @@ export interface PositionAction {
   data?: any;
 }
 
-// News and alerts
 export interface StockNews {
   id: string;
   symbol: string;
@@ -404,7 +398,6 @@ export interface PriceAlert {
   triggeredAt?: string;
 }
 
-// Pagination and table state
 export interface TableState {
   page: number;
   pageSize: number;
@@ -415,7 +408,6 @@ export interface TableState {
   filters: HoldingsFilter;
 }
 
-// Component configuration
 export interface PortfolioPageConfig {
   showSummaryCards: boolean;
   showAnalytics: boolean;
@@ -427,47 +419,4 @@ export interface PortfolioPageConfig {
   enableExport: boolean;
   enableQuickActions: boolean;
   compactMode: boolean;
-}
-
-// Export all types for easy importing
-export type {
-  Portfolio,
-  PortfolioPosition,
-  Transaction,
-  AIPortfolioInsight,
-  PortfolioSnapshot,
-  DashboardSummary,
-  MarketSummary,
-  PerformanceMetrics,
-  CreatePortfolioRequest,
-  UpdatePortfolioRequest,
-  AddPositionRequest,
-  UpdatePositionRequest,
-  PortfolioListResponse,
-  PortfolioDetailResponse,
-  PortfolioError,
-  PortfolioLoadingState,
-  ChartDataPoint,
-  PortfolioChartData,
-  DashboardWidget,
-  PortfolioFilters,
-  PortfolioUpdate,
-  Position,
-  PortfolioSummary,
-  Holdings,
-  HoldingsSortBy,
-  SortDirection,
-  HoldingsFilter,
-  PortfolioAnalytics,
-  RiskMetrics,
-  DiversificationMetrics,
-  BenchmarkComparison,
-  PriceUpdate,
-  RealtimeData,
-  ExportOptions,
-  PositionAction,
-  StockNews,
-  PriceAlert,
-  TableState,
-  PortfolioPageConfig,
-};
+} 

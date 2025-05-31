@@ -1,6 +1,7 @@
 import { http, HttpResponse, RequestHandler } from 'msw'; // Mock Service Worker v2 syntax
+import { getEnvVar } from '../utils/env';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+const API_BASE_URL = getEnvVar('VITE_API_BASE_URL', '/api/v1');
 
 // --- Control flags for mock responses (you would set these in your tests) ---
 // Example:

@@ -2,6 +2,8 @@ import { authService } from './authService';
 import { aiAgentService } from './aiAgentService';
 import { server } from '../mocks/server'; // Assuming MSW server setup is in src/mocks/server.ts
 import { http, HttpResponse } from 'msw';
+import { LoginCredentials, RegisterCredentials } from '../types/auth';
+import { getEnvVar } from '../utils/env';
 
 // Helper to control mock responses for aiAgentService directly for some tests if needed,
 // or rely on MSW handlers via setMockFraudScenario / setMockRegistrationScenario from handlers.ts
@@ -13,7 +15,8 @@ jest.mock('./aiAgentService', () => ({
   },
 }));
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+// Mock API configuration for tests
+const API_BASE_URL = getEnvVar('VITE_API_BASE_URL', '/api/v1');
 
 describe('authService.registerUser', () => {
   const mockUserData = {
