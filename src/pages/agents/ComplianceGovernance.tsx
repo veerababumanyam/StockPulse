@@ -174,9 +174,9 @@ const ComplianceGovernance: React.FC = () => {
       setComplianceChecks(status.checks);
     } catch (error) {
       toast({
-        title: "Error Loading Compliance Checks",
+        title: 'Error Loading Compliance Checks',
         description: `Failed to load compliance checks: ${(error as Error).message}`,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -196,15 +196,15 @@ const ComplianceGovernance: React.FC = () => {
       const passedCount = results.filter(check => check.status === 'passed').length;
       
       toast({
-        title: "Compliance Checks Completed",
+        title: 'Compliance Checks Completed',
         description: `Results: ${passedCount} passed, ${warningCount} warnings, ${failedCount} failed`,
-        variant: failedCount > 0 ? "destructive" : warningCount > 0 ? "warning" : "success",
+        variant: failedCount > 0 ? 'destructive' : warningCount > 0 ? 'warning' : 'success',
       });
     } catch (error) {
       toast({
-        title: "Error Running Compliance Checks",
+        title: 'Error Running Compliance Checks',
         description: `Failed to run compliance checks: ${(error as Error).message}`,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -224,16 +224,16 @@ const ComplianceGovernance: React.FC = () => {
       );
       
       toast({
-        title: "Compliance Check Completed",
+        title: 'Compliance Check Completed',
         description: `${result.name}: ${result.status}`,
-        variant: result.status === 'failed' ? "destructive" : 
-                 result.status === 'warning' ? "warning" : "success",
+        variant: result.status === 'failed' ? 'destructive' : 
+                 result.status === 'warning' ? 'warning' : 'success',
       });
     } catch (error) {
       toast({
-        title: "Error Running Compliance Check",
+        title: 'Error Running Compliance Check',
         description: `Failed to run compliance check: ${(error as Error).message}`,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -245,11 +245,11 @@ const ComplianceGovernance: React.FC = () => {
     governance.setGovernanceEnabled(!governance.isGovernanceEnabled);
     
     toast({
-      title: governance.isGovernanceEnabled ? "Governance Disabled" : "Governance Enabled",
+      title: governance.isGovernanceEnabled ? 'Governance Disabled' : 'Governance Enabled',
       description: governance.isGovernanceEnabled 
-        ? "Compliance and governance features have been disabled." 
-        : "Compliance and governance features have been enabled.",
-      variant: "default",
+        ? 'Compliance and governance features have been disabled.' 
+        : 'Compliance and governance features have been enabled.',
+      variant: 'default',
     });
   };
   
@@ -405,7 +405,7 @@ const ComplianceGovernance: React.FC = () => {
             onClick={toggleGovernance}
           >
             <Shield size={16} />
-            {governance.isGovernanceEnabled ? "Disable Governance" : "Enable Governance"}
+            {governance.isGovernanceEnabled ? 'Disable Governance' : 'Enable Governance'}
           </Button>
           
           <Button 
@@ -414,7 +414,7 @@ const ComplianceGovernance: React.FC = () => {
             disabled={isLoading || !governance.isGovernanceEnabled}
           >
             <ClipboardCheck size={16} />
-            {isLoading ? "Running Checks..." : "Run All Checks"}
+            {isLoading ? 'Running Checks...' : 'Run All Checks'}
           </Button>
         </div>
       </div>
@@ -878,9 +878,9 @@ const ComplianceGovernance: React.FC = () => {
               size="sm"
               onClick={() => {
                 toast({
-                  title: "Audit Export",
-                  description: "Audit trail has been exported to file.",
-                  variant: "success",
+                  title: 'Audit Export',
+                  description: 'Audit trail has been exported to file.',
+                  variant: 'success',
                 });
               }}
             >
@@ -973,9 +973,9 @@ const ComplianceGovernance: React.FC = () => {
               size="sm"
               onClick={() => {
                 toast({
-                  title: "Lineage Visualization",
-                  description: "Opening data lineage visualization tool.",
-                  variant: "success",
+                  title: 'Lineage Visualization',
+                  description: 'Opening data lineage visualization tool.',
+                  variant: 'success',
                 });
               }}
             >
@@ -1101,9 +1101,9 @@ const ComplianceGovernance: React.FC = () => {
             variant="outline"
             onClick={() => {
               toast({
-                title: "Settings Reset",
-                description: "Governance settings have been reset to defaults.",
-                variant: "default",
+                title: 'Settings Reset',
+                description: 'Governance settings have been reset to defaults.',
+                variant: 'default',
               });
             }}
           >
@@ -1113,9 +1113,9 @@ const ComplianceGovernance: React.FC = () => {
           <Button 
             onClick={() => {
               toast({
-                title: "Settings Saved",
-                description: "Governance settings have been saved.",
-                variant: "success",
+                title: 'Settings Saved',
+                description: 'Governance settings have been saved.',
+                variant: 'success',
               });
             }}
           >

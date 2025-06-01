@@ -4,28 +4,34 @@
  */
 
 import React, { Suspense, lazy } from 'react';
-import { 
-  PieChart, 
-  TrendingUp, 
-  Eye, 
-  BarChart3, 
-  Brain, 
-  ArrowLeftRight, 
-  Activity, 
-  Bell, 
-  Newspaper, 
-  Building2, 
+import {
+  PieChart,
+  TrendingUp,
+  Eye,
+  BarChart3,
+  Brain,
+  ArrowLeftRight,
+  Activity,
+  Bell,
+  Newspaper,
+  Building2,
   Calendar,
   X,
   Settings,
-  Loader2
+  Loader2,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { WidgetType, WidgetInstance } from '../../types/dashboard';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import { cn } from '../../utils/tailwind';
+import { cn } from '../../utils/cn';
 
 // Lazy load individual widget components
 const PortfolioOverviewWidget = lazy(() => import('./PortfolioOverview'));
@@ -45,12 +51,12 @@ interface WidgetPlaceholderProps {
 const WIDGET_ICONS: Record<WidgetType, React.ComponentType<any>> = {
   'portfolio-overview': PieChart,
   'portfolio-chart': TrendingUp,
-  'watchlist': Eye,
+  watchlist: Eye,
   'market-summary': BarChart3,
   'ai-insights': Brain,
   'recent-transactions': ArrowLeftRight,
   'performance-metrics': Activity,
-  'alerts': Bell,
+  alerts: Bell,
   'news-feed': Newspaper,
   'sector-performance': Building2,
   'top-movers': TrendingUp,
@@ -60,12 +66,12 @@ const WIDGET_ICONS: Record<WidgetType, React.ComponentType<any>> = {
 const WIDGET_COLORS: Record<WidgetType, string> = {
   'portfolio-overview': 'from-blue-500 to-blue-600',
   'portfolio-chart': 'from-green-500 to-green-600',
-  'watchlist': 'from-purple-500 to-purple-600',
+  watchlist: 'from-purple-500 to-purple-600',
   'market-summary': 'from-orange-500 to-orange-600',
   'ai-insights': 'from-pink-500 to-pink-600',
   'recent-transactions': 'from-indigo-500 to-indigo-600',
   'performance-metrics': 'from-teal-500 to-teal-600',
-  'alerts': 'from-red-500 to-red-600',
+  alerts: 'from-red-500 to-red-600',
   'news-feed': 'from-yellow-500 to-yellow-600',
   'sector-performance': 'from-cyan-500 to-cyan-600',
   'top-movers': 'from-emerald-500 to-emerald-600',
@@ -75,12 +81,12 @@ const WIDGET_COLORS: Record<WidgetType, string> = {
 const WIDGET_TITLES: Record<WidgetType, string> = {
   'portfolio-overview': 'Portfolio Overview',
   'portfolio-chart': 'Portfolio Chart',
-  'watchlist': 'Watchlist',
+  watchlist: 'Watchlist',
   'market-summary': 'Market Summary',
   'ai-insights': 'AI Insights',
   'recent-transactions': 'Recent Transactions',
   'performance-metrics': 'Performance Metrics',
-  'alerts': 'Alerts',
+  alerts: 'Alerts',
   'news-feed': 'News Feed',
   'sector-performance': 'Sector Performance',
   'top-movers': 'Top Movers',
@@ -88,10 +94,10 @@ const WIDGET_TITLES: Record<WidgetType, string> = {
 };
 
 // Loading component for Suspense fallback
-const WidgetLoadingFallback: React.FC<{ widget: WidgetInstance; showHeader?: boolean }> = ({ 
-  widget, 
-  showHeader = true 
-}) => {
+const WidgetLoadingFallback: React.FC<{
+  widget: WidgetInstance;
+  showHeader?: boolean;
+}> = ({ widget, showHeader = true }) => {
   const IconComponent = WIDGET_ICONS[widget.type];
   const colorClass = WIDGET_COLORS[widget.type];
 
@@ -116,10 +122,10 @@ const WidgetLoadingFallback: React.FC<{ widget: WidgetInstance; showHeader?: boo
 };
 
 // Fallback component for unsupported widget types
-const UnsupportedWidgetFallback: React.FC<{ widget: WidgetInstance; showHeader?: boolean }> = ({ 
-  widget, 
-  showHeader = true 
-}) => {
+const UnsupportedWidgetFallback: React.FC<{
+  widget: WidgetInstance;
+  showHeader?: boolean;
+}> = ({ widget, showHeader = true }) => {
   const IconComponent = WIDGET_ICONS[widget.type];
   const colorClass = WIDGET_COLORS[widget.type];
 
@@ -128,7 +134,9 @@ const UnsupportedWidgetFallback: React.FC<{ widget: WidgetInstance; showHeader?:
       {showHeader && (
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-medium flex items-center">
-            <div className={cn("p-1.5 rounded-md bg-gradient-to-r", colorClass)}>
+            <div
+              className={cn('p-1.5 rounded-md bg-gradient-to-r', colorClass)}
+            >
               <IconComponent className="h-4 w-4 text-white" />
             </div>
             <span className="ml-2">{WIDGET_TITLES[widget.type]}</span>
@@ -143,9 +151,7 @@ const UnsupportedWidgetFallback: React.FC<{ widget: WidgetInstance; showHeader?:
         <p className="text-sm text-muted-foreground">
           {WIDGET_TITLES[widget.type]} Widget
         </p>
-        <p className="text-xs text-muted-foreground">
-          Widget ID: {widget.id}
-        </p>
+        <p className="text-xs text-muted-foreground">Widget ID: {widget.id}</p>
         <Badge variant="outline" className="text-xs">
           {widget.type}
         </Badge>
@@ -165,10 +171,10 @@ const WidgetPlaceholderInternal: React.FC<WidgetPlaceholderProps> = ({
   // TEMPORARY: Render all widgets as fallback components to test rendering
   // This will help us identify if the issue is with lazy loading or grid layout
   console.log(`🎯 Rendering widget: ${widget.type} (ID: ${widget.id})`);
-  
+
   const commonProps = {
     widgetId: widget.id,
-    className: "h-full",
+    className: 'h-full',
     showHeader: !isEditMode, // Hide headers in edit mode to save space
   };
 
@@ -176,13 +182,16 @@ const WidgetPlaceholderInternal: React.FC<WidgetPlaceholderProps> = ({
   return (
     <motion.div
       layout
-      className={cn("h-full", className)}
+      className={cn('h-full', className)}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.2 }}
     >
-      <UnsupportedWidgetFallback widget={widget} showHeader={commonProps.showHeader} />
+      <UnsupportedWidgetFallback
+        widget={widget}
+        showHeader={commonProps.showHeader}
+      />
     </motion.div>
   );
 
@@ -248,4 +257,4 @@ const WidgetPlaceholderInternal: React.FC<WidgetPlaceholderProps> = ({
   */
 };
 
-export default React.memo(WidgetPlaceholderInternal); 
+export default React.memo(WidgetPlaceholderInternal);

@@ -307,9 +307,9 @@ const MCPFederationRegistry: React.FC = () => {
     serverForm.reset();
     
     toast({
-      title: "Server Added",
+      title: 'Server Added',
       description: `${values.name} has been successfully added to the registry.`,
-      variant: "success",
+      variant: 'success',
     });
   };
 
@@ -357,9 +357,9 @@ const MCPFederationRegistry: React.FC = () => {
     serverForm.reset();
     
     toast({
-      title: "Server Updated",
+      title: 'Server Updated',
       description: `${values.name} has been successfully updated.`,
-      variant: "success",
+      variant: 'success',
     });
   };
 
@@ -367,9 +367,9 @@ const MCPFederationRegistry: React.FC = () => {
     setServers(prev => prev.filter(server => server.id !== serverId));
     
     toast({
-      title: "Server Deleted",
-      description: "The server has been removed from the registry.",
-      variant: "default",
+      title: 'Server Deleted',
+      description: 'The server has been removed from the registry.',
+      variant: 'default',
     });
   };
 
@@ -433,9 +433,9 @@ const MCPFederationRegistry: React.FC = () => {
       setDiscoveryHistory(prev => [newHistoryEntry, ...prev]);
       
       toast({
-        title: "Discovery Complete",
+        title: 'Discovery Complete',
         description: `Found ${results.length} MCP servers matching your criteria.`,
-        variant: results.length > 0 ? "success" : "default",
+        variant: results.length > 0 ? 'success' : 'default',
       });
     }, 1500);
   };
@@ -444,18 +444,18 @@ const MCPFederationRegistry: React.FC = () => {
     // Check if already connected
     if (connectedServers.some(s => s.id === server.id)) {
       toast({
-        title: "Already Connected",
+        title: 'Already Connected',
         description: `You are already connected to ${server.name}.`,
-        variant: "default",
+        variant: 'default',
       });
       return;
     }
     
     // Simulate connection process
     toast({
-      title: "Connecting...",
+      title: 'Connecting...',
       description: `Establishing connection to ${server.name}.`,
-      variant: "default",
+      variant: 'default',
     });
     
     setTimeout(() => {
@@ -484,9 +484,9 @@ const MCPFederationRegistry: React.FC = () => {
       }
       
       toast({
-        title: "Connection Established",
+        title: 'Connection Established',
         description: `Successfully connected to ${server.name}.`,
-        variant: "success",
+        variant: 'success',
       });
     }, 1000);
   };
@@ -495,9 +495,9 @@ const MCPFederationRegistry: React.FC = () => {
     setConnectedServers(prev => prev.filter(server => server.id !== serverId));
     
     toast({
-      title: "Disconnected",
-      description: "The server connection has been closed.",
-      variant: "default",
+      title: 'Disconnected',
+      description: 'The server connection has been closed.',
+      variant: 'default',
     });
   };
 
@@ -816,9 +816,9 @@ const MCPFederationRegistry: React.FC = () => {
                           onClick={() => {
                             // Simulate QR code scanning
                             toast({
-                              title: "QR Code Scanner",
-                              description: "Camera access is required to scan QR codes.",
-                              variant: "default",
+                              title: 'QR Code Scanner',
+                              description: 'Camera access is required to scan QR codes.',
+                              variant: 'default',
                             });
                           }}
                         >
@@ -1351,9 +1351,9 @@ const MCPFederationRegistry: React.FC = () => {
                               value={server.trustScore} 
                               className="h-2 w-16" 
                               indicatorClassName={
-                                server.trustScore > 90 ? "bg-green-500" :
-                                server.trustScore > 70 ? "bg-yellow-500" :
-                                "bg-red-500"
+                                server.trustScore > 90 ? 'bg-green-500' :
+                                server.trustScore > 70 ? 'bg-yellow-500' :
+                                'bg-red-500'
                               }
                             />
                             <span>{server.trustScore}%</span>
@@ -1461,9 +1461,9 @@ const MCPFederationRegistry: React.FC = () => {
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <span className={
-                              server.responseTime < 200 ? "text-green-600" :
-                              server.responseTime < 500 ? "text-yellow-600" :
-                              "text-red-600"
+                              server.responseTime < 200 ? 'text-green-600' :
+                              server.responseTime < 500 ? 'text-yellow-600' :
+                              'text-red-600'
                             }>
                               {server.responseTime}ms
                             </span>
@@ -1490,9 +1490,9 @@ const MCPFederationRegistry: React.FC = () => {
                                 setConnectedServers(updatedServers);
                                 
                                 toast({
-                                  title: "Request Sent",
+                                  title: 'Request Sent',
                                   description: `Successfully sent request to ${server.name}.`,
-                                  variant: "success",
+                                  variant: 'success',
                                 });
                               }}
                             >
@@ -1673,7 +1673,7 @@ const MCPFederationRegistry: React.FC = () => {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant={entry.resultsCount > 0 ? "success" : "outline"}>
+                          <Badge variant={entry.resultsCount > 0 ? 'success' : 'outline'}>
                             {entry.resultsCount} {entry.resultsCount === 1 ? 'server' : 'servers'}
                           </Badge>
                         </TableCell>

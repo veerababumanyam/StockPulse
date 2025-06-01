@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import {
   Users,
   CheckCircle,
@@ -9,9 +9,9 @@ import {
   Search,
   Filter,
   RefreshCw,
-} from "lucide-react";
-import apiClient from "@config/api";
-import { PageLayout, Card, Alert } from "../../components/layout/PageLayout";
+} from 'lucide-react';
+import apiClient from '@config/api';
+import { PageLayout, Card, Alert } from '../../components/layout/PageLayout';
 
 interface PendingUser {
   id: string;
@@ -24,20 +24,20 @@ interface PendingUser {
 const UserApproval: React.FC = () => {
   const [pendingUsers, setPendingUsers] = useState<PendingUser[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>("");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [error, setError] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [processingUser, setProcessingUser] = useState<string | null>(null);
 
   // Fetch pending users
   const fetchPendingUsers = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get("/auth/admin/pending-users");
+      const response = await apiClient.get('/auth/admin/pending-users');
       setPendingUsers(response.data);
-      setError("");
+      setError('');
     } catch (err: any) {
-      setError(err.response?.data?.detail || "Failed to fetch pending users");
-      console.error("Failed to fetch pending users:", err);
+      setError(err.response?.data?.detail || 'Failed to fetch pending users');
+      console.error('Failed to fetch pending users:', err);
     } finally {
       setLoading(false);
     }
@@ -47,9 +47,9 @@ const UserApproval: React.FC = () => {
   const approveUser = async (userId: string, email: string) => {
     try {
       setProcessingUser(userId);
-      await apiClient.post("/auth/admin/approve-user", {
+      await apiClient.post('/auth/admin/approve-user', {
         user_id: userId,
-        action: "approve",
+        action: 'approve',
       });
 
       // Remove from pending list
@@ -57,8 +57,8 @@ const UserApproval: React.FC = () => {
 
       console.log(`✅ User ${email} approved successfully`);
     } catch (err: any) {
-      setError(err.response?.data?.detail || "Failed to approve user");
-      console.error("Failed to approve user:", err);
+      setError(err.response?.data?.detail || 'Failed to approve user');
+      console.error('Failed to approve user:', err);
     } finally {
       setProcessingUser(null);
     }
@@ -68,9 +68,9 @@ const UserApproval: React.FC = () => {
   const rejectUser = async (userId: string, email: string, reason: string) => {
     try {
       setProcessingUser(userId);
-      await apiClient.post("/auth/admin/approve-user", {
+      await apiClient.post('/auth/admin/approve-user', {
         user_id: userId,
-        action: "reject",
+        action: 'reject',
         rejection_reason: reason,
       });
 
@@ -79,8 +79,8 @@ const UserApproval: React.FC = () => {
 
       console.log(`❌ User ${email} rejected successfully`);
     } catch (err: any) {
-      setError(err.response?.data?.detail || "Failed to reject user");
-      console.error("Failed to reject user:", err);
+      setError(err.response?.data?.detail || 'Failed to reject user');
+      console.error('Failed to reject user:', err);
     } finally {
       setProcessingUser(null);
     }
@@ -88,7 +88,7 @@ const UserApproval: React.FC = () => {
 
   // Handle rejection with reason
   const handleReject = (userId: string, email: string) => {
-    const reason = prompt("Please provide a reason for rejection:");
+    const reason = prompt('Please provide a reason for rejection:');
     if (reason && reason.trim()) {
       rejectUser(userId, email, reason.trim());
     }
@@ -115,7 +115,7 @@ const UserApproval: React.FC = () => {
           disabled={loading}
           className="flex items-center space-x-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80 disabled:opacity-50 transition-colors"
         >
-          <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           <span>Refresh</span>
         </button>
       }
@@ -154,7 +154,7 @@ const UserApproval: React.FC = () => {
             <Clock className="w-4 h-4" />
             <span>
               {filteredUsers.length} pending approval
-              {filteredUsers.length !== 1 ? "s" : ""}
+              {filteredUsers.length !== 1 ? 's' : ''}
             </span>
           </div>
         </div>
@@ -173,8 +173,8 @@ const UserApproval: React.FC = () => {
           </h3>
           <p className="text-text/60">
             {searchTerm
-              ? "No users match your search criteria."
-              : "All user registrations have been processed."}
+              ? 'No users match your search criteria.'
+              : 'All user registrations have been processed.'}
           </p>
         </Card>
       ) : (
@@ -205,7 +205,7 @@ const UserApproval: React.FC = () => {
                     </div>
                     <div className="flex items-center text-sm text-text/60 space-x-4">
                       <span>
-                        Registered:{" "}
+                        Registered:{' '}
                         {new Date(user.created_at).toLocaleDateString()}
                       </span>
                       <span className="flex items-center">

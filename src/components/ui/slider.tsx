@@ -1,9 +1,9 @@
-import * as React from "react";
+import * as React from 'react';
 
 export interface SliderProps
   extends Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
-    "type" | "onChange"
+    'type' | 'onChange'
   > {
   value?: number[];
   onValueChange?: (value: number[]) => void;
@@ -16,7 +16,7 @@ export interface SliderProps
 const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
   (
     {
-      className = "",
+      className = '',
       value = [0],
       onValueChange,
       defaultValue = [0],
@@ -78,6 +78,6 @@ const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
   },
 );
 
-Slider.displayName = "Slider";
+Slider.displayName = 'Slider';
 
 export { Slider };

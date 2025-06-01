@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 // import Navbar from '@components/layout/Navbar'; // REMOVE: MainLayout provides the Navbar
 // import Footer from '@components/layout/Footer'; // REMOVE: MainLayout provides the Footer
 
@@ -112,7 +112,7 @@ const PositionalTrading: React.FC = () => {
                     <div className="w-full bg-surface/80 border border-border rounded-full h-2.5">
                       <div
                         className="bg-green-500 h-2.5 rounded-full"
-                        style={{ width: "75%" }}
+                        style={{ width: '75%' }}
                       ></div>
                     </div>
                     <div className="flex justify-between mt-1 text-xs text-text/60">
@@ -134,7 +134,7 @@ const PositionalTrading: React.FC = () => {
                     <div className="w-full bg-surface/80 border border-border rounded-full h-2.5">
                       <div
                         className="bg-yellow-500 h-2.5 rounded-full"
-                        style={{ width: "50%" }}
+                        style={{ width: '50%' }}
                       ></div>
                     </div>
                     <div className="flex justify-between mt-1 text-xs text-text/60">

@@ -3,9 +3,9 @@
  * Ensures only authenticated users can access protected routes
  * Story 1.5: Authentication Security Hardening
  */
-import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
+import React from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -16,20 +16,20 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requireAdmin = false,
 }) => {
-  const { user, loading } = useAuth();
+  const { user, isLoading } = useAuth();
   const location = useLocation();
 
   // Development mode bypass for testing
-  const isDevelopment = import.meta.env.MODE === "development";
+  const isDevelopment = import.meta.env.MODE === 'development';
   const bypassAuth =
-    isDevelopment && localStorage.getItem("dev-bypass-auth") === "true";
+    isDevelopment && localStorage.getItem('dev-bypass-auth') === 'true';
 
   if (bypassAuth) {
     return <>{children}</>;
   }
 
   // Show loading state while authentication status is being checked
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-secondary-900">
         <div className="flex flex-col items-center space-y-4">
@@ -42,7 +42,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
               <p>Development Mode: To bypass auth for testing,</p>
               <button
                 onClick={() => {
-                  localStorage.setItem("dev-bypass-auth", "true");
+                  localStorage.setItem('dev-bypass-auth', 'true');
                   window.location.reload();
                 }}
                 className="underline text-blue-500 hover:text-blue-700"
@@ -63,7 +63,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // Check admin requirement if specified
-  if (requireAdmin && !user.role?.includes("ADMIN")) {
+  if (requireAdmin && !user.role?.includes('ADMIN')) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-secondary-900">
         <div className="text-center">
@@ -78,7 +78,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 18.5c-.77.833.192 2.5 1.732 2.5z"
+                d="M12 9v2m0 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 18.5c-.77.833.192 2.5 1.732 2.5z"
               />
             </svg>
           </div>

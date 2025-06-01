@@ -1,9 +1,9 @@
-import React, { useState, ErrorInfo, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import Sidebar from "./Sidebar";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-import { cn } from "../../utils/cn";
+import React, { useState, ErrorInfo, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import Sidebar from './Sidebar';
+import Navbar from './Navbar';
+import Footer from './Footer';
+import { cn } from '../../utils/cn';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -29,7 +29,7 @@ class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("Layout Error Boundary caught an error:", error, errorInfo);
+    console.error('Layout Error Boundary caught an error:', error, errorInfo);
     this.setState({ error, errorInfo });
   }
 
@@ -51,7 +51,7 @@ class ErrorBoundary extends React.Component<
             >
               Refresh Page
             </button>
-            {process.env.NODE_ENV === "development" && this.state.error && (
+            {process.env.NODE_ENV === 'development' && this.state.error && (
               <details className="mt-4 text-left">
                 <summary className="cursor-pointer text-red-600">
                   Error Details
@@ -78,7 +78,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   // Initialize sidebar collapsed state from localStorage
   useEffect(() => {
-    const savedState = localStorage.getItem("sidebar-collapsed");
+    const savedState = localStorage.getItem('sidebar-collapsed');
     if (savedState !== null) {
       setSidebarCollapsed(JSON.parse(savedState));
     }
@@ -86,17 +86,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   // Save collapsed state to localStorage
   useEffect(() => {
-    localStorage.setItem("sidebar-collapsed", JSON.stringify(sidebarCollapsed));
+    localStorage.setItem('sidebar-collapsed', JSON.stringify(sidebarCollapsed));
   }, [sidebarCollapsed]);
 
   // Routes that don't need the full layout (auth pages, landing page)
   const authRoutes = [
-    "/auth/login",
-    "/auth/register",
-    "/auth/forgot-password",
-    "/auth/reset-password",
+    '/auth/login',
+    '/auth/register',
+    '/auth/forgot-password',
+    '/auth/reset-password',
   ];
-  const noLayoutRoutes = ["/", ...authRoutes];
+  const noLayoutRoutes = ['/', ...authRoutes];
 
   const isNoLayoutRoute = noLayoutRoutes.includes(location.pathname);
 
@@ -122,7 +122,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }
 
   // Calculate main content margin based on sidebar state
-  const mainContentMargin = sidebarCollapsed ? "lg:ml-16" : "lg:ml-64";
+  const mainContentMargin = sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-64';
 
   return (
     <ErrorBoundary>
@@ -140,7 +140,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {/* Main Content Area */}
         <div
           className={cn(
-            "min-h-screen transition-all duration-300 ease-in-out",
+            'min-h-screen transition-all duration-300 ease-in-out',
             mainContentMargin,
           )}
         >

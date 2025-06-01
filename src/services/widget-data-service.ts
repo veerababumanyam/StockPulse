@@ -43,7 +43,11 @@ export interface DataFetchOptions {
   forceRefresh?: boolean;
   timeout?: number;
   retryOnError?: boolean;
-  cacheStrategy?: 'cache-first' | 'network-first' | 'cache-only' | 'network-only';
+  cacheStrategy?:
+    | 'cache-first'
+    | 'network-first'
+    | 'cache-only'
+    | 'network-only';
 }
 
 // Event callbacks
@@ -87,7 +91,7 @@ class WidgetDataService {
     widgetId: string,
     widgetType: WidgetType,
     dataSource: string,
-    refreshInterval: number = 30000
+    refreshInterval: number = 30000,
   ): void {
     const subscription: DataSubscription = {
       widgetId,
@@ -100,7 +104,7 @@ class WidgetDataService {
     };
 
     this.subscriptions.set(widgetId, subscription);
-    
+
     // Add to cache subscribers
     const cacheKey = this.getCacheKey(widgetType, dataSource);
     const cacheEntry = this.cache.get(cacheKey);
@@ -133,11 +137,14 @@ class WidgetDataService {
     if (!subscription) return;
 
     // Remove from cache subscribers
-    const cacheKey = this.getCacheKey(subscription.widgetType, subscription.dataSource);
+    const cacheKey = this.getCacheKey(
+      subscription.widgetType,
+      subscription.dataSource,
+    );
     const cacheEntry = this.cache.get(cacheKey);
     if (cacheEntry) {
       cacheEntry.subscribers.delete(widgetId);
-      
+
       // Clean up cache if no more subscribers
       if (cacheEntry.subscribers.size === 0) {
         this.cache.delete(cacheKey);
@@ -162,7 +169,10 @@ class WidgetDataService {
   /**
    * Fetch data for widget
    */
-  async fetchData(widgetId: string, options: DataFetchOptions = {}): Promise<WidgetData | null> {
+  async fetchData(
+    widgetId: string,
+    options: DataFetchOptions = {},
+  ): Promise<WidgetData | null> {
     const subscription = this.subscriptions.get(widgetId);
     if (!subscription) return null;
 
@@ -170,16 +180,22 @@ class WidgetDataService {
       forceRefresh = false,
       timeout = 10000,
       retryOnError = true,
-      cacheStrategy = 'cache-first'
+      cacheStrategy = 'cache-first',
     } = options;
 
-    const cacheKey = this.getCacheKey(subscription.widgetType, subscription.dataSource);
-    
+    const cacheKey = this.getCacheKey(
+      subscription.widgetType,
+      subscription.dataSource,
+    );
+
     try {
       // Check cache first (unless network-only)
       if (cacheStrategy !== 'network-only' && !forceRefresh) {
         const cached = this.getCachedData(cacheKey);
-        if (cached && (cacheStrategy === 'cache-only' || cacheStrategy === 'cache-first')) {
+        if (
+          cached &&
+          (cacheStrategy === 'cache-only' || cacheStrategy === 'cache-first')
+        ) {
           const widgetData: WidgetData = {
             widgetId,
             data: cached.data,
@@ -187,7 +203,7 @@ class WidgetDataService {
             lastFetched: cached.timestamp,
             nextRefresh: new Date(Date.now() + subscription.refreshInterval),
           };
-          
+
           this.callbacks.onDataUpdate?.(widgetId, widgetData);
           return widgetData;
         }
@@ -223,7 +239,7 @@ class WidgetDataService {
             'Content-Type': 'application/json',
           },
           credentials: 'include',
-        }
+        },
       );
 
       clearTimeout(timeoutId);
@@ -246,7 +262,9 @@ class WidgetDataService {
 
       // Update subscription
       subscription.lastFetched = now;
-      subscription.nextRefresh = new Date(now.getTime() + subscription.refreshInterval);
+      subscription.nextRefresh = new Date(
+        now.getTime() + subscription.refreshInterval,
+      );
       subscription.retryCount = 0;
 
       const widgetData: WidgetData = {
@@ -259,10 +277,13 @@ class WidgetDataService {
 
       this.callbacks.onDataUpdate?.(widgetId, widgetData);
       return widgetData;
-
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error(`Failed to fetch data for widget ${widgetId}:`, errorMessage);
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
+      console.error(
+        `Failed to fetch data for widget ${widgetId}:`,
+        errorMessage,
+      );
 
       // Update cache with error
       this.updateCacheEntry(cacheKey, {
@@ -273,8 +294,11 @@ class WidgetDataService {
       // Handle retries
       if (retryOnError && subscription.retryCount < subscription.maxRetries) {
         subscription.retryCount++;
-        const retryDelay = Math.min(1000 * Math.pow(2, subscription.retryCount), 30000);
-        
+        const retryDelay = Math.min(
+          1000 * Math.pow(2, subscription.retryCount),
+          30000,
+        );
+
         setTimeout(() => {
           this.fetchData(widgetId, { ...options, retryOnError: false });
         }, retryDelay);
@@ -312,7 +336,10 @@ class WidgetDataService {
   /**
    * Update cache entry
    */
-  private updateCacheEntry(cacheKey: string, updates: Partial<CacheEntry>): void {
+  private updateCacheEntry(
+    cacheKey: string,
+    updates: Partial<CacheEntry>,
+  ): void {
     const existing = this.cache.get(cacheKey) || {
       data: null,
       timestamp: new Date(),
@@ -374,7 +401,7 @@ class WidgetDataService {
         this.callbacks.onConnectionChange?.(true);
 
         // Resubscribe to all active subscriptions
-        this.subscriptions.forEach(subscription => {
+        this.subscriptions.forEach((subscription) => {
           this.sendWebSocketMessage({
             type: 'subscription',
             widgetType: subscription.widgetType,
@@ -402,7 +429,6 @@ class WidgetDataService {
       this.websocket.onerror = (error) => {
         console.error('WebSocket error:', error);
       };
-
     } catch (error) {
       console.error('Failed to initialize WebSocket:', error);
       this.scheduleReconnect();
@@ -416,7 +442,11 @@ class WidgetDataService {
     switch (message.type) {
       case 'data':
         if (message.widgetType && message.dataSource && message.data) {
-          this.handleRealTimeData(message.widgetType, message.dataSource, message.data);
+          this.handleRealTimeData(
+            message.widgetType,
+            message.dataSource,
+            message.data,
+          );
         }
         break;
 
@@ -436,13 +466,17 @@ class WidgetDataService {
   /**
    * Handle real-time data update
    */
-  private handleRealTimeData(widgetType: WidgetType, dataSource: string, data: any): void {
+  private handleRealTimeData(
+    widgetType: WidgetType,
+    dataSource: string,
+    data: any,
+  ): void {
     const cacheKey = this.getCacheKey(widgetType, dataSource);
     const cacheEntry = this.cache.get(cacheKey);
-    
+
     if (cacheEntry) {
       const now = new Date();
-      
+
       // Update cache
       this.updateCacheEntry(cacheKey, {
         data,
@@ -453,11 +487,11 @@ class WidgetDataService {
       });
 
       // Notify all subscribers
-      cacheEntry.subscribers.forEach(widgetId => {
+      cacheEntry.subscribers.forEach((widgetId) => {
         const subscription = this.subscriptions.get(widgetId);
         if (subscription) {
           subscription.lastFetched = now;
-          
+
           const widgetData: WidgetData = {
             widgetId,
             data,
@@ -497,8 +531,10 @@ class WidgetDataService {
     const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000);
     this.reconnectAttempts++;
 
-    console.log(`Scheduling reconnection in ${delay}ms (attempt ${this.reconnectAttempts})`);
-    
+    console.log(
+      `Scheduling reconnection in ${delay}ms (attempt ${this.reconnectAttempts})`,
+    );
+
     this.reconnectTimer = setTimeout(() => {
       this.initializeWebSocket();
     }, delay);
@@ -565,7 +601,9 @@ class WidgetDataService {
    * Get all active subscriptions
    */
   getActiveSubscriptions(): DataSubscription[] {
-    return Array.from(this.subscriptions.values()).filter(sub => sub.isActive);
+    return Array.from(this.subscriptions.values()).filter(
+      (sub) => sub.isActive,
+    );
   }
 
   /**
@@ -573,7 +611,7 @@ class WidgetDataService {
    */
   clear(): void {
     // Unsubscribe all widgets
-    Array.from(this.subscriptions.keys()).forEach(widgetId => {
+    Array.from(this.subscriptions.keys()).forEach((widgetId) => {
       this.unsubscribe(widgetId);
     });
 
@@ -612,13 +650,21 @@ export const subscribeWidget = (
   widgetId: string,
   widgetType: WidgetType,
   dataSource: string,
-  refreshInterval?: number
-) => widgetDataService.subscribe(widgetId, widgetType, dataSource, refreshInterval);
+  refreshInterval?: number,
+) =>
+  widgetDataService.subscribe(
+    widgetId,
+    widgetType,
+    dataSource,
+    refreshInterval,
+  );
 
-export const unsubscribeWidget = (widgetId: string) => widgetDataService.unsubscribe(widgetId);
+export const unsubscribeWidget = (widgetId: string) =>
+  widgetDataService.unsubscribe(widgetId);
 
 export const fetchWidgetData = (widgetId: string, options?: DataFetchOptions) =>
   widgetDataService.fetchData(widgetId, options);
 
-export const setDataServiceCallbacks = (callbacks: Partial<DataServiceCallbacks>) =>
-  widgetDataService.setCallbacks(callbacks); 
+export const setDataServiceCallbacks = (
+  callbacks: Partial<DataServiceCallbacks>,
+) => widgetDataService.setCallbacks(callbacks);

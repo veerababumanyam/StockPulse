@@ -1,6 +1,10 @@
-// StockPulse Color Palettes with Typography
+/**
+ * StockPulse Color Palettes - SINGLE SOURCE OF TRUTH
+ * Enterprise-grade centralized theme system
+ * All theme data and metadata in one place
+ */
 
-// Define the available color theme keys
+// ===== COLOR THEME TYPE DEFINITION =====
 export type ColorTheme =
   | "default" // Electric Minimalist
   | "cyber-neon" // Cyber Luxury
@@ -14,15 +18,36 @@ export type ColorTheme =
   | "sunset-gradient" // Sunset Gradient
   | "monochrome-pop"; // Monochrome Pop
 
-// Each palette now has both light and dark variants with typography
-export const colorPalettes: Record<
-  ColorTheme,
-  {
+// ===== THEME METADATA INTERFACE =====
+export interface ThemeMetadata {
+  name: string;
+  description: string;
+  category: 'modern' | 'futuristic' | 'natural' | 'elegant' | 'vibrant' | 'cool' | 'warm' | 'earthy' | 'minimal';
+  colors: string[]; // Representative colors for UI display
+  primary: string;
+  secondary: string;
+  accent: string;
+}
+
+// ===== PALETTE DEFINITION INTERFACE =====
+export interface PaletteDefinition {
+  metadata: ThemeMetadata;
     light: Record<string, string>;
     dark: Record<string, string>;
   }
-> = {
+
+// ===== CENTRALIZED COLOR PALETTES WITH METADATA =====
+export const colorPalettes: Record<ColorTheme, PaletteDefinition> = {
   default: { // ⚡ ELECTRIC MINIMALIST (Light Dominant)
+    metadata: {
+      name: 'Electric Minimalist',
+      description: 'Clean and modern electric blue design',
+      category: 'modern',
+      primary: '#3B82F6',
+      secondary: '#EC4899',
+      accent: '#84CC16',
+      colors: ['#3B82F6', '#EC4899', '#84CC16']
+    },
     light: {
       // Foundation Colors
       "--primary-50": "#EFF6FF", "--primary-100": "#DBEAFE", "--primary-200": "#BFDBFE",
@@ -153,7 +178,70 @@ export const colorPalettes: Record<
       "--color-surface": "#1E293B", "--color-text": "#F8FAFC", "--color-text-secondary": "#CBD5E1", "--color-border": "#475569",
     },
   },
-  "cyber-neon": { // 🔮 CYBER LUXURY (Dark Dominant)
+  "cyber-neon": { // 🌌 CYBER LUXURY (Dark Dominant with Electric Accents)
+    metadata: {
+      name: 'Cyber Luxury',
+      description: 'Futuristic neon cyber aesthetic',
+      category: 'futuristic',
+      primary: '#8B5CF6',
+      secondary: '#22D3EE',
+      accent: '#F59E0B',
+      colors: ['#8B5CF6', '#22D3EE', '#F59E0B']
+    },
+    light: {
+      // Foundation Colors
+      "--primary-50": "#F3E8FF", "--primary-100": "#DDD6FE", "--primary-200": "#C4B5FD",
+      "--primary-300": "#A78BFA", "--primary-400": "#8B5CF6", "--primary-500": "#7C3AED",
+      "--primary-600": "#6D28D9", "--primary-700": "#5B21B6", "--primary-800": "#4C1D95", "--primary-900": "#3B0764",
+      "--secondary-50": "#CFFAFE", "--secondary-100": "#A5F3FC", "--secondary-200": "#67E8F9",
+      "--secondary-300": "#22D3EE", "--secondary-400": "#06B6D4", "--secondary-500": "#0891B2",
+      "--secondary-600": "#0E7490", "--secondary-700": "#155E75", "--secondary-800": "#164E63", "--secondary-900": "#113540",
+      "--accent-gold-50": "#FFFBEB", "--accent-gold-100": "#FEF3C7", "--accent-gold-500": "#F59E0B", "--accent-gold-700": "#B45309",
+      
+      // Typography System - Futuristic Cyber (Light Mode)
+      "--font-family-primary": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      "--font-family-secondary": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      "--font-family-mono": "'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace",
+      "--font-family-display": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      
+      // Font Weights
+      "--font-weight-light": "300", "--font-weight-normal": "400", "--font-weight-medium": "500",
+      "--font-weight-semibold": "600", "--font-weight-bold": "700", "--font-weight-extrabold": "800",
+      
+      // Font Sizes
+      "--font-size-xs": "0.75rem", "--font-size-sm": "0.875rem", "--font-size-base": "1rem",
+      "--font-size-lg": "1.125rem", "--font-size-xl": "1.25rem", "--font-size-2xl": "1.5rem",
+      "--font-size-3xl": "1.875rem", "--font-size-4xl": "2.25rem", "--font-size-5xl": "3rem",
+      
+      // Line Heights
+      "--line-height-tight": "1.25", "--line-height-snug": "1.375", "--line-height-normal": "1.5",
+      "--line-height-relaxed": "1.625", "--line-height-loose": "2",
+      
+      // Letter Spacing
+      "--letter-spacing-tighter": "-0.05em", "--letter-spacing-tight": "-0.025em", "--letter-spacing-normal": "0em",
+      "--letter-spacing-wide": "0.025em", "--letter-spacing-wider": "0.05em", "--letter-spacing-widest": "0.1em",
+      
+      // Text System
+      "--text-primary": "#0F172A", "--text-secondary": "#334155", "--text-tertiary": "#475569", "--text-disabled": "#94A3B8",
+      "--text-inverse": "#F1F5F9", "--text-link": "#0891B2", "--text-link-hover": "#0E7490", "--text-neon": "#7C3AED",
+      // Background System
+      "--background-primary": "#FFFFFF", "--background-secondary": "#F8FAFC", "--background-tertiary": "#F1F5F9",
+      "--surface-primary": "#FFFFFF", "--surface-secondary": "#F3E8FF", "--surface-raised": "#E0F7FA",
+      // Border & Divider System
+      "--border-light": "#E0E7FF", "--border-medium": "#DDD6FE", "--border-strong": "#C4B5FD",
+      "--border-interactive": "#7C3AED", "--border-focus": "#0891B2", "--divider": "#E0E7FF",
+      // Interactive States
+      "--hover-primary": "#6D28D9", "--hover-secondary": "#0E7490", "--active-primary": "#5B21B6",
+      "--focus-ring": "#A78BFA", "--selected-background": "#E9D5FF", "--selected-text": "#5B21B6",
+      // Semantic Colors
+      "--success-50": "#D1FAE5", "--success-500": "#10B981", "--success-700": "#047857",
+      "--warning-50": "#FEF3C7", "--warning-500": "#F59E0B", "--warning-700": "#B45309",
+      "--error-50": "#FEE2E2", "--error-500": "#EF4444", "--error-700": "#B91C1C",
+      "--info-50": "#E0F2FE", "--info-500": "#0EA5E9", "--info-700": "#0369A1",
+      // Compatibility
+      "--color-primary": "#7C3AED", "--color-accent": "#F59E0B", "--color-background": "#FFFFFF",
+      "--color-surface": "#F8FAFC", "--color-text": "#0F172A", "--color-text-secondary": "#334155", "--color-border": "#DDD6FE",
+    },
     dark: {
       // Foundation Colors
       "--primary-50": "#312E81", "--primary-100": "#3730A3", "--primary-200": "#4338CA",
@@ -225,103 +313,344 @@ export const colorPalettes: Record<
       "--color-primary": "#8B5CF6", "--color-accent": "#F59E0B", "--color-background": "#0A0A0F",
       "--color-surface": "#1A1A2E", "--color-text": "#F1F5F9", "--color-text-secondary": "#94A3B8", "--color-border": "#334155",
     },
+  },
+  "sage-terracotta": { // 🌿 SAGE LUXURY (Natural Elegance)
+    metadata: {
+      name: 'Sage Luxury',
+      description: 'Natural sage green with terracotta accents',
+      category: 'natural',
+      primary: '#22C55E',
+      secondary: '#EA580C',
+      accent: '#D97706',
+      colors: ['#22C55E', '#EA580C', '#D97706']
+    },
     light: {
       // Foundation Colors
-      "--primary-50": "#F3E8FF", "--primary-100": "#DDD6FE", "--primary-200": "#C4B5FD",
-      "--primary-300": "#A78BFA", "--primary-400": "#8B5CF6", "--primary-500": "#7C3AED",
-      "--primary-600": "#6D28D9", "--primary-700": "#5B21B6", "--primary-800": "#4C1D95", "--primary-900": "#3B0764",
-      "--secondary-50": "#CFFAFE", "--secondary-100": "#A5F3FC", "--secondary-200": "#67E8F9",
-      "--secondary-300": "#22D3EE", "--secondary-400": "#06B6D4", "--secondary-500": "#0891B2",
-      "--secondary-600": "#0E7490", "--secondary-700": "#155E75", "--secondary-800": "#164E63", "--secondary-900": "#113540",
-      "--accent-gold-50": "#FFFBEB", "--accent-gold-100": "#FEF3C7", "--accent-gold-500": "#F59E0B", "--accent-gold-700": "#B45309",
+      "--primary-50": "#ECFDF5", "--primary-100": "#D1FAE5", "--primary-200": "#A7F3D0",
+      "--primary-300": "#6EE7B7", "--primary-400": "#34D399", "--primary-500": "#10B981",
+      "--primary-600": "#059669", "--primary-700": "#047857", "--primary-800": "#064E3B", "--primary-900": "#064E3B",
+      // Foundation Colors - Secondary Lime Scale
+      "--secondary-50": "#F7FEE7", "--secondary-100": "#ECFCCB", "--secondary-200": "#D9F99D",
+      "--secondary-300": "#BEF264", "--secondary-400": "#A3E635", "--secondary-500": "#84CC16",
+      "--secondary-600": "#65A30D", "--secondary-700": "#4D7C0F", "--secondary-800": "#365314", "--secondary-900": "#365314",
+      // Accent Jungle Orange
+      "--accent-jungle-orange": "#F97316",
       
-      // Typography System - Futuristic Cyber (Light Mode)
+      // Typography System - Natural Botanical
+      "--font-family-primary": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      "--font-family-secondary": "'Merriweather', Georgia, serif",
+      "--font-family-mono": "'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace",
+      "--font-family-display": "'Playfair Display', 'Merriweather', Georgia, serif",
+      
+      // Font Weights - Natural Feel
+      "--font-weight-light": "300",
+      "--font-weight-normal": "400",
+      "--font-weight-medium": "500",
+      "--font-weight-semibold": "600",
+      "--font-weight-bold": "700",
+      "--font-weight-extrabold": "800",
+      
+      // Font Sizes - Organic Scale
+      "--font-size-xs": "0.8rem", // 12.8px - Slightly larger for readability
+      "--font-size-sm": "0.9rem", // 14.4px
+      "--font-size-base": "1.05rem", // 16.8px - Comfortable reading
+      "--font-size-lg": "1.2rem", // 19.2px
+      "--font-size-xl": "1.35rem", // 21.6px
+      "--font-size-2xl": "1.6rem", // 25.6px
+      "--font-size-3xl": "2rem", // 32px
+      "--font-size-4xl": "2.5rem", // 40px
+      "--font-size-5xl": "3.2rem", // 51.2px
+      
+      // Line Heights - Natural Flow
+      "--line-height-tight": "1.3",
+      "--line-height-snug": "1.4",
+      "--line-height-normal": "1.6",
+      "--line-height-relaxed": "1.7",
+      "--line-height-loose": "2.1",
+      
+      // Letter Spacing - Organic Feel
+      "--letter-spacing-tighter": "-0.03em",
+      "--letter-spacing-tight": "-0.01em",
+      "--letter-spacing-normal": "0em",
+      "--letter-spacing-wide": "0.02em",
+      "--letter-spacing-wider": "0.04em",
+      "--letter-spacing-widest": "0.08em",
+      
+      // Text System
+      "--text-primary": "#064E3B", // deep forest
+      "--text-secondary": "#065F46", // medium forest
+      "--text-tertiary": "#047857", // light forest
+      "--text-disabled": "#A7F3D0", // very light
+      "--text-inverse": "#F0FDF4", // on dark backgrounds
+      "--text-link": "#059669", // sage links
+      "--text-link-hover": "#047857", // darker hover
+      "--text-accent": "#EA580C", // orange highlights (corrected from F97316)
+      // Background System
+      "--background-primary": "#FEFFFE", // pure white with green tint
+      "--background-secondary": "#F0FDF4", // light sage
+      "--background-tertiary": "#DCFCE7", // lighter sage
+      "--surface-primary": "#FFFFFF", // cards
+      "--surface-secondary": "#F0FDF4", // elevated surfaces
+      "--surface-raised": "#ECFDF5", // modals, tooltips
+      // Border & Divider System
+      "--border-light": "#D1FAE5", // subtle
+      "--border-medium": "#A7F3D0", // medium
+      "--border-strong": "#6EE7B7", // strong
+      "--border-interactive": "#059669", // primary
+      "--border-focus": "#34D399", // focus ring
+      "--divider": "#BBF7D0",
+      // Interactive States
+      "--hover-primary": "#047857", // sage hover
+      "--hover-secondary": "#65A30D", // lime hover
+      "--active-primary": "#064E3B", // pressed
+      "--focus-ring": "#6EE7B7", // accessibility
+      "--selected-background": "#D1FAE5",
+      "--selected-text": "#047857",
+      // Semantic Colors - Success
+      "--success-light": "#10B981", "--success-medium": "#059669", "--success-dark": "#064E3B",
+      "--success-50": "#ECFDF5", "--success-500": "#10B981", "--success-700": "#059669",
+      // Semantic Colors - Warning
+      "--warning-light": "#F59E0B", "--warning-medium": "#D97706", "--warning-dark": "#92400E",
+      "--warning-50": "#FFFBEB", "--warning-500": "#F59E0B", "--warning-700": "#D97706",
+      // Semantic Colors - Error
+      "--error-light": "#EF4444", "--error-medium": "#DC2626", "--error-dark": "#B91C1C",
+      "--error-50": "#FEF2F2", "--error-500": "#EF4444", "--error-700": "#DC2626",
+      // Semantic Colors - Info
+      "--info-light": "#06B6D4", "--info-medium": "#0891B2", "--info-dark": "#164E63",
+      "--info-50": "#CFFAFE", "--info-500": "#06B6D4", "--info-700": "#0891B2",
+      // Compatibility
+      "--color-primary": "#059669", "--color-accent": "#F97316", "--color-background": "#FEFFFE",
+      "--color-surface": "#F0FDF4", "--color-text": "#064E3B", "--color-text-secondary": "#065F46", "--color-border": "#D1FAE5",
+    },
+    dark: {
+      // Foundation Colors - Primary Sage Green Scale (inverted)
+      "--primary-50": "#064E3B", "--primary-100": "#065F46", "--primary-200": "#047857",
+      "--primary-300": "#059669", "--primary-400": "#10B981", "--primary-500": "#34D399",
+      "--primary-600": "#6EE7B7", "--primary-700": "#A7F3D0", "--primary-800": "#D1FAE5", "--primary-900": "#ECFDF5",
+      // Foundation Colors - Secondary Lime Scale (inverted)
+      "--secondary-50": "#365314", "--secondary-100": "#4D7C0F", "--secondary-200": "#65A30D",
+      "--secondary-300": "#84CC16", "--secondary-400": "#A3E635", "--secondary-500": "#BEF264",
+      "--secondary-600": "#D9F99D", "--secondary-700": "#ECFCCB", "--secondary-800": "#F7FEE7", "--secondary-900": "#F7FEE7",
+      // Accent Jungle Orange (adapted for dark)
+      "--accent-jungle-orange": "#FB923C",
+      
+      // Typography System - Natural Botanical (Dark Mode)
+      "--font-family-primary": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      "--font-family-secondary": "'Merriweather', Georgia, serif",
+      "--font-family-mono": "'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace",
+      "--font-family-display": "'Playfair Display', 'Merriweather', Georgia, serif",
+      
+      // Font Weights (same as light)
+      "--font-weight-light": "300", "--font-weight-normal": "400", "--font-weight-medium": "500",
+      "--font-weight-semibold": "600", "--font-weight-bold": "700", "--font-weight-extrabold": "800",
+      
+      // Font Sizes (same as light)
+      "--font-size-xs": "0.8rem", "--font-size-sm": "0.9rem", "--font-size-base": "1.05rem",
+      "--font-size-lg": "1.2rem", "--font-size-xl": "1.35rem", "--font-size-2xl": "1.6rem",
+      "--font-size-3xl": "2rem", "--font-size-4xl": "2.5rem", "--font-size-5xl": "3.2rem",
+      
+      // Line Heights (same as light)
+      "--line-height-tight": "1.3", "--line-height-snug": "1.4", "--line-height-normal": "1.6",
+      "--line-height-relaxed": "1.7", "--line-height-loose": "2.1",
+      
+      // Letter Spacing (same as light)
+      "--letter-spacing-tighter": "-0.03em", "--letter-spacing-tight": "-0.01em", "--letter-spacing-normal": "0em",
+      "--letter-spacing-wide": "0.02em", "--letter-spacing-wider": "0.04em", "--letter-spacing-widest": "0.08em",
+      
+      // Text System
+      "--text-primary": "#F0FDF4", // light on dark
+      "--text-secondary": "#D1FAE5", // medium light
+      "--text-tertiary": "#A7F3D0", // lighter
+      "--text-disabled": "#065F46", // dark disabled
+      "--text-inverse": "#064E3B", // dark text on light
+      "--text-link": "#34D399", // bright sage links
+      "--text-link-hover": "#6EE7B7", // brighter hover
+      "--text-accent": "#FB923C", // bright orange highlights
+      // Background System
+      "--background-primary": "#0A1F0F", // very dark forest
+      "--background-secondary": "#064E3B", // dark forest
+      "--background-tertiary": "#065F46", // medium forest
+      "--surface-primary": "#064E3B", // dark cards
+      "--surface-secondary": "#065F46", // elevated dark surfaces
+      "--surface-raised": "#047857", // dark modals, tooltips
+      // Border & Divider System
+      "--border-light": "#065F46", // dark subtle
+      "--border-medium": "#047857", // dark medium
+      "--border-strong": "#059669", // dark strong
+      "--border-interactive": "#34D399", // bright primary
+      "--border-focus": "#6EE7B7", // bright focus ring
+      "--divider": "#065F46",
+      // Interactive States
+      "--hover-primary": "#6EE7B7", // bright sage hover
+      "--hover-secondary": "#A3E635", // bright lime hover
+      "--active-primary": "#10B981", // bright pressed
+      "--focus-ring": "#34D399", // bright accessibility
+      "--selected-background": "#065F46",
+      "--selected-text": "#A7F3D0",
+      // Semantic Colors (adapted for dark)
+      "--success-light": "#34D399", "--success-medium": "#10B981", "--success-dark": "#059669",
+      "--success-50": "#064E3B", "--success-500": "#34D399", "--success-700": "#A7F3D0",
+      "--warning-light": "#FBBF24", "--warning-medium": "#F59E0B", "--warning-dark": "#D97706",
+      "--warning-50": "#78350F", "--warning-500": "#FBBF24", "--warning-700": "#FEF3C7",
+      "--error-light": "#F87171", "--error-medium": "#EF4444", "--error-dark": "#7F1D1D",
+      "--error-50": "#7F1D1D", "--error-500": "#F87171", "--error-700": "#FECACA",
+      "--info-light": "#22D3EE", "--info-medium": "#06B6D4", "--info-dark": "#0891B2",
+      "--info-50": "#164E63", "--info-500": "#22D3EE", "--info-700": "#A5F3FC",
+      // Compatibility
+      "--color-primary": "#34D399", "--color-accent": "#FB923C", "--color-background": "#0A1F0F",
+      "--color-surface": "#064E3B", "--color-text": "#F0FDF4", "--color-text-secondary": "#D1FAE5", "--color-border": "#065F46",
+    },
+  },
+  "midnight-aurora": { // 🌙 MIDNIGHT GOLD (Dark Elegance with Golden Highlights)
+    metadata: {
+      name: 'Midnight Gold',
+      description: 'Dark elegance with golden highlights',
+      category: 'elegant',
+      primary: '#1E40AF',
+      secondary: '#F59E0B',
+      accent: '#7C3AED',
+      colors: ['#1E40AF', '#F59E0B', '#7C3AED']
+    },
+    light: {
+      // Foundation Colors
+      "--primary-50": "#F8FAFC", "--primary-100": "#DBEAFE", "--primary-200": "#BFDBFE",
+      "--primary-300": "#93C5FD", "--primary-400": "#60A5FA", "--primary-500": "#3B82F6",
+      "--primary-600": "#2563EB", "--primary-700": "#1D4ED8", "--primary-800": "#1E40AF", "--primary-900": "#1E3A8A",
+      "--secondary-50": "#FDF2F8", "--secondary-100": "#FCE7F3", "--secondary-200": "#FBCFE8",
+      "--secondary-300": "#F9A8D4", "--secondary-400": "#F472B6", "--secondary-500": "#EC4899",
+      "--secondary-600": "#DB2777", "--secondary-700": "#BE185D", "--secondary-800": "#9D174D", "--secondary-900": "#831843",
+      "--accent-lime-50": "#F7FEE7", "--accent-lime-100": "#ECFCCB", "--accent-lime-500": "#84CC16", "--accent-lime-700": "#4D7C0F",
+      
+      // Typography System - Modern Clean
       "--font-family-primary": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       "--font-family-secondary": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       "--font-family-mono": "'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace",
       "--font-family-display": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       
       // Font Weights
-      "--font-weight-light": "300", "--font-weight-normal": "400", "--font-weight-medium": "500",
-      "--font-weight-semibold": "600", "--font-weight-bold": "700", "--font-weight-extrabold": "800",
+      "--font-weight-light": "300",
+      "--font-weight-normal": "400",
+      "--font-weight-medium": "500",
+      "--font-weight-semibold": "600",
+      "--font-weight-bold": "700",
+      "--font-weight-extrabold": "800",
       
-      // Font Sizes
+      // Font Sizes - Clean Modern Scale
+      "--font-size-xs": "0.75rem", // 12px
+      "--font-size-sm": "0.875rem", // 14px
+      "--font-size-base": "1rem", // 16px
+      "--font-size-lg": "1.125rem", // 18px
+      "--font-size-xl": "1.25rem", // 20px
+      "--font-size-2xl": "1.5rem", // 24px
+      "--font-size-3xl": "1.875rem", // 30px
+      "--font-size-4xl": "2.25rem", // 36px
+      "--font-size-5xl": "3rem", // 48px
+      
+      // Line Heights
+      "--line-height-tight": "1.25",
+      "--line-height-snug": "1.375",
+      "--line-height-normal": "1.5",
+      "--line-height-relaxed": "1.625",
+      "--line-height-loose": "2",
+      
+      // Letter Spacing
+      "--letter-spacing-tighter": "-0.05em",
+      "--letter-spacing-tight": "-0.025em",
+      "--letter-spacing-normal": "0em",
+      "--letter-spacing-wide": "0.025em",
+      "--letter-spacing-wider": "0.05em",
+      "--letter-spacing-widest": "0.1em",
+      
+      // Text System
+      "--text-primary": "#0F172A", "--text-secondary": "#475569", "--text-tertiary": "#64748B", "--text-disabled": "#CBD5E1",
+      "--text-inverse": "#F8FAFC", "--text-link": "#3B82F6", "--text-link-hover": "#2563EB", "--text-glow": "#60A5FA",
+      // Background System
+      "--background-primary": "#FFFFFF", "--background-secondary": "#F8FAFC", "--background-tertiary": "#F1F5F9",
+      "--surface-primary": "#FFFFFF", "--surface-secondary": "#F8FAFC", "--surface-dark": "#0F172A",
+      // Border & Divider System
+      "--border-light": "#E2E8F0", "--border-medium": "#CBD5E1", "--border-strong": "#94A3B8",
+      "--border-interactive": "#3B82F6", "--border-focus": "#60A5FA", "--divider": "#E2E8F0",
+      // Interactive States
+      "--hover-primary": "#2563EB", "--hover-secondary": "#BE185D", "--active-primary": "#1D4ED8",
+      "--focus-ring": "#93C5FD", "--selected-background": "#DBEAFE", "--selected-text": "#1D4ED8",
+      // Semantic Colors
+      "--success-50": "#F0FDF4", "--success-500": "#10B981", "--success-700": "#059669",
+      "--warning-50": "#FFFBEB", "--warning-500": "#F59E0B", "--warning-700": "#D97706",
+      "--error-50": "#FEF2F2", "--error-500": "#EF4444", "--error-700": "#DC2626",
+      "--info-50": "#EFF6FF", "--info-500": "#3B82F6", "--info-700": "#2563EB",
+      // Compatibility
+      "--color-primary": "#3B82F6", "--color-accent": "#EC4899", "--color-background": "#FFFFFF",
+      "--color-surface": "#F8FAFC", "--color-text": "#0F172A", "--color-text-secondary": "#475569", "--color-border": "#CBD5E1",
+    },
+    dark: {
+      // Foundation Colors
+      "--primary-50": "#1E293B", "--primary-100": "#1E3A8A", "--primary-200": "#1D4ED8",
+      "--primary-300": "#2563EB", "--primary-400": "#3B82F6", "--primary-500": "#60A5FA",
+      "--primary-600": "#93C5FD", "--primary-700": "#BFDBFE", "--primary-800": "#DBEAFE", "--primary-900": "#EFF6FF",
+      "--secondary-50": "#831843", "--secondary-100": "#9D174D", "--secondary-200": "#BE185D",
+      "--secondary-300": "#DB2777", "--secondary-400": "#EC4899", "--secondary-500": "#F472B6",
+      "--secondary-600": "#F9A8D4", "--secondary-700": "#FBCFE8", "--secondary-800": "#FCE7F3", "--secondary-900": "#FDF2F8",
+      "--accent-lime-50": "#365314", "--accent-lime-100": "#4D7C0F", "--accent-lime-500": "#A3E635", "--accent-lime-700": "#BEF264",
+      
+      // Typography System - Modern Clean (Dark Mode)
+      "--font-family-primary": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      "--font-family-secondary": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      "--font-family-mono": "'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace",
+      "--font-family-display": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      
+      // Font Weights (same as light)
+      "--font-weight-light": "300",
+      "--font-weight-normal": "400",
+      "--font-weight-medium": "500",
+      "--font-weight-semibold": "600",
+      "--font-weight-bold": "700",
+      "--font-weight-extrabold": "800",
+      
+      // Font Sizes (same as light)
       "--font-size-xs": "0.75rem", "--font-size-sm": "0.875rem", "--font-size-base": "1rem",
       "--font-size-lg": "1.125rem", "--font-size-xl": "1.25rem", "--font-size-2xl": "1.5rem",
       "--font-size-3xl": "1.875rem", "--font-size-4xl": "2.25rem", "--font-size-5xl": "3rem",
       
-      // Line Heights
+      // Line Heights (same as light)
       "--line-height-tight": "1.25", "--line-height-snug": "1.375", "--line-height-normal": "1.5",
       "--line-height-relaxed": "1.625", "--line-height-loose": "2",
       
-      // Letter Spacing
+      // Letter Spacing (same as light)
       "--letter-spacing-tighter": "-0.05em", "--letter-spacing-tight": "-0.025em", "--letter-spacing-normal": "0em",
       "--letter-spacing-wide": "0.025em", "--letter-spacing-wider": "0.05em", "--letter-spacing-widest": "0.1em",
       
       // Text System
-      "--text-primary": "#0F172A", "--text-secondary": "#334155", "--text-tertiary": "#475569", "--text-disabled": "#94A3B8",
-      "--text-inverse": "#F1F5F9", "--text-link": "#0891B2", "--text-link-hover": "#0E7490", "--text-neon": "#7C3AED",
+      "--text-primary": "#F8FAFC", "--text-secondary": "#CBD5E1", "--text-tertiary": "#94A3B8", "--text-disabled": "#475569",
+      "--text-inverse": "#0F172A", "--text-link": "#60A5FA", "--text-link-hover": "#93C5FD", "--text-glow": "#93C5FD",
       // Background System
-      "--background-primary": "#FFFFFF", "--background-secondary": "#F8FAFC", "--background-tertiary": "#F1F5F9",
-      "--surface-primary": "#FFFFFF", "--surface-secondary": "#F3E8FF", "--surface-raised": "#E0F7FA",
+      "--background-primary": "#0F172A", "--background-secondary": "#1E293B", "--background-tertiary": "#334155",
+      "--surface-primary": "#1E293B", "--surface-secondary": "#334155", "--surface-dark": "#0F172A",
       // Border & Divider System
-      "--border-light": "#E0E7FF", "--border-medium": "#DDD6FE", "--border-strong": "#C4B5FD",
-      "--border-interactive": "#7C3AED", "--border-focus": "#0891B2", "--divider": "#E0E7FF",
+      "--border-light": "#334155", "--border-medium": "#475569", "--border-strong": "#64748B",
+      "--border-interactive": "#60A5FA", "--border-focus": "#93C5FD", "--divider": "#334155",
       // Interactive States
-      "--hover-primary": "#6D28D9", "--hover-secondary": "#0E7490", "--active-primary": "#5B21B6",
-      "--focus-ring": "#A78BFA", "--selected-background": "#E9D5FF", "--selected-text": "#5B21B6",
+      "--hover-primary": "#93C5FD", "--hover-secondary": "#F9A8D4", "--active-primary": "#3B82F6",
+      "--focus-ring": "#60A5FA", "--selected-background": "#1E3A8A", "--selected-text": "#DBEAFE",
       // Semantic Colors
-      "--success-50": "#D1FAE5", "--success-500": "#10B981", "--success-700": "#047857",
-      "--warning-50": "#FEF3C7", "--warning-500": "#F59E0B", "--warning-700": "#B45309",
-      "--error-50": "#FEE2E2", "--error-500": "#EF4444", "--error-700": "#B91C1C",
-      "--info-50": "#E0F2FE", "--info-500": "#0EA5E9", "--info-700": "#0369A1",
+      "--success-50": "#064E3B", "--success-500": "#34D399", "--success-700": "#A7F3D0",
+      "--warning-50": "#78350F", "--warning-500": "#FBBF24", "--warning-700": "#FEF3C7",
+      "--error-50": "#7F1D1D", "--error-500": "#F87171", "--error-700": "#FECACA",
+      "--info-50": "#164E63", "--info-500": "#22D3EE", "--info-700": "#A5F3FC",
       // Compatibility
-      "--color-primary": "#7C3AED", "--color-accent": "#F59E0B", "--color-background": "#FFFFFF",
-      "--color-surface": "#F8FAFC", "--color-text": "#0F172A", "--color-text-secondary": "#334155", "--color-border": "#DDD6FE",
+      "--color-primary": "#60A5FA", "--color-accent": "#F472B6", "--color-background": "#0F172A",
+      "--color-surface": "#1E293B", "--color-text": "#F8FAFC", "--color-text-secondary": "#CBD5E1", "--color-border": "#475569",
     },
   },
-  // Additional color themes would continue here...
-  "sage-terracotta": {
-    light: {
-      "--color-primary": "#84CC16",
-      "--color-accent": "#EF4444",
-      "--color-background": "#FFFFFF",
-      "--color-surface": "#FEFCF3",
-      "--color-text": "#1A2E05",
-      "--color-text-secondary": "#365314",
-      "--color-border": "#D9F99D",
+  "tropical-jungle": { // 🌺 TROPICAL JUNGLE (Vibrant Nature)
+    metadata: {
+      name: 'Tropical Jungle',
+      description: 'Vibrant tropical greens and warm accents',
+      category: 'vibrant',
+      primary: '#059669',
+      secondary: '#DC2626',
+      accent: '#F59E0B',
+      colors: ['#059669', '#DC2626', '#F59E0B']
     },
-    dark: {
-      "--color-primary": "#A3E635",
-      "--color-accent": "#F87171",
-      "--color-background": "#0F1A02",
-      "--color-surface": "#1A2E05",
-      "--color-text": "#F7FEE7",
-      "--color-text-secondary": "#ECFCCB",
-      "--color-border": "#4D7C0F",
-    },
-  },
-  "midnight-aurora": {
-    light: {
-      "--color-primary": "#3B82F6",
-      "--color-accent": "#F59E0B",
-      "--color-background": "#FFFFFF",
-      "--color-surface": "#F8FAFC",
-      "--color-text": "#0F172A",
-      "--color-text-secondary": "#475569",
-      "--color-border": "#CBD5E1",
-    },
-    dark: {
-      "--color-primary": "#60A5FA",
-      "--color-accent": "#FBBF24",
-      "--color-background": "#0F172A",
-      "--color-surface": "#1E293B",
-      "--color-text": "#F8FAFC",
-      "--color-text-secondary": "#CBD5E1",
-      "--color-border": "#475569",
-    },
-  },
-  "tropical-jungle": {
     light: {
       // Foundation Colors - Primary Sage Green Scale
       "--primary-50": "#ECFDF5", "--primary-100": "#D1FAE5", "--primary-200": "#A7F3D0",
@@ -499,7 +828,16 @@ export const colorPalettes: Record<
       "--color-surface": "#064E3B", "--color-text": "#F0FDF4", "--color-text-secondary": "#D1FAE5", "--color-border": "#065F46",
     },
   },
-  "ocean-sunset": {
+  "ocean-sunset": { // 🌊 OCEAN SUNSET (Natural Harmony)
+    metadata: {
+      name: 'Ocean Sunset',
+      description: 'Ocean blues meeting sunset oranges',
+      category: 'natural',
+      primary: '#0891B2',
+      secondary: '#F97316',
+      accent: '#7C3AED',
+      colors: ['#0891B2', '#F97316', '#7C3AED']
+    },
     light: {
       // Foundation Colors - Primary Ocean Blue Scale
       "--primary-50": "#F0F9FF", "--primary-100": "#E0F2FE", "--primary-200": "#BAE6FD",
@@ -677,7 +1015,16 @@ export const colorPalettes: Record<
       "--color-surface": "#155E75", "--color-text": "#F0F9FF", "--color-text-secondary": "#CFFAFE", "--color-border": "#0E7490",
     },
   },
-  "desert-storm": {
+  "desert-storm": { // 🏜️ DESERT STORM (Warm Earth Tones)
+    metadata: {
+      name: 'Desert Storm',
+      description: 'Warm desert tones with storm grays',
+      category: 'earthy',
+      primary: '#A16207',
+      secondary: '#475569',
+      accent: '#DC2626',
+      colors: ['#A16207', '#475569', '#DC2626']
+    },
     light: {
       // Foundation Colors - Primary Terracotta Scale
       "--primary-50": "#FEF2F2", "--primary-100": "#FEE2E2", "--primary-200": "#FECACA",
@@ -855,7 +1202,16 @@ export const colorPalettes: Record<
       "--color-surface": "#B45309", "--color-text": "#FEF3C7", "--color-text-secondary": "#FDE68A", "--color-border": "#F59E0B",
     },
   },
-  "berry-fields": {
+  "berry-fields": { // 🫐 BERRY FIELDS (Rich Purple & Green)
+    metadata: {
+      name: 'Berry Fields',
+      description: 'Rich berry purples and field greens',
+      category: 'vibrant',
+      primary: '#7C3AED',
+      secondary: '#16A34A',
+      accent: '#F59E0B',
+      colors: ['#7C3AED', '#16A34A', '#F59E0B']
+    },
     light: {
       // Foundation Colors - Primary Purple Scale
       "--primary-50": "#F3E8FF", "--primary-100": "#E9D5FF", "--primary-200": "#DDD6FE",
@@ -971,7 +1327,16 @@ export const colorPalettes: Record<
       "--color-surface": "#5B21B6", "--color-text": "#F3E8FF", "--color-text-secondary": "#E9D5FF", "--color-border": "#7C3AED",
     },
   },
-  "arctic-moss": {
+  "arctic-moss": { // ❄️ ARCTIC MOSS (Cool Nature)
+    metadata: {
+      name: 'Arctic Moss',
+      description: 'Cool arctic blues with moss greens',
+      category: 'cool',
+      primary: '#0284C7',
+      secondary: '#15803D',
+      accent: '#64748B',
+      colors: ['#0284C7', '#15803D', '#64748B']
+    },
     light: {
       // Foundation Colors - Primary Steel Blue Scale
       "--primary-50": "#EFF6FF", "--primary-100": "#DBEAFE", "--primary-200": "#BFDBFE",
@@ -1087,7 +1452,16 @@ export const colorPalettes: Record<
       "--color-surface": "#2563EB", "--color-text": "#EFF6FF", "--color-text-secondary": "#DBEAFE", "--color-border": "#1E40AF",
     },
   },
-  "sunset-gradient": {
+  "sunset-gradient": { // 🌅 SUNSET GRADIENT (Warm Vibrant)
+    metadata: {
+      name: 'Sunset Gradient',
+      description: 'Warm sunset gradient colors',
+      category: 'warm',
+      primary: '#F97316',
+      secondary: '#DC2626',
+      accent: '#F59E0B',
+      colors: ['#F97316', '#DC2626', '#F59E0B']
+    },
     light: {
       // Foundation Colors - Primary Orange Scale
       "--primary-50": "#FEF3C7", "--primary-100": "#FDE68A", "--primary-200": "#FCD34D",
@@ -1203,7 +1577,16 @@ export const colorPalettes: Record<
       "--color-surface": "#92400E", "--color-text": "#FEF3C7", "--color-text-secondary": "#FDE68A", "--color-border": "#D97706",
     },
   },
-  "monochrome-pop": {
+  "monochrome-pop": { // ⚫ MONOCHROME POP (Sophisticated Minimal)
+    metadata: {
+      name: 'Monochrome Pop',
+      description: 'Sophisticated monochrome with accent pops',
+      category: 'minimal',
+      primary: '#374151',
+      secondary: '#EF4444',
+      accent: '#6B7280',
+      colors: ['#374151', '#EF4444', '#6B7280']
+    },
     light: {
       // Foundation Colors - Primary Charcoal Scale
       "--primary-50": "#F9FAFB", "--primary-100": "#F3F4F6", "--primary-200": "#E5E7EB",
@@ -1319,4 +1702,64 @@ export const colorPalettes: Record<
       "--color-surface": "#1F2937", "--color-text": "#F9FAFB", "--color-text-secondary": "#E5E7EB", "--color-border": "#374151",
     },
   },
+};
+
+// ===== UTILITY FUNCTIONS FOR THEME ACCESS =====
+
+/**
+ * Get theme metadata (derived from single source of truth)
+ */
+export const getThemeMetadata = (theme: ColorTheme): ThemeMetadata => {
+  return colorPalettes[theme].metadata;
+};
+
+/**
+ * Get all themes grouped by category (derived from single source of truth)
+ */
+export const getThemesByCategory = () => {
+  const categories: Record<string, Array<[ColorTheme, ThemeMetadata]>> = {};
+  
+  Object.entries(colorPalettes).forEach(([themeKey, palette]) => {
+    const category = palette.metadata.category;
+    if (!categories[category]) {
+      categories[category] = [];
+    }
+    categories[category].push([themeKey as ColorTheme, palette.metadata]);
+  });
+  
+  return categories;
+};
+
+/**
+ * Get theme colors for a specific mode
+ */
+export const getThemeColors = (theme: ColorTheme, mode: 'light' | 'dark'): Record<string, string> => {
+  return colorPalettes[theme][mode];
+};
+
+/**
+ * Validate if a theme exists
+ */
+export const isValidTheme = (theme: string): theme is ColorTheme => {
+  return Object.keys(colorPalettes).includes(theme);
+};
+
+/**
+ * Get all available theme keys
+ */
+export const getAllThemeKeys = (): ColorTheme[] => {
+  return Object.keys(colorPalettes) as ColorTheme[];
+};
+
+/**
+ * Get theme metadata for all themes (for UI components)
+ */
+export const getAllThemeMetadata = (): Record<ColorTheme, ThemeMetadata> => {
+  const metadata: Record<ColorTheme, ThemeMetadata> = {} as Record<ColorTheme, ThemeMetadata>;
+  
+  Object.entries(colorPalettes).forEach(([themeKey, palette]) => {
+    metadata[themeKey as ColorTheme] = palette.metadata;
+  });
+  
+  return metadata;
 }; 

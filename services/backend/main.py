@@ -15,6 +15,7 @@ from app.core.config import get_settings
 from app.core.database import init_database
 from app.core.redis import init_redis
 from app.middleware.security import security_headers_middleware
+from app.api.v1.websocket import start_market_data_simulator, stop_market_data_simulator
 
 # Configure logging
 logging.basicConfig(
@@ -43,6 +44,11 @@ async def lifespan(app: FastAPI):
         # await init_redis()
         # logger.info("Redis initialization completed")
 
+        # Start WebSocket market data simulator
+        logger.info("Starting WebSocket market data simulator...")
+        await start_market_data_simulator()
+        logger.info("WebSocket market data simulator started")
+
         # TODO: Initialize MCP integration when fastapi-mcp becomes available
         # mcp = FastApiMCP(app)
         # app.state.mcp = mcp
@@ -53,6 +59,11 @@ async def lifespan(app: FastAPI):
 
         # Shutdown - cleanup resources
         logger.info("Shutting down StockPulse backend...")
+        
+        # Stop WebSocket market data simulator
+        logger.info("Stopping WebSocket market data simulator...")
+        await stop_market_data_simulator()
+        logger.info("WebSocket market data simulator stopped")
 
     except Exception as e:
         logger.error(f"Startup failed: {e}")
@@ -63,7 +74,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="StockPulse API",
     description="Enterprise-grade financial portfolio management API with comprehensive security",
-    version="0.2.1",
+    version="0.2.4",
     docs_url="/docs" if settings.DEBUG else None,
     redoc_url="/redoc" if settings.DEBUG else None,
     openapi_url="/openapi.json" if settings.DEBUG else None,
@@ -97,7 +108,7 @@ async def read_root():
     """Health check endpoint with API information"""
     return {
         "message": "StockPulse Backend API",
-        "version": "0.2.1",
+        "version": "0.2.4",
         "status": "running",
     }
 

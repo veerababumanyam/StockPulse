@@ -3,7 +3,7 @@
  * Handles API communication for portfolio management
  * Follows enterprise patterns with proper error handling and caching
  */
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError } from 'axios';
 import {
   Portfolio,
   PortfolioPosition,
@@ -19,8 +19,8 @@ import {
   PortfolioError,
   MarketSummary,
   PerformanceMetrics,
-} from "../types/portfolio";
-import apiClient, { API_ENDPOINTS } from "../config/api";
+} from '../types/portfolio';
+import apiClient, { API_ENDPOINTS } from '../config/api';
 
 // Cache configuration
 interface CacheEntry<T> {

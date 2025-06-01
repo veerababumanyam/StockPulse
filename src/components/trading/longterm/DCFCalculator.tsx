@@ -39,7 +39,7 @@ const generateMockFinancialData = (years = 5): { yearlyData: YearlyData[]; summa
   const currentYear = new Date().getFullYear();
   
   // Base revenue and growth rate
-  let revenue = 1000 + Math.random() * 500; // $1000M - $1500M
+  const revenue = 1000 + Math.random() * 500; // $1000M - $1500M
   const growthRate = 0.05 + Math.random() * 0.15; // 5% - 20%
   const marginImprovement = 0.002 + Math.random() * 0.005; // 0.2% - 0.7% per year
   // Current financials

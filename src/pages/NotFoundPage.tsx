@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const NotFoundPage: React.FC = () => {
   return (
@@ -10,8 +10,8 @@ const NotFoundPage: React.FC = () => {
           <h2 className="text-3xl font-bold mt-4 mb-6 text-text">
             Page Not Found
           </h2>
-          <p className="text-text/60 mb-8">
-            The page you are looking for doesn't exist or has been moved.
+          <p className="text-lg text-text/70 mb-8">
+            Sorry, we couldn&apos;t find the page you&apos;re looking for.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/" className="btn-primary">

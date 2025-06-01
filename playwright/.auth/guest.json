@@ -1,0 +1,14 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:3000",
+      "localStorage": [
+        {
+          "name": "stockpulse_dashboard_preferences",
+          "value": "{\"autoSave\":true,\"autoRefresh\":true,\"refreshInterval\":30000,\"gridSnap\":true,\"showGrid\":false,\"compactMode\":false,\"animations\":true,\"notifications\":true,\"defaultView\":\"desktop\"}"
+        }
+      ]
+    }
+  ]
+}

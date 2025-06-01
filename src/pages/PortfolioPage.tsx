@@ -3,17 +3,17 @@
  * Complete portfolio management interface with real-time data, analytics,
  * advanced filtering, mobile responsiveness, and accessibility features
  */
-import React, { useCallback, useMemo, useState, useEffect } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Badge } from "../components/ui/badge";
-import { Alert, AlertDescription } from "../components/ui/alert";
+} from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { Badge } from '../components/ui/badge';
+import { Alert, AlertDescription } from '../components/ui/alert';
 import {
   Settings,
   RefreshCw,
@@ -35,19 +35,19 @@ import {
   Target,
   Shield,
   MoreVertical,
-} from "lucide-react";
+} from 'lucide-react';
 
 // Custom hooks and components
-import { usePortfolioData } from "../hooks/usePortfolioData";
-import { PortfolioSummaryCard } from "../components/portfolio/PortfolioSummaryCard";
-import { HoldingsTable } from "../components/portfolio/HoldingsTable";
+import { usePortfolioData } from '../hooks/usePortfolioData';
+import { PortfolioSummaryCard } from '../components/portfolio/PortfolioSummaryCard';
+import { HoldingsTable } from '../components/portfolio/HoldingsTable';
 import {
   PortfolioPageSkeleton,
   PortfolioSummarySkeleton,
   HoldingsTableSkeleton,
   PortfolioAnalyticsSkeleton,
   NewsAndAlertsSkeleton,
-} from "../components/portfolio/PortfolioSkeletonLoader";
+} from '../components/portfolio/PortfolioSkeletonLoader';
 
 // Types
 import {
@@ -57,12 +57,12 @@ import {
   PortfolioAnalytics,
   StockNews,
   PriceAlert,
-} from "../types/portfolio";
+} from '../types/portfolio';
 import {
   formatCurrency,
   formatPercentage,
-} from "../utils/portfolioCalculations";
-import { cn } from "../utils/tailwind";
+} from '../utils/portfolioCalculations';
+import { cn } from '../utils/cn';
 
 // Enhanced Portfolio Analytics Component
 const PortfolioAnalyticsSection: React.FC<{
@@ -81,7 +81,7 @@ const PortfolioAnalyticsSection: React.FC<{
   }
 
   return (
-    <div className={cn("space-y-6", className)}>
+    <div className={cn('space-y-6', className)}>
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">
@@ -103,10 +103,10 @@ const PortfolioAnalyticsSection: React.FC<{
       {/* Performance metrics grid */}
       <div
         className={cn(
-          "grid gap-4",
+          'grid gap-4',
           compactMode
-            ? "grid-cols-2 lg:grid-cols-3"
-            : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
+            ? 'grid-cols-2 lg:grid-cols-3'
+            : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
         )}
       >
         <Card>
@@ -172,13 +172,13 @@ const PortfolioAnalyticsSection: React.FC<{
           <CardContent>
             <div
               className={cn(
-                "text-2xl font-bold",
+                'text-2xl font-bold',
                 analytics.comparisonData.alpha >= 0
-                  ? "text-green-600"
-                  : "text-red-600",
+                  ? 'text-green-600'
+                  : 'text-red-600',
               )}
             >
-              {analytics.comparisonData.alpha >= 0 ? "+" : ""}
+              {analytics.comparisonData.alpha >= 0 ? '+' : ''}
               {analytics.comparisonData.alpha.toFixed(2)}%
             </div>
             <p className="text-xs text-muted-foreground">
@@ -250,10 +250,10 @@ const PortfolioAnalyticsSection: React.FC<{
                   <span className="text-sm">Concentration Risk</span>
                   <span
                     className={cn(
-                      "text-sm font-medium",
+                      'text-sm font-medium',
                       analytics.diversificationMetrics.concentrationRisk > 0.3
-                        ? "text-red-600"
-                        : "text-green-600",
+                        ? 'text-red-600'
+                        : 'text-green-600',
                     )}
                   >
                     {(
@@ -285,7 +285,7 @@ const PortfolioAnalyticsSection: React.FC<{
   );
 });
 
-PortfolioAnalyticsSection.displayName = "PortfolioAnalyticsSection";
+PortfolioAnalyticsSection.displayName = 'PortfolioAnalyticsSection';
 
 // News and Alerts Section Component
 const NewsAndAlertsSection: React.FC<{
@@ -304,8 +304,8 @@ const NewsAndAlertsSection: React.FC<{
   return (
     <div
       className={cn(
-        "grid gap-6",
-        compactMode ? "lg:grid-cols-1" : "lg:grid-cols-2",
+        'grid gap-6',
+        compactMode ? 'lg:grid-cols-1' : 'lg:grid-cols-2',
         className,
       )}
     >
@@ -349,11 +349,11 @@ const NewsAndAlertsSection: React.FC<{
                       </span>
                       <Badge
                         variant={
-                          article.sentiment === "POSITIVE"
-                            ? "default"
-                            : article.sentiment === "NEGATIVE"
-                              ? "destructive"
-                              : "secondary"
+                          article.sentiment === 'POSITIVE'
+                            ? 'default'
+                            : article.sentiment === 'NEGATIVE'
+                              ? 'destructive'
+                              : 'secondary'
                         }
                         className="text-xs"
                       >
@@ -396,14 +396,14 @@ const NewsAndAlertsSection: React.FC<{
                 >
                   <div
                     className={cn(
-                      "w-2 h-2 rounded-full",
-                      alert.isActive ? "bg-green-500" : "bg-gray-400",
+                      'w-2 h-2 rounded-full',
+                      alert.isActive ? 'bg-green-500' : 'bg-gray-400',
                     )}
                   />
                   <div className="flex-1">
                     <div className="text-sm font-medium">{alert.symbol}</div>
                     <div className="text-xs text-muted-foreground">
-                      {alert.alertType.replace("_", " ").toLowerCase()}{" "}
+                      {alert.alertType.replace('_', ' ').toLowerCase()}{' '}
                       {alert.threshold}
                     </div>
                   </div>
@@ -420,7 +420,7 @@ const NewsAndAlertsSection: React.FC<{
   );
 });
 
-NewsAndAlertsSection.displayName = "NewsAndAlertsSection";
+NewsAndAlertsSection.displayName = 'NewsAndAlertsSection';
 
 // Main Portfolio Page Component
 export default function PortfolioPage() {
@@ -450,7 +450,7 @@ export default function PortfolioPage() {
     setAlert,
     updateConfig,
   } = usePortfolioData({
-    portfolioId: "1",
+    portfolioId: '1',
     enableRealTime: true,
     autoLoad: true,
   });
@@ -467,32 +467,32 @@ export default function PortfolioPage() {
       setSelectedAction(action);
 
       switch (action.type) {
-        case "BUY_MORE":
+        case 'BUY_MORE':
           // Mock buy more action
           console.log(`Buy more ${action.symbol}`);
           break;
-        case "SELL":
+        case 'SELL':
           // Mock sell action
           console.log(`Sell ${action.symbol}`);
           break;
-        case "SET_ALERT":
+        case 'SET_ALERT':
           // Mock set alert action
           await setAlert({
             symbol: action.symbol,
-            alertType: "PRICE_ABOVE",
+            alertType: 'PRICE_ABOVE',
             threshold: action.data?.currentPrice * 1.1 || 100,
             isActive: true,
           });
           break;
-        case "VIEW_DETAILS":
+        case 'VIEW_DETAILS':
           // Navigate to position details
           console.log(`View details for ${action.symbol}`);
           break;
-        case "VIEW_NEWS":
+        case 'VIEW_NEWS':
           // Navigate to stock news
           console.log(`View news for ${action.symbol}`);
           break;
-        case "ANALYZE":
+        case 'ANALYZE':
           // Navigate to analysis page
           console.log(`Analyze ${action.symbol}`);
           break;
@@ -504,7 +504,7 @@ export default function PortfolioPage() {
   // Handle export
   const handleExport = useCallback(async () => {
     const exportOptions: ExportOptions = {
-      format: "CSV",
+      format: 'CSV',
       includeTransactions: true,
       includeAnalytics: true,
     };
@@ -512,7 +512,7 @@ export default function PortfolioPage() {
     try {
       await exportData(exportOptions);
     } catch (err) {
-      console.error("Export failed:", err);
+      console.error('Export failed:', err);
     }
   }, [exportData]);
 
@@ -622,7 +622,7 @@ export default function PortfolioPage() {
             disabled={isRefreshing}
           >
             <RefreshCw
-              className={cn("w-4 h-4 mr-2", isRefreshing && "animate-spin")}
+              className={cn('w-4 h-4 mr-2', isRefreshing && 'animate-spin')}
             />
             Refresh
           </Button>
@@ -668,7 +668,7 @@ export default function PortfolioPage() {
                     Total Value
                   </p>
                   <p className="text-2xl font-bold">
-                    {summary ? formatCurrency(summary.totalValue) : "---"}
+                    {summary ? formatCurrency(summary.totalValue) : '---'}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     Portfolio worth

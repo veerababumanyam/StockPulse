@@ -163,9 +163,9 @@ const ApiKeyManagement: React.FC = () => {
     form.reset();
     
     toast({
-      title: "API Key Added",
+      title: 'API Key Added',
       description: `${values.name} has been successfully added.`,
-      variant: "success",
+      variant: 'success',
     });
   };
 
@@ -173,9 +173,9 @@ const ApiKeyManagement: React.FC = () => {
     setApiKeys(prev => prev.filter(key => key.id !== keyId));
     
     toast({
-      title: "API Key Deleted",
-      description: "The API key has been removed.",
-      variant: "default",
+      title: 'API Key Deleted',
+      description: 'The API key has been removed.',
+      variant: 'default',
     });
   };
 
@@ -187,9 +187,9 @@ const ApiKeyManagement: React.FC = () => {
       setIsTestingKey(null);
       
       toast({
-        title: "API Key Valid",
-        description: "The API key was tested successfully.",
-        variant: "success",
+        title: 'API Key Valid',
+        description: 'The API key was tested successfully.',
+        variant: 'success',
       });
     }, 1500);
   };
@@ -197,9 +197,9 @@ const ApiKeyManagement: React.FC = () => {
   const handleRotateKey = (keyId: string) => {
     // In a real implementation, this would guide the user through key rotation
     toast({
-      title: "Key Rotation",
-      description: "Please generate a new key from the provider and add it here.",
-      variant: "default",
+      title: 'Key Rotation',
+      description: 'Please generate a new key from the provider and add it here.',
+      variant: 'default',
     });
   };
 

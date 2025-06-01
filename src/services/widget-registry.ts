@@ -1,263 +1,457 @@
 /**
- * Widget Registry System
- * Central registry for dynamic widget management in federated architecture
+ * StockPulse Widget Registry - Enterprise-Grade
+ * Centralized registry for managing widget types, metadata, and registration
+ * Follows Story 2.2 requirements and enterprise architecture patterns
  */
 
-import { WidgetType, WidgetConfig, WidgetLibraryItem, WidgetCategory } from '../types/dashboard';
+import {
+  WidgetType,
+  WidgetMetadata,
+  WidgetCategory,
+  WidgetSize,
+  WidgetComponentProps,
+} from '../types/dashboard';
+import { ComponentType, lazy } from 'react';
 
-// Widget metadata for registration
-export interface WidgetMetadata {
+// ===============================================
+// Widget Registry Interface
+// ===============================================
+
+export interface WidgetRegistryEntry {
   type: WidgetType;
-  component: React.LazyExoticComponent<React.ComponentType<any>>;
-  config: WidgetConfig;
-  libraryItem: WidgetLibraryItem;
-  previewComponent?: React.LazyExoticComponent<React.ComponentType<any>>;
-  dependencies?: string[];
+  metadata: WidgetMetadata;
+  component: ComponentType<WidgetComponentProps>;
+  previewComponent?: ComponentType<any>;
+  isEnabled: boolean;
   permissions?: string[];
-  dataRequirements?: string[];
+  version: string;
+  lastUpdated: string;
 }
 
-// Widget factory interface
-export interface WidgetFactory {
-  create: (config: Record<string, any>) => React.ComponentType<any>;
-  validate: (config: Record<string, any>) => boolean;
-  getDefaultConfig: () => Record<string, any>;
+export interface WidgetRegistry {
+  [key: string]: WidgetRegistryEntry;
 }
 
-// Widget registry class
+// ===============================================
+// Widget Component Lazy Loading
+// ===============================================
+
+const WIDGET_COMPONENTS: Record<WidgetType, ComponentType<WidgetComponentProps>> = {
+  'portfolio-overview': lazy(() => import('../components/widgets/PortfolioOverview')),
+  'portfolio-chart': lazy(() => import('../components/widgets/PortfolioChart')),
+  'watchlist': lazy(() => import('../components/widgets/Watchlist')),
+  'market-summary': lazy(() => import('../components/widgets/MarketSummary')),
+  'ai-insights': lazy(() => import('../components/widgets/AIInsightsWidget')),
+  'recent-transactions': lazy(() => import('../components/widgets/RecentTransactions')),
+  'performance-metrics': lazy(() => import('../components/widgets/PerformanceMetrics')),
+  'alerts': lazy(() => import('../components/widgets/Alerts')),
+  'news-feed': lazy(() => import('../components/widgets/NewsFeed')),
+  'sector-performance': lazy(() => import('../components/widgets/SectorPerformance')),
+  'top-movers': lazy(() => import('../components/widgets/TopMovers')),
+  'economic-calendar': lazy(() => import('../components/widgets/EconomicCalendar')),
+};
+
+// ===============================================
+// Widget Metadata Definitions
+// ===============================================
+
+const WIDGET_METADATA: Record<WidgetType, WidgetMetadata> = {
+  'portfolio-overview': {
+    type: 'portfolio-overview',
+    name: 'Portfolio Overview',
+    description: 'Comprehensive overview of portfolio performance and key metrics',
+    category: 'portfolio',
+    icon: 'PieChart',
+    isResizable: true,
+    isDraggable: true,
+    defaultSize: { w: 3, h: 3, minW: 2, minH: 2, maxW: 6, maxH: 4 },
+    supportedSizes: [
+      { w: 2, h: 2, minW: 2, minH: 2 },
+      { w: 3, h: 3, minW: 2, minH: 2 },
+      { w: 4, h: 3, minW: 2, minH: 2 },
+    ],
+    tags: ['portfolio', 'overview', 'performance', 'metrics'],
+    isPremium: false,
+  },
+  'portfolio-chart': {
+    type: 'portfolio-chart',
+    name: 'Portfolio Chart',
+    description: 'Interactive chart showing portfolio performance over time',
+    category: 'portfolio',
+    icon: 'TrendingUp',
+    isResizable: true,
+    isDraggable: true,
+    defaultSize: { w: 4, h: 3, minW: 3, minH: 2, maxW: 8, maxH: 6 },
+    supportedSizes: [
+      { w: 3, h: 2, minW: 3, minH: 2 },
+      { w: 4, h: 3, minW: 3, minH: 2 },
+      { w: 6, h: 4, minW: 3, minH: 2 },
+    ],
+    tags: ['portfolio', 'chart', 'performance', 'visualization'],
+    isPremium: false,
+  },
+  'watchlist': {
+    type: 'watchlist',
+    name: 'Watchlist',
+    description: 'Monitor your favorite stocks and track their performance',
+    category: 'market',
+    icon: 'List',
+    isResizable: true,
+    isDraggable: true,
+    defaultSize: { w: 3, h: 4, minW: 2, minH: 3, maxW: 6, maxH: 8 },
+    supportedSizes: [
+      { w: 2, h: 3, minW: 2, minH: 3 },
+      { w: 3, h: 4, minW: 2, minH: 3 },
+      { w: 4, h: 5, minW: 2, minH: 3 },
+    ],
+    tags: ['stocks', 'watchlist', 'monitoring', 'market'],
+    isPremium: false,
+  },
+  'market-summary': {
+    type: 'market-summary',
+    name: 'Market Summary',
+    description: 'Overview of major market indices and their performance',
+    category: 'market',
+    icon: 'BarChart3',
+    isResizable: true,
+    isDraggable: true,
+    defaultSize: { w: 3, h: 2, minW: 2, minH: 2, maxW: 6, maxH: 4 },
+    supportedSizes: [
+      { w: 2, h: 2, minW: 2, minH: 2 },
+      { w: 3, h: 2, minW: 2, minH: 2 },
+      { w: 4, h: 3, minW: 2, minH: 2 },
+    ],
+    tags: ['market', 'indices', 'summary', 'overview'],
+    isPremium: false,
+  },
+  'ai-insights': {
+    type: 'ai-insights',
+    name: 'AI Insights',
+    description: 'AI-powered trading insights and recommendations',
+    category: 'analytics',
+    icon: 'Brain',
+    isResizable: true,
+    isDraggable: true,
+    defaultSize: { w: 3, h: 3, minW: 2, minH: 2, maxW: 6, maxH: 5 },
+    supportedSizes: [
+      { w: 2, h: 2, minW: 2, minH: 2 },
+      { w: 3, h: 3, minW: 2, minH: 2 },
+      { w: 4, h: 4, minW: 2, minH: 2 },
+    ],
+    tags: ['ai', 'insights', 'recommendations', 'analytics'],
+    isPremium: true,
+  },
+  'recent-transactions': {
+    type: 'recent-transactions',
+    name: 'Recent Transactions',
+    description: 'View your latest trading activity and transaction history',
+    category: 'trading',
+    icon: 'History',
+    isResizable: true,
+    isDraggable: true,
+    defaultSize: { w: 3, h: 3, minW: 2, minH: 2, maxW: 6, maxH: 6 },
+    supportedSizes: [
+      { w: 2, h: 2, minW: 2, minH: 2 },
+      { w: 3, h: 3, minW: 2, minH: 2 },
+      { w: 4, h: 4, minW: 2, minH: 2 },
+    ],
+    tags: ['transactions', 'trading', 'history', 'activity'],
+    isPremium: false,
+  },
+  'performance-metrics': {
+    type: 'performance-metrics',
+    name: 'Performance Metrics',
+    description: 'Key performance indicators and portfolio analytics',
+    category: 'analytics',
+    icon: 'Gauge',
+    isResizable: true,
+    isDraggable: true,
+    defaultSize: { w: 3, h: 2, minW: 2, minH: 2, maxW: 6, maxH: 4 },
+    supportedSizes: [
+      { w: 2, h: 2, minW: 2, minH: 2 },
+      { w: 3, h: 2, minW: 2, minH: 2 },
+      { w: 4, h: 3, minW: 2, minH: 2 },
+    ],
+    tags: ['performance', 'metrics', 'analytics', 'kpi'],
+    isPremium: false,
+  },
+  'alerts': {
+    type: 'alerts',
+    name: 'Alerts',
+    description: 'Trading alerts, notifications, and important updates',
+    category: 'trading',
+    icon: 'AlertTriangle',
+    isResizable: true,
+    isDraggable: true,
+    defaultSize: { w: 3, h: 3, minW: 2, minH: 2, maxW: 6, maxH: 5 },
+    supportedSizes: [
+      { w: 2, h: 2, minW: 2, minH: 2 },
+      { w: 3, h: 3, minW: 2, minH: 2 },
+      { w: 4, h: 4, minW: 2, minH: 2 },
+    ],
+    tags: ['alerts', 'notifications', 'trading', 'updates'],
+    isPremium: false,
+  },
+  'news-feed': {
+    type: 'news-feed',
+    name: 'News Feed',
+    description: 'Latest financial news and market updates',
+    category: 'news',
+    icon: 'Newspaper',
+    isResizable: true,
+    isDraggable: true,
+    defaultSize: { w: 3, h: 4, minW: 2, minH: 3, maxW: 6, maxH: 8 },
+    supportedSizes: [
+      { w: 2, h: 3, minW: 2, minH: 3 },
+      { w: 3, h: 4, minW: 2, minH: 3 },
+      { w: 4, h: 5, minW: 2, minH: 3 },
+    ],
+    tags: ['news', 'financial', 'market', 'updates'],
+    isPremium: false,
+  },
+  'sector-performance': {
+    type: 'sector-performance',
+    name: 'Sector Performance',
+    description: 'Performance analysis across different market sectors',
+    category: 'market',
+    icon: 'Building2',
+    isResizable: true,
+    isDraggable: true,
+    defaultSize: { w: 3, h: 3, minW: 2, minH: 2, maxW: 6, maxH: 5 },
+    supportedSizes: [
+      { w: 2, h: 2, minW: 2, minH: 2 },
+      { w: 3, h: 3, minW: 2, minH: 2 },
+      { w: 4, h: 4, minW: 2, minH: 2 },
+    ],
+    tags: ['sectors', 'performance', 'analysis', 'market'],
+    isPremium: false,
+  },
+  'top-movers': {
+    type: 'top-movers',
+    name: 'Top Movers',
+    description: 'Stocks with the biggest gains and losses today',
+    category: 'market',
+    icon: 'Activity',
+    isResizable: true,
+    isDraggable: true,
+    defaultSize: { w: 3, h: 3, minW: 2, minH: 2, maxW: 6, maxH: 5 },
+    supportedSizes: [
+      { w: 2, h: 2, minW: 2, minH: 2 },
+      { w: 3, h: 3, minW: 2, minH: 2 },
+      { w: 4, h: 4, minW: 2, minH: 2 },
+    ],
+    tags: ['movers', 'gainers', 'losers', 'market'],
+    isPremium: false,
+  },
+  'economic-calendar': {
+    type: 'economic-calendar',
+    name: 'Economic Calendar',
+    description: 'Important economic events and their market impact',
+    category: 'news',
+    icon: 'Calendar',
+    isResizable: true,
+    isDraggable: true,
+    defaultSize: { w: 4, h: 3, minW: 3, minH: 2, maxW: 8, maxH: 6 },
+    supportedSizes: [
+      { w: 3, h: 2, minW: 3, minH: 2 },
+      { w: 4, h: 3, minW: 3, minH: 2 },
+      { w: 6, h: 4, minW: 3, minH: 2 },
+    ],
+    tags: ['economic', 'calendar', 'events', 'news'],
+    isPremium: true,
+  },
+};
+
+// ===============================================
+// Widget Registry Implementation
+// ===============================================
+
 class WidgetRegistryService {
-  private widgets: Map<WidgetType, WidgetMetadata> = new Map();
-  private factories: Map<WidgetType, WidgetFactory> = new Map();
-  private categories: Map<WidgetCategory, WidgetType[]> = new Map();
-  private loadPromises: Map<WidgetType, Promise<void>> = new Map();
+  private registry: WidgetRegistry = {};
+  private initialized = false;
+
+  constructor() {
+    this.initializeRegistry();
+  }
 
   /**
-   * Register a widget with the registry
+   * Initialize the widget registry with all available widgets
    */
-  register(metadata: WidgetMetadata, factory?: WidgetFactory): void {
-    this.widgets.set(metadata.type, metadata);
-    
-    if (factory) {
-      this.factories.set(metadata.type, factory);
-    }
+  private initializeRegistry(): void {
+    if (this.initialized) return;
 
-    // Update category mapping
-    const category = metadata.libraryItem.category;
-    const categoryWidgets = this.categories.get(category) || [];
-    if (!categoryWidgets.includes(metadata.type)) {
-      categoryWidgets.push(metadata.type);
-      this.categories.set(category, categoryWidgets);
-    }
+    Object.entries(WIDGET_METADATA).forEach(([type, metadata]) => {
+      this.registry[type] = {
+        type: type as WidgetType,
+        metadata,
+        component: WIDGET_COMPONENTS[type as WidgetType],
+        isEnabled: true,
+        version: '1.0.0',
+        lastUpdated: new Date().toISOString(),
+      };
+    });
 
-    console.log(`Widget registered: ${metadata.type}`);
+    this.initialized = true;
   }
 
   /**
    * Get all registered widgets
    */
-  getAll(): WidgetMetadata[] {
-    return Array.from(this.widgets.values());
+  getAllWidgets(): WidgetRegistryEntry[] {
+    return Object.values(this.registry);
   }
 
   /**
    * Get widgets by category
    */
-  getByCategory(category: WidgetCategory): WidgetMetadata[] {
-    const widgetTypes = this.categories.get(category) || [];
-    return widgetTypes
-      .map(type => this.widgets.get(type))
-      .filter((widget): widget is WidgetMetadata => widget !== undefined);
-  }
-
-  /**
-   * Get widget metadata by type
-   */
-  get(type: WidgetType): WidgetMetadata | undefined {
-    return this.widgets.get(type);
-  }
-
-  /**
-   * Get widget component (lazy loaded)
-   */
-  async getComponent(type: WidgetType): Promise<React.ComponentType<any> | null> {
-    const metadata = this.widgets.get(type);
-    if (!metadata) return null;
-
-    try {
-      const module = await metadata.component();
-      return module.default || module;
-    } catch (error) {
-      console.error(`Failed to load widget component: ${type}`, error);
-      return null;
-    }
-  }
-
-  /**
-   * Get widget preview component
-   */
-  async getPreviewComponent(type: WidgetType): Promise<React.ComponentType<any> | null> {
-    const metadata = this.widgets.get(type);
-    if (!metadata?.previewComponent) return null;
-
-    try {
-      const module = await metadata.previewComponent();
-      return module.default || module;
-    } catch (error) {
-      console.error(`Failed to load widget preview: ${type}`, error);
-      return null;
-    }
-  }
-
-  /**
-   * Get widget factory
-   */
-  getFactory(type: WidgetType): WidgetFactory | undefined {
-    return this.factories.get(type);
-  }
-
-  /**
-   * Check if widget is available
-   */
-  isAvailable(type: WidgetType): boolean {
-    const metadata = this.widgets.get(type);
-    return metadata?.libraryItem.isAvailable ?? false;
-  }
-
-  /**
-   * Search widgets by query
-   */
-  search(query: string): WidgetMetadata[] {
-    const searchTerm = query.toLowerCase();
-    return this.getAll().filter(widget => 
-      widget.config.title.toLowerCase().includes(searchTerm) ||
-      widget.config.description.toLowerCase().includes(searchTerm) ||
-      widget.libraryItem.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+  getWidgetsByCategory(category: WidgetCategory): WidgetRegistryEntry[] {
+    return Object.values(this.registry).filter(
+      (entry) => entry.metadata.category === category
     );
   }
 
   /**
-   * Validate widget configuration
+   * Get widget by type
    */
-  validateConfig(type: WidgetType, config: Record<string, any>): boolean {
-    const factory = this.factories.get(type);
-    return factory?.validate(config) ?? true;
+  getWidget(type: WidgetType): WidgetRegistryEntry | undefined {
+    return this.registry[type];
   }
 
   /**
-   * Get default configuration for widget
+   * Get widget metadata
    */
-  getDefaultConfig(type: WidgetType): Record<string, any> {
-    const factory = this.factories.get(type);
-    return factory?.getDefaultConfig() ?? {};
+  getWidgetMetadata(type: WidgetType): WidgetMetadata | undefined {
+    return this.registry[type]?.metadata;
   }
 
   /**
-   * Check widget permissions
+   * Get widget component
    */
-  checkPermissions(type: WidgetType, userPermissions: string[]): boolean {
-    const metadata = this.widgets.get(type);
-    if (!metadata?.permissions) return true;
-
-    return metadata.permissions.every(permission => 
-      userPermissions.includes(permission)
-    );
+  getWidgetComponent(type: WidgetType): ComponentType<WidgetComponentProps> | undefined {
+    return this.registry[type]?.component;
   }
 
   /**
-   * Get widget library items for display
+   * Check if widget is available for user
    */
-  getLibraryItems(): WidgetLibraryItem[] {
-    return this.getAll()
-      .map(widget => widget.libraryItem)
-      .sort((a, b) => a.title.localeCompare(b.title));
-  }
+  isWidgetAvailable(type: WidgetType, userPermissions: string[] = []): boolean {
+    const widget = this.registry[type];
+    if (!widget || !widget.isEnabled) return false;
 
-  /**
-   * Get categories with widget counts
-   */
-  getCategoriesWithCounts(): Array<{ category: WidgetCategory; count: number; widgets: WidgetType[] }> {
-    return Array.from(this.categories.entries()).map(([category, widgets]) => ({
-      category,
-      count: widgets.length,
-      widgets
-    }));
-  }
-
-  /**
-   * Preload widget components
-   */
-  async preloadWidgets(types?: WidgetType[]): Promise<void> {
-    const widgetsToLoad = types || Array.from(this.widgets.keys());
-    const loadPromises = widgetsToLoad.map(type => this.preloadWidget(type));
-    await Promise.allSettled(loadPromises);
-  }
-
-  /**
-   * Preload single widget
-   */
-  private async preloadWidget(type: WidgetType): Promise<void> {
-    if (this.loadPromises.has(type)) {
-      return this.loadPromises.get(type);
+    if (widget.permissions && widget.permissions.length > 0) {
+      return widget.permissions.some(permission => userPermissions.includes(permission));
     }
 
-    const loadPromise = this.getComponent(type).then(() => {
-      console.log(`Widget preloaded: ${type}`);
-    });
-
-    this.loadPromises.set(type, loadPromise);
-    return loadPromise;
-  }
-
-  /**
-   * Unregister widget
-   */
-  unregister(type: WidgetType): boolean {
-    const metadata = this.widgets.get(type);
-    if (!metadata) return false;
-
-    this.widgets.delete(type);
-    this.factories.delete(type);
-    this.loadPromises.delete(type);
-
-    // Update category mapping
-    const category = metadata.libraryItem.category;
-    const categoryWidgets = this.categories.get(category) || [];
-    const updatedWidgets = categoryWidgets.filter(w => w !== type);
-    if (updatedWidgets.length > 0) {
-      this.categories.set(category, updatedWidgets);
-    } else {
-      this.categories.delete(category);
-    }
-
-    console.log(`Widget unregistered: ${type}`);
     return true;
   }
 
   /**
-   * Clear all registrations (for testing)
+   * Get available widgets for user
    */
-  clear(): void {
-    this.widgets.clear();
-    this.factories.clear();
-    this.categories.clear();
-    this.loadPromises.clear();
+  getAvailableWidgets(userPermissions: string[] = []): WidgetRegistryEntry[] {
+    return Object.values(this.registry).filter(widget =>
+      this.isWidgetAvailable(widget.type, userPermissions)
+    );
+  }
+
+  /**
+   * Register a new widget (for extensibility)
+   */
+  registerWidget(entry: WidgetRegistryEntry): void {
+    this.registry[entry.type] = entry;
+  }
+
+  /**
+   * Unregister a widget
+   */
+  unregisterWidget(type: WidgetType): void {
+    delete this.registry[type];
+  }
+
+  /**
+   * Enable/disable a widget
+   */
+  setWidgetEnabled(type: WidgetType, enabled: boolean): void {
+    if (this.registry[type]) {
+      this.registry[type].isEnabled = enabled;
+    }
+  }
+
+  /**
+   * Get widget statistics
+   */
+  getRegistryStats(): {
+    totalWidgets: number;
+    enabledWidgets: number;
+    categoryCounts: Record<WidgetCategory, number>;
+    premiumWidgets: number;
+  } {
+    const widgets = Object.values(this.registry);
+    const categoryCounts: Record<WidgetCategory, number> = {
+      portfolio: 0,
+      market: 0,
+      trading: 0,
+      analytics: 0,
+      news: 0,
+    };
+
+    widgets.forEach(widget => {
+      categoryCounts[widget.metadata.category]++;
+    });
+
+    return {
+      totalWidgets: widgets.length,
+      enabledWidgets: widgets.filter(w => w.isEnabled).length,
+      categoryCounts,
+      premiumWidgets: widgets.filter(w => w.metadata.isPremium).length,
+    };
   }
 }
 
-// Export singleton instance
+// ===============================================
+// Singleton Instance
+// ===============================================
+
 export const widgetRegistry = new WidgetRegistryService();
 
-// Export utility functions
-export const registerWidget = (metadata: WidgetMetadata, factory?: WidgetFactory) => 
-  widgetRegistry.register(metadata, factory);
+// ===============================================
+// Utility Functions
+// ===============================================
 
-export const getWidget = (type: WidgetType) => widgetRegistry.get(type);
+/**
+ * Get all available widget types
+ */
+export const getAvailableWidgetTypes = (): WidgetType[] => {
+  return widgetRegistry.getAllWidgets().map(widget => widget.type);
+};
 
-export const getWidgetComponent = (type: WidgetType) => widgetRegistry.getComponent(type);
+/**
+ * Get widget metadata by type
+ */
+export const getWidgetMetadata = (type: WidgetType): WidgetMetadata | undefined => {
+  return widgetRegistry.getWidgetMetadata(type);
+};
 
-export const searchWidgets = (query: string) => widgetRegistry.search(query);
+/**
+ * Get widget component by type
+ */
+export const getWidgetComponent = (type: WidgetType): ComponentType<WidgetComponentProps> | undefined => {
+  return widgetRegistry.getWidgetComponent(type);
+};
 
-export const getWidgetsByCategory = (category: WidgetCategory) => 
-  widgetRegistry.getByCategory(category);
+/**
+ * Check if widget type is valid
+ */
+export const isValidWidgetType = (type: string): type is WidgetType => {
+  return widgetRegistry.getWidget(type as WidgetType) !== undefined;
+};
 
-export const getWidgetLibrary = () => widgetRegistry.getLibraryItems(); 
+/**
+ * Get default widget configuration
+ */
+export const getDefaultWidgetConfig = (type: WidgetType): Partial<WidgetSize> | undefined => {
+  const metadata = widgetRegistry.getWidgetMetadata(type);
+  return metadata?.defaultSize;
+};
+
+export default widgetRegistry;

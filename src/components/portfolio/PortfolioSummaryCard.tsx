@@ -2,15 +2,15 @@
  * Portfolio Summary Card Component
  * Reusable card component for displaying portfolio metrics with animations and accessibility
  */
-import React from "react";
+import React from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import { Badge } from "../ui/badge";
+} from '../ui/card';
+import { Badge } from '../ui/badge';
 import {
   TrendingUp,
   TrendingDown,
@@ -20,14 +20,14 @@ import {
   Wallet,
   Target,
   TrendingUp as Profit,
-} from "lucide-react";
-import { PortfolioSummary } from "../../types/portfolio";
+} from 'lucide-react';
+import { PortfolioSummary } from '../../types/portfolio';
 import {
   formatCurrency,
   formatPercentage,
-} from "../../utils/portfolioCalculations";
-import ValueChangeDisplay from "../ui/ValueChangeDisplay";
-import { cn } from "../../utils/tailwind";
+} from '../../utils/portfolioCalculations';
+import ValueChangeDisplay from '../ui/ValueChangeDisplay';
+import { cn } from '../../utils/cn';
 
 interface PortfolioSummaryCardProps {
   summary: PortfolioSummary;
@@ -45,7 +45,7 @@ const MetricCard: React.FC<{
   changePercentage?: number;
   icon: React.ReactNode;
   subtitle?: string;
-  color?: "default" | "green" | "red" | "blue";
+  color?: 'default' | 'green' | 'red' | 'blue';
   isLoading?: boolean;
   currency?: boolean;
   compactMode?: boolean;
@@ -57,7 +57,7 @@ const MetricCard: React.FC<{
     changePercentage,
     icon,
     subtitle,
-    color = "default",
+    color = 'default',
     isLoading,
     currency = false,
     compactMode = false,
@@ -80,41 +80,41 @@ const MetricCard: React.FC<{
     }
 
     const colorClasses = {
-      default: "text-muted-foreground",
-      green: "text-green-600 dark:text-green-400",
-      red: "text-red-600 dark:text-red-400",
-      blue: "text-blue-600 dark:text-blue-400",
+      default: 'text-muted-foreground',
+      green: 'text-green-600 dark:text-green-400',
+      red: 'text-red-600 dark:text-red-400',
+      blue: 'text-blue-600 dark:text-blue-400',
     };
 
     return (
       <Card className="transition-all duration-200 hover:shadow-md">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">{title}</CardTitle>
-          <div className={cn("h-4 w-4", colorClasses[color])}>{icon}</div>
+          <div className={cn('h-4 w-4', colorClasses[color])}>{icon}</div>
         </CardHeader>
         <CardContent>
           {change !== undefined || changePercentage !== undefined ? (
             <ValueChangeDisplay
               value={
-                typeof value === "string"
-                  ? parseFloat(value.replace(/[^0-9.-]/g, ""))
+                typeof value === 'string'
+                  ? parseFloat(value.replace(/[^0-9.-]/g, ''))
                   : value
               }
               change={change}
               changePercentage={changePercentage}
               currency={currency}
-              size={compactMode ? "sm" : "lg"}
-              aria-label={`${title}: ${value}${change !== undefined ? `, change: ${change}` : ""}`}
+              size={compactMode ? 'sm' : 'lg'}
+              aria-label={`${title}: ${value}${change !== undefined ? `, change: ${change}` : ''}`}
             />
           ) : (
             <div className="space-y-1">
               <div
                 className={cn(
-                  "font-bold",
-                  compactMode ? "text-lg" : "text-2xl",
+                  'font-bold',
+                  compactMode ? 'text-lg' : 'text-2xl',
                 )}
               >
-                {typeof value === "number" && currency
+                {typeof value === 'number' && currency
                   ? formatCurrency(value)
                   : value}
               </div>
@@ -129,7 +129,7 @@ const MetricCard: React.FC<{
   },
 );
 
-MetricCard.displayName = "MetricCard";
+MetricCard.displayName = 'MetricCard';
 
 export const PortfolioSummaryCard: React.FC<PortfolioSummaryCardProps> =
   React.memo(
@@ -148,16 +148,16 @@ export const PortfolioSummaryCard: React.FC<PortfolioSummaryCardProps> =
 
       const metrics = [
         {
-          title: "Total Value",
+          title: 'Total Value',
           value: summary.totalValue,
           change: summary.dayChange,
           changePercentage: summary.dayChangePercentage,
           icon: <DollarSign className="h-4 w-4" />,
           currency: true,
-          color: "default" as const,
+          color: 'default' as const,
         },
         {
-          title: "Total Gain/Loss",
+          title: 'Total Gain/Loss',
           value: summary.totalGainLoss,
           changePercentage: summary.totalGainLossPercentage,
           icon:
@@ -167,27 +167,27 @@ export const PortfolioSummaryCard: React.FC<PortfolioSummaryCardProps> =
               <TrendingDown className="h-4 w-4" />
             ),
           currency: true,
-          color: summary.totalGainLoss >= 0 ? "green" : ("red" as const),
+          color: summary.totalGainLoss >= 0 ? 'green' : ('red' as const),
         },
         {
-          title: "Cash Balance",
+          title: 'Cash Balance',
           value: summary.cashBalance,
           icon: <Wallet className="h-4 w-4" />,
           subtitle: `${summary.cashPercentage.toFixed(1)}% of portfolio`,
           currency: true,
-          color: "blue" as const,
+          color: 'blue' as const,
         },
         {
-          title: "Positions",
+          title: 'Positions',
           value: `${summary.profitablePositions}/${summary.openPositions}`,
           icon: <PieChart className="h-4 w-4" />,
           subtitle: `${profitabilityRate.toFixed(1)}% profitable`,
           color:
             profitabilityRate >= 60
-              ? "green"
+              ? 'green'
               : profitabilityRate >= 40
-                ? "default"
-                : ("red" as const),
+                ? 'default'
+                : ('red' as const),
         },
       ];
 
@@ -195,10 +195,10 @@ export const PortfolioSummaryCard: React.FC<PortfolioSummaryCardProps> =
         return (
           <div
             className={cn(
-              "grid gap-4",
+              'grid gap-4',
               compactMode
-                ? "grid-cols-2 lg:grid-cols-4"
-                : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
+                ? 'grid-cols-2 lg:grid-cols-4'
+                : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
               className,
             )}
           >
@@ -217,7 +217,7 @@ export const PortfolioSummaryCard: React.FC<PortfolioSummaryCardProps> =
       }
 
       return (
-        <div className={cn("space-y-4", className)}>
+        <div className={cn('space-y-4', className)}>
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
@@ -232,12 +232,12 @@ export const PortfolioSummaryCard: React.FC<PortfolioSummaryCardProps> =
             {/* Portfolio Performance Badge */}
             <Badge
               variant={
-                summary.totalGainLossPercentage >= 0 ? "default" : "destructive"
+                summary.totalGainLossPercentage >= 0 ? 'default' : 'destructive'
               }
               className="text-sm px-3 py-1"
             >
               <Activity className="w-4 h-4 mr-1" />
-              {summary.totalGainLossPercentage >= 0 ? "+" : ""}
+              {summary.totalGainLossPercentage >= 0 ? '+' : ''}
               {summary.totalGainLossPercentage.toFixed(2)}% Total Return
             </Badge>
           </div>
@@ -245,11 +245,11 @@ export const PortfolioSummaryCard: React.FC<PortfolioSummaryCardProps> =
           {/* Metrics Grid */}
           <div
             className={cn(
-              "grid gap-4 transition-all duration-300",
+              'grid gap-4 transition-all duration-300',
               compactMode
-                ? "grid-cols-2 lg:grid-cols-4"
-                : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
-              showAnimations && "animate-in slide-in-from-bottom-4",
+                ? 'grid-cols-2 lg:grid-cols-4'
+                : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
+              showAnimations && 'animate-in slide-in-from-bottom-4',
             )}
             role="grid"
             aria-label="Portfolio summary metrics"
@@ -259,7 +259,7 @@ export const PortfolioSummaryCard: React.FC<PortfolioSummaryCardProps> =
                 key={metric.title}
                 role="gridcell"
                 style={{
-                  animationDelay: showAnimations ? `${index * 100}ms` : "0ms",
+                  animationDelay: showAnimations ? `${index * 100}ms` : '0ms',
                 }}
               >
                 <MetricCard
@@ -296,13 +296,13 @@ export const PortfolioSummaryCard: React.FC<PortfolioSummaryCardProps> =
                     </div>
                     <div
                       className={cn(
-                        "text-lg font-bold",
+                        'text-lg font-bold',
                         summary.portfolioReturn >= 0
-                          ? "text-green-600"
-                          : "text-red-600",
+                          ? 'text-green-600'
+                          : 'text-red-600',
                       )}
                     >
-                      {summary.portfolioReturn >= 0 ? "+" : ""}
+                      {summary.portfolioReturn >= 0 ? '+' : ''}
                       {summary.portfolioReturn.toFixed(2)}%
                     </div>
                   </div>
@@ -312,13 +312,13 @@ export const PortfolioSummaryCard: React.FC<PortfolioSummaryCardProps> =
                     </div>
                     <div
                       className={cn(
-                        "text-lg font-bold",
+                        'text-lg font-bold',
                         summary.dayChangePercentage >= 0
-                          ? "text-green-600"
-                          : "text-red-600",
+                          ? 'text-green-600'
+                          : 'text-red-600',
                       )}
                     >
-                      {summary.dayChangePercentage >= 0 ? "+" : ""}
+                      {summary.dayChangePercentage >= 0 ? '+' : ''}
                       {summary.dayChangePercentage.toFixed(2)}%
                     </div>
                   </div>
@@ -331,6 +331,6 @@ export const PortfolioSummaryCard: React.FC<PortfolioSummaryCardProps> =
     },
   );
 
-PortfolioSummaryCard.displayName = "PortfolioSummaryCard";
+PortfolioSummaryCard.displayName = 'PortfolioSummaryCard';
 
 export default PortfolioSummaryCard;

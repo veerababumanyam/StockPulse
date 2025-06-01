@@ -1,1 +1,1 @@
-export { RecentTransactionsPreview as default } from './index'; 
+export { RecentTransactionsPreview as default } from './index';

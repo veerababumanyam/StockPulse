@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const ScreenerPage: React.FC = () => {
   return (
@@ -435,8 +435,8 @@ const ScreenerPage: React.FC = () => {
         <div className="px-6 py-4 border-t border-border">
           <div className="flex justify-between items-center">
             <div className="text-sm text-text/60">
-              Showing <span className="font-medium">1</span> to{" "}
-              <span className="font-medium">5</span> of{" "}
+              Showing <span className="font-medium">1</span> to{' '}
+              <span className="font-medium">5</span> of{' '}
               <span className="font-medium">125</span> results
             </div>
             <div className="flex space-x-2">

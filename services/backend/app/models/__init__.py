@@ -1,24 +1,35 @@
 # Models package initialization
 # This ensures all models are imported for SQLAlchemy metadata
 
+from .api_keys import APIKey, APIKeyUsage, APIProvider
+from .market_data import (
+    CacheMetrics,
+    MarketDataSnapshot,
+    TransactionHistory,
+    UserPreferences,
+)
+from .portfolio import (
+    AIPortfolioInsight,
+    Portfolio,
+    PortfolioPosition,
+    PortfolioSnapshot,
+    Transaction,
+)
 from .user import User
-from .portfolio import Portfolio, PortfolioPosition, Transaction, AIPortfolioInsight, PortfolioSnapshot
-from .api_keys import APIProvider, APIKey, APIKeyUsage
-from .market_data import MarketDataSnapshot, TransactionHistory, UserPreferences, CacheMetrics
 
 # Import all base models for metadata creation
 __all__ = [
     "User",
-    "Portfolio", 
-    "PortfolioPosition", 
-    "Transaction", 
+    "Portfolio",
+    "PortfolioPosition",
+    "Transaction",
     "AIPortfolioInsight",
-    "APIProvider", 
-    "APIKey", 
+    "APIProvider",
+    "APIKey",
     "APIKeyUsage",
     "MarketDataSnapshot",
-    "PortfolioSnapshot", 
-    "TransactionHistory", 
-    "UserPreferences", 
-    "CacheMetrics"
-] 
+    "PortfolioSnapshot",
+    "TransactionHistory",
+    "UserPreferences",
+    "CacheMetrics",
+]

@@ -160,9 +160,9 @@ const LevelTwoOrderBook: React.FC<LevelTwoOrderBookProps> = ({
           <div className="bg-green-50 dark:bg-green-900/20 p-2 rounded-t-lg">
             <div className="grid grid-cols-12 text-xs font-medium text-gray-500 dark:text-gray-400">
               {showExchanges && <div className="col-span-2">Exchange</div>}
-              <div className={showExchanges ? "col-span-3" : "col-span-4"}>Size</div>
-              <div className={showExchanges ? "col-span-3" : "col-span-4"}>Price</div>
-              <div className={showExchanges ? "col-span-4" : "col-span-4"}>Volume</div>
+              <div className={showExchanges ? 'col-span-3' : 'col-span-4'}>Size</div>
+              <div className={showExchanges ? 'col-span-3' : 'col-span-4'}>Price</div>
+              <div className={showExchanges ? 'col-span-4' : 'col-span-4'}>Volume</div>
             </div>
           </div>
           
@@ -176,9 +176,9 @@ const LevelTwoOrderBook: React.FC<LevelTwoOrderBookProps> = ({
                 className={`grid grid-cols-12 text-sm py-1 ${index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-700/30'}`}
               >
                 {showExchanges && <div className="col-span-2 text-xs">{bid.exchange}</div>}
-                <div className={`${showExchanges ? "col-span-3" : "col-span-4"} font-medium`}>{bid.size}</div>
-                <div className={`${showExchanges ? "col-span-3" : "col-span-4"} text-green-600 dark:text-green-400 font-medium`}>${bid.price.toFixed(2)}</div>
-                <div className={`${showExchanges ? "col-span-4" : "col-span-4"} pr-2`}>
+                <div className={`${showExchanges ? 'col-span-3' : 'col-span-4'} font-medium`}>{bid.size}</div>
+                <div className={`${showExchanges ? 'col-span-3' : 'col-span-4'} text-green-600 dark:text-green-400 font-medium`}>${bid.price.toFixed(2)}</div>
+                <div className={`${showExchanges ? 'col-span-4' : 'col-span-4'} pr-2`}>
                   <div className="h-4 bg-green-100 dark:bg-green-900/40 rounded-sm" style={{ width: `${(bid.size / maxVolume) * 100}%` }}></div>
                 </div>
               </motion.div>
@@ -197,9 +197,9 @@ const LevelTwoOrderBook: React.FC<LevelTwoOrderBookProps> = ({
         <div>
           <div className="bg-red-50 dark:bg-red-900/20 p-2 rounded-t-lg">
             <div className="grid grid-cols-12 text-xs font-medium text-gray-500 dark:text-gray-400">
-              <div className={showExchanges ? "col-span-4" : "col-span-4"}>Volume</div>
-              <div className={showExchanges ? "col-span-3" : "col-span-4"}>Price</div>
-              <div className={showExchanges ? "col-span-3" : "col-span-4"}>Size</div>
+              <div className={showExchanges ? 'col-span-4' : 'col-span-4'}>Volume</div>
+              <div className={showExchanges ? 'col-span-3' : 'col-span-4'}>Price</div>
+              <div className={showExchanges ? 'col-span-3' : 'col-span-4'}>Size</div>
               {showExchanges && <div className="col-span-2">Exchange</div>}
             </div>
           </div>
@@ -213,11 +213,11 @@ const LevelTwoOrderBook: React.FC<LevelTwoOrderBookProps> = ({
                 transition={{ duration: 0.2 }}
                 className={`grid grid-cols-12 text-sm py-1 ${index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-700/30'}`}
               >
-                <div className={`${showExchanges ? "col-span-4" : "col-span-4"} pl-2`}>
+                <div className={`${showExchanges ? 'col-span-4' : 'col-span-4'} pl-2`}>
                   <div className="h-4 bg-red-100 dark:bg-red-900/40 rounded-sm" style={{ width: `${(ask.size / maxVolume) * 100}%` }}></div>
                 </div>
-                <div className={`${showExchanges ? "col-span-3" : "col-span-4"} text-red-600 dark:text-red-400 font-medium`}>${ask.price.toFixed(2)}</div>
-                <div className={`${showExchanges ? "col-span-3" : "col-span-4"} font-medium`}>{ask.size}</div>
+                <div className={`${showExchanges ? 'col-span-3' : 'col-span-4'} text-red-600 dark:text-red-400 font-medium`}>${ask.price.toFixed(2)}</div>
+                <div className={`${showExchanges ? 'col-span-3' : 'col-span-4'} font-medium`}>{ask.size}</div>
                 {showExchanges && <div className="col-span-2 text-xs">{ask.exchange}</div>}
               </motion.div>
             ))}

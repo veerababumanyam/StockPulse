@@ -242,9 +242,9 @@ const MCPSetupWizard: React.FC = () => {
       
       // Show success toast
       toast({
-        title: "Setup Complete",
+        title: 'Setup Complete',
         description: `Your MCP ${wizardType} connection has been successfully configured.`,
-        variant: "success",
+        variant: 'success',
       });
       
       // Navigate to appropriate page

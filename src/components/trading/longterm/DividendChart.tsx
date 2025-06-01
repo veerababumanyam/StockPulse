@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import {
   LineChart,
   Line,
@@ -15,15 +15,15 @@ import {
   PieChart,
   Pie,
   Cell,
-} from "recharts";
+} from 'recharts';
 import {
   TrendingUp,
   TrendingDown,
   DollarSign,
   Calendar,
   Info,
-} from "lucide-react";
-import { useTheme } from "../../../contexts/ThemeContext";
+} from 'lucide-react';
+import { useTheme } from '../../../contexts/ThemeContext';
 
 // Mock data for dividend chart
 const generateMockDividendData = (years = 10) => {
@@ -177,8 +177,8 @@ const DividendChart: React.FC<DividendChartProps> = ({
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [chartType, setChartType] = useState<"dividend" | "yield" | "growth">(
-    "dividend",
+  const [chartType, setChartType] = useState<'dividend' | 'yield' | 'growth'>(
+    'dividend',
   );
   const [showAllData, setShowAllData] = useState<boolean>(false);
 
@@ -193,7 +193,7 @@ const DividendChart: React.FC<DividendChartProps> = ({
         setData(dividendData);
         setLoading(false);
       } catch (err) {
-        setError("Failed to load dividend data");
+        setError('Failed to load dividend data');
         setLoading(false);
       }
     }, 500);
@@ -204,79 +204,79 @@ const DividendChart: React.FC<DividendChartProps> = ({
   // Get primary color based on current theme
   const getPrimaryColor = () => {
     switch (colorTheme) {
-      case "tropical-jungle":
-        return "#29A329";
-      case "ocean-sunset":
-        return "#008B8B";
-      case "desert-storm":
-        return "#C19A6B";
-      case "berry-fields":
-        return "#8E4585";
-      case "arctic-moss":
-        return "#4682B4";
+      case 'tropical-jungle':
+        return '#29A329';
+      case 'ocean-sunset':
+        return '#008B8B';
+      case 'desert-storm':
+        return '#C19A6B';
+      case 'berry-fields':
+        return '#8E4585';
+      case 'arctic-moss':
+        return '#4682B4';
       default:
-        return "#FF1493";
+        return '#FF1493';
     }
   };
 
   // Get secondary color based on current theme
   const getSecondaryColor = () => {
     switch (colorTheme) {
-      case "tropical-jungle":
-        return "#32CD32";
-      case "ocean-sunset":
-        return "#FF7F50";
-      case "desert-storm":
-        return "#B7410E";
-      case "berry-fields":
-        return "#FF1493";
-      case "arctic-moss":
-        return "#9CAF88";
+      case 'tropical-jungle':
+        return '#32CD32';
+      case 'ocean-sunset':
+        return '#FF7F50';
+      case 'desert-storm':
+        return '#B7410E';
+      case 'berry-fields':
+        return '#FF1493';
+      case 'arctic-moss':
+        return '#9CAF88';
       default:
-        return "#000000";
+        return '#000000';
     }
   };
 
   // Get dividend safety rating
   const getDividendSafetyRating = () => {
-    if (!data) return { text: "Loading...", color: "text-gray-500" };
+    if (!data) return { text: 'Loading...', color: 'text-gray-500' };
 
     const score = data.summary.dividendSafety;
 
     if (score >= 80) {
       return {
-        text: "Very Safe",
-        color: "text-green-600 dark:text-green-400",
+        text: 'Very Safe',
+        color: 'text-green-600 dark:text-green-400',
         description:
-          "Low payout ratio and strong dividend growth history indicate very sustainable dividends.",
+          'Low payout ratio and strong dividend growth history indicate very sustainable dividends.',
       };
     } else if (score >= 60) {
       return {
-        text: "Safe",
-        color: "text-green-600 dark:text-green-400",
+        text: 'Safe',
+        color: 'text-green-600 dark:text-green-400',
         description:
-          "Reasonable payout ratio and good dividend growth history suggest sustainable dividends.",
+          'Reasonable payout ratio and good dividend growth history suggest sustainable dividends.',
       };
     } else if (score >= 40) {
       return {
-        text: "Average",
-        color: "text-yellow-600 dark:text-yellow-400",
+        text: 'Average',
+        color: 'text-yellow-600 dark:text-yellow-400',
         description:
-          "Moderate payout ratio and dividend growth indicate generally sustainable dividends with some risk.",
+          'Moderate payout ratio and dividend growth indicate generally sustainable dividends with some risk.',
       };
     } else if (score >= 20) {
       return {
-        text: "At Risk",
-        color: "text-orange-600 dark:text-orange-400",
+        text: 'At Risk',
+        color: 'text-orange-600 dark:text-orange-400',
         description:
-          "High payout ratio or weak dividend growth history suggest potential dividend sustainability issues.",
+          'High payout ratio or weak dividend growth history suggest potential dividend sustainability issues.',
       };
     } else {
       return {
-        text: "Unsafe",
-        color: "text-red-600 dark:text-red-400",
+        text: 'Unsafe',
+        color: 'text-red-600 dark:text-red-400',
         description:
-          "Very high payout ratio and/or declining dividends indicate significant risk to dividend sustainability.",
+          'Very high payout ratio and/or declining dividends indicate significant risk to dividend sustainability.',
       };
     }
   };
@@ -334,31 +334,31 @@ const DividendChart: React.FC<DividendChartProps> = ({
         <div className="flex items-center space-x-2">
           <div className="flex space-x-1">
             <button
-              onClick={() => setChartType("dividend")}
+              onClick={() => setChartType('dividend')}
               className={`px-2 py-1 text-xs font-medium rounded ${
-                chartType === "dividend"
-                  ? "bg-primary-100 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400"
-                  : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                chartType === 'dividend'
+                  ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
               }`}
             >
               Dividend
             </button>
             <button
-              onClick={() => setChartType("yield")}
+              onClick={() => setChartType('yield')}
               className={`px-2 py-1 text-xs font-medium rounded ${
-                chartType === "yield"
-                  ? "bg-primary-100 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400"
-                  : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                chartType === 'yield'
+                  ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
               }`}
             >
               Yield
             </button>
             <button
-              onClick={() => setChartType("growth")}
+              onClick={() => setChartType('growth')}
               className={`px-2 py-1 text-xs font-medium rounded ${
-                chartType === "growth"
-                  ? "bg-primary-100 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400"
-                  : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                chartType === 'growth'
+                  ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
               }`}
             >
               Growth
@@ -372,11 +372,11 @@ const DividendChart: React.FC<DividendChartProps> = ({
           <div className="mb-6">
             <div className="flex justify-between items-center mb-3">
               <h4 className="text-sm font-medium">
-                {chartType === "dividend"
-                  ? "Dividend History & Projections"
-                  : chartType === "yield"
-                    ? "Dividend Yield History"
-                    : "Dividend Growth Rate"}
+                {chartType === 'dividend'
+                  ? 'Dividend History & Projections'
+                  : chartType === 'yield'
+                    ? 'Dividend Yield History'
+                    : 'Dividend Growth Rate'}
               </h4>
               <div className="flex items-center space-x-2">
                 <label className="inline-flex items-center cursor-pointer">
@@ -407,7 +407,7 @@ const DividendChart: React.FC<DividendChartProps> = ({
             </div>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                {chartType === "dividend" ? (
+                {chartType === 'dividend' ? (
                   <BarChart
                     data={getFilteredData()}
                     margin={{
@@ -430,7 +430,7 @@ const DividendChart: React.FC<DividendChartProps> = ({
                     <Tooltip
                       formatter={(value: number) => [
                         `$${value}`,
-                        "Dividend Per Share",
+                        'Dividend Per Share',
                       ]}
                       labelFormatter={(label) => `Year: ${label}`}
                     />
@@ -451,10 +451,10 @@ const DividendChart: React.FC<DividendChartProps> = ({
                             fill={props.fill}
                             opacity={props.payload.isProjection ? 0.5 : 0.8}
                             stroke={
-                              props.payload.isProjection ? "#000" : "none"
+                              props.payload.isProjection ? '#000' : 'none'
                             }
                             strokeDasharray={
-                              props.payload.isProjection ? "3 3" : "0"
+                              props.payload.isProjection ? '3 3' : '0'
                             }
                             strokeWidth={props.payload.isProjection ? 1 : 0}
                           />
@@ -462,7 +462,7 @@ const DividendChart: React.FC<DividendChartProps> = ({
                       }}
                     />
                   </BarChart>
-                ) : chartType === "yield" ? (
+                ) : chartType === 'yield' ? (
                   <LineChart
                     data={getFilteredData()}
                     margin={{
@@ -485,7 +485,7 @@ const DividendChart: React.FC<DividendChartProps> = ({
                     <Tooltip
                       formatter={(value: number) => [
                         `${value}%`,
-                        "Dividend Yield",
+                        'Dividend Yield',
                       ]}
                       labelFormatter={(label) => `Year: ${label}`}
                     />
@@ -498,7 +498,7 @@ const DividendChart: React.FC<DividendChartProps> = ({
                       strokeWidth={2}
                       dot={{ r: 3 }}
                       strokeDasharray={(d: any) =>
-                        d.isProjection ? "5 5" : "0"
+                        d.isProjection ? '5 5' : '0'
                       }
                     />
                     <ReferenceLine
@@ -506,9 +506,9 @@ const DividendChart: React.FC<DividendChartProps> = ({
                       stroke="#666"
                       strokeDasharray="3 3"
                       label={{
-                        value: "Avg Yield",
-                        position: "right",
-                        fill: "#666",
+                        value: 'Avg Yield',
+                        position: 'right',
+                        fill: '#666',
                         fontSize: 10,
                       }}
                     />
@@ -538,7 +538,7 @@ const DividendChart: React.FC<DividendChartProps> = ({
                     <Tooltip
                       formatter={(value: number) => [
                         `${value}%`,
-                        "Growth Rate",
+                        'Growth Rate',
                       ]}
                       labelFormatter={(label) => `Year: ${label}`}
                     />
@@ -564,10 +564,10 @@ const DividendChart: React.FC<DividendChartProps> = ({
                             }
                             opacity={props.payload.isProjection ? 0.5 : 0.8}
                             stroke={
-                              props.payload.isProjection ? "#000" : "none"
+                              props.payload.isProjection ? '#000' : 'none'
                             }
                             strokeDasharray={
-                              props.payload.isProjection ? "3 3" : "0"
+                              props.payload.isProjection ? '3 3' : '0'
                             }
                             strokeWidth={props.payload.isProjection ? 1 : 0}
                           />
@@ -632,7 +632,7 @@ const DividendChart: React.FC<DividendChartProps> = ({
                     stroke={getSecondaryColor()}
                     strokeWidth={2}
                     dot={{ r: 3 }}
-                    strokeDasharray={(d: any) => (d.isProjection ? "5 5" : "0")}
+                    strokeDasharray={(d: any) => (d.isProjection ? '5 5' : '0')}
                   />
                   <Line
                     yAxisId="right"
@@ -642,7 +642,7 @@ const DividendChart: React.FC<DividendChartProps> = ({
                     stroke={getPrimaryColor()}
                     strokeWidth={2}
                     dot={{ r: 3 }}
-                    strokeDasharray={(d: any) => (d.isProjection ? "5 5" : "0")}
+                    strokeDasharray={(d: any) => (d.isProjection ? '5 5' : '0')}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -652,7 +652,7 @@ const DividendChart: React.FC<DividendChartProps> = ({
           <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
             <span>
               {showProjections &&
-                "Dashed/lighter areas represent projections based on historical trends."}
+                'Dashed/lighter areas represent projections based on historical trends.'}
             </span>
             <span>Data source: Company filings, financial analysis</span>
           </div>
@@ -699,11 +699,11 @@ const DividendChart: React.FC<DividendChartProps> = ({
                 <span
                   className={`font-medium ${
                     data.summary.fiveYearCAGR > 0
-                      ? "text-green-600 dark:text-green-400"
-                      : "text-red-600 dark:text-red-400"
+                      ? 'text-green-600 dark:text-green-400'
+                      : 'text-red-600 dark:text-red-400'
                   }`}
                 >
-                  {data.summary.fiveYearCAGR > 0 ? "+" : ""}
+                  {data.summary.fiveYearCAGR > 0 ? '+' : ''}
                   {data.summary.fiveYearCAGR}%
                 </span>
               </div>
@@ -741,11 +741,11 @@ const DividendChart: React.FC<DividendChartProps> = ({
                 <span
                   className={`font-medium ${
                     data.summary.totalReturn > 0
-                      ? "text-green-600 dark:text-green-400"
-                      : "text-red-600 dark:text-red-400"
+                      ? 'text-green-600 dark:text-green-400'
+                      : 'text-red-600 dark:text-red-400'
                   }`}
                 >
-                  {data.summary.totalReturn > 0 ? "+" : ""}
+                  {data.summary.totalReturn > 0 ? '+' : ''}
                   {(data.summary.totalReturn * 100).toFixed(1)}%
                 </span>
               </div>
@@ -760,14 +760,14 @@ const DividendChart: React.FC<DividendChartProps> = ({
                 <div
                   className={`h-2.5 rounded-full ${
                     data.summary.dividendSafety >= 80
-                      ? "bg-green-600"
+                      ? 'bg-green-600'
                       : data.summary.dividendSafety >= 60
-                        ? "bg-green-500"
+                        ? 'bg-green-500'
                         : data.summary.dividendSafety >= 40
-                          ? "bg-yellow-500"
+                          ? 'bg-yellow-500'
                           : data.summary.dividendSafety >= 20
-                            ? "bg-orange-500"
-                            : "bg-red-600"
+                            ? 'bg-orange-500'
+                            : 'bg-red-600'
                   }`}
                   style={{ width: `${data.summary.dividendSafety}%` }}
                 ></div>
@@ -871,35 +871,35 @@ const DividendChart: React.FC<DividendChartProps> = ({
       <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
         <h4 className="text-sm font-medium mb-2">Dividend Analysis</h4>
         <p className="text-sm text-gray-600 dark:text-gray-300">
-          {symbol} has maintained a{" "}
-          {data.summary.consecutiveYearsIncreased > 5 ? "strong" : "consistent"}{" "}
+          {symbol} has maintained a{' '}
+          {data.summary.consecutiveYearsIncreased > 5 ? 'strong' : 'consistent'}{' '}
           dividend history with
           {data.summary.consecutiveYearsIncreased > 0
             ? ` ${data.summary.consecutiveYearsIncreased} consecutive years of dividend increases`
-            : " regular dividend payments"}
-          . The current dividend yield of{" "}
+            : ' regular dividend payments'}
+          . The current dividend yield of{' '}
           {((data.summary.currentDividend / currentPrice) * 100).toFixed(2)}% is
           {data.summary.averageYield >
           (data.summary.currentDividend / currentPrice) * 100
-            ? " below"
-            : " above"}{" "}
+            ? ' below'
+            : ' above'}{' '}
           its 5-year average of {data.summary.averageYield}%. With a payout
           ratio of {data.summary.averagePayoutRatio}%, the dividend appears to
           be
           {data.summary.averagePayoutRatio < 50
-            ? " well-covered by earnings, leaving room for future increases."
+            ? ' well-covered by earnings, leaving room for future increases.'
             : data.summary.averagePayoutRatio < 75
-              ? " adequately covered by earnings, though with less room for significant increases."
-              : " somewhat stretched, which could limit future dividend growth potential."}
+              ? ' adequately covered by earnings, though with less room for significant increases.'
+              : ' somewhat stretched, which could limit future dividend growth potential.'}
           The 5-year dividend growth rate of {data.summary.fiveYearCAGR}% is
           {data.summary.fiveYearCAGR > 7
             ? " impressive and well above inflation, suggesting management's commitment to returning value to shareholders."
             : data.summary.fiveYearCAGR > 3
-              ? " solid and above inflation, indicating a balanced approach to shareholder returns."
+              ? ' solid and above inflation, indicating a balanced approach to shareholder returns.'
               : data.summary.fiveYearCAGR > 0
-                ? " modest but positive, keeping pace with or slightly above inflation."
-                : " negative, which could be a concern for income-focused investors."}
-          Overall, {symbol}'s dividend can be considered{" "}
+                ? ' modest but positive, keeping pace with or slightly above inflation.'
+                : ' negative, which could be a concern for income-focused investors.'}
+          Overall, {symbol}'s dividend can be considered{' '}
           {getDividendSafetyRating().text.toLowerCase()} for income-focused
           investors.
         </p>

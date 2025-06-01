@@ -8,18 +8,18 @@ export interface User {
   id: string;
   email: string;
   name?: string;
-  role?: "ADMIN" | "USER" | "MODERATOR";
+  role?: 'ADMIN' | 'USER' | 'MODERATOR';
   preferences?: UserPreferences;
   createdAt: string;
   lastLogin: string;
 }
 
 export interface UserPreferences {
-  theme?: "light" | "dark";
+  theme?: 'light' | 'dark';
   tradingPreferences?: {
-    riskTolerance: "low" | "medium" | "high";
+    riskTolerance: 'low' | 'medium' | 'high';
     preferredSectors: string[];
-    tradingStyle: "conservative" | "moderate" | "aggressive";
+    tradingStyle: 'conservative' | 'moderate' | 'aggressive';
   };
   notifications?: {
     email: boolean;
@@ -49,6 +49,7 @@ export interface AuthContextType {
   error: string | null;
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (credentials: RegisterCredentials) => Promise<any>;
+  forgotPassword: (email: string) => Promise<void>;
   logout: () => Promise<void>;
   checkAuthStatus: () => Promise<void>;
   clearError: () => void;

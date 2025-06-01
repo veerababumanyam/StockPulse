@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import { useTheme } from "../../contexts/ThemeContext";
-import { Check, ChevronRight, ArrowRight } from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../../contexts/ThemeContext';
+import { Check, ChevronRight, ArrowRight } from 'lucide-react';
 
 const Onboarding: React.FC = () => {
   const { colorTheme, setColorTheme } = useTheme();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [tradingExperience, setTradingExperience] =
-    useState<string>("beginner");
+    useState<string>('beginner');
   const [investmentGoals, setInvestmentGoals] = useState<string[]>([]);
-  const [riskTolerance, setRiskTolerance] = useState<string>("moderate");
+  const [riskTolerance, setRiskTolerance] = useState<string>('moderate');
   const [preferredTheme, setPreferredTheme] = useState<string>(colorTheme);
   const [completed, setCompleted] = useState<boolean>(false);
 
@@ -22,59 +22,59 @@ const Onboarding: React.FC = () => {
   // Investment goals options
   const goalOptions = [
     {
-      id: "growth",
-      label: "Growth",
-      description: "Focus on capital appreciation",
+      id: 'growth',
+      label: 'Growth',
+      description: 'Focus on capital appreciation',
     },
-    { id: "income", label: "Income", description: "Generate regular income" },
+    { id: 'income', label: 'Income', description: 'Generate regular income' },
     {
-      id: "preservation",
-      label: "Preservation",
-      description: "Protect existing capital",
-    },
-    {
-      id: "speculation",
-      label: "Speculation",
-      description: "High-risk, high-reward opportunities",
+      id: 'preservation',
+      label: 'Preservation',
+      description: 'Protect existing capital',
     },
     {
-      id: "retirement",
-      label: "Retirement",
-      description: "Long-term retirement planning",
+      id: 'speculation',
+      label: 'Speculation',
+      description: 'High-risk, high-reward opportunities',
+    },
+    {
+      id: 'retirement',
+      label: 'Retirement',
+      description: 'Long-term retirement planning',
     },
   ];
 
   // Theme options
   const themeOptions = [
     {
-      id: "tropical-jungle",
-      name: "Tropical Jungle",
-      description: "Vibrant Greens",
-      primary: "#29A329",
+      id: 'tropical-jungle',
+      name: 'Tropical Jungle',
+      description: 'Vibrant Greens',
+      primary: '#29A329',
     },
     {
-      id: "ocean-sunset",
-      name: "Ocean Sunset",
-      description: "Blues + Corals",
-      primary: "#008B8B",
+      id: 'ocean-sunset',
+      name: 'Ocean Sunset',
+      description: 'Blues + Corals',
+      primary: '#008B8B',
     },
     {
-      id: "desert-storm",
-      name: "Desert Storm",
-      description: "Warm Neutrals",
-      primary: "#C19A6B",
+      id: 'desert-storm',
+      name: 'Desert Storm',
+      description: 'Warm Neutrals',
+      primary: '#C19A6B',
     },
     {
-      id: "berry-fields",
-      name: "Berry Fields",
-      description: "Purples + Pinks",
-      primary: "#8E4585",
+      id: 'berry-fields',
+      name: 'Berry Fields',
+      description: 'Purples + Pinks',
+      primary: '#8E4585',
     },
     {
-      id: "arctic-moss",
-      name: "Arctic Moss",
-      description: "Cool Grays + Greens",
-      primary: "#4682B4",
+      id: 'arctic-moss',
+      name: 'Arctic Moss',
+      description: 'Cool Grays + Greens',
+      primary: '#4682B4',
     },
   ];
 
@@ -92,18 +92,18 @@ const Onboarding: React.FC = () => {
     switch (currentStep) {
       case 1:
         return (
-          name.trim() !== "" &&
-          email.trim() !== "" &&
+          name.trim() !== '' &&
+          email.trim() !== '' &&
           /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
         );
       case 2:
-        return tradingExperience !== "";
+        return tradingExperience !== '';
       case 3:
         return investmentGoals.length > 0;
       case 4:
-        return riskTolerance !== "";
+        return riskTolerance !== '';
       case 5:
-        return preferredTheme !== "";
+        return preferredTheme !== '';
       default:
         return true;
     }
@@ -122,7 +122,7 @@ const Onboarding: React.FC = () => {
 
         // Delay navigation to dashboard to show completion animation
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate('/dashboard');
         }, 2000);
       }
     }
@@ -137,7 +137,7 @@ const Onboarding: React.FC = () => {
 
   // Skip onboarding
   const handleSkip = () => {
-    navigate("/dashboard");
+    navigate('/dashboard');
   };
 
   return (
@@ -162,10 +162,10 @@ const Onboarding: React.FC = () => {
                   <div
                     className={`flex items-center justify-center w-8 h-8 rounded-full ${
                       index + 1 < currentStep
-                        ? "bg-primary-600 text-white"
+                        ? 'bg-primary-600 text-white'
                         : index + 1 === currentStep
-                          ? "bg-primary-100 border-2 border-primary-600 text-primary-600 dark:bg-primary-900/30 dark:border-primary-500 dark:text-primary-400"
-                          : "bg-surface border border-border text-text/60"
+                          ? 'bg-primary-100 border-2 border-primary-600 text-primary-600 dark:bg-primary-900/30 dark:border-primary-500 dark:text-primary-400'
+                          : 'bg-surface border border-border text-text/60'
                     }`}
                   >
                     {index + 1 < currentStep ? (
@@ -178,7 +178,7 @@ const Onboarding: React.FC = () => {
                   {index < totalSteps - 1 && (
                     <div
                       className={`flex-1 h-1 ${
-                        index + 1 < currentStep ? "bg-primary-600" : "bg-border"
+                        index + 1 < currentStep ? 'bg-primary-600' : 'bg-border'
                       }`}
                     ></div>
                   )}
@@ -272,31 +272,31 @@ const Onboarding: React.FC = () => {
 
                 <div className="space-y-3">
                   <div
-                    onClick={() => setTradingExperience("beginner")}
+                    onClick={() => setTradingExperience('beginner')}
                     className={`p-4 border rounded-md cursor-pointer ${
-                      tradingExperience === "beginner"
-                        ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500"
-                        : "border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600"
+                      tradingExperience === 'beginner'
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500'
+                        : 'border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600'
                     }`}
                   >
                     <div className="flex items-center">
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                          tradingExperience === "beginner"
-                            ? "bg-primary-500 text-white"
-                            : "border border-border dark:border-gray-600"
+                          tradingExperience === 'beginner'
+                            ? 'bg-primary-500 text-white'
+                            : 'border border-border dark:border-gray-600'
                         }`}
                       >
-                        {tradingExperience === "beginner" && (
+                        {tradingExperience === 'beginner' && (
                           <Check className="w-3 h-3" />
                         )}
                       </div>
                       <div className="ml-3">
                         <h3
                           className={`text-sm font-medium ${
-                            tradingExperience === "beginner"
-                              ? "text-primary-700 dark:text-primary-400"
-                              : "text-text dark:text-white"
+                            tradingExperience === 'beginner'
+                              ? 'text-primary-700 dark:text-primary-400'
+                              : 'text-text dark:text-white'
                           }`}
                         >
                           Beginner
@@ -309,31 +309,31 @@ const Onboarding: React.FC = () => {
                   </div>
 
                   <div
-                    onClick={() => setTradingExperience("intermediate")}
+                    onClick={() => setTradingExperience('intermediate')}
                     className={`p-4 border rounded-md cursor-pointer ${
-                      tradingExperience === "intermediate"
-                        ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500"
-                        : "border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600"
+                      tradingExperience === 'intermediate'
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500'
+                        : 'border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600'
                     }`}
                   >
                     <div className="flex items-center">
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                          tradingExperience === "intermediate"
-                            ? "bg-primary-500 text-white"
-                            : "border border-border dark:border-gray-600"
+                          tradingExperience === 'intermediate'
+                            ? 'bg-primary-500 text-white'
+                            : 'border border-border dark:border-gray-600'
                         }`}
                       >
-                        {tradingExperience === "intermediate" && (
+                        {tradingExperience === 'intermediate' && (
                           <Check className="w-3 h-3" />
                         )}
                       </div>
                       <div className="ml-3">
                         <h3
                           className={`text-sm font-medium ${
-                            tradingExperience === "intermediate"
-                              ? "text-primary-700 dark:text-primary-400"
-                              : "text-text dark:text-white"
+                            tradingExperience === 'intermediate'
+                              ? 'text-primary-700 dark:text-primary-400'
+                              : 'text-text dark:text-white'
                           }`}
                         >
                           Intermediate
@@ -346,31 +346,31 @@ const Onboarding: React.FC = () => {
                   </div>
 
                   <div
-                    onClick={() => setTradingExperience("advanced")}
+                    onClick={() => setTradingExperience('advanced')}
                     className={`p-4 border rounded-md cursor-pointer ${
-                      tradingExperience === "advanced"
-                        ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500"
-                        : "border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600"
+                      tradingExperience === 'advanced'
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500'
+                        : 'border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600'
                     }`}
                   >
                     <div className="flex items-center">
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                          tradingExperience === "advanced"
-                            ? "bg-primary-500 text-white"
-                            : "border border-border dark:border-gray-600"
+                          tradingExperience === 'advanced'
+                            ? 'bg-primary-500 text-white'
+                            : 'border border-border dark:border-gray-600'
                         }`}
                       >
-                        {tradingExperience === "advanced" && (
+                        {tradingExperience === 'advanced' && (
                           <Check className="w-3 h-3" />
                         )}
                       </div>
                       <div className="ml-3">
                         <h3
                           className={`text-sm font-medium ${
-                            tradingExperience === "advanced"
-                              ? "text-primary-700 dark:text-primary-400"
-                              : "text-text dark:text-white"
+                            tradingExperience === 'advanced'
+                              ? 'text-primary-700 dark:text-primary-400'
+                              : 'text-text dark:text-white'
                           }`}
                         >
                           Advanced
@@ -383,31 +383,31 @@ const Onboarding: React.FC = () => {
                   </div>
 
                   <div
-                    onClick={() => setTradingExperience("expert")}
+                    onClick={() => setTradingExperience('expert')}
                     className={`p-4 border rounded-md cursor-pointer ${
-                      tradingExperience === "expert"
-                        ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500"
-                        : "border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600"
+                      tradingExperience === 'expert'
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500'
+                        : 'border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600'
                     }`}
                   >
                     <div className="flex items-center">
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                          tradingExperience === "expert"
-                            ? "bg-primary-500 text-white"
-                            : "border border-border dark:border-gray-600"
+                          tradingExperience === 'expert'
+                            ? 'bg-primary-500 text-white'
+                            : 'border border-border dark:border-gray-600'
                         }`}
                       >
-                        {tradingExperience === "expert" && (
+                        {tradingExperience === 'expert' && (
                           <Check className="w-3 h-3" />
                         )}
                       </div>
                       <div className="ml-3">
                         <h3
                           className={`text-sm font-medium ${
-                            tradingExperience === "expert"
-                              ? "text-primary-700 dark:text-primary-400"
-                              : "text-text dark:text-white"
+                            tradingExperience === 'expert'
+                              ? 'text-primary-700 dark:text-primary-400'
+                              : 'text-text dark:text-white'
                           }`}
                         >
                           Expert
@@ -447,16 +447,16 @@ const Onboarding: React.FC = () => {
                       onClick={() => toggleGoal(goal.id)}
                       className={`p-4 border rounded-md cursor-pointer ${
                         investmentGoals.includes(goal.id)
-                          ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500"
-                          : "border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600"
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500'
+                          : 'border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600'
                       }`}
                     >
                       <div className="flex items-center">
                         <div
                           className={`w-5 h-5 rounded-md flex items-center justify-center ${
                             investmentGoals.includes(goal.id)
-                              ? "bg-primary-500 text-white"
-                              : "border border-border dark:border-gray-600"
+                              ? 'bg-primary-500 text-white'
+                              : 'border border-border dark:border-gray-600'
                           }`}
                         >
                           {investmentGoals.includes(goal.id) && (
@@ -467,8 +467,8 @@ const Onboarding: React.FC = () => {
                           <h3
                             className={`text-sm font-medium ${
                               investmentGoals.includes(goal.id)
-                                ? "text-primary-700 dark:text-primary-400"
-                                : "text-text dark:text-white"
+                                ? 'text-primary-700 dark:text-primary-400'
+                                : 'text-text dark:text-white'
                             }`}
                           >
                             {goal.label}
@@ -484,7 +484,7 @@ const Onboarding: React.FC = () => {
 
                 <div className="text-sm text-text/60">
                   <p>
-                    Selected goals: {investmentGoals.length} of{" "}
+                    Selected goals: {investmentGoals.length} of{' '}
                     {goalOptions.length}
                   </p>
                 </div>
@@ -508,31 +508,31 @@ const Onboarding: React.FC = () => {
 
                 <div className="space-y-3">
                   <div
-                    onClick={() => setRiskTolerance("conservative")}
+                    onClick={() => setRiskTolerance('conservative')}
                     className={`p-4 border rounded-md cursor-pointer ${
-                      riskTolerance === "conservative"
-                        ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500"
-                        : "border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600"
+                      riskTolerance === 'conservative'
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500'
+                        : 'border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600'
                     }`}
                   >
                     <div className="flex items-center">
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                          riskTolerance === "conservative"
-                            ? "bg-primary-500 text-white"
-                            : "border border-border dark:border-gray-600"
+                          riskTolerance === 'conservative'
+                            ? 'bg-primary-500 text-white'
+                            : 'border border-border dark:border-gray-600'
                         }`}
                       >
-                        {riskTolerance === "conservative" && (
+                        {riskTolerance === 'conservative' && (
                           <Check className="w-3 h-3" />
                         )}
                       </div>
                       <div className="ml-3">
                         <h3
                           className={`text-sm font-medium ${
-                            riskTolerance === "conservative"
-                              ? "text-primary-700 dark:text-primary-400"
-                              : "text-text dark:text-white"
+                            riskTolerance === 'conservative'
+                              ? 'text-primary-700 dark:text-primary-400'
+                              : 'text-text dark:text-white'
                           }`}
                         >
                           Conservative
@@ -546,31 +546,31 @@ const Onboarding: React.FC = () => {
                   </div>
 
                   <div
-                    onClick={() => setRiskTolerance("moderate")}
+                    onClick={() => setRiskTolerance('moderate')}
                     className={`p-4 border rounded-md cursor-pointer ${
-                      riskTolerance === "moderate"
-                        ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500"
-                        : "border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600"
+                      riskTolerance === 'moderate'
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500'
+                        : 'border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600'
                     }`}
                   >
                     <div className="flex items-center">
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                          riskTolerance === "moderate"
-                            ? "bg-primary-500 text-white"
-                            : "border border-border dark:border-gray-600"
+                          riskTolerance === 'moderate'
+                            ? 'bg-primary-500 text-white'
+                            : 'border border-border dark:border-gray-600'
                         }`}
                       >
-                        {riskTolerance === "moderate" && (
+                        {riskTolerance === 'moderate' && (
                           <Check className="w-3 h-3" />
                         )}
                       </div>
                       <div className="ml-3">
                         <h3
                           className={`text-sm font-medium ${
-                            riskTolerance === "moderate"
-                              ? "text-primary-700 dark:text-primary-400"
-                              : "text-text dark:text-white"
+                            riskTolerance === 'moderate'
+                              ? 'text-primary-700 dark:text-primary-400'
+                              : 'text-text dark:text-white'
                           }`}
                         >
                           Moderate
@@ -584,31 +584,31 @@ const Onboarding: React.FC = () => {
                   </div>
 
                   <div
-                    onClick={() => setRiskTolerance("aggressive")}
+                    onClick={() => setRiskTolerance('aggressive')}
                     className={`p-4 border rounded-md cursor-pointer ${
-                      riskTolerance === "aggressive"
-                        ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500"
-                        : "border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600"
+                      riskTolerance === 'aggressive'
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500'
+                        : 'border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600'
                     }`}
                   >
                     <div className="flex items-center">
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                          riskTolerance === "aggressive"
-                            ? "bg-primary-500 text-white"
-                            : "border border-border dark:border-gray-600"
+                          riskTolerance === 'aggressive'
+                            ? 'bg-primary-500 text-white'
+                            : 'border border-border dark:border-gray-600'
                         }`}
                       >
-                        {riskTolerance === "aggressive" && (
+                        {riskTolerance === 'aggressive' && (
                           <Check className="w-3 h-3" />
                         )}
                       </div>
                       <div className="ml-3">
                         <h3
                           className={`text-sm font-medium ${
-                            riskTolerance === "aggressive"
-                              ? "text-primary-700 dark:text-primary-400"
-                              : "text-text dark:text-white"
+                            riskTolerance === 'aggressive'
+                              ? 'text-primary-700 dark:text-primary-400'
+                              : 'text-text dark:text-white'
                           }`}
                         >
                           Aggressive
@@ -622,31 +622,31 @@ const Onboarding: React.FC = () => {
                   </div>
 
                   <div
-                    onClick={() => setRiskTolerance("very_aggressive")}
+                    onClick={() => setRiskTolerance('very_aggressive')}
                     className={`p-4 border rounded-md cursor-pointer ${
-                      riskTolerance === "very_aggressive"
-                        ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500"
-                        : "border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600"
+                      riskTolerance === 'very_aggressive'
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500'
+                        : 'border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600'
                     }`}
                   >
                     <div className="flex items-center">
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                          riskTolerance === "very_aggressive"
-                            ? "bg-primary-500 text-white"
-                            : "border border-border dark:border-gray-600"
+                          riskTolerance === 'very_aggressive'
+                            ? 'bg-primary-500 text-white'
+                            : 'border border-border dark:border-gray-600'
                         }`}
                       >
-                        {riskTolerance === "very_aggressive" && (
+                        {riskTolerance === 'very_aggressive' && (
                           <Check className="w-3 h-3" />
                         )}
                       </div>
                       <div className="ml-3">
                         <h3
                           className={`text-sm font-medium ${
-                            riskTolerance === "very_aggressive"
-                              ? "text-primary-700 dark:text-primary-400"
-                              : "text-text dark:text-white"
+                            riskTolerance === 'very_aggressive'
+                              ? 'text-primary-700 dark:text-primary-400'
+                              : 'text-text dark:text-white'
                           }`}
                         >
                           Very Aggressive
@@ -686,8 +686,8 @@ const Onboarding: React.FC = () => {
                       onClick={() => setPreferredTheme(theme.id)}
                       className={`p-4 border rounded-md cursor-pointer ${
                         preferredTheme === theme.id
-                          ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500"
-                          : "border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600"
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 dark:border-primary-500'
+                          : 'border-border bg-surface hover:bg-border dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600'
                       }`}
                     >
                       <div className="flex items-center">
@@ -699,8 +699,8 @@ const Onboarding: React.FC = () => {
                           <h3
                             className={`text-sm font-medium ${
                               preferredTheme === theme.id
-                                ? "text-primary-700 dark:text-primary-400"
-                                : "text-text dark:text-white"
+                                ? 'text-primary-700 dark:text-primary-400'
+                                : 'text-text dark:text-white'
                             }`}
                           >
                             {theme.name}
@@ -713,8 +713,8 @@ const Onboarding: React.FC = () => {
                           <div
                             className={`w-5 h-5 rounded-full flex items-center justify-center ${
                               preferredTheme === theme.id
-                                ? "bg-primary-500 text-white"
-                                : "border border-border dark:border-gray-600"
+                                ? 'bg-primary-500 text-white'
+                                : 'border border-border dark:border-gray-600'
                             }`}
                           >
                             {preferredTheme === theme.id && (
@@ -756,8 +756,8 @@ const Onboarding: React.FC = () => {
               disabled={!isStepValid()}
               className={`px-4 py-2 text-sm font-medium rounded-md flex items-center ${
                 isStepValid()
-                  ? "bg-primary-600 text-white hover:bg-primary-700"
-                  : "bg-primary-300 text-white cursor-not-allowed dark:bg-primary-800 dark:text-primary-300"
+                  ? 'bg-primary-600 text-white hover:bg-primary-700'
+                  : 'bg-primary-300 text-white cursor-not-allowed dark:bg-primary-800 dark:text-primary-300'
               }`}
             >
               {currentStep < totalSteps ? (
@@ -790,9 +790,9 @@ const Onboarding: React.FC = () => {
           <div className="w-full bg-border rounded-full h-2.5 mb-4">
             <motion.div
               className="bg-primary-600 h-2.5 rounded-full"
-              initial={{ width: "0%" }}
-              animate={{ width: "100%" }}
-              transition={{ duration: 1.8, ease: "linear" }}
+              initial={{ width: '0%' }}
+              animate={{ width: '100%' }}
+              transition={{ duration: 1.8, ease: 'linear' }}
             />
           </div>
         </motion.div>

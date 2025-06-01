@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
-import { cn } from '../../utils/tailwind';
+import { cn } from '../../utils/theme/tailwind';
 
 // Component props
 interface ValueChangeDisplayProps {
@@ -148,15 +148,15 @@ export const ValueChangeDisplay: React.FC<ValueChangeDisplayProps> = ({
   if (compact) {
     return (
       <div 
-        className={cn("flex items-center", config.gap, className)}
+        className={cn('flex items-center', config.gap, className)}
         aria-label={accessibleLabel}
         role="status"
       >
-        <span className={cn("font-bold", config.valueText)}>
+        <span className={cn('font-bold', config.valueText)}>
           {showCurrency && currency ? formatValue(value, true) : value.toLocaleString()}
         </span>
         {hasChange && (
-          <div className={cn("flex items-center gap-1", getChangeColor(primaryChange))}>
+          <div className={cn('flex items-center gap-1', getChangeColor(primaryChange))}>
             <ChangeIcon />
             <span className={config.changeText}>
               {displayPercentage !== 0 ? formatPercentage(displayPercentage) : formatChange(displayChange, currency)}
@@ -169,20 +169,20 @@ export const ValueChangeDisplay: React.FC<ValueChangeDisplayProps> = ({
 
   return (
     <div 
-      className={cn("space-y-1", className)}
+      className={cn('space-y-1', className)}
       aria-label={accessibleLabel}
       role="status"
     >
       {/* Main Value */}
-      <div className={cn("font-bold", config.valueText)}>
+      <div className={cn('font-bold', config.valueText)}>
         {showCurrency && currency ? formatValue(value, true) : value.toLocaleString()}
       </div>
       
       {/* Change Indicators */}
       {hasChange && (
-        <div className={cn("flex items-center", config.gap, getChangeColor(primaryChange))}>
+        <div className={cn('flex items-center', config.gap, getChangeColor(primaryChange))}>
           <ChangeIcon />
-          <div className={cn("flex items-center gap-1", config.changeText)}>
+          <div className={cn('flex items-center gap-1', config.changeText)}>
             {displayChange !== 0 && (
               <span>{formatChange(displayChange, currency)}</span>
             )}
@@ -222,4 +222,4 @@ export const announceValueChange = (value: number, change?: number, currency: bo
   }, 1000);
 };
 
-export default ValueChangeDisplay; 
+export default ValueChangeDisplay;

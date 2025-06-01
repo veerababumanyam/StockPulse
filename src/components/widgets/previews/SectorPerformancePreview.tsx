@@ -1,1 +1,1 @@
-export { SectorPerformancePreview as default } from './index'; 
+export { SectorPerformancePreview as default } from './index';

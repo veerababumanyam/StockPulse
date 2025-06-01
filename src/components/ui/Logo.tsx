@@ -1,11 +1,22 @@
 import React from 'react';
 
-const Logo: React.FC<{ className?: string }> = ({ className = 'h-8 w-8' }) => {
+interface LogoProps {
+  className?: string;
+  variant?: 'default' | 'white' | 'icon-only';
+}
+
+const Logo: React.FC<LogoProps> = ({ 
+  className = 'h-8 w-8', 
+  variant = 'default' 
+}) => {
   return (
     <img 
-      src="/favicon.png" 
+      src="/logo.png" 
       alt="StockPulse Logo" 
-      className={className}
+      className={`${className} object-contain`}
+      style={{
+        filter: variant === 'white' ? 'brightness(0) invert(1)' : 'none'
+      }}
     />
   );
 };

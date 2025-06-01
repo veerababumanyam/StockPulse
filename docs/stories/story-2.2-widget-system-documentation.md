@@ -39,20 +39,20 @@ graph TB
         B --> E[Widget Components]
         C --> F[React Grid Layout]
     end
-    
+
     subgraph "Service Layer"
         G[Widget Data Service] --> H[WebSocket Manager]
         G --> I[Cache Manager]
         J[Widget Registration] --> B
     end
-    
+
     subgraph "Backend Layer"
         K[Widget API] --> L[Widget Data Endpoints]
         K --> M[Widget Config Endpoints]
         K --> N[Widget Subscription Endpoints]
         L --> O[Data Sources]
     end
-    
+
     A --> G
     G --> K
     E --> G
@@ -74,6 +74,7 @@ graph TB
 The central registry for all available widgets in the system.
 
 **Key Features:**
+
 - Dynamic widget registration
 - Lazy loading support
 - Permission-based access control
@@ -81,17 +82,18 @@ The central registry for all available widgets in the system.
 - Factory pattern for widget creation
 
 **Usage:**
+
 ```typescript
-import { widgetRegistry } from '@/services/widget-registry';
+import { widgetRegistry } from "@/services/widget-registry";
 
 // Register a widget
 widgetRegistry.register(metadata, factory);
 
 // Get a widget
-const widget = widgetRegistry.get('portfolio-overview');
+const widget = widgetRegistry.get("portfolio-overview");
 
 // Search widgets
-const results = widgetRegistry.search('portfolio');
+const results = widgetRegistry.search("portfolio");
 ```
 
 ### 2. Grid Layout Hook (`src/hooks/useGridLayout.ts`)
@@ -99,6 +101,7 @@ const results = widgetRegistry.search('portfolio');
 Manages the React Grid Layout integration and responsive behavior.
 
 **Key Features:**
+
 - Responsive breakpoints
 - Optimal positioning algorithms
 - Auto-arrange functionality
@@ -106,8 +109,9 @@ Manages the React Grid Layout integration and responsive behavior.
 - Collision detection
 
 **Usage:**
+
 ```typescript
-import { useGridLayout } from '@/hooks/useGridLayout';
+import { useGridLayout } from "@/hooks/useGridLayout";
 
 const {
   layout,
@@ -115,7 +119,7 @@ const {
   addWidget,
   removeWidget,
   saveLayout,
-  isEditMode
+  isEditMode,
 } = useGridLayout(initialLayout);
 ```
 
@@ -124,6 +128,7 @@ const {
 Handles data fetching, caching, and real-time updates for widgets.
 
 **Key Features:**
+
 - WebSocket subscriptions
 - Smart caching with TTL
 - Retry logic with exponential backoff
@@ -131,17 +136,17 @@ Handles data fetching, caching, and real-time updates for widgets.
 - Error handling and recovery
 
 **Usage:**
+
 ```typescript
-import { widgetDataService } from '@/services/widget-data-service';
+import { widgetDataService } from "@/services/widget-data-service";
 
 // Subscribe to widget data
-const unsubscribe = widgetDataService.subscribe(
-  'portfolio-overview',
-  (data) => setWidgetData(data)
+const unsubscribe = widgetDataService.subscribe("portfolio-overview", (data) =>
+  setWidgetData(data),
 );
 
 // Get cached data
-const data = widgetDataService.getCachedData('portfolio-overview');
+const data = widgetDataService.getCachedData("portfolio-overview");
 ```
 
 ### 4. Widget Library (`src/components/dashboard/widget-library.tsx`)
@@ -149,6 +154,7 @@ const data = widgetDataService.getCachedData('portfolio-overview');
 Interactive widget browser for discovering and adding widgets.
 
 **Key Features:**
+
 - Category-based browsing
 - Search functionality
 - Widget previews
@@ -160,6 +166,7 @@ Interactive widget browser for discovering and adding widgets.
 Main orchestration component that manages the entire widget system.
 
 **Key Features:**
+
 - Edit mode controls
 - Widget lifecycle management
 - Connection monitoring
@@ -175,15 +182,17 @@ Main orchestration component that manages the entire widget system.
 Retrieves real-time data for a specific widget type.
 
 **Parameters:**
+
 - `widget_type` (path): Type of widget (e.g., 'portfolio-overview')
 - `config` (query, optional): Widget configuration parameters
 
 **Response:**
+
 ```json
 {
   "widget_type": "portfolio-overview",
   "data": {
-    "total_value": 125750.50,
+    "total_value": 125750.5,
     "day_change": 2847.25,
     "day_change_percent": 2.31,
     "positions": 12,
@@ -200,22 +209,28 @@ Retrieves real-time data for a specific widget type.
 Retrieves data for multiple widgets in a single request.
 
 **Request Body:**
+
 ```json
 {
   "widget_types": ["portfolio-overview", "market-summary"],
   "configs": {
-    "portfolio-overview": {"showCash": true},
-    "market-summary": {"indices": ["SPY", "QQQ"]}
+    "portfolio-overview": { "showCash": true },
+    "market-summary": { "indices": ["SPY", "QQQ"] }
   }
 }
 ```
 
 **Response:**
+
 ```json
 {
   "widget_data": {
-    "portfolio-overview": { /* widget data */ },
-    "market-summary": { /* widget data */ }
+    "portfolio-overview": {
+      /* widget data */
+    },
+    "market-summary": {
+      /* widget data */
+    }
   },
   "errors": {},
   "timestamp": "2024-01-15T10:30:00Z"
@@ -229,6 +244,7 @@ Retrieves data for multiple widgets in a single request.
 Updates configuration for a specific widget instance.
 
 **Request Body:**
+
 ```json
 {
   "widget_type": "portfolio-overview",
@@ -250,6 +266,7 @@ Retrieves configuration for a specific widget instance.
 Subscribes to real-time updates for specific widgets.
 
 **Request Body:**
+
 ```json
 {
   "widget_types": ["portfolio-overview", "market-summary"],
@@ -271,6 +288,7 @@ Cancels subscription to widget updates.
 Retrieves usage metrics for user's widgets.
 
 **Parameters:**
+
 - `timeframe` (query): Time period for metrics (1d, 7d, 30d)
 
 ## Frontend Components
@@ -280,6 +298,7 @@ Retrieves usage metrics for user's widgets.
 Standardized wrapper for all widgets providing common functionality.
 
 **Features:**
+
 - Error boundaries
 - Loading states
 - Action menus
@@ -287,6 +306,7 @@ Standardized wrapper for all widgets providing common functionality.
 - Edit mode overlays
 
 **Props:**
+
 ```typescript
 interface WidgetWrapperProps {
   widget: WidgetConfig;
@@ -315,56 +335,67 @@ interface WidgetProps {
 #### Available Widgets
 
 1. **Portfolio Overview** (`portfolio-overview`)
+
    - Total portfolio value
    - Day change and percentage
    - Position count and cash balance
 
 2. **Market Summary** (`market-summary`)
+
    - Major market indices
    - Real-time price updates
    - Change indicators
 
 3. **Watchlist** (`watchlist`)
+
    - Customizable stock list
    - Price and change data
    - Quick action buttons
 
 4. **Portfolio Chart** (`portfolio-chart`)
+
    - Interactive portfolio performance chart
    - Time range selection
    - Benchmark comparison
 
 5. **AI Insights** (`ai-insights`)
+
    - AI-generated recommendations
    - Risk analysis
    - Market sentiment
 
 6. **Recent Transactions** (`recent-transactions`)
+
    - Latest buy/sell orders
    - Transaction details
    - Performance impact
 
 7. **Performance Metrics** (`performance-metrics`)
+
    - Sharpe ratio, alpha, beta
    - Risk metrics
    - Benchmark comparison
 
 8. **Alerts** (`alerts`)
+
    - Price alerts
    - News alerts
    - System notifications
 
 9. **News Feed** (`news-feed`)
+
    - Financial news articles
    - Market updates
    - Company-specific news
 
 10. **Sector Performance** (`sector-performance`)
+
     - Sector allocation
     - Performance by sector
     - Rebalancing suggestions
 
 11. **Top Movers** (`top-movers`)
+
     - Biggest gainers and losers
     - Volume leaders
     - Market momentum
@@ -383,10 +414,10 @@ interface WidgetProps {
 Add the new widget type to `src/types/dashboard.ts`:
 
 ```typescript
-export type WidgetType = 
-  | 'portfolio-overview'
-  | 'market-summary'
-  | 'your-new-widget'; // Add here
+export type WidgetType =
+  | "portfolio-overview"
+  | "market-summary"
+  | "your-new-widget"; // Add here
 ```
 
 2. **Create Widget Component**
@@ -464,39 +495,41 @@ Add registration in `src/services/widget-registration.ts`:
 
 ```typescript
 // Import your components
-const YourNewWidget = lazy(() => import('../components/widgets/YourNewWidget'));
-const YourNewWidgetPreview = lazy(() => import('../components/widgets/previews/YourNewWidgetPreview'));
+const YourNewWidget = lazy(() => import("../components/widgets/YourNewWidget"));
+const YourNewWidgetPreview = lazy(
+  () => import("../components/widgets/previews/YourNewWidgetPreview"),
+);
 
 // Add to widget definitions
 const WIDGET_DEFINITIONS: WidgetDefinition[] = [
   // ... existing widgets
   {
-    type: 'your-new-widget',
+    type: "your-new-widget",
     metadata: {
-      type: 'your-new-widget',
+      type: "your-new-widget",
       config: {
-        id: 'your-new-widget',
-        type: 'your-new-widget',
-        title: 'Your New Widget',
-        description: 'Description of your widget',
+        id: "your-new-widget",
+        type: "your-new-widget",
+        title: "Your New Widget",
+        description: "Description of your widget",
         icon: YourIcon,
-        category: 'portfolio', // or appropriate category
+        category: "portfolio", // or appropriate category
         isEnabled: true,
       },
       libraryItem: {
-        type: 'your-new-widget',
-        title: 'Your New Widget',
-        description: 'Detailed description for the library',
-        category: 'portfolio',
+        type: "your-new-widget",
+        title: "Your New Widget",
+        description: "Detailed description for the library",
+        category: "portfolio",
         icon: YourIcon,
         isAvailable: true,
         isPremium: false,
-        tags: ['portfolio', 'custom'],
+        tags: ["portfolio", "custom"],
       },
       component: YourNewWidget,
       previewComponent: YourNewWidgetPreview,
-      permissions: ['portfolio.read'],
-      dataRequirements: ['portfolio_data'],
+      permissions: ["portfolio.read"],
+      dataRequirements: ["portfolio_data"],
     },
     factory: {
       create: (config: WidgetConfig) => YourNewWidget,
@@ -525,16 +558,19 @@ elif widget_type == "your-new-widget":
 ### Widget Best Practices
 
 1. **Performance**
+
    - Use React.memo for expensive components
    - Implement proper loading states
    - Optimize data fetching
 
 2. **Accessibility**
+
    - Use semantic HTML
    - Provide ARIA labels
    - Support keyboard navigation
 
 3. **Error Handling**
+
    - Graceful degradation
    - User-friendly error messages
    - Retry mechanisms
@@ -615,6 +651,7 @@ Test fixtures are available in `tests/story-2.2/fixtures/`:
 ### Frontend Deployment
 
 1. **Build the application**
+
    ```bash
    npm run build
    ```
@@ -627,6 +664,7 @@ Test fixtures are available in `tests/story-2.2/fixtures/`:
 ### Backend Deployment
 
 1. **Build Docker image**
+
    ```bash
    docker build -t stockpulse-backend .
    ```
@@ -655,6 +693,7 @@ alembic upgrade head
 4. Review browser console for errors
 
 **Solution:**
+
 ```typescript
 // Check widget data service status
 console.log(widgetDataService.getConnectionStatus());
@@ -670,6 +709,7 @@ widgetDataService.retryFailedRequests();
 3. Review browser storage permissions
 
 **Solution:**
+
 ```typescript
 // Force layout save
 await dashboardService.saveLayout(currentLayout, { force: true });
@@ -682,9 +722,10 @@ await dashboardService.saveLayout(currentLayout, { force: true });
 3. Monitor memory usage
 
 **Solution:**
+
 ```typescript
 // Optimize refresh intervals
-widgetDataService.updateRefreshInterval('widget-id', 60000);
+widgetDataService.updateRefreshInterval("widget-id", 60000);
 
 // Clear cache if needed
 widgetDataService.clearCache();
@@ -709,8 +750,8 @@ Monitor widget performance with built-in metrics:
 ```typescript
 // Get widget performance metrics
 const metrics = await widgetDataService.getPerformanceMetrics();
-console.log('Average load time:', metrics.averageLoadTime);
-console.log('Error rate:', metrics.errorRate);
+console.log("Average load time:", metrics.averageLoadTime);
+console.log("Error rate:", metrics.errorRate);
 ```
 
 ## Support
@@ -724,6 +765,6 @@ For additional support:
 
 ---
 
-**Last Updated:** January 2024  
-**Version:** 2.0.0  
-**Authors:** StockPulse Development Team 
+**Last Updated:** January 2024
+**Version:** 2.0.0
+**Authors:** StockPulse Development Team

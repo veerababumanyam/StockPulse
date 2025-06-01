@@ -85,7 +85,7 @@ const Dashboard: React.FC = () => {
           {isEditMode ? 'Exit Edit' : 'Edit Dashboard'}
         </button>
       </div>
-      
+
       <DashboardGrid
         layout={layout}
         widgets={widgets}
@@ -151,37 +151,37 @@ export default SimpleWidget;
 
 ```typescript
 // Add to src/services/widget-registration.ts
-import SimpleWidget from '../components/widgets/SimpleWidget';
+import SimpleWidget from "../components/widgets/SimpleWidget";
 
 const WIDGET_DEFINITIONS = [
   // ... existing widgets
   {
-    type: 'simple-widget',
+    type: "simple-widget",
     metadata: {
-      type: 'simple-widget',
+      type: "simple-widget",
       config: {
-        id: 'simple-widget',
-        type: 'simple-widget',
-        title: 'Simple Widget',
-        description: 'A simple example widget',
-        icon: 'Square',
-        category: 'portfolio',
+        id: "simple-widget",
+        type: "simple-widget",
+        title: "Simple Widget",
+        description: "A simple example widget",
+        icon: "Square",
+        category: "portfolio",
         isEnabled: true,
       },
       libraryItem: {
-        type: 'simple-widget',
-        title: 'Simple Widget',
-        description: 'A simple widget for demonstration',
-        category: 'portfolio',
+        type: "simple-widget",
+        title: "Simple Widget",
+        description: "A simple widget for demonstration",
+        category: "portfolio",
         icon: Square,
         isAvailable: true,
         isPremium: false,
-        tags: ['simple', 'example'],
+        tags: ["simple", "example"],
       },
       component: SimpleWidget,
       previewComponent: SimpleWidget,
-      permissions: ['portfolio.read'],
-      dataRequirements: ['simple_data'],
+      permissions: ["portfolio.read"],
+      dataRequirements: ["simple_data"],
     },
     factory: {
       create: (config) => SimpleWidget,
@@ -198,7 +198,7 @@ const WIDGET_DEFINITIONS = [
 
 ```typescript
 // Using the widget data service
-import { widgetDataService } from '@/services/widget-data-service';
+import { widgetDataService } from "@/services/widget-data-service";
 
 const MyWidget: React.FC<WidgetProps> = ({ config }) => {
   const [data, setData] = useState(null);
@@ -212,9 +212,9 @@ const MyWidget: React.FC<WidgetProps> = ({ config }) => {
         setLoading(false);
       },
       (error) => {
-        console.error('Widget data error:', error);
+        console.error("Widget data error:", error);
         setLoading(false);
-      }
+      },
     );
 
     return unsubscribe;
@@ -227,11 +227,11 @@ const MyWidget: React.FC<WidgetProps> = ({ config }) => {
 ### 2. Adding Edit Mode Controls
 
 ```typescript
-const EditableWidget: React.FC<WidgetProps> = ({ 
-  config, 
-  isEditMode, 
-  onRemove, 
-  onConfigure 
+const EditableWidget: React.FC<WidgetProps> = ({
+  config,
+  isEditMode,
+  onRemove,
+  onConfigure
 }) => {
   return (
     <Card className="relative">
@@ -292,15 +292,15 @@ describe('SimpleWidget', () => {
     };
 
     render(<SimpleWidget config={config} />);
-    
+
     expect(screen.getByText('Test Widget')).toBeInTheDocument();
   });
 
   it('shows loading state', () => {
     const config = { /* ... */ };
-    
+
     render(<SimpleWidget config={config} isLoading={true} />);
-    
+
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 });
@@ -310,18 +310,18 @@ describe('SimpleWidget', () => {
 
 ```typescript
 // tests/story-2.2/integration/test-widget-integration.test.ts
-import { TestClient } from 'fastapi.testclient';
-import { app } from 'services/backend/app/main';
+import { TestClient } from "fastapi.testclient";
+import { app } from "services/backend/app/main";
 
-describe('Widget API Integration', () => {
+describe("Widget API Integration", () => {
   const client = new TestClient(app);
 
-  it('fetches widget data', async () => {
-    const response = await client.get('/widgets/data/simple-widget');
-    
+  it("fetches widget data", async () => {
+    const response = await client.get("/widgets/data/simple-widget");
+
     expect(response.status_code).toBe(200);
-    expect(response.json()).toHaveProperty('widget_type', 'simple-widget');
-    expect(response.json()).toHaveProperty('data');
+    expect(response.json()).toHaveProperty("widget_type", "simple-widget");
+    expect(response.json()).toHaveProperty("data");
   });
 });
 ```
@@ -348,7 +348,7 @@ console.log(widgetRegistry.getAll());
 console.log(widgetDataService.getConnectionStatus());
 
 // Force refresh widget data
-widgetDataService.refreshWidget('widget-id');
+widgetDataService.refreshWidget("widget-id");
 
 // Clear widget cache
 widgetDataService.clearCache();
@@ -357,17 +357,20 @@ widgetDataService.clearCache();
 ## Performance Tips
 
 1. **Use React.memo for expensive widgets**
+
    ```typescript
    export default React.memo(MyWidget);
    ```
 
 2. **Optimize data fetching intervals**
+
    ```typescript
    // Longer intervals for less critical data
    const config = { refreshInterval: 60000 }; // 1 minute
    ```
 
 3. **Implement proper loading states**
+
    ```typescript
    if (isLoading) return <WidgetSkeleton />;
    ```
@@ -376,8 +379,8 @@ widgetDataService.clearCache();
    ```typescript
    // Fetch multiple widgets at once
    const data = await widgetDataService.getBulkData([
-     'portfolio-overview',
-     'market-summary'
+     "portfolio-overview",
+     "market-summary",
    ]);
    ```
 
@@ -392,16 +395,19 @@ widgetDataService.clearCache();
 ## Troubleshooting
 
 ### Widget Not Appearing
+
 - Check if widget is registered: `widgetRegistry.has('your-widget-type')`
 - Verify permissions: `widgetRegistry.checkPermissions('your-widget-type', userPermissions)`
 - Check console for errors
 
 ### Data Not Loading
+
 - Verify API endpoint is running
 - Check network tab in browser dev tools
 - Ensure authentication is working
 
 ### Layout Issues
+
 - Check React Grid Layout props
 - Verify responsive breakpoints
 - Test on different screen sizes
@@ -415,4 +421,4 @@ widgetDataService.clearCache();
 
 ---
 
-Happy coding! 🚀 
+Happy coding! 🚀

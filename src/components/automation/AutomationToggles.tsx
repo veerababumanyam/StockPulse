@@ -77,17 +77,17 @@ const AutomationToggles: React.FC = () => {
     console.log('Automation toggles saved:', values);
     
     toast({
-      title: "Settings Saved",
-      description: "Your automation settings have been updated.",
-      variant: "success",
+      title: 'Settings Saved',
+      description: 'Your automation settings have been updated.',
+      variant: 'success',
     });
   };
 
   const handleEmergencyStop = () => {
     toast({
-      title: "Emergency Stop Activated",
-      description: "All automated trading has been halted. Please review your positions.",
-      variant: "destructive",
+      title: 'Emergency Stop Activated',
+      description: 'All automated trading has been halted. Please review your positions.',
+      variant: 'destructive',
     });
   };
 
@@ -351,8 +351,8 @@ const AutomationToggles: React.FC = () => {
                               <FormLabel className="text-base font-semibold">
                                 Risk Management Framework
                               </FormLabel>
-                              <Badge variant={field.value ? "success" : "destructive"}>
-                                {field.value ? "Enabled" : "Disabled"}
+                              <Badge variant={field.value ? 'success' : 'destructive'}>
+                                {field.value ? 'Enabled' : 'Disabled'}
                               </Badge>
                             </div>
                             <FormDescription>
@@ -391,8 +391,8 @@ const AutomationToggles: React.FC = () => {
                               <FormLabel className="text-base font-semibold">
                                 Comprehensive Audit Logging
                               </FormLabel>
-                              <Badge variant={field.value ? "success" : "destructive"}>
-                                {field.value ? "Enabled" : "Disabled"}
+                              <Badge variant={field.value ? 'success' : 'destructive'}>
+                                {field.value ? 'Enabled' : 'Disabled'}
                               </Badge>
                             </div>
                             <FormDescription>
@@ -431,8 +431,8 @@ const AutomationToggles: React.FC = () => {
                               <FormLabel className="text-base font-semibold">
                                 Automatic Emergency Stop
                               </FormLabel>
-                              <Badge variant={field.value ? "success" : "destructive"}>
-                                {field.value ? "Enabled" : "Disabled"}
+                              <Badge variant={field.value ? 'success' : 'destructive'}>
+                                {field.value ? 'Enabled' : 'Disabled'}
                               </Badge>
                             </div>
                             <FormDescription>
@@ -507,8 +507,8 @@ const AutomationToggles: React.FC = () => {
                             <FormLabel className="text-base font-semibold">
                               Automation Notifications
                             </FormLabel>
-                            <Badge variant={field.value ? "success" : "destructive"}>
-                              {field.value ? "Enabled" : "Disabled"}
+                            <Badge variant={field.value ? 'success' : 'destructive'}>
+                              {field.value ? 'Enabled' : 'Disabled'}
                             </Badge>
                           </div>
                           <FormDescription>

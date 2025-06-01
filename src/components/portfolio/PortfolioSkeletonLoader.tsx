@@ -2,9 +2,9 @@
  * Portfolio Page Skeleton Loaders
  * Specialized skeleton loading components for portfolio page sections
  */
-import React from "react";
-import { Card, CardContent, CardHeader } from "../ui/card";
-import { cn } from "../../utils/tailwind";
+import React from 'react';
+import { Card, CardContent, CardHeader } from '../ui/card';
+import { cn } from '../../utils/cn';
 
 // Portfolio Summary Skeleton
 export const PortfolioSummarySkeleton: React.FC<{
@@ -12,7 +12,7 @@ export const PortfolioSummarySkeleton: React.FC<{
   compactMode?: boolean;
 }> = ({ className, compactMode = false }) => {
   return (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn('space-y-4', className)}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="space-y-2">
@@ -25,10 +25,10 @@ export const PortfolioSummarySkeleton: React.FC<{
       {/* Metrics Grid */}
       <div
         className={cn(
-          "grid gap-4",
+          'grid gap-4',
           compactMode
-            ? "grid-cols-2 lg:grid-cols-4"
-            : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
+            ? 'grid-cols-2 lg:grid-cols-4'
+            : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
         )}
       >
         {[...Array(4)].map((_, index) => (
@@ -158,7 +158,7 @@ export const PortfolioAnalyticsSkeleton: React.FC<{
   compactMode?: boolean;
 }> = ({ className, compactMode = false }) => {
   return (
-    <div className={cn("space-y-6", className)}>
+    <div className={cn('space-y-6', className)}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="space-y-2">
@@ -173,10 +173,10 @@ export const PortfolioAnalyticsSkeleton: React.FC<{
       {/* Performance metrics grid */}
       <div
         className={cn(
-          "grid gap-4",
+          'grid gap-4',
           compactMode
-            ? "grid-cols-2 lg:grid-cols-3"
-            : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
+            ? 'grid-cols-2 lg:grid-cols-3'
+            : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
         )}
       >
         {[...Array(6)].map((_, index) => (
@@ -247,8 +247,8 @@ export const NewsAndAlertsSkeleton: React.FC<{
   return (
     <div
       className={cn(
-        "grid gap-6",
-        compactMode ? "lg:grid-cols-1" : "lg:grid-cols-2",
+        'grid gap-6',
+        compactMode ? 'lg:grid-cols-1' : 'lg:grid-cols-2',
         className,
       )}
     >
@@ -319,7 +319,7 @@ export const PortfolioPageSkeleton: React.FC<{
   showNews = true,
 }) => {
   return (
-    <div className={cn("space-y-8 p-6", className)}>
+    <div className={cn('space-y-8 p-6', className)}>
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div className="space-y-2">

@@ -11,7 +11,7 @@ export type ThemeSize = 'sm' | 'md' | 'lg' | 'xl';
 export type ThemeDensity = 'low' | 'medium' | 'high';
 
 // Advanced theme configuration
-interface ThemeComposition {
+export interface ThemeComposition {
   base: ColorTheme;
   variant: ThemeVariant;
   size: ThemeSize;

@@ -4,13 +4,13 @@
  * Part of Story 2.2: Customizable Widget System
  */
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { 
-  DashboardLayout, 
-  DashboardConfig, 
-  WidgetType, 
+import {
+  DashboardLayout,
+  DashboardConfig,
+  WidgetType,
   WidgetInstance,
   DEFAULT_LAYOUTS,
-  WIDGET_LIBRARY 
+  WIDGET_LIBRARY,
 } from '../types/dashboard';
 import dashboardService from '../services/dashboardServicexxx';
 import { generateWidgetId } from '../utils/dashboard';
@@ -21,11 +21,11 @@ interface UseDashboardReturn {
   currentLayout: DashboardLayout | null;
   isLoading: boolean;
   error: string | null;
-  
+
   // Edit Mode
   isEditMode: boolean;
   hasUnsavedChanges: boolean;
-  
+
   // Actions
   toggleEditMode: () => void;
   addWidget: (widgetType: WidgetType) => void;
@@ -33,16 +33,21 @@ interface UseDashboardReturn {
   updateLayout: (layout: DashboardLayout) => void;
   saveLayout: () => Promise<void>;
   resetLayout: () => void;
-  
+
   // Computed
   existingWidgetTypes: WidgetType[];
-  updateWidgetConfig: (widgetId: string, newConfig: Partial<WidgetInstance['config']>) => void;
+  updateWidgetConfig: (
+    widgetId: string,
+    newConfig: Partial<WidgetInstance['config']>,
+  ) => void;
 }
 
 export const useDashboard = (): UseDashboardReturn => {
   // Core state
   const [config, setConfig] = useState<DashboardConfig | null>(null);
-  const [currentLayout, setCurrentLayout] = useState<DashboardLayout | null>(null);
+  const [currentLayout, setCurrentLayout] = useState<DashboardLayout | null>(
+    null,
+  );
   const [savedLayout, setSavedLayout] = useState<DashboardLayout | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,7 +57,7 @@ export const useDashboard = (): UseDashboardReturn => {
   // Computed state
   const existingWidgetTypes = useMemo(() => {
     if (!currentLayout) return [];
-    return currentLayout.widgets.map(widget => widget.type);
+    return currentLayout.widgets.map((widget) => widget.type);
   }, [currentLayout]);
 
   // Load dashboard configuration
@@ -60,12 +65,16 @@ export const useDashboard = (): UseDashboardReturn => {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       // Let the service handle all default dashboard creation
       const dashboardConfig = await dashboardService.getDashboardConfig();
-      
+
       if (dashboardConfig) {
-        console.log('Loaded dashboard config with', dashboardConfig.layout.widgets.length, 'widgets');
+        console.log(
+          'Loaded dashboard config with',
+          dashboardConfig.layout.widgets.length,
+          'widgets',
+        );
         setConfig(dashboardConfig);
         setCurrentLayout(dashboardConfig.layout);
         setSavedLayout(dashboardConfig.layout);
@@ -82,60 +91,73 @@ export const useDashboard = (): UseDashboardReturn => {
 
   // Toggle edit mode
   const toggleEditMode = useCallback(() => {
-    setIsEditMode(prev => !prev);
+    setIsEditMode((prev) => !prev);
   }, []);
 
   // Add widget to layout
-  const addWidget = useCallback((widgetType: WidgetType) => {
-    if (!currentLayout) return;
+  const addWidget = useCallback(
+    (widgetType: WidgetType) => {
+      if (!currentLayout) return;
 
-    // Get widget configuration from library
-    const widgetConfig = WIDGET_LIBRARY.find(w => w.type === widgetType);
-    if (!widgetConfig) {
-      console.error(`Widget type ${widgetType} not found in library`);
-      return;
-    }
+      // Get widget configuration from library
+      const widgetConfig = WIDGET_LIBRARY.find((w) => w.type === widgetType);
+      if (!widgetConfig) {
+        console.error(`Widget type ${widgetType} not found in library`);
+        return;
+      }
 
-    // Find optimal position for new widget
-    const newPosition = findOptimalPosition(currentLayout.widgets, widgetType);
+      // Find optimal position for new widget
+      const newPosition = findOptimalPosition(
+        currentLayout.widgets,
+        widgetType,
+      );
 
-    const newWidget: WidgetInstance = {
-      id: generateWidgetId(),
-      type: widgetType,
-      layout: newPosition,
-      config: {},
-    };
-
-    setCurrentLayout(prev => {
-      if (!prev) return prev;
-      
-      const updatedLayout = {
-        ...prev,
-        widgets: [...prev.widgets, newWidget]
+      const newWidget: WidgetInstance = {
+        id: generateWidgetId(),
+        type: widgetType,
+        layout: newPosition,
+        config: {},
       };
-      
-      return updatedLayout;
-    });
 
-    // Auto-enable edit mode when adding widgets
-    if (!isEditMode) {
-      setIsEditMode(true);
-    }
+      setCurrentLayout((prev) => {
+        if (!prev) return prev;
 
-    setHasUnsavedChanges(true);
-  }, [currentLayout, isEditMode]);
+        const updatedLayout = {
+          ...prev,
+          widgets: [...prev.widgets, newWidget],
+        };
+
+        return updatedLayout;
+      });
+
+      // Auto-enable edit mode when adding widgets
+      if (!isEditMode) {
+        setIsEditMode(true);
+      }
+
+      setHasUnsavedChanges(true);
+    },
+    [currentLayout, isEditMode],
+  );
 
   // Remove widget from layout
-  const removeWidget = useCallback((widgetId: string) => {
-    if (!currentLayout) return;
+  const removeWidget = useCallback(
+    (widgetId: string) => {
+      if (!currentLayout) return;
 
-    setCurrentLayout(prev => prev ? {
-      ...prev,
-      widgets: prev.widgets.filter(widget => widget.id !== widgetId),
-    } : null);
-    
-    setHasUnsavedChanges(true);
-  }, [currentLayout]);
+      setCurrentLayout((prev) =>
+        prev
+          ? {
+              ...prev,
+              widgets: prev.widgets.filter((widget) => widget.id !== widgetId),
+            }
+          : null,
+      );
+
+      setHasUnsavedChanges(true);
+    },
+    [currentLayout],
+  );
 
   // Update layout (from grid changes)
   const updateLayout = useCallback((layout: DashboardLayout) => {
@@ -144,23 +166,26 @@ export const useDashboard = (): UseDashboardReturn => {
   }, []);
 
   // Update widget configuration
-  const updateWidgetConfig = useCallback((widgetId: string, newConfig: Partial<WidgetInstance['config']>) => {
-    if (!currentLayout) return;
+  const updateWidgetConfig = useCallback(
+    (widgetId: string, newConfig: Partial<WidgetInstance['config']>) => {
+      if (!currentLayout) return;
 
-    setCurrentLayout(prevLayout => {
-      if (!prevLayout) return null;
-      return {
-        ...prevLayout,
-        widgets: prevLayout.widgets.map(widget => 
-          widget.id === widgetId 
-            ? { ...widget, config: { ...widget.config, ...newConfig } } 
-            : widget
-        ),
-      };
-    });
-    
-    setHasUnsavedChanges(true);
-  }, [currentLayout]);
+      setCurrentLayout((prevLayout) => {
+        if (!prevLayout) return null;
+        return {
+          ...prevLayout,
+          widgets: prevLayout.widgets.map((widget) =>
+            widget.id === widgetId
+              ? { ...widget, config: { ...widget.config, ...newConfig } }
+              : widget,
+          ),
+        };
+      });
+
+      setHasUnsavedChanges(true);
+    },
+    [currentLayout],
+  );
 
   // Save current layout
   const saveLayout = useCallback(async () => {
@@ -177,7 +202,7 @@ export const useDashboard = (): UseDashboardReturn => {
       setConfig(updatedConfig);
       setSavedLayout(currentLayout);
       setHasUnsavedChanges(false);
-      
+
       console.log('Dashboard layout saved successfully');
     } catch (err) {
       console.error('Failed to save dashboard layout:', err);
@@ -194,65 +219,65 @@ export const useDashboard = (): UseDashboardReturn => {
   }, [savedLayout]);
 
   // Find optimal position for new widget
-  const findOptimalPosition = useCallback((
-    existingWidgets: WidgetInstance[], 
-    widgetType: WidgetType
-  ) => {
-    const defaultLayout = DEFAULT_LAYOUTS[widgetType];
-    if (!defaultLayout) {
-      // Fallback position
-      return {
-        lg: { x: 0, y: 0, w: 4, h: 4 },
-        md: { x: 0, y: 0, w: 4, h: 4 },
-        sm: { x: 0, y: 0, w: 6, h: 4 },
-        xs: { x: 0, y: 0, w: 4, h: 4 },
-        xxs: { x: 0, y: 0, w: 2, h: 4 },
-      };
-    }
+  const findOptimalPosition = useCallback(
+    (existingWidgets: WidgetInstance[], widgetType: WidgetType) => {
+      const defaultLayout = DEFAULT_LAYOUTS[widgetType];
+      if (!defaultLayout) {
+        // Fallback position
+        return {
+          lg: { x: 0, y: 0, w: 4, h: 4 },
+          md: { x: 0, y: 0, w: 4, h: 4 },
+          sm: { x: 0, y: 0, w: 6, h: 4 },
+          xs: { x: 0, y: 0, w: 4, h: 4 },
+          xxs: { x: 0, y: 0, w: 2, h: 4 },
+        };
+      }
 
-    // For now, use default positions with some offset to avoid overlap
-    const offset = existingWidgets.length;
-    
-    // Safe fallbacks for each breakpoint
-    const lgLayout = defaultLayout.lg || { x: 0, y: 0, w: 4, h: 4 };
-    const mdLayout = defaultLayout.md || { x: 0, y: 0, w: 4, h: 4 };
-    const smLayout = defaultLayout.sm || { x: 0, y: 0, w: 6, h: 4 };
-    const xsLayout = defaultLayout.xs || { x: 0, y: 0, w: 4, h: 4 };
-    const xxsLayout = defaultLayout.xxs || { x: 0, y: 0, w: 2, h: 4 };
-    
-    return {
-      lg: { 
-        x: lgLayout.x, 
-        y: lgLayout.y + Math.floor(offset / 3) * 4, 
-        w: lgLayout.w, 
-        h: lgLayout.h 
-      },
-      md: { 
-        x: mdLayout.x, 
-        y: mdLayout.y + Math.floor(offset / 3) * 4, 
-        w: mdLayout.w, 
-        h: mdLayout.h 
-      },
-      sm: { 
-        x: smLayout.x, 
-        y: smLayout.y + Math.floor(offset / 2) * 4, 
-        w: smLayout.w, 
-        h: smLayout.h 
-      },
-      xs: { 
-        x: xsLayout.x, 
-        y: xsLayout.y + offset * 4, 
-        w: xsLayout.w, 
-        h: xsLayout.h 
-      },
-      xxs: { 
-        x: xxsLayout.x, 
-        y: xxsLayout.y + offset * 3, 
-        w: xxsLayout.w, 
-        h: xxsLayout.h 
-      },
-    };
-  }, []);
+      // For now, use default positions with some offset to avoid overlap
+      const offset = existingWidgets.length;
+
+      // Safe fallbacks for each breakpoint
+      const lgLayout = defaultLayout.lg || { x: 0, y: 0, w: 4, h: 4 };
+      const mdLayout = defaultLayout.md || { x: 0, y: 0, w: 4, h: 4 };
+      const smLayout = defaultLayout.sm || { x: 0, y: 0, w: 6, h: 4 };
+      const xsLayout = defaultLayout.xs || { x: 0, y: 0, w: 4, h: 4 };
+      const xxsLayout = defaultLayout.xxs || { x: 0, y: 0, w: 2, h: 4 };
+
+      return {
+        lg: {
+          x: lgLayout.x,
+          y: lgLayout.y + Math.floor(offset / 3) * 4,
+          w: lgLayout.w,
+          h: lgLayout.h,
+        },
+        md: {
+          x: mdLayout.x,
+          y: mdLayout.y + Math.floor(offset / 3) * 4,
+          w: mdLayout.w,
+          h: mdLayout.h,
+        },
+        sm: {
+          x: smLayout.x,
+          y: smLayout.y + Math.floor(offset / 2) * 4,
+          w: smLayout.w,
+          h: smLayout.h,
+        },
+        xs: {
+          x: xsLayout.x,
+          y: xsLayout.y + offset * 4,
+          w: xsLayout.w,
+          h: xsLayout.h,
+        },
+        xxs: {
+          x: xxsLayout.x,
+          y: xxsLayout.y + offset * 3,
+          w: xxsLayout.w,
+          h: xxsLayout.h,
+        },
+      };
+    },
+    [],
+  );
 
   // Load dashboard on mount
   useEffect(() => {
@@ -269,7 +294,7 @@ export const useDashboard = (): UseDashboardReturn => {
           console.error('Auto-save failed:', err);
         }
       };
-      
+
       // Debounce auto-save
       const timeoutId = setTimeout(autoSave, 1000);
       return () => clearTimeout(timeoutId);
@@ -282,11 +307,11 @@ export const useDashboard = (): UseDashboardReturn => {
     currentLayout,
     isLoading,
     error,
-    
+
     // Edit Mode
     isEditMode,
     hasUnsavedChanges,
-    
+
     // Actions
     toggleEditMode,
     addWidget,
@@ -294,9 +319,9 @@ export const useDashboard = (): UseDashboardReturn => {
     updateLayout,
     saveLayout,
     resetLayout,
-    
+
     // Computed
     existingWidgetTypes,
     updateWidgetConfig,
   };
-}; 
+};

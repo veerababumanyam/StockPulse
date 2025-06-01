@@ -153,7 +153,7 @@ const TimeAndSales: React.FC<TimeAndSalesProps> = ({
             <div className="col-span-2">Size</div>
             <div className="col-span-2">Exchange</div>
             {showConditions && <div className="col-span-2">Condition</div>}
-            <div className={showConditions ? "col-span-2" : "col-span-4"}>Side</div>
+            <div className={showConditions ? 'col-span-2' : 'col-span-4'}>Side</div>
           </div>
         </div>
         
@@ -186,7 +186,7 @@ const TimeAndSales: React.FC<TimeAndSalesProps> = ({
                 </div>
                 <div className="col-span-2 text-xs">{trade.exchange}</div>
                 {showConditions && <div className="col-span-2 text-xs">{trade.condition}</div>}
-                <div className={`${showConditions ? "col-span-2" : "col-span-4"} ${
+                <div className={`${showConditions ? 'col-span-2' : 'col-span-4'} ${
                   trade.side === 'buy' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                 }`}>
                   {trade.side.toUpperCase()}

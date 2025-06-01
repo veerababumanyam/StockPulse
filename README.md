@@ -58,8 +58,6 @@ curl http://localhost:9002/health  # Portfolio Manager Agent (A2A)
 curl http://localhost:8003/health  # PostgreSQL MCP Server
 ```
 
-````
-
 ### Production Deployment
 
 ```bash
@@ -68,7 +66,7 @@ docker-compose -f docker-compose.yml up -d
 
 # Staging environment
 docker-compose -f docker-compose.yml -f docker-compose.staging.yml up -d
-````
+```
 
 ### 🌐 Start Frontend (Local Development)
 
@@ -342,6 +340,99 @@ StockPulse follows industry best practices including:
 - **Conventional Commits** for clear commit history
 - **Automated Testing** for all new features and bug fixes
 
+## 🏗️ Component Architecture: PortfolioOverview
+
+We've completely revamped the PortfolioOverview component with a modern, maintainable, and performant architecture. Here are the key improvements:
+
+### 🧩 Component Structure
+
+```
+src/
+├── components/
+│   ├── common/
+│   │   └── ErrorBoundary.tsx      # Reusable error boundary with error recovery
+│   └── widgets/
+│       ├── PortfolioOverview.tsx  # Main component with container logic
+│       ├── MetricCard.tsx         # Reusable metric card component
+│       └── __tests__/             # Component tests
+│           ├── PortfolioOverview.test.tsx
+│           └── MetricCard.test.tsx
+├── hooks/
+│   ├── usePortfolioOverview.ts    # Custom hook for data fetching
+│   └── __tests__/                 # Hook tests
+│       └── usePortfolioOverview.test.ts
+└── utils/
+    └── common/
+        ├── format.ts               # Formatting utilities
+        └── __tests__/             # Utility tests
+            └── format.test.ts
+```
+
+### 🚀 Key Improvements
+
+1. **Modular Architecture**
+   - Separated concerns with container/presentational components
+   - Reusable `MetricCard` and `MetricItem` components
+   - Custom hook for data fetching and state management
+
+2. **Performance Optimizations**
+   - Memoized expensive calculations
+   - Efficient re-renders with React.memo
+   - Optimized data fetching with caching
+
+3. **Error Handling**
+   - Comprehensive error boundaries
+   - Graceful error states and recovery
+   - Retry mechanisms for failed requests
+
+4. **Testing**
+   - Unit tests for all components and hooks
+   - Integration tests for user flows
+   - Test coverage for edge cases
+
+5. **Code Quality**
+   - TypeScript for type safety
+   - Consistent code style with ESLint/Prettier
+   - Comprehensive JSDoc documentation
+
+### 🛠️ Usage
+
+```tsx
+import { PortfolioOverview } from './components/widgets/PortfolioOverview';
+
+// In your component:
+<PortfolioOverview 
+  widgetId="portfolio-1"
+  config={{
+    title: 'My Portfolio',
+    refreshInterval: 30000, // 30 seconds
+  }}
+  isEditMode={false}
+  onConfigChange={(config) => console.log('Config changed:', config)}
+/>
+```
+
+### 📊 Features
+
+- Real-time portfolio metrics
+- Responsive grid layout
+- Loading and error states
+- Configurable refresh interval
+- Edit mode for customization
+- Accessible UI components
+
+### 🧪 Testing
+
+Run the test suite:
+
+```bash
+# Run all tests
+npm test
+
+# Run tests with coverage
+npm test -- --coverage
+```
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -362,3 +453,25 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 📝 **Blog**: Latest updates and technical insights
 
 ---
+
+## Default Security Settings
+
+The server comes with secure defaults:
+
+### Allowed File Extensions
+- Source code: `.ts`, `.tsx`, `.js`, `.jsx`, `.py`, `.sql`
+- Documentation: `.md`, `.txt`, `.json`, `.yml`, `.yaml`
+- Configuration: `.env.example`, `.gitignore`
+- Assets: `.css`, `.html`, `.svg`, `.png`, `.jpg`
+
+### Blocked Patterns
+- Dependencies: `**/node_modules/**`, `**/dist/**`
+- Version control: `**/.git/**`
+- Secrets: `**/.env`, `**/*.key`, `**/*.pem`
+- Logs: `**/*.log`
+- Build artifacts: `**/build/**`, `**/.next/**`
+
+### Size Limits
+- Max file size: 50MB
+- Max directory depth: 10 levels
+- Max files per request: 100

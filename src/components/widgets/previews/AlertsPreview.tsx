@@ -1,1 +1,1 @@
-export { AlertsPreview as default } from './index'; 
+export { AlertsPreview as default } from './index';

@@ -180,9 +180,9 @@ const MCPSecurity: React.FC = () => {
       setIsLoading(false);
       
       toast({
-        title: "Security Audit Complete",
-        description: "No vulnerabilities found. See recommendations for improvements.",
-        variant: "success",
+        title: 'Security Audit Complete',
+        description: 'No vulnerabilities found. See recommendations for improvements.',
+        variant: 'success',
       });
       
       // Record in governance
@@ -206,11 +206,11 @@ const MCPSecurity: React.FC = () => {
     }));
     
     toast({
-      title: tlsConfig.mutualTlsEnabled ? "Mutual TLS Disabled" : "Mutual TLS Enabled",
+      title: tlsConfig.mutualTlsEnabled ? 'Mutual TLS Disabled' : 'Mutual TLS Enabled',
       description: tlsConfig.mutualTlsEnabled 
-        ? "Client certificate verification has been disabled." 
-        : "Client certificate verification has been enabled.",
-      variant: tlsConfig.mutualTlsEnabled ? "destructive" : "success",
+        ? 'Client certificate verification has been disabled.' 
+        : 'Client certificate verification has been enabled.',
+      variant: tlsConfig.mutualTlsEnabled ? 'destructive' : 'success',
     });
     
     // Record in governance
@@ -243,9 +243,9 @@ const MCPSecurity: React.FC = () => {
     setPermissionModels(prev => [...prev, newModel]);
     
     toast({
-      title: "Permission Model Created",
-      description: "New permission model has been created.",
-      variant: "success",
+      title: 'Permission Model Created',
+      description: 'New permission model has been created.',
+      variant: 'success',
     });
     
     // Record in governance
@@ -273,9 +273,9 @@ const MCPSecurity: React.FC = () => {
     setRateLimiters(prev => [...prev, newLimiter]);
     
     toast({
-      title: "Rate Limiter Created",
-      description: "New rate limiter has been created.",
-      variant: "success",
+      title: 'Rate Limiter Created',
+      description: 'New rate limiter has been created.',
+      variant: 'success',
     });
     
     // Record in governance
@@ -304,9 +304,9 @@ const MCPSecurity: React.FC = () => {
     setConnectionPools(prev => [...prev, newPool]);
     
     toast({
-      title: "Connection Pool Created",
-      description: "New connection pool has been created.",
-      variant: "success",
+      title: 'Connection Pool Created',
+      description: 'New connection pool has been created.',
+      variant: 'success',
     });
     
     // Record in governance
@@ -343,8 +343,8 @@ const MCPSecurity: React.FC = () => {
             onClick={runSecurityAudit}
             disabled={isLoading}
           >
-            <Shield size={16} className={isLoading ? "animate-pulse" : ""} />
-            {isLoading ? "Running Audit..." : "Run Security Audit"}
+            <Shield size={16} className={isLoading ? 'animate-pulse' : ''} />
+            {isLoading ? 'Running Audit...' : 'Run Security Audit'}
           </Button>
           
           <Button className="gap-2">
@@ -364,11 +364,11 @@ const MCPSecurity: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2">
-              <div className={`h-3 w-3 rounded-full ${tlsConfig.enabled ? "bg-green-500" : "bg-red-500"}`}></div>
-              <span className="font-medium">{tlsConfig.enabled ? "Enabled" : "Disabled"}</span>
+              <div className={`h-3 w-3 rounded-full ${tlsConfig.enabled ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              <span className="font-medium">{tlsConfig.enabled ? 'Enabled' : 'Disabled'}</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              {tlsConfig.minVersion} with mutual TLS {tlsConfig.mutualTlsEnabled ? "enabled" : "disabled"}
+              {tlsConfig.minVersion} with mutual TLS {tlsConfig.mutualTlsEnabled ? 'enabled' : 'disabled'}
             </p>
           </CardContent>
           <CardFooter>
@@ -440,9 +440,9 @@ const MCPSecurity: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <div className="flex items-center gap-2 mb-4">
-                    <div className={`h-4 w-4 rounded-full ${securityAuditResults.status === 'passed' ? "bg-green-500" : "bg-red-500"}`}></div>
+                    <div className={`h-4 w-4 rounded-full ${securityAuditResults.status === 'passed' ? 'bg-green-500' : 'bg-red-500'}`}></div>
                     <span className="font-medium text-lg">
-                      {securityAuditResults.status === 'passed' ? "Security Audit Passed" : "Security Audit Failed"}
+                      {securityAuditResults.status === 'passed' ? 'Security Audit Passed' : 'Security Audit Failed'}
                     </span>
                   </div>
                   
@@ -453,9 +453,9 @@ const MCPSecurity: React.FC = () => {
                         <Progress 
                           value={tlsConfig.mutualTlsEnabled ? 100 : 75} 
                           className="h-2" 
-                          indicatorClassName={tlsConfig.mutualTlsEnabled ? "bg-green-500" : "bg-yellow-500"}
+                          indicatorClassName={tlsConfig.mutualTlsEnabled ? 'bg-green-500' : 'bg-yellow-500'}
                         />
-                        <span className="text-sm">{tlsConfig.mutualTlsEnabled ? "Strong" : "Good"}</span>
+                        <span className="text-sm">{tlsConfig.mutualTlsEnabled ? 'Strong' : 'Good'}</span>
                       </div>
                     </div>
                     
@@ -609,8 +609,8 @@ const MCPSecurity: React.FC = () => {
                           className="h-1" 
                           indicatorClassName={
                             (limiter.currentRequests / limiter.maxRequestsPerMinute) > 0.8 
-                              ? "bg-yellow-500" 
-                              : "bg-green-500"
+                              ? 'bg-yellow-500' 
+                              : 'bg-green-500'
                           }
                         />
                       </div>
@@ -748,13 +748,13 @@ const MCPSecurity: React.FC = () => {
                   <div>
                     <label className="text-sm font-medium">Preferred Cipher Suites</label>
                     <div className="flex flex-wrap gap-2 mt-1">
-                      <Badge variant={tlsConfig.preferredCipherSuites.includes('TLS_AES_256_GCM_SHA384') ? "default" : "outline"}>
+                      <Badge variant={tlsConfig.preferredCipherSuites.includes('TLS_AES_256_GCM_SHA384') ? 'default' : 'outline'}>
                         TLS_AES_256_GCM_SHA384
                       </Badge>
-                      <Badge variant={tlsConfig.preferredCipherSuites.includes('TLS_CHACHA20_POLY1305_SHA256') ? "default" : "outline"}>
+                      <Badge variant={tlsConfig.preferredCipherSuites.includes('TLS_CHACHA20_POLY1305_SHA256') ? 'default' : 'outline'}>
                         TLS_CHACHA20_POLY1305_SHA256
                       </Badge>
-                      <Badge variant={tlsConfig.preferredCipherSuites.includes('TLS_AES_128_GCM_SHA256') ? "default" : "outline"}>
+                      <Badge variant={tlsConfig.preferredCipherSuites.includes('TLS_AES_128_GCM_SHA256') ? 'default' : 'outline'}>
                         TLS_AES_128_GCM_SHA256
                       </Badge>
                     </div>
@@ -788,9 +788,9 @@ const MCPSecurity: React.FC = () => {
                   });
                   
                   toast({
-                    title: "TLS Settings Reset",
-                    description: "TLS settings have been reset to defaults.",
-                    variant: "default",
+                    title: 'TLS Settings Reset',
+                    description: 'TLS settings have been reset to defaults.',
+                    variant: 'default',
                   });
                 }}
               >
@@ -800,9 +800,9 @@ const MCPSecurity: React.FC = () => {
               <Button 
                 onClick={() => {
                   toast({
-                    title: "TLS Settings Saved",
-                    description: "TLS settings have been saved.",
-                    variant: "success",
+                    title: 'TLS Settings Saved',
+                    description: 'TLS settings have been saved.',
+                    variant: 'success',
                   });
                   
                   // Record in governance
@@ -947,8 +947,8 @@ const MCPSecurity: React.FC = () => {
                             className="h-2 w-24" 
                             indicatorClassName={
                               (limiter.currentRequests / limiter.maxRequestsPerMinute) > 0.8 
-                                ? "bg-yellow-500" 
-                                : "bg-green-500"
+                                ? 'bg-yellow-500' 
+                                : 'bg-green-500'
                             }
                           />
                           <span className="text-sm">{limiter.currentRequests}/{limiter.maxRequestsPerMinute}</span>
@@ -974,9 +974,9 @@ const MCPSecurity: React.FC = () => {
                               ));
                               
                               toast({
-                                title: "Rate Limit Increased",
+                                title: 'Rate Limit Increased',
                                 description: `Rate limit for ${limiter.serverUrl.replace('https://', '')} increased to ${limiter.maxRequestsPerMinute + 10} req/min.`,
-                                variant: "success",
+                                variant: 'success',
                               });
                             }}
                           >
@@ -993,9 +993,9 @@ const MCPSecurity: React.FC = () => {
                               ));
                               
                               toast({
-                                title: "Rate Limiter Reset",
+                                title: 'Rate Limiter Reset',
                                 description: `Rate limiter for ${limiter.serverUrl.replace('https://', '')} has been reset.`,
-                                variant: "success",
+                                variant: 'success',
                               });
                             }}
                           >
@@ -1024,9 +1024,9 @@ const MCPSecurity: React.FC = () => {
                   })));
                   
                   toast({
-                    title: "All Rate Limiters Reset",
-                    description: "All rate limiters have been reset.",
-                    variant: "success",
+                    title: 'All Rate Limiters Reset',
+                    description: 'All rate limiters have been reset.',
+                    variant: 'success',
                   });
                 }}
               >
@@ -1102,16 +1102,16 @@ const MCPSecurity: React.FC = () => {
                               ));
                               
                               toast({
-                                title: "Pool Size Increased",
+                                title: 'Pool Size Increased',
                                 description: `Connection pool size for ${pool.serverUrl.replace('https://', '')} increased to ${pool.maxConnections + 5}.`,
-                                variant: "success",
+                                variant: 'success',
                               });
                             }}
                           >
                             Increase Size
                           </Button>
                           <Button 
-                            variant={pool.status === 'active' ? "destructive" : "outline"} 
+                            variant={pool.status === 'active' ? 'destructive' : 'outline'} 
                             size="sm"
                             onClick={() => {
                               if (pool.status === 'active') {
@@ -1122,9 +1122,9 @@ const MCPSecurity: React.FC = () => {
                                 ));
                                 
                                 toast({
-                                  title: "Pool Draining",
+                                  title: 'Pool Draining',
                                   description: `Connection pool for ${pool.serverUrl.replace('https://', '')} is now draining.`,
-                                  variant: "warning",
+                                  variant: 'warning',
                                 });
                               } else {
                                 setConnectionPools(prev => prev.map(p => 
@@ -1134,9 +1134,9 @@ const MCPSecurity: React.FC = () => {
                                 ));
                                 
                                 toast({
-                                  title: "Pool Activated",
+                                  title: 'Pool Activated',
                                   description: `Connection pool for ${pool.serverUrl.replace('https://', '')} is now active.`,
-                                  variant: "success",
+                                  variant: 'success',
                                 });
                               }
                             }}
@@ -1160,9 +1160,9 @@ const MCPSecurity: React.FC = () => {
                 size="sm"
                 onClick={() => {
                   toast({
-                    title: "Connection Pools Optimized",
-                    description: "Connection pools have been optimized for current load.",
-                    variant: "success",
+                    title: 'Connection Pools Optimized',
+                    description: 'Connection pools have been optimized for current load.',
+                    variant: 'success',
                   });
                 }}
               >
@@ -1285,9 +1285,9 @@ const MCPSecurity: React.FC = () => {
             variant="outline"
             onClick={() => {
               toast({
-                title: "Settings Reset",
-                description: "Security and performance settings have been reset to defaults.",
-                variant: "default",
+                title: 'Settings Reset',
+                description: 'Security and performance settings have been reset to defaults.',
+                variant: 'default',
               });
             }}
           >
@@ -1297,9 +1297,9 @@ const MCPSecurity: React.FC = () => {
           <Button 
             onClick={() => {
               toast({
-                title: "Settings Saved",
-                description: "Security and performance settings have been saved.",
-                variant: "success",
+                title: 'Settings Saved',
+                description: 'Security and performance settings have been saved.',
+                variant: 'success',
               });
               
               // Record in governance

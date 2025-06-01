@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Manrope%3Awght%40400%3B500%3B700%3B800&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+
+    <title>Stitch Design</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  </head>
+  <body>
+    <div
+      class="relative flex size-full min-h-screen flex-col bg-[#14191f] dark justify-between group/design-root overflow-x-hidden"
+      style='font-family: Manrope, "Noto Sans", sans-serif;'
+    >
+      <div>
+        <div class="flex items-center bg-[#14191f] p-4 pb-2 justify-between">
+          <div class="text-white flex size-12 shrink-0 items-center" data-icon="X" data-size="24px" data-weight="regular">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+              <path
+                d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"
+              ></path>
+            </svg>
+          </div>
+          <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">Confirm Order</h2>
+        </div>
+        <h2 class="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Order Summary</h2>
+        <div class="p-4 grid grid-cols-[20%_1fr] gap-x-6">
+          <div class="col-span-2 grid grid-cols-subgrid border-t border-t-[#3d4b5c] py-5">
+            <p class="text-[#9dacbe] text-sm font-normal leading-normal">Symbol</p>
+            <p class="text-white text-sm font-normal leading-normal">BTC</p>
+          </div>
+          <div class="col-span-2 grid grid-cols-subgrid border-t border-t-[#3d4b5c] py-5">
+            <p class="text-[#9dacbe] text-sm font-normal leading-normal">Action</p>
+            <p class="text-white text-sm font-normal leading-normal">Buy</p>
+          </div>
+          <div class="col-span-2 grid grid-cols-subgrid border-t border-t-[#3d4b5c] py-5">
+            <p class="text-[#9dacbe] text-sm font-normal leading-normal">Quantity</p>
+            <p class="text-white text-sm font-normal leading-normal">0.5</p>
+          </div>
+          <div class="col-span-2 grid grid-cols-subgrid border-t border-t-[#3d4b5c] py-5">
+            <p class="text-[#9dacbe] text-sm font-normal leading-normal">Limit Price</p>
+            <p class="text-white text-sm font-normal leading-normal">$30,000</p>
+          </div>
+          <div class="col-span-2 grid grid-cols-subgrid border-t border-t-[#3d4b5c] py-5">
+            <p class="text-[#9dacbe] text-sm font-normal leading-normal">Estimated Cost</p>
+            <p class="text-white text-sm font-normal leading-normal">$15,000</p>
+          </div>
+        </div>
+        <h2 class="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Risk Disclosure</h2>
+        <p class="text-white text-base font-normal leading-normal pb-3 pt-1 px-4">
+          Trading involves risk of loss and is not suitable for all investors. Past performance is not indicative of future results. Please review the full risk disclosure before
+          proceeding.
+        </p>
+      </div>
+      <div>
+        <div class="flex px-4 py-3">
+          <button
+            class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 flex-1 bg-[#b2cae5] text-[#14191f] text-base font-bold leading-normal tracking-[0.015em]"
+          >
+            <span class="truncate">Confirm Order</span>
+          </button>
+        </div>
+        <div class="h-5 bg-[#14191f]"></div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -35,10 +35,10 @@ import {
 import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert';
 import { useToast } from '../../hooks/useToast';
 import { Progress } from '../../components/ui/progress';
-import MCPFederationService from '../../services/mcpFederationService';
+import mcpFederationService from '../../services/mcpFederationService';
 
-// Initialize the MCP federation service
-const federationService = new MCPFederationService();
+// Use the already instantiated MCP federation service
+const federationService = mcpFederationService;
 
 const MCPObservability: React.FC = () => {
   const { toast } = useToast();
@@ -187,9 +187,9 @@ const MCPObservability: React.FC = () => {
           setAlerts(prev => [newAlert, ...prev]);
           
           toast({
-            title: "Error Alert",
+            title: 'Error Alert',
             description: newLog.message,
-            variant: "destructive",
+            variant: 'destructive',
           });
         }
       }
@@ -253,9 +253,9 @@ const MCPObservability: React.FC = () => {
       setRefreshInterval(null);
       
       toast({
-        title: "Auto-refresh Disabled",
-        description: "Manual refresh mode activated.",
-        variant: "default",
+        title: 'Auto-refresh Disabled',
+        description: 'Manual refresh mode activated.',
+        variant: 'default',
       });
     } else {
       const interval = window.setInterval(() => {
@@ -265,9 +265,9 @@ const MCPObservability: React.FC = () => {
       setRefreshInterval(interval);
       
       toast({
-        title: "Auto-refresh Enabled",
-        description: "Data will refresh every 10 seconds.",
-        variant: "success",
+        title: 'Auto-refresh Enabled',
+        description: 'Data will refresh every 10 seconds.',
+        variant: 'success',
       });
     }
   };
@@ -280,9 +280,9 @@ const MCPObservability: React.FC = () => {
       setIsLoading(false);
       
       toast({
-        title: "Data Refreshed",
-        description: "Observability data has been updated.",
-        variant: "success",
+        title: 'Data Refreshed',
+        description: 'Observability data has been updated.',
+        variant: 'success',
       });
     }, 1000);
   };
@@ -294,9 +294,9 @@ const MCPObservability: React.FC = () => {
     ));
     
     toast({
-      title: "Alert Acknowledged",
-      description: "The alert has been marked as acknowledged.",
-      variant: "success",
+      title: 'Alert Acknowledged',
+      description: 'The alert has been marked as acknowledged.',
+      variant: 'success',
     });
   };
   
@@ -347,17 +347,17 @@ const MCPObservability: React.FC = () => {
             onClick={refreshData}
             disabled={isLoading}
           >
-            <RefreshCw size={16} className={isLoading ? "animate-spin" : ""} />
-            {isLoading ? "Refreshing..." : "Refresh"}
+            <RefreshCw size={16} className={isLoading ? 'animate-spin' : ''} />
+            {isLoading ? 'Refreshing...' : 'Refresh'}
           </Button>
           
           <Button 
-            variant={refreshInterval ? "default" : "outline"}
+            variant={refreshInterval ? 'default' : 'outline'}
             className="gap-2"
             onClick={toggleAutoRefresh}
           >
             <Activity size={16} />
-            {refreshInterval ? "Disable Auto-refresh" : "Enable Auto-refresh"}
+            {refreshInterval ? 'Disable Auto-refresh' : 'Enable Auto-refresh'}
           </Button>
         </div>
       </div>
@@ -415,14 +415,14 @@ const MCPObservability: React.FC = () => {
           <CardContent>
             <div className="flex items-center gap-2">
               <div className={`h-3 w-3 rounded-full ${
-                systemMetrics.cpuUsage > 80 ? "bg-red-500" :
-                systemMetrics.cpuUsage > 60 ? "bg-yellow-500" :
-                "bg-green-500"
+                systemMetrics.cpuUsage > 80 ? 'bg-red-500' :
+                systemMetrics.cpuUsage > 60 ? 'bg-yellow-500' :
+                'bg-green-500'
               }`}></div>
               <span className="font-medium">
-                {systemMetrics.cpuUsage > 80 ? "Critical" :
-                 systemMetrics.cpuUsage > 60 ? "Warning" :
-                 "Healthy"}
+                {systemMetrics.cpuUsage > 80 ? 'Critical' :
+                 systemMetrics.cpuUsage > 60 ? 'Warning' :
+                 'Healthy'}
               </span>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -472,9 +472,9 @@ const MCPObservability: React.FC = () => {
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <span className={
-                        connection.latency < 200 ? "text-green-600" :
-                        connection.latency < 500 ? "text-yellow-600" :
-                        "text-red-600"
+                        connection.latency < 200 ? 'text-green-600' :
+                        connection.latency < 500 ? 'text-yellow-600' :
+                        'text-red-600'
                       }>
                         {connection.latency.toFixed(0)}ms
                       </span>
@@ -484,9 +484,9 @@ const MCPObservability: React.FC = () => {
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <span className={
-                        connection.errorRate < 1 ? "text-green-600" :
-                        connection.errorRate < 5 ? "text-yellow-600" :
-                        "text-red-600"
+                        connection.errorRate < 1 ? 'text-green-600' :
+                        connection.errorRate < 5 ? 'text-yellow-600' :
+                        'text-red-600'
                       }>
                         {connection.errorRate.toFixed(1)}%
                       </span>
@@ -502,9 +502,9 @@ const MCPObservability: React.FC = () => {
                         size="sm"
                         onClick={() => {
                           toast({
-                            title: "Trace Viewer",
+                            title: 'Trace Viewer',
                             description: `Opening trace ${connection.traceId} in trace viewer.`,
-                            variant: "success",
+                            variant: 'success',
                           });
                         }}
                       >
@@ -516,16 +516,16 @@ const MCPObservability: React.FC = () => {
                         size="sm"
                         onClick={() => {
                           toast({
-                            title: "Test Connection",
+                            title: 'Test Connection',
                             description: `Testing connection to ${connection.serverName}.`,
-                            variant: "default",
+                            variant: 'default',
                           });
                           
                           setTimeout(() => {
                             toast({
-                              title: "Connection Test",
+                              title: 'Connection Test',
                               description: `Connection to ${connection.serverName} is healthy.`,
-                              variant: "success",
+                              variant: 'success',
                             });
                           }, 1000);
                         }}
@@ -560,9 +560,9 @@ const MCPObservability: React.FC = () => {
                 value={systemMetrics.cpuUsage} 
                 className="h-2" 
                 indicatorClassName={
-                  systemMetrics.cpuUsage > 80 ? "bg-red-500" :
-                  systemMetrics.cpuUsage > 60 ? "bg-yellow-500" :
-                  "bg-green-500"
+                  systemMetrics.cpuUsage > 80 ? 'bg-red-500' :
+                  systemMetrics.cpuUsage > 60 ? 'bg-yellow-500' :
+                  'bg-green-500'
                 }
               />
             </div>
@@ -576,9 +576,9 @@ const MCPObservability: React.FC = () => {
                 value={systemMetrics.memoryUsage} 
                 className="h-2" 
                 indicatorClassName={
-                  systemMetrics.memoryUsage > 80 ? "bg-red-500" :
-                  systemMetrics.memoryUsage > 60 ? "bg-yellow-500" :
-                  "bg-green-500"
+                  systemMetrics.memoryUsage > 80 ? 'bg-red-500' :
+                  systemMetrics.memoryUsage > 60 ? 'bg-yellow-500' :
+                  'bg-green-500'
                 }
               />
             </div>
@@ -661,9 +661,9 @@ const MCPObservability: React.FC = () => {
                 setAlerts(prev => prev.map(alert => ({...alert, acknowledged: true})));
                 
                 toast({
-                  title: "All Alerts Acknowledged",
-                  description: "All alerts have been marked as acknowledged.",
-                  variant: "success",
+                  title: 'All Alerts Acknowledged',
+                  description: 'All alerts have been marked as acknowledged.',
+                  variant: 'success',
                 });
               }}
               disabled={alerts.filter(alert => !alert.acknowledged).length === 0}
@@ -703,9 +703,9 @@ const MCPObservability: React.FC = () => {
               variant="outline"
               onClick={() => {
                 toast({
-                  title: "Trace Explorer",
-                  description: "Opening distributed trace explorer.",
-                  variant: "success",
+                  title: 'Trace Explorer',
+                  description: 'Opening distributed trace explorer.',
+                  variant: 'success',
                 });
               }}
             >
@@ -763,9 +763,9 @@ const MCPObservability: React.FC = () => {
             size="sm"
             onClick={() => {
               toast({
-                title: "Logs Exported",
-                description: "Trace logs have been exported to file.",
-                variant: "success",
+                title: 'Logs Exported',
+                description: 'Trace logs have been exported to file.',
+                variant: 'success',
               });
             }}
           >
@@ -789,7 +789,7 @@ const MCPObservability: React.FC = () => {
                 <h3 className="font-semibold">Security Anomalies</h3>
               </div>
               <div className="flex items-center gap-2 mb-4">
-                <div className={`h-3 w-3 rounded-full bg-green-500`}></div>
+                <div className={'h-3 w-3 rounded-full bg-green-500'}></div>
                 <span className="text-sm">No anomalies detected</span>
               </div>
               <p className="text-xs text-muted-foreground">
@@ -803,7 +803,7 @@ const MCPObservability: React.FC = () => {
                 <h3 className="font-semibold">Performance Anomalies</h3>
               </div>
               <div className="flex items-center gap-2 mb-4">
-                <div className={`h-3 w-3 rounded-full bg-yellow-500`}></div>
+                <div className={'h-3 w-3 rounded-full bg-yellow-500'}></div>
                 <span className="text-sm">1 anomaly detected</span>
               </div>
               <p className="text-xs text-muted-foreground">
@@ -817,7 +817,7 @@ const MCPObservability: React.FC = () => {
                 <h3 className="font-semibold">Data Anomalies</h3>
               </div>
               <div className="flex items-center gap-2 mb-4">
-                <div className={`h-3 w-3 rounded-full bg-green-500`}></div>
+                <div className={'h-3 w-3 rounded-full bg-green-500'}></div>
                 <span className="text-sm">No anomalies detected</span>
               </div>
               <p className="text-xs text-muted-foreground">
@@ -845,16 +845,16 @@ const MCPObservability: React.FC = () => {
             size="sm"
             onClick={() => {
               toast({
-                title: "Anomaly Scan",
-                description: "Running manual anomaly detection scan...",
-                variant: "default",
+                title: 'Anomaly Scan',
+                description: 'Running manual anomaly detection scan...',
+                variant: 'default',
               });
               
               setTimeout(() => {
                 toast({
-                  title: "Scan Complete",
-                  description: "Anomaly detection scan completed. 1 anomaly found.",
-                  variant: "success",
+                  title: 'Scan Complete',
+                  description: 'Anomaly detection scan completed. 1 anomaly found.',
+                  variant: 'success',
                 });
               }, 2000);
             }}

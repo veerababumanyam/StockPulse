@@ -1,0 +1,50 @@
+{
+  "server": {
+    "name": "stockpulse-filesystem-mcp",
+    "version": "1.0.0"
+  },
+  "security": {
+    "allowedRootPaths": [
+      "C:\\Users\\admin\\Desktop\\StockPulse"
+    ],
+    "readOnlyMode": false,
+    "maxFileSize": 10485760,
+    "maxDirectoryDepth": 10,
+    "allowedFileExtensions": [
+      ".ts", ".tsx", ".js", ".jsx", ".json", ".md", ".txt",
+      ".yml", ".yaml", ".env.example", ".gitignore", ".css",
+      ".html", ".svg", ".png", ".jpg", ".jpeg", ".gif",
+      ".py", ".sql", ".sh", ".bat", ".ps1", ".xml"
+    ],
+    "blockedPatterns": [
+      "**/node_modules/**",
+      "**/.git/**",
+      "**/.env",
+      "**/*.log",
+      "**/dist/**",
+      "**/build/**",
+      "**/.next/**",
+      "**/coverage/**",
+      "**/*.pem",
+      "**/*.key",
+      "**/*.p12",
+      "**/*.jks"
+    ],
+    "enableAuditLog": true
+  },
+  "features": {
+    "enableFileWatch": true,
+    "enableSearch": true,
+    "enableBinaryFiles": false,
+    "cacheDirectoryListings": true
+  },
+  "limits": {
+    "maxFilesPerRequest": 100,
+    "maxConcurrentOperations": 10,
+    "rateLimitPerMinute": 1000
+  },
+  "logging": {
+    "level": "info",
+    "enableConsole": true
+  }
+} 

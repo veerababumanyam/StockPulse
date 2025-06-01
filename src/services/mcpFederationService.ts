@@ -1,92 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
-} from '../../components/ui/card';
-import { 
-  Table, 
-  TableBody, 
-  TableCaption, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from '../../components/ui/table';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogFooter, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger 
-} from '../../components/ui/dialog';
-import { 
-  Form, 
-  FormControl, 
-  FormDescription, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
-  FormMessage 
-} from '../../components/ui/form';
-import { Input } from '../../components/ui/input';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert';
-import { 
-  AlertCircle, 
-  CheckCircle, 
-  Plus, 
-  Trash2, 
-  Settings, 
-  RefreshCw,
-  ArrowRight,
-  ArrowLeft,
-  Server,
-  Laptop,
-  Shield,
-  Activity,
-  Lock,
-  Key,
-  Eye,
-  EyeOff,
-  Code,
-  FileJson,
-  Zap,
-  ExternalLink,
-  Search,
-  Globe,
-  Network,
-  QrCode,
-  Wifi,
-  Database
-} from 'lucide-react';
-import { useToast } from '../../hooks/useToast';
-import { Switch } from '../../components/ui/switch';
-import { Textarea } from '../../components/ui/textarea';
-import { Progress } from '../../components/ui/progress';
+/**
+ * MCP Federation Service - Enterprise grade service for managing MCP server federation
+ * This service provides methods for interacting with the MCP Federation Registry.
+ * It handles server discovery, registration, connection, and management.
+ */
 
-// Import the MCP federation service
-import { 
-  discoverServers, 
-  registerServer, 
-  updateServer, 
-  deleteServer, 
-  connectToServer, 
-  disconnectFromServer 
-} from '../../services/mcpFederationService';
+// Import only the types that are actually used
+import {
+  MCPServerConfig,
+  MCPServerStatus,
+} from '../types/mcp';
 
 /**
  * MCP Federation Registry API Service
- * 
- * This service provides methods for interacting with the MCP Federation Registry.
- * It handles server discovery, registration, connection, and management.
  */
 class MCPFederationService {
   /**
@@ -94,12 +19,13 @@ class MCPFederationService {
    * 
    * @param method - Discovery method (registry, network, url, qrcode)
    * @param query - Search query or URL
-   * @param options - Additional discovery options
+   * @param _options - Additional discovery options (unused)
    * @returns Promise resolving to discovered servers
    */
-  async discoverServers(method, query, options = {}) {
+  async discoverServers(method: string, query: string, _options = {}) {
     // Implementation would connect to actual registry or network services
-    console.log(`Discovering servers via ${method} with query: ${query}`);
+    // TODO: Replace with proper logging
+    // console.log(`Discovering servers via ${method} with query: ${query}`);
     
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -114,7 +40,7 @@ class MCPFederationService {
         capabilities: ['market_data', 'technical_analysis', 'sentiment_analysis'],
         version: '1.0.0',
         authType: 'oauth2',
-        status: 'active',
+        status: 'active' as MCPServerStatus,
         category: 'finance',
         owner: 'StockData Inc.',
         created: '2025-04-10T10:30:00Z',
@@ -133,8 +59,9 @@ class MCPFederationService {
    * @param serverData - Server data to register
    * @returns Promise resolving to the registered server
    */
-  async registerServer(serverData) {
-    console.log('Registering server:', serverData);
+  async registerServer(serverData: Partial<MCPServerConfig>) {
+    // TODO: Replace with proper logging
+    // console.log('Registering server:', serverData);
     
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -158,8 +85,9 @@ class MCPFederationService {
    * @param serverData - Updated server data
    * @returns Promise resolving to the updated server
    */
-  async updateServer(serverId, serverData) {
-    console.log(`Updating server ${serverId}:`, serverData);
+  async updateServer(serverId: string, serverData: Partial<MCPServerConfig>) {
+    // TODO: Replace with proper logging
+    // console.log(`Updating server ${serverId}:`, serverData);
     
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -176,38 +104,39 @@ class MCPFederationService {
    * Delete an MCP server from the registry
    * 
    * @param serverId - ID of the server to delete
-   * @returns Promise resolving when the server is deleted
+   * @returns Promise resolving to deletion confirmation
    */
-  async deleteServer(serverId) {
-    console.log(`Deleting server ${serverId}`);
+  async deleteServer(serverId: string) {
+    // TODO: Replace with proper logging
+    // console.log(`Deleting server ${serverId}`);
     
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // In a real implementation, this would make an API call to delete the server
-    return { success: true };
+    return { success: true, message: `Server ${serverId} deleted successfully` };
   }
   
   /**
    * Connect to an MCP server
    * 
-   * @param server - Server to connect to
+   * @param server - Server configuration to connect to
    * @returns Promise resolving to connection details
    */
-  async connectToServer(server) {
-    console.log(`Connecting to server ${server.id} (${server.name})`);
+  async connectToServer(server: MCPServerConfig) {
+    // TODO: Replace with proper logging
+    // console.log('Connecting to server:', server);
     
-    // Simulate network delay and connection process
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    // Simulate connection delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
     
-    // In a real implementation, this would establish an MCP connection
+    // In a real implementation, this would establish an SSE connection
     return {
-      id: server.id,
-      name: server.name,
-      status: 'connected',
-      lastUsed: new Date().toISOString(),
-      responseTime: server.responseTime,
-      requestsToday: 0
+      connectionId: Date.now().toString(),
+      serverId: server.id,
+      status: 'connected' as MCPServerStatus,
+      connectedAt: new Date().toISOString(),
+      capabilities: server.capabilities || []
     };
   }
   
@@ -215,60 +144,84 @@ class MCPFederationService {
    * Disconnect from an MCP server
    * 
    * @param serverId - ID of the server to disconnect from
-   * @returns Promise resolving when disconnected
+   * @returns Promise resolving to disconnection confirmation
    */
-  async disconnectFromServer(serverId) {
-    console.log(`Disconnecting from server ${serverId}`);
+  async disconnectFromServer(serverId: string) {
+    // TODO: Replace with proper logging
+    // console.log(`Disconnecting from server ${serverId}`);
     
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Simulate disconnection delay
+    await new Promise(resolve => setTimeout(resolve, 500));
     
-    // In a real implementation, this would close the MCP connection
-    return { success: true };
-  }
-  
-  /**
-   * Get server health status
-   * 
-   * @param serverId - ID of the server to check
-   * @returns Promise resolving to server health data
-   */
-  async getServerHealth(serverId) {
-    console.log(`Checking health of server ${serverId}`);
-    
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    // In a real implementation, this would query the server's health endpoint
+    // In a real implementation, this would close the SSE connection
     return {
-      status: 'healthy',
-      uptime: '99.98%',
-      responseTime: 120,
-      lastChecked: new Date().toISOString()
+      serverId,
+      status: 'disconnected' as MCPServerStatus,
+      disconnectedAt: new Date().toISOString()
     };
   }
   
   /**
-   * Verify MCP server compliance
+   * Check the health of an MCP server
+   * 
+   * @param serverId - ID of the server to check
+   * @returns Promise resolving to health status
+   */
+  async getServerHealth(serverId: string) {
+    // TODO: Replace with proper logging
+    // console.log(`Checking health of server ${serverId}`);
+    
+    // Simulate health check delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // In a real implementation, this would make a health check call
+    return {
+      serverId,
+      status: 'healthy' as MCPServerStatus,
+      responseTime: Math.floor(Math.random() * 500) + 50,
+      lastChecked: new Date().toISOString(),
+      uptime: '99.9%',
+      errorCount: 0
+    };
+  }
+  
+  /**
+   * Verify server compliance with MCP standards
    * 
    * @param serverId - ID of the server to verify
-   * @returns Promise resolving to compliance verification results
+   * @returns Promise resolving to compliance status
    */
-  async verifyServerCompliance(serverId) {
-    console.log(`Verifying compliance of server ${serverId}`);
+  async verifyServerCompliance(serverId: string) {
+    // TODO: Replace with proper logging
+    // console.log(`Verifying compliance for server ${serverId}`);
     
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1200));
+    // Simulate compliance check delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // In a real implementation, this would run compliance checks
+    // In a real implementation, this would run compliance tests
     return {
+      serverId,
       compliant: true,
-      protocolVersion: '1.0',
-      securityScore: 92,
-      issues: [],
+      score: 95,
+      checks: {
+        security: 'passed',
+        authentication: 'passed',
+        capabilities: 'passed',
+        performance: 'passed'
+      },
       lastVerified: new Date().toISOString()
     };
   }
 }
 
-export default MCPFederationService;
+// Export service functions
+const mcpFederationService = new MCPFederationService();
+
+export const discoverServers = mcpFederationService.discoverServers.bind(mcpFederationService);
+export const registerServer = mcpFederationService.registerServer.bind(mcpFederationService);
+export const updateServer = mcpFederationService.updateServer.bind(mcpFederationService);
+export const deleteServer = mcpFederationService.deleteServer.bind(mcpFederationService);
+export const connectToServer = mcpFederationService.connectToServer.bind(mcpFederationService);
+export const disconnectFromServer = mcpFederationService.disconnectFromServer.bind(mcpFederationService);
+
+export default mcpFederationService;

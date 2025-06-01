@@ -105,9 +105,9 @@ const AIAgents: React.FC = () => {
   const handleConnectToMCP = (serverId: string) => {
     if (connectedAgents.includes(serverId)) {
       toast({
-        title: "Already Connected",
-        description: `You are already connected to this MCP server.`,
-        variant: "default",
+        title: 'Already Connected',
+        description: 'You are already connected to this MCP server.',
+        variant: 'default',
       });
       return;
     }
@@ -120,9 +120,9 @@ const AIAgents: React.FC = () => {
       setIsConnecting(false);
       
       toast({
-        title: "Connection Established",
-        description: `Successfully connected to MCP server.`,
-        variant: "success",
+        title: 'Connection Established',
+        description: 'Successfully connected to MCP server.',
+        variant: 'success',
       });
     }, 1500);
   };
@@ -131,9 +131,9 @@ const AIAgents: React.FC = () => {
     setConnectedAgents(prev => prev.filter(id => id !== serverId));
     
     toast({
-      title: "Disconnected",
-      description: `Successfully disconnected from MCP server.`,
-      variant: "default",
+      title: 'Disconnected',
+      description: 'Successfully disconnected from MCP server.',
+      variant: 'default',
     });
   };
 
@@ -304,9 +304,9 @@ const AIAgents: React.FC = () => {
                       size="sm"
                       onClick={() => {
                         toast({
-                          title: "MCP Server Status",
-                          description: "StockPulse MCP Server is currently active and accessible.",
-                          variant: "success",
+                          title: 'MCP Server Status',
+                          description: 'StockPulse MCP Server is currently active and accessible.',
+                          variant: 'success',
                         });
                       }}
                     >
@@ -360,16 +360,16 @@ const AIAgents: React.FC = () => {
                     className="w-full"
                     onClick={() => {
                       toast({
-                        title: "Network Scan",
-                        description: "Scanning local network for MCP servers...",
-                        variant: "default",
+                        title: 'Network Scan',
+                        description: 'Scanning local network for MCP servers...',
+                        variant: 'default',
                       });
                       
                       setTimeout(() => {
                         toast({
-                          title: "Scan Complete",
-                          description: "Found 1 MCP server on your local network.",
-                          variant: "success",
+                          title: 'Scan Complete',
+                          description: 'Found 1 MCP server on your local network.',
+                          variant: 'success',
                         });
                       }, 2000);
                     }}
@@ -392,12 +392,12 @@ const AIAgents: React.FC = () => {
                     size="sm" 
                     className="w-full"
                     onClick={() => {
-                      const input = prompt("Enter MCP server URL:");
+                      const input = prompt('Enter MCP server URL:');
                       if (input) {
                         toast({
-                          title: "Connecting...",
+                          title: 'Connecting...',
                           description: `Attempting to connect to ${input}`,
-                          variant: "default",
+                          variant: 'default',
                         });
                       }
                     }}
@@ -421,9 +421,9 @@ const AIAgents: React.FC = () => {
                     className="w-full"
                     onClick={() => {
                       toast({
-                        title: "QR Code Scanner",
-                        description: "Camera access is required to scan QR codes.",
-                        variant: "default",
+                        title: 'QR Code Scanner',
+                        description: 'Camera access is required to scan QR codes.',
+                        variant: 'default',
                       });
                     }}
                   >
@@ -569,7 +569,7 @@ const AIAgents: React.FC = () => {
                       </div>
                       <div>
                         <Button 
-                          variant={agent.active ? "outline" : "default"} 
+                          variant={agent.active ? 'outline' : 'default'} 
                           size="sm"
                         >
                           {agent.active ? 'Deactivate' : 'Activate'}

@@ -12,274 +12,154 @@ import React, {
   useState,
   useCallback,
   useRef,
-} from "react";
-import { authService } from "../services/authService";
+  ReactNode,
+} from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import {
   User,
   AuthContextType,
   LoginCredentials,
   RegisterCredentials,
-} from "../types/auth";
+} from '../types/auth';
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// Define public routes where initial auth check is not needed
+const PUBLIC_ROUTES = [
+  '/',
+  '/landing',
+  '/auth/login',
+  '/auth/register',
+  '/auth/forgot-password',
+  '/auth/reset-password',
+  '/about',
+  '/features',
+  '/pricing',
+  '/contact',
+];
 
 interface AuthProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const initializationAttempted = useRef<boolean>(false);
-  const sessionCheckInterval = useRef<NodeJS.Timeout | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  /**
-   * AC1: Check authentication status via API call without accessing client-side tokens
-   * AC6: Provide appropriate loading indicators
-   */
-  const checkAuthStatus = useCallback(async () => {
-    try {
-      setLoading(true);
-      const userData = await authService.getCurrentUser();
-      setUser(userData);
-      setError(null);
-      console.log("✅ Authentication status verified:", userData.email);
-    } catch (err: any) {
-      setUser(null);
+  // Check if current route is public
+  const isPublicRoute = PUBLIC_ROUTES.some(route => 
+    location.pathname === route || location.pathname.startsWith(route)
+  );
 
-      // Only set error if user was previously authenticated (session expired)
-      if (user !== null) {
-        setError("Session expired. Please log in again.");
-        console.warn("⚠️ Session expired during status check");
-      } else if (initializationAttempted.current) {
-        // Silent failure on initial check - user is not authenticated
-        console.info("ℹ️ No active session found");
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [user]);
-
-  /**
-   * AC2: Login function that updates AuthContext with user information
-   * AC6: Provide loading states during authentication operations
-   * AC7: Handle authentication errors with appropriate error states
-   */
-  const login = useCallback(async (credentials: LoginCredentials) => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      console.log("🔐 Attempting login for:", credentials.email);
-      const response = await authService.login(credentials);
-      setUser(response.user);
-
-      // Store CSRF token for future requests
-      if (response.csrf_token) {
-        authService.setCsrfToken(response.csrf_token);
-      }
-
-      console.log("✅ Login successful for:", response.user.email);
-
-      // Start session monitoring after successful login
-      startSessionMonitoring();
-    } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.error ||
-        err.response?.data?.detail ||
-        err.message ||
-        "Login failed. Please try again.";
-      setError(errorMessage);
-      console.error("❌ Login failed:", errorMessage);
-      throw err; // Re-throw for component error handling
-    } finally {
-      setLoading(false);
-    }
+  // Configure axios defaults
+  useEffect(() => {
+    axios.defaults.withCredentials = true;
+    axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
   }, []);
 
-  /**
-   * Register function that creates new user account in pending approval status
-   * AC6: Provide loading states during registration operations
-   * AC7: Handle registration errors with appropriate error states
-   * SECURITY: No auto-login - users must wait for admin approval
-   */
-  const register = useCallback(async (credentials: RegisterCredentials) => {
-    try {
-      setLoading(true);
-      setError(null);
+  // Check authentication status on mount and route changes
+  useEffect(() => {
+    // Skip auth check for public routes
+    if (isPublicRoute) {
+      setIsLoading(false);
+      return;
+    }
 
-      console.log("📝 Attempting registration for:", credentials.email);
-      const response = await authService.register(credentials);
+    checkAuthStatus();
+  }, [location.pathname, isPublicRoute]);
+
+  const checkAuthStatus = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get('/api/v1/auth/me');
+      setUser(response.data.user);
+    } catch (error) {
+      console.error('Auth check failed:', error);
+      setUser(null);
+      // Only redirect if not on a public route
+      if (!isPublicRoute && location.pathname !== '/auth/login') {
+        navigate('/auth/login', { replace: true });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const login = async (email: string, password: string) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.post('/api/v1/auth/login', {
+        email,
+        password,
+      });
       
-      console.log("✅ Registration submitted successfully for:", credentials.email);
-      console.log("🔒 Status:", response.status, "- Awaiting admin approval");
-
-      // DO NOT set user or start session monitoring - user needs approval
-      // DO NOT store CSRF token - no session created yet
-
-      return response;
-    } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.error ||
-        err.response?.data?.detail ||
-        err.message ||
-        "Registration failed. Please try again.";
-      setError(errorMessage);
-      console.error("❌ Registration failed:", errorMessage);
-      throw err; // Re-throw for component error handling
+      setUser(response.data.user);
+      
+      // Use React Router navigation instead of hard redirect
+      // Get redirect path from location state or default to dashboard
+      const from = (location.state as any)?.from?.pathname || '/dashboard';
+      navigate(from, { replace: true });
+    } catch (error: any) {
+      console.error('Login failed:', error);
+      throw new Error(error.response?.data?.detail || 'Login failed');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
-  }, []);
+  };
 
-  /**
-   * AC5: Logout function that clears user state and authentication status
-   * AC6: Provide loading states during logout operations
-   */
-  const logout = useCallback(async () => {
+  const register = async (email: string, password: string, name: string) => {
     try {
-      setLoading(true);
-      console.log("🚪 Logging out user:", user?.email);
+      setIsLoading(true);
+      const response = await axios.post('/api/v1/auth/register', {
+        email,
+        password,
+        name,
+      });
+      
+      setUser(response.data.user);
+      
+      // Use React Router navigation instead of hard redirect
+      navigate('/dashboard', { replace: true });
+    } catch (error: any) {
+      console.error('Registration failed:', error);
+      throw new Error(error.response?.data?.detail || 'Registration failed');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-      await authService.logout();
-    } catch (err) {
-      // Log error but don't prevent logout UX
-      console.error("⚠️ Logout error (non-blocking):", err);
+  const logout = async () => {
+    try {
+      await axios.post('/api/v1/auth/logout');
+    } catch (error) {
+      console.error('Logout request failed:', error);
     } finally {
       setUser(null);
-      setError(null);
-      setLoading(false);
-      authService.clearCsrfToken();
-      stopSessionMonitoring();
-
-      console.log("✅ Logout completed");
+      navigate('/', { replace: true });
     }
-  }, [user?.email]);
+  };
 
-  /**
-   * AC7: Clear error state
-   */
-  const clearError = useCallback(() => {
-    setError(null);
-  }, []);
+  const refreshAuth = async () => {
+    await checkAuthStatus();
+  };
 
-  /**
-   * Start periodic session monitoring for authenticated users
-   * AC3: Maintain authentication state without additional API calls until validation needed
-   */
-  const startSessionMonitoring = useCallback(() => {
-    // Clear existing interval
-    if (sessionCheckInterval.current) {
-      clearInterval(sessionCheckInterval.current);
-    }
-
-    // Check session every 15 minutes
-    sessionCheckInterval.current = setInterval(
-      () => {
-        if (user) {
-          console.log("🔍 Performing periodic session check");
-          checkAuthStatus();
-        }
-      },
-      15 * 60 * 1000,
-    ); // 15 minutes
-  }, [user, checkAuthStatus]);
-
-  /**
-   * Stop session monitoring
-   */
-  const stopSessionMonitoring = useCallback(() => {
-    if (sessionCheckInterval.current) {
-      clearInterval(sessionCheckInterval.current);
-      sessionCheckInterval.current = null;
-    }
-  }, []);
-
-  /**
-   * AC4: Handle 401 unauthorized events from API interceptor
-   * Automatically detect session expiry and update authentication state
-   */
-  useEffect(() => {
-    const handleUnauthorized = () => {
-      console.warn("🚨 Unauthorized event received - clearing session");
-      setUser(null);
-      setError("Your session has expired. Please log in again.");
-      authService.clearCsrfToken();
-      stopSessionMonitoring();
-    };
-
-    // AC8: Listen for unauthorized events from API interceptor
-    window.addEventListener("auth:unauthorized", handleUnauthorized);
-
-    return () => {
-      window.removeEventListener("auth:unauthorized", handleUnauthorized);
-    };
-  }, [stopSessionMonitoring]);
-
-  /**
-   * AC1: Initial authentication check on app load
-   * Only perform once to avoid infinite loops
-   */
-  useEffect(() => {
-    if (!initializationAttempted.current) {
-      initializationAttempted.current = true;
-      console.log(
-        "🚀 Initializing AuthContext - checking authentication status",
-      );
-      checkAuthStatus();
-    }
-  }, [checkAuthStatus]);
-
-  /**
-   * Start session monitoring when user becomes authenticated
-   */
-  useEffect(() => {
-    if (user) {
-      startSessionMonitoring();
-    } else {
-      stopSessionMonitoring();
-    }
-
-    // Cleanup on unmount
-    return () => {
-      stopSessionMonitoring();
-    };
-  }, [user, startSessionMonitoring, stopSessionMonitoring]);
-
-  /**
-   * AC2, AC5: Computed authentication status
-   */
-  const isAuthenticated = Boolean(user);
-
-  /**
-   * Refresh session function for enhanced session management
-   */
-  const refreshSession = useCallback(async () => {
-    try {
-      await authService.refreshToken();
-      await checkAuthStatus();
-    } catch (err) {
-      console.error("⚠️ Session refresh failed:", err);
-      throw err;
-    }
-  }, [checkAuthStatus]);
-
-  const contextValue: AuthContextType = {
+  const value: AuthContextType = {
     user,
-    loading,
-    error,
+    isLoading,
+    isAuthenticated: !!user,
     login,
     register,
     logout,
-    checkAuthStatus,
-    refreshSession,
-    clearError,
-    isAuthenticated,
+    refreshAuth,
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
@@ -290,8 +170,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
 
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
   }
 
   return context;
@@ -301,12 +181,12 @@ export const useAuth = (): AuthContextType => {
  * Helper hook for authentication status checking
  */
 export const useAuthStatus = () => {
-  const { isAuthenticated, loading, user } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   return {
     isAuthenticated,
-    isLoading: loading,
-    isAnonymous: !isAuthenticated && !loading,
+    isLoading,
+    isAnonymous: !isAuthenticated && !isLoading,
     user,
   };
 };
@@ -316,9 +196,9 @@ export const useAuthStatus = () => {
  * Returns null during loading, renders children when authenticated
  */
 export const useRequireAuth = () => {
-  const { isAuthenticated, loading, error } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
-  if (loading) {
+  if (isLoading) {
     return { requiresAuth: true, isLoading: true, error: null };
   }
 
@@ -326,7 +206,7 @@ export const useRequireAuth = () => {
     return {
       requiresAuth: true,
       isLoading: false,
-      error: error || "Authentication required",
+      error: null,
     };
   }
 

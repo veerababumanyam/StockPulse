@@ -1,17 +1,17 @@
-import * as React from "react";
+import * as React from 'react';
 
 export interface Toast {
   id: string;
   title?: string;
   description?: string;
   action?: React.ReactNode;
-  variant?: "default" | "destructive" | "success" | "warning";
+  variant?: 'default' | 'destructive' | 'success' | 'warning';
   duration?: number;
 }
 
 interface ToastContextType {
   toasts: Toast[];
-  toast: (toast: Omit<Toast, "id">) => void;
+  toast: (toast: Omit<Toast, 'id'>) => void;
   dismiss: (toastId: string) => void;
 }
 
@@ -22,7 +22,7 @@ const ToastContext = React.createContext<ToastContextType | undefined>(
 export const useToast = (): ToastContextType => {
   const context = React.useContext(ToastContext);
   if (!context) {
-    throw new Error("useToast must be used within a ToastProvider");
+    throw new Error('useToast must be used within a ToastProvider');
   }
   return context;
 };
@@ -34,7 +34,7 @@ interface ToastProviderProps {
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
   const [toasts, setToasts] = React.useState<Toast[]>([]);
 
-  const toast = React.useCallback((newToast: Omit<Toast, "id">) => {
+  const toast = React.useCallback((newToast: Omit<Toast, 'id'>) => {
     const id = Math.random().toString(36).substring(2, 9);
     const duration = newToast.duration ?? 5000;
 
@@ -89,17 +89,17 @@ const ToastComponent: React.FC<ToastComponentProps> = ({
   title,
   description,
   action,
-  variant = "default",
+  variant = 'default',
   onDismiss,
 }) => {
   const variants = {
-    default: "border bg-background text-foreground",
+    default: 'border bg-background text-foreground',
     destructive:
-      "destructive border-destructive bg-destructive text-destructive-foreground",
+      'destructive border-destructive bg-destructive text-destructive-foreground',
     success:
-      "border-green-500 bg-green-50 text-green-900 dark:bg-green-900 dark:text-green-100",
+      'border-green-500 bg-green-50 text-green-900 dark:bg-green-900 dark:text-green-100',
     warning:
-      "border-yellow-500 bg-yellow-50 text-yellow-900 dark:bg-yellow-900 dark:text-yellow-100",
+      'border-yellow-500 bg-yellow-50 text-yellow-900 dark:bg-yellow-900 dark:text-yellow-100',
   };
 
   return (

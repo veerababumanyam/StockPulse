@@ -1,31 +1,32 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import {
   BarChart2,
   TrendingUp,
   TrendingDown,
   DollarSign,
   AlertCircle,
-} from "lucide-react";
+} from 'lucide-react';
 
-const StockAnalysisPage = () => {
-  const [symbol, setSymbol] = useState("AAPL");
-  const [timeframe, setTimeframe] = useState("1D");
+const StockAnalysis: React.FC = () => {
+  // Remove unused state variables
+  // const [symbol, setSymbol] = useState('AAPL');
+  const [timeframe, setTimeframe] = useState('1D');
 
   // Mock data for the stock
   const stockData = {
-    name: "Apple Inc.",
-    symbol: "AAPL",
+    name: 'Apple Inc.',
+    symbol: 'AAPL',
     price: 187.42,
     change: 2.35,
     changePercent: 1.27,
-    marketCap: "2.94T",
-    volume: "52.3M",
+    marketCap: '2.94T',
+    volume: '52.3M',
     pe: 31.2,
     dividend: 0.92,
     high52: 198.23,
     low52: 124.17,
-    recommendation: "Buy",
+    recommendation: 'Buy',
     targetPrice: 210.5,
   };
 
@@ -47,14 +48,14 @@ const StockAnalysisPage = () => {
             <div className="flex items-center mt-2">
               <span className="text-2xl font-semibold">${stockData.price}</span>
               <span
-                className={`ml-3 flex items-center ${stockData.change >= 0 ? "text-green-500" : "text-red-500"}`}
+                className={`ml-3 flex items-center ${stockData.change >= 0 ? 'text-green-500' : 'text-red-500'}`}
               >
                 {stockData.change >= 0 ? (
                   <TrendingUp className="w-4 h-4 mr-1" />
                 ) : (
                   <TrendingDown className="w-4 h-4 mr-1" />
                 )}
-                {stockData.change >= 0 ? "+" : ""}
+                {stockData.change >= 0 ? '+' : ''}
                 {stockData.change} ({stockData.changePercent}%)
               </span>
             </div>
@@ -78,13 +79,13 @@ const StockAnalysisPage = () => {
           <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
             <h2 className="text-xl font-semibold">Price Chart</h2>
             <div className="flex space-x-2">
-              {["1D", "1W", "1M", "3M", "1Y", "5Y", "MAX"].map((period) => (
+              {['1D', '1W', '1M', '3M', '1Y', '5Y', 'MAX'].map((period) => (
                 <button
                   key={period}
                   className={`px-3 py-1 rounded-md text-sm font-medium ${
                     timeframe === period
-                      ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-                      : "bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                      : 'bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                   }`}
                   onClick={() => setTimeframe(period)}
                 >
@@ -96,8 +97,8 @@ const StockAnalysisPage = () => {
 
           <div className="p-4">
             <div className="h-96 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-lg">
-              <p className="text-gray-500 dark:text-gray-400">
-                Price chart will be implemented with Recharts
+              <p className="text-text/70">
+                We couldn&apos;t load the chart data at this time. Please try again later.
               </p>
             </div>
           </div>
@@ -189,7 +190,7 @@ const StockAnalysisPage = () => {
                 <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
                   <span>Current: ${stockData.price}</span>
                   <span>
-                    Upside:{" "}
+                    Upside:{' '}
                     {(
                       (stockData.targetPrice / stockData.price - 1) *
                       100
@@ -282,8 +283,8 @@ const StockAnalysisPage = () => {
             <div className="mb-6">
               <h3 className="font-semibold mb-4">Revenue & EPS Growth</h3>
               <div className="h-64 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50 rounded-lg">
-                <p className="text-gray-500 dark:text-gray-400">
-                  Financial charts will be implemented with Recharts
+                <p className="text-text/70">
+                  We couldn&apos;t load the analysis data at this time. Please try again later.
                 </p>
               </div>
             </div>
@@ -447,4 +448,4 @@ const StockAnalysisPage = () => {
   );
 };
 
-export default StockAnalysisPage;
+export default StockAnalysis;

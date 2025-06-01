@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
   ArrowRight,
   Award,
@@ -11,7 +11,7 @@ import {
   Globe,
   Smartphone,
   Lock,
-} from "lucide-react";
+} from 'lucide-react';
 
 const AboutPage: React.FC = () => {
   return (
@@ -76,14 +76,14 @@ const AboutPage: React.FC = () => {
               className="text-center mb-16"
             >
               <h1 className="text-4xl sm:text-5xl font-bold text-text mb-6">
-                About{" "}
+                About{' '}
                 <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
                   StockPulse
                 </span>
               </h1>
               <p className="text-lg text-text/70 max-w-3xl mx-auto">
-                We're on a mission to democratize sophisticated trading tools
-                and make AI-powered market analysis accessible to everyone.
+                We&apos;re building the future of intelligent trading platforms,
+                combining cutting-edge AI with institutional-grade infrastructure.
               </p>
             </motion.div>
           </div>
@@ -122,10 +122,10 @@ const AboutPage: React.FC = () => {
                 className="grid grid-cols-2 gap-6"
               >
                 {[
-                  { icon: Users, title: "50,000+", desc: "Active Traders" },
-                  { icon: TrendingUp, title: "$2.1B+", desc: "Volume Traded" },
-                  { icon: Target, title: "94.2%", desc: "Accuracy Rate" },
-                  { icon: Award, title: "99.9%", desc: "Uptime" },
+                  { icon: Users, title: '50,000+', desc: 'Active Traders' },
+                  { icon: TrendingUp, title: '$2.1B+', desc: 'Volume Traded' },
+                  { icon: Target, title: '94.2%', desc: 'Accuracy Rate' },
+                  { icon: Award, title: '99.9%', desc: 'Uptime' },
                 ].map((stat, index) => (
                   <div
                     key={index}

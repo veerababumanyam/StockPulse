@@ -4,7 +4,7 @@ services:
   # ================================
   # DATABASE LAYER
   # ================================
-  
+
   # Main PostgreSQL Database
   postgres:
     image: postgres:15
@@ -81,18 +81,22 @@ services:
       NEO4J_dbms_memory_heap_initial__size: 512m
       NEO4J_dbms_memory_heap_max__size: 1G
       NEO4J_dbms_memory_pagecache_size: 512m
+      NEO4J_apoc_export_file_enabled: "true"
+      NEO4J_apoc_import_file_enabled: "true"
+      NEO4J_apoc_import_file_use__neo4j__config: "true"
     ports:
       - "7474:7474"  # HTTP
       - "7687:7687"  # Bolt
     volumes:
       - neo4j_data:/data
       - neo4j_logs:/logs
+      - ./init-neo4j.sh:/docker-entrypoint-initdb.d/init-neo4j.sh
     healthcheck:
-      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "stockpulse_neo4j_password", "RETURN 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
+      test: ["CMD", "wget", "--spider", "http://localhost:7474"]
+      interval: 10s
+      timeout: 20s
+      retries: 10
+      start_period: 120s
     networks:
       - stockpulse-network
     restart: unless-stopped
@@ -165,7 +169,7 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  # PostgreSQL MCP Server  
+  # PostgreSQL MCP Server
   mcp-postgres-server:
     build:
       context: ./mcp-servers/postgres-server
@@ -334,4 +338,4 @@ volumes:
 
 networks:
   stockpulse-network:
-    driver: bridge 
+    driver: bridge

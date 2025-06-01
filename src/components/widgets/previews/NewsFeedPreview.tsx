@@ -1,1 +1,1 @@
-export { NewsFeedPreview as default } from './index'; 
+export { NewsFeedPreview as default } from './index';

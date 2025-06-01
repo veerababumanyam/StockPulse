@@ -1,31 +1,80 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import {
   Settings,
   User,
   Shield,
   Bell,
-  Moon,
-  Sun,
   LogOut,
   HelpCircle,
   Palette,
-} from "lucide-react";
-import ThemeSelector from "../components/ui/ThemeSelector";
-import { useTheme } from "../contexts/ThemeContext";
-import { PageLayout, Card } from "../components/layout/PageLayout";
+  BarChart3,
+  Sparkles,
+  Clock,
+} from 'lucide-react';
+import { UnifiedThemeSelector } from '../components/common/UnifiedThemeSelector';
+import { useTheme } from '../hooks/useTheme'; // Enhanced hook
+import { PageLayout, Card } from '../components/layout/PageLayout';
 
 const SettingsPage: React.FC = () => {
-  const { mode, colorTheme } = useTheme();
-  const [activeTab, setActiveTab] = useState("appearance");
+  // Use enhanced theme hook with all features
+  const { 
+    mode, 
+    colorTheme, 
+    isDark, 
+    analytics, 
+    recommendations, 
+    autoSwitch,
+    toggleAutoSwitch,
+    exportThemeData,
+    importThemeData
+  } = useTheme({
+    enableAnalytics: true,
+    enableRecommendations: true,
+    context: 'settings-page'
+  });
+  
+  const [activeTab, setActiveTab] = useState('appearance');
 
   const tabs = [
-    { id: "appearance", label: "Appearance", icon: <Palette /> },
-    { id: "account", label: "Account", icon: <User /> },
-    { id: "security", label: "Security", icon: <Shield /> },
-    { id: "notifications", label: "Notifications", icon: <Bell /> },
-    { id: "help", label: "Help & Support", icon: <HelpCircle /> },
+    { id: 'appearance', label: 'Appearance', icon: <Palette /> },
+    { id: 'account', label: 'Account', icon: <User /> },
+    { id: 'security', label: 'Security', icon: <Shield /> },
+    { id: 'notifications', label: 'Notifications', icon: <Bell /> },
+    { id: 'help', label: 'Help & Support', icon: <HelpCircle /> },
   ];
+
+  const handleExportTheme = async () => {
+    try {
+      const data = await exportThemeData();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `stockpulse-theme-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Failed to export theme data:', error);
+    }
+  };
+
+  const handleImportTheme = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const data = JSON.parse(e.target?.result as string);
+        await importThemeData(data);
+        console.log('Theme data imported successfully');
+      } catch (error) {
+        console.error('Failed to import theme data:', error);
+      }
+    };
+    reader.readAsText(file);
+  };
 
   return (
     <PageLayout>
@@ -44,8 +93,8 @@ const SettingsPage: React.FC = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-150 ${
                     activeTab === tab.id
-                      ? "bg-primary/10 text-primary"
-                      : "text-text hover:bg-surface/50"
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-text hover:bg-surface/50'
                   }`}
                 >
                   <span className="mr-3 h-5 w-5">{tab.icon}</span>
@@ -63,7 +112,7 @@ const SettingsPage: React.FC = () => {
         {/* Main content */}
         <div className="flex-1">
           <Card padding="lg">
-            {activeTab === "appearance" && (
+            {activeTab === 'appearance' && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -74,56 +123,145 @@ const SettingsPage: React.FC = () => {
                 </h3>
 
                 <div className="space-y-8">
-                  {/* Theme Mode */}
+                  {/* Enhanced Theme Management */}
                   <div>
-                    <h4 className="text-md font-medium mb-4 text-text">
+                    <h4 className="text-md font-medium mb-4 text-text flex items-center">
+                      <Palette className="mr-2 h-5 w-5 text-primary" />
                       Theme & Colors
                     </h4>
-                    <p className="text-sm text-text/60 mb-4">
-                      Customize the look and feel of StockPulse with your
-                      preferred color theme and mode.
+                    <p className="text-sm text-text/60 mb-6">
+                      Customize StockPulse with AI-powered theme recommendations, 
+                      analytics, and advanced theme management features.
                     </p>
 
-                    <div className="mb-6">
-                      <ThemeSelector className="mb-4" />
+                    {/* Unified Theme Selector - Full Featured */}
+                    <div className="mb-8 p-6 rounded-xl border border-border bg-surface/30">
+                      <UnifiedThemeSelector
+                        variant="full"
+                        position="settings"
+                        showLabels={true}
+                        showRecommendations={true}
+                        showAnalytics={true}
+                        enableAutoSwitch={true}
+                        className="settings-theme-selector"
+                        title="Theme Management"
+                        description="Advanced theme controls with AI recommendations and usage analytics"
+                      />
+                    </div>
 
-                      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-4 rounded-lg border border-border bg-surface">
-                          <h5 className="font-medium mb-2 text-text">
-                            Current Theme
-                          </h5>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-4 h-4 rounded-full bg-primary"></div>
-                            <div className="w-4 h-4 rounded-full bg-secondary"></div>
-                            <div className="w-4 h-4 rounded-full bg-accent"></div>
-                            <span className="ml-2 text-sm text-text/60">
-                              {colorTheme.charAt(0).toUpperCase() +
-                                colorTheme.slice(1).replace("-", " ")}
-                            </span>
+                    {/* Theme Analytics Section */}
+                    {analytics && (
+                      <div className="p-6 rounded-xl border border-border bg-surface/20">
+                        <h5 className="font-medium mb-4 text-text flex items-center">
+                          <BarChart3 className="mr-2 h-4 w-4 text-primary" />
+                          Theme Usage Analytics
+                        </h5>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div className="p-3 rounded-lg bg-background/50">
+                            <div className="text-sm text-text/60">Total Changes</div>
+                            <div className="text-lg font-semibold text-text">
+                              {analytics.totalChanges || 0}
+                            </div>
+                          </div>
+                          <div className="p-3 rounded-lg bg-background/50">
+                            <div className="text-sm text-text/60">Most Used Theme</div>
+                            <div className="text-lg font-semibold text-text">
+                              {analytics.mostUsedTheme || colorTheme}
+                            </div>
+                          </div>
+                          <div className="p-3 rounded-lg bg-background/50">
+                            <div className="text-sm text-text/60">Usage Time</div>
+                            <div className="text-lg font-semibold text-text">
+                              {analytics.totalUsageTime ? 
+                                `${Math.round(analytics.totalUsageTime / 1000 / 60)}m` : 
+                                '0m'
+                              }
+                            </div>
                           </div>
                         </div>
+                      </div>
+                    )}
 
-                        <div className="p-4 rounded-lg border border-border bg-surface">
-                          <h5 className="font-medium mb-2 text-text">
-                            Current Mode
-                          </h5>
-                          <div className="flex items-center">
-                            {mode === "light" ? (
-                              <Sun className="w-4 h-4 mr-2 text-primary" />
-                            ) : mode === "dark" ? (
-                              <Moon className="w-4 h-4 mr-2 text-accent" />
-                            ) : (
-                              <div className="flex">
-                                <Sun className="w-4 h-4 mr-1 text-primary" />
-                                <Moon className="w-4 h-4 mr-2 text-accent" />
+                    {/* AI Recommendations Section */}
+                    {recommendations && recommendations.length > 0 && (
+                      <div className="p-6 rounded-xl border border-border bg-surface/20">
+                        <h5 className="font-medium mb-4 text-text flex items-center">
+                          <Sparkles className="mr-2 h-4 w-4 text-primary" />
+                          AI Theme Recommendations
+                        </h5>
+                        <div className="space-y-3">
+                          {recommendations.slice(0, 3).map((rec, index) => (
+                            <div key={index} className="p-3 rounded-lg bg-background/50 border border-border/50">
+                              <div className="text-sm font-medium text-text">{rec.theme}</div>
+                              <div className="text-xs text-text/60 mt-1">{rec.reason}</div>
+                              <div className="text-xs text-primary mt-1">
+                                Confidence: {Math.round(rec.confidence * 100)}%
                               </div>
-                            )}
-                            <span className="text-sm text-text/60">
-                              {mode.charAt(0).toUpperCase() + mode.slice(1)}{" "}
-                              Mode
-                            </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Auto-Switch Settings */}
+                    <div className="p-6 rounded-xl border border-border bg-surface/20">
+                      <h5 className="font-medium mb-4 text-text flex items-center">
+                        <Clock className="mr-2 h-4 w-4 text-primary" />
+                        Automatic Theme Switching
+                      </h5>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-sm font-medium text-text">Smart Auto-Switch</div>
+                          <div className="text-xs text-text/60 mt-1">
+                            Automatically switch themes based on time, system preference, and usage patterns
                           </div>
                         </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={autoSwitch?.enabled || false}
+                            onChange={toggleAutoSwitch}
+                            className="sr-only peer"
+                          />
+                          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                        </label>
+                      </div>
+                      {autoSwitch?.enabled && (
+                        <div className="mt-4 p-3 rounded-lg bg-background/50">
+                          <div className="text-xs text-text/60">
+                            Auto-switch is enabled. Themes will change based on:
+                          </div>
+                          <ul className="text-xs text-text/80 mt-2 space-y-1">
+                            <li>• System time (dark mode at night)</li>
+                            <li>• System preferences</li>
+                            <li>• Usage patterns and analytics</li>
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Theme Data Management */}
+                    <div className="p-6 rounded-xl border border-border bg-surface/20">
+                      <h5 className="font-medium mb-4 text-text">Theme Data Management</h5>
+                      <div className="flex flex-wrap gap-3">
+                        <button
+                          onClick={handleExportTheme}
+                          className="px-4 py-2 bg-primary/10 text-primary rounded-lg text-sm font-medium hover:bg-primary/20 transition-colors duration-200"
+                        >
+                          Export Theme Data
+                        </button>
+                        <label className="px-4 py-2 bg-secondary/10 text-secondary rounded-lg text-sm font-medium hover:bg-secondary/20 transition-colors duration-200 cursor-pointer">
+                          Import Theme Data
+                          <input
+                            type="file"
+                            accept=".json"
+                            onChange={handleImportTheme}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
+                      <div className="text-xs text-text/60 mt-3">
+                        Export your theme preferences and analytics data, or import settings from another device.
                       </div>
                     </div>
                   </div>
@@ -133,18 +271,16 @@ const SettingsPage: React.FC = () => {
                     <h4 className="text-md font-medium mb-4">
                       Layout Preferences
                     </h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                      Customize how information is displayed throughout the
-                      application.
+                    <p className="text-sm text-text/60 mb-4">
+                      Customize how information is displayed throughout the application.
                     </p>
 
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h5 className="font-medium">Compact Mode</h5>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Reduce padding and spacing to fit more content on
-                            screen
+                          <h5 className="font-medium text-text">Compact Mode</h5>
+                          <p className="text-sm text-text/60">
+                            Reduce padding and spacing to fit more content on screen
                           </p>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
@@ -153,14 +289,14 @@ const SettingsPage: React.FC = () => {
                             value=""
                             className="sr-only peer"
                           />
-                          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
                         </label>
                       </div>
 
                       <div className="flex items-center justify-between">
                         <div>
-                          <h5 className="font-medium">Show Grid Lines</h5>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                          <h5 className="font-medium text-text">Show Grid Lines</h5>
+                          <p className="text-sm text-text/60">
                             Display grid lines in charts and tables
                           </p>
                         </div>
@@ -169,16 +305,16 @@ const SettingsPage: React.FC = () => {
                             type="checkbox"
                             value=""
                             className="sr-only peer"
-                            checked
+                            defaultChecked
                           />
-                          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
                         </label>
                       </div>
 
                       <div className="flex items-center justify-between">
                         <div>
-                          <h5 className="font-medium">Animations</h5>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                          <h5 className="font-medium text-text">Animations</h5>
+                          <p className="text-sm text-text/60">
                             Enable animations and transitions
                           </p>
                         </div>
@@ -187,9 +323,9 @@ const SettingsPage: React.FC = () => {
                             type="checkbox"
                             value=""
                             className="sr-only peer"
-                            checked
+                            defaultChecked
                           />
-                          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
                         </label>
                       </div>
                     </div>
@@ -197,108 +333,82 @@ const SettingsPage: React.FC = () => {
 
                   {/* Font Settings */}
                   <div>
-                    <h4 className="text-md font-medium mb-4">Font Settings</h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                      Adjust text size and font preferences.
+                    <h4 className="text-md font-medium mb-4 text-text">Font Settings</h4>
+                    <p className="text-sm text-text/60 mb-4">
+                      Adjust typography settings for better readability.
                     </p>
 
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-sm font-medium mb-2">
+                        <label className="block text-sm font-medium text-text mb-2">
                           Font Size
                         </label>
-                        <select className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                        <select className="block w-full px-3 py-2 border border-border rounded-lg bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
                           <option value="small">Small</option>
-                          <option value="medium" selected>
-                            Medium
-                          </option>
+                          <option value="medium" selected>Medium</option>
                           <option value="large">Large</option>
                         </select>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium mb-2">
+                        <label className="block text-sm font-medium text-text mb-2">
                           Font Family
                         </label>
-                        <select className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
-                          <option value="inter" selected>
-                            Inter (Default)
-                          </option>
+                        <select className="block w-full px-3 py-2 border border-border rounded-lg bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                          <option value="inter">Inter (Recommended)</option>
+                          <option value="system">System Default</option>
                           <option value="roboto">Roboto</option>
                           <option value="opensans">Open Sans</option>
                         </select>
                       </div>
                     </div>
                   </div>
-
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <button className="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200">
-                      Save Preferences
-                    </button>
-                  </div>
                 </div>
               </motion.div>
             )}
 
-            {activeTab === "account" && (
+            {/* Other tabs content */}
+            {activeTab === 'account' && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
               >
-                <h3 className="text-lg font-medium mb-6">Account Settings</h3>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Manage your account information and preferences.
-                </p>
-
-                {/* Account settings content would go here */}
+                <h3 className="text-lg font-medium mb-6 text-text">Account Settings</h3>
+                <p className="text-text/60">Account settings content goes here...</p>
               </motion.div>
             )}
 
-            {activeTab === "security" && (
+            {activeTab === 'security' && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
               >
-                <h3 className="text-lg font-medium mb-6">Security Settings</h3>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Manage your security preferences and authentication methods.
-                </p>
-
-                {/* Security settings content would go here */}
+                <h3 className="text-lg font-medium mb-6 text-text">Security Settings</h3>
+                <p className="text-text/60">Security settings content goes here...</p>
               </motion.div>
             )}
 
-            {activeTab === "notifications" && (
+            {activeTab === 'notifications' && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
               >
-                <h3 className="text-lg font-medium mb-6">
-                  Notification Settings
-                </h3>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Customize how and when you receive notifications.
-                </p>
-
-                {/* Notification settings content would go here */}
+                <h3 className="text-lg font-medium mb-6 text-text">Notification Settings</h3>
+                <p className="text-text/60">Notification settings content goes here...</p>
               </motion.div>
             )}
 
-            {activeTab === "help" && (
+            {activeTab === 'help' && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
               >
-                <h3 className="text-lg font-medium mb-6">Help & Support</h3>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Get help with StockPulse and contact support.
-                </p>
-
-                {/* Help & support content would go here */}
+                <h3 className="text-lg font-medium mb-6 text-text">Help & Support</h3>
+                <p className="text-text/60">Help and support content goes here...</p>
               </motion.div>
             )}
           </Card>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '../../utils/tailwind';
+import { cn } from '../../utils/cn';
 
 /**
  * AppContainer is a reusable, theme-driven container for all major layouts, cards, and modals.
@@ -36,7 +36,7 @@ export const AppContainer: React.FC<AppContainerProps> = ({
       padding !== 'none' && `p-${padding}`,
       shadow !== 'none' && `shadow-${shadow}`,
       border && 'border border-surface',
-      className
+      className,
     )}
     data-variant={variant}
   >
@@ -44,4 +44,4 @@ export const AppContainer: React.FC<AppContainerProps> = ({
   </div>
 );
 
-export default AppContainer; 
+export default AppContainer;

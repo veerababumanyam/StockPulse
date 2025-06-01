@@ -1,0 +1,536 @@
+/* StockPulse Authentication System Styles */
+/* Mobile-First, Touch-Friendly, Modern Design */
+
+/* Auth Layout Specific Styles */
+.auth-layout {
+  /* Ensure full viewport coverage */
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+  
+  /* Touch-friendly scrolling */
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
+  
+  /* Prevent zoom on input focus (iOS) */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+/* Auth Context Body Styling */
+body[data-auth-context="true"] {
+  /* Prevent background scrolling */
+  overflow-x: hidden;
+  
+  /* Enhanced font rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  
+  /* Touch action optimization */
+  touch-action: manipulation;
+}
+
+/* Page Type Specific Styling */
+body[data-page-type="login"] {
+  --auth-primary-color: #1e40af;
+  --auth-accent-color: #3b82f6;
+}
+
+body[data-page-type="register"] {
+  --auth-primary-color: #059669;
+  --auth-accent-color: #10b981;
+}
+
+body[data-page-type="forgot-password"] {
+  --auth-primary-color: #dc2626;
+  --auth-accent-color: #ef4444;
+}
+
+body[data-page-type="reset-password"] {
+  --auth-primary-color: #7c3aed;
+  --auth-accent-color: #8b5cf6;
+}
+
+/* Touch-Friendly Form Elements */
+.auth-layout input,
+.auth-layout button,
+.auth-layout select,
+.auth-layout textarea {
+  /* Minimum touch target size (44px) */
+  min-height: 44px;
+  
+  /* Touch manipulation optimization */
+  touch-action: manipulation;
+  
+  /* Prevent zoom on focus (iOS) */
+  font-size: 16px;
+  
+  /* Enhanced tap highlighting */
+  -webkit-tap-highlight-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Input Field Enhancements */
+.auth-layout input[type="email"],
+.auth-layout input[type="password"],
+.auth-layout input[type="text"],
+.auth-layout input[type="tel"] {
+  /* Mobile keyboard optimization */
+  autocomplete: on;
+  autocorrect: off;
+  autocapitalize: off;
+  spellcheck: false;
+  
+  /* Enhanced focus states */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-layout input[type="email"]:focus,
+.auth-layout input[type="password"]:focus,
+.auth-layout input[type="text"]:focus,
+.auth-layout input[type="tel"]:focus {
+  /* Enhanced focus ring */
+  outline: none;
+  ring: 2px;
+  ring-color: rgb(59 130 246);
+  ring-offset: 2px;
+  border-color: transparent;
+  
+  /* Subtle scale effect */
+  transform: scale(1.01);
+}
+
+/* Button Enhancements */
+.auth-layout button {
+  /* Touch feedback */
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  
+  /* Prevent text selection */
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.auth-layout button:active {
+  /* Touch feedback */
+  transform: scale(0.98);
+}
+
+.auth-layout button:disabled {
+  /* Disabled state */
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none !important;
+}
+
+/* Checkbox and Radio Enhancements */
+.auth-layout input[type="checkbox"],
+.auth-layout input[type="radio"] {
+  /* Larger touch targets */
+  width: 18px;
+  height: 18px;
+  min-height: 18px;
+  
+  /* Enhanced styling */
+  accent-color: var(--auth-primary-color, #1e40af);
+}
+
+/* Loading States */
+.auth-loading {
+  /* Skeleton loading animation */
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Dark Mode Enhancements */
+@media (prefers-color-scheme: dark) {
+  .auth-layout {
+    color-scheme: dark;
+  }
+  
+  .auth-loading {
+    background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+    background-size: 200% 100%;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .auth-layout input,
+  .auth-layout button {
+    border-width: 2px;
+    border-style: solid;
+  }
+  
+  .auth-layout button {
+    font-weight: 600;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .auth-layout *,
+  .auth-layout *::before,
+  .auth-layout *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile Responsive Breakpoints */
+
+/* Small Mobile (320px - 480px) */
+@media (max-width: 480px) {
+  .auth-layout {
+    padding: 1rem;
+  }
+  
+  .auth-layout .max-w-md {
+    max-width: 100%;
+  }
+  
+  .auth-layout input,
+  .auth-layout button {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: 0.875rem 1rem;
+  }
+  
+  .auth-layout h1,
+  .auth-layout h2 {
+    font-size: 1.5rem;
+    line-height: 1.3;
+  }
+}
+
+/* Medium Mobile (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .auth-layout {
+    padding: 1.5rem;
+  }
+  
+  .auth-layout input,
+  .auth-layout button {
+    padding: 1rem 1.25rem;
+  }
+}
+
+/* Tablet (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .auth-layout {
+    padding: 2rem;
+  }
+}
+
+/* Desktop (1025px+) */
+@media (min-width: 1025px) {
+  .auth-layout {
+    padding: 2.5rem;
+  }
+  
+  /* Hover effects for desktop */
+  .auth-layout button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .auth-layout input:hover {
+    border-color: rgb(156 163 175);
+  }
+}
+
+/* Landscape Mobile Optimization */
+@media (max-height: 500px) and (orientation: landscape) {
+  .auth-layout {
+    padding: 0.5rem;
+  }
+  
+  .auth-layout .space-y-6 > * + * {
+    margin-top: 1rem;
+  }
+  
+  .auth-layout .space-y-8 > * + * {
+    margin-top: 1.5rem;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .auth-layout {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .auth-layout button,
+  .auth-layout .fixed,
+  .auth-layout .absolute {
+    display: none !important;
+  }
+}
+
+/* Focus Visible Enhancement */
+.auth-layout *:focus-visible {
+  outline: 2px solid var(--auth-accent-color, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Password Strength Indicator */
+.password-strength-weak {
+  background-color: #ef4444;
+}
+
+.password-strength-medium {
+  background-color: #f59e0b;
+}
+
+.password-strength-strong {
+  background-color: #10b981;
+}
+
+/* Biometric Button Styling */
+.biometric-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.biometric-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  transform: translateY(-2px);
+}
+
+/* Security Indicator Animations */
+.security-pulse {
+  animation: security-pulse 2s infinite;
+}
+
+@keyframes security-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Toast Notification Styles */
+.auth-toast {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Floating Label Animation */
+.floating-label {
+  transition: all 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+.floating-label.active {
+  transform: translateY(-1.5rem) scale(0.875);
+  color: var(--auth-primary-color, #1e40af);
+}
+
+/* Custom Scrollbar for Auth Areas */
+.auth-layout::-webkit-scrollbar {
+  width: 6px;
+}
+
+.auth-layout::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.auth-layout::-webkit-scrollbar-thumb {
+  background: var(--auth-primary-color, #1e40af);
+  border-radius: 3px;
+}
+
+.auth-layout::-webkit-scrollbar-thumb:hover {
+  background: var(--auth-accent-color, #3b82f6);
+}
+
+/* Accessibility Enhancements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Error State Animations */
+.error-shake {
+  animation: error-shake 0.5s ease-in-out;
+}
+
+@keyframes error-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+/* Success State Animations */
+.success-bounce {
+  animation: success-bounce 0.6s ease-in-out;
+}
+
+@keyframes success-bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Progressive Enhancement */
+.no-js .auth-layout {
+  /* Fallback styles for no JavaScript */
+  background: #f8fafc;
+}
+
+.no-js .auth-layout button {
+  background: #1e40af;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+}
+
+/* Performance Optimizations */
+.auth-layout * {
+  /* GPU acceleration for smooth animations */
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Safe Area Insets for Mobile Devices */
+@supports (padding: max(0px)) {
+  .auth-layout {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Container Query Support (Future Enhancement) */
+@supports (container-type: inline-size) {
+  .auth-container {
+    container-type: inline-size;
+  }
+  
+  @container (max-width: 400px) {
+    .auth-layout .grid-cols-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+/* Modern CSS Features */
+.auth-layout {
+  /* CSS Logical Properties */
+  margin-inline: auto;
+  padding-inline: 1rem;
+  
+  /* CSS Grid Enhancements */
+  display: grid;
+  place-items: center;
+  
+  /* CSS Custom Properties for Dynamic Theming */
+  --auth-border-radius: clamp(0.5rem, 2vw, 1rem);
+  --auth-spacing: clamp(1rem, 4vw, 2rem);
+}
+
+/* Utility Classes for Auth System */
+.auth-gradient-bg {
+  background: linear-gradient(135deg, 
+    var(--auth-primary-color, #1e40af) 0%, 
+    var(--auth-accent-color, #3b82f6) 100%);
+}
+
+.auth-glass-effect {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.auth-shadow-soft {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.auth-shadow-strong {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Animation Utilities */
+.auth-fade-in {
+  animation: auth-fade-in 0.5s ease-out;
+}
+
+@keyframes auth-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-slide-up {
+  animation: auth-slide-up 0.4s ease-out;
+}
+
+@keyframes auth-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Final Mobile Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch device specific styles */
+  .auth-layout button:hover {
+    transform: none;
+  }
+  
+  .auth-layout input:hover {
+    border-color: initial;
+  }
+  
+  /* Larger touch targets for mobile */
+  .auth-layout button,
+  .auth-layout input[type="checkbox"],
+  .auth-layout input[type="radio"] {
+    min-height: 48px;
+    min-width: 48px;
+  }
+} 

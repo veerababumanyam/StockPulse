@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 interface TooltipContextType {
   open: boolean;
@@ -13,7 +13,7 @@ const TooltipContext = React.createContext<TooltipContextType | undefined>(
 const useTooltip = () => {
   const context = React.useContext(TooltipContext);
   if (!context) {
-    throw new Error("Tooltip components must be used within TooltipProvider");
+    throw new Error('Tooltip components must be used within TooltipProvider');
   }
   return context;
 };
@@ -65,7 +65,7 @@ const TooltipTrigger = React.forwardRef<
 >(
   (
     {
-      className = "",
+      className = '',
       children,
       onMouseEnter,
       onMouseLeave,
@@ -126,22 +126,22 @@ const TooltipTrigger = React.forwardRef<
     );
   },
 );
-TooltipTrigger.displayName = "TooltipTrigger";
+TooltipTrigger.displayName = 'TooltipTrigger';
 
 const TooltipContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    side?: "top" | "right" | "bottom" | "left";
-    align?: "start" | "center" | "end";
+    side?: 'top' | 'right' | 'bottom' | 'left';
+    align?: 'start' | 'center' | 'end';
     sideOffset?: number;
   }
 >(
   (
     {
-      className = "",
+      className = '',
       children,
-      side = "top",
-      align = "center",
+      side = 'top',
+      align = 'center',
       sideOffset = 4,
       ...props
     },
@@ -152,19 +152,19 @@ const TooltipContent = React.forwardRef<
     if (!open) return null;
 
     const sideClasses = {
-      top: "bottom-full mb-2",
-      bottom: "top-full mt-2",
-      left: "right-full mr-2",
-      right: "left-full ml-2",
+      top: 'bottom-full mb-2',
+      bottom: 'top-full mt-2',
+      left: 'right-full mr-2',
+      right: 'left-full ml-2',
     };
 
     const alignClasses = {
-      start: side === "top" || side === "bottom" ? "left-0" : "top-0",
+      start: side === 'top' || side === 'bottom' ? 'left-0' : 'top-0',
       center:
-        side === "top" || side === "bottom"
-          ? "left-1/2 -translate-x-1/2"
-          : "top-1/2 -translate-y-1/2",
-      end: side === "top" || side === "bottom" ? "right-0" : "bottom-0",
+        side === 'top' || side === 'bottom'
+          ? 'left-1/2 -translate-x-1/2'
+          : 'top-1/2 -translate-y-1/2',
+      end: side === 'top' || side === 'bottom' ? 'right-0' : 'bottom-0',
     };
 
     return (
@@ -172,8 +172,8 @@ const TooltipContent = React.forwardRef<
         ref={ref}
         className={`absolute z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 ${sideClasses[side]} ${alignClasses[align]} ${className}`}
         style={{
-          marginTop: side === "bottom" ? sideOffset : undefined,
-          marginBottom: side === "top" ? sideOffset : undefined,
+          marginTop: side === 'bottom' ? sideOffset : undefined,
+          marginBottom: side === 'top' ? sideOffset : undefined,
         }}
         {...props}
       >
@@ -182,6 +182,6 @@ const TooltipContent = React.forwardRef<
     );
   },
 );
-TooltipContent.displayName = "TooltipContent";
+TooltipContent.displayName = 'TooltipContent';
 
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };

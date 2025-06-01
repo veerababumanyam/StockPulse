@@ -616,7 +616,7 @@ const OptionsChain: React.FC<OptionsChainProps> = ({
                       ) : selectedOption.strike > price ? (
                         ` The stock needs to rise $${(selectedOption.strike - price).toFixed(2)} (${(((selectedOption.strike - price) / price) * 100).toFixed(1)}%) to reach the strike price.`
                       ) : (
-                        ` It's currently at-the-money.`
+                        ' It\'s currently at-the-money.'
                       )}
                       {` Break-even at expiration: $${(selectedOption.strike + selectedOption.call.price).toFixed(2)}.`}
                     </>
@@ -628,7 +628,7 @@ const OptionsChain: React.FC<OptionsChainProps> = ({
                       ) : selectedOption.strike < price ? (
                         ` The stock needs to fall $${(price - selectedOption.strike).toFixed(2)} (${(((price - selectedOption.strike) / price) * 100).toFixed(1)}%) to reach the strike price.`
                       ) : (
-                        ` It's currently at-the-money.`
+                        ' It\'s currently at-the-money.'
                       )}
                       {` Break-even at expiration: $${(selectedOption.strike - selectedOption.put.price).toFixed(2)}.`}
                     </>

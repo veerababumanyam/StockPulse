@@ -25,14 +25,14 @@ import {
   Eye,
   Battery,
   Smartphone,
-  RefreshCw
+  RefreshCw,
 } from 'lucide-react';
 
 import { AppContainer } from '../ui/AppContainer';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { useTheme } from '../../hooks/useTheme';
-import { cn } from '../../utils/tailwind';
+import { cn } from '../../utils/cn';
 
 interface ThemeManagementWidgetProps {
   className?: string;
@@ -45,7 +45,7 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
   className = '',
   showAdvancedFeatures = true,
   enableRecommendations = true,
-  showAnalytics = true
+  showAnalytics = true,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
@@ -65,12 +65,12 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
     applyRecommendation,
     refreshRecommendations,
     exportThemeData,
-    importThemeData
+    importThemeData,
   } = useTheme({
     enableAnalytics: true,
     enableRecommendations: true,
     enableCrossTabSync: true,
-    context: 'dashboard-widget'
+    context: 'dashboard-widget',
   });
 
   // Refresh recommendations periodically
@@ -115,34 +115,41 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
   }, [exportThemeData]);
 
   // Handle theme import
-  const handleImport = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const handleImport = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      try {
-        const data = e.target?.result as string;
-        const success = await importThemeData(data);
-        if (success) {
-          console.log('Theme data imported successfully');
-        } else {
-          console.error('Failed to import theme data');
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const data = e.target?.result as string;
+          const success = await importThemeData(data);
+          if (success) {
+            console.log('Theme data imported successfully');
+          } else {
+            console.error('Failed to import theme data');
+          }
+        } catch (error) {
+          console.error('Error importing theme data:', error);
         }
-      } catch (error) {
-        console.error('Error importing theme data:', error);
-      }
-    };
-    reader.readAsText(file);
-  }, [importThemeData]);
+      };
+      reader.readAsText(file);
+    },
+    [importThemeData],
+  );
 
   // Get theme icon based on current theme
   const getThemeIcon = (themeMode: string) => {
     switch (themeMode) {
-      case 'light': return Sun;
-      case 'dark': return Moon;
-      case 'system': return Monitor;
-      default: return Monitor;
+      case 'light':
+        return Sun;
+      case 'dark':
+        return Moon;
+      case 'system':
+        return Monitor;
+      default:
+        return Monitor;
     }
   };
 
@@ -165,13 +172,15 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
       padding="md"
       shadow="md"
       border
-      className={cn("transition-all duration-300", className)}
+      className={cn('transition-all duration-300', className)}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
           <Palette className="w-5 h-5 text-primary" />
-          <h3 className="text-foreground text-lg font-semibold">Theme Control</h3>
+          <h3 className="text-foreground text-lg font-semibold">
+            Theme Control
+          </h3>
           {isTransitioning && (
             <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
           )}
@@ -185,7 +194,9 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
               disabled={isRefreshing}
               className="h-8 w-8 p-0"
             >
-              <RefreshCw className={cn("w-4 h-4", isRefreshing && "animate-spin")} />
+              <RefreshCw
+                className={cn('w-4 h-4', isRefreshing && 'animate-spin')}
+              />
             </Button>
           )}
           <Button
@@ -194,7 +205,12 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
             onClick={() => setIsExpanded(!isExpanded)}
             className="h-8 w-8 p-0"
           >
-            <ChevronRight className={cn("w-4 h-4 transition-transform", isExpanded && "rotate-90")} />
+            <ChevronRight
+              className={cn(
+                'w-4 h-4 transition-transform',
+                isExpanded && 'rotate-90',
+              )}
+            />
           </Button>
         </div>
       </div>
@@ -202,18 +218,23 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
       {/* Current Theme Status */}
       <div className="grid grid-cols-2 gap-3 mb-4">
         <div className="flex items-center space-x-2 p-2 rounded-lg bg-muted/50">
-          {React.createElement(getThemeIcon(theme), { 
-            className: "w-4 h-4 text-muted-foreground" 
+          {React.createElement(getThemeIcon(theme), {
+            className: 'w-4 h-4 text-muted-foreground',
           })}
           <div>
             <div className="text-xs text-muted-foreground">Mode</div>
-            <div className="text-sm font-medium text-foreground capitalize">{theme}</div>
+            <div className="text-sm font-medium text-foreground capitalize">
+              {theme}
+            </div>
           </div>
         </div>
         <div className="flex items-center space-x-2 p-2 rounded-lg bg-muted/50">
-          <div className="w-4 h-4 rounded-full" style={{
-            background: `linear-gradient(45deg, var(--primary), var(--secondary))`
-          }} />
+          <div
+            className="w-4 h-4 rounded-full"
+            style={{
+              background: 'linear-gradient(45deg, var(--primary), var(--secondary))',
+            }}
+          />
           <div>
             <div className="text-xs text-muted-foreground">Theme</div>
             <div className="text-sm font-medium text-foreground capitalize">
@@ -262,7 +283,9 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
         <div className="mb-4">
           <div className="flex items-center space-x-2 mb-2">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-foreground">AI Recommendations</span>
+            <span className="text-sm font-medium text-foreground">
+              AI Recommendations
+            </span>
           </div>
           <div className="space-y-2">
             {topRecommendations.map((rec, index) => (
@@ -275,19 +298,30 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
                 onClick={() => applyRecommendation(rec)}
               >
                 <div className="flex items-center space-x-2">
-                  <Badge className={cn("text-xs", getConfidenceColor(rec.confidence))}>
+                  <Badge
+                    className={cn(
+                      'text-xs',
+                      getConfidenceColor(rec.confidence),
+                    )}
+                  >
                     {Math.round(rec.confidence * 100)}%
                   </Badge>
                   <div>
                     <div className="text-sm font-medium text-foreground capitalize">
                       {rec.theme.replace('-', ' ')} ({rec.mode})
                     </div>
-                    <div className="text-xs text-muted-foreground">{rec.reason}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {rec.reason}
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-1">
-                  {rec.energyImpact === 'low' && <Battery className="w-3 h-3 text-success" />}
-                  {rec.performanceImpact === 'low' && <Zap className="w-3 h-3 text-primary" />}
+                  {rec.energyImpact === 'low' && (
+                    <Battery className="w-3 h-3 text-success" />
+                  )}
+                  {rec.performanceImpact === 'low' && (
+                    <Zap className="w-3 h-3 text-primary" />
+                  )}
                   <ChevronRight className="w-3 h-3 text-muted-foreground" />
                 </div>
               </motion.div>
@@ -321,7 +355,9 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
                   </div>
                   <div className="p-2 rounded bg-muted/30">
                     <div className="text-muted-foreground">Switches</div>
-                    <div className="font-medium text-foreground">{analytics.switchCount}</div>
+                    <div className="font-medium text-foreground">
+                      {analytics.switchCount}
+                    </div>
                   </div>
                   <div className="p-2 rounded bg-muted/30">
                     <div className="text-muted-foreground">Session</div>
@@ -341,7 +377,9 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
 
             {/* Theme Picker */}
             <div>
-              <h4 className="text-sm font-medium text-foreground mb-2">Color Themes</h4>
+              <h4 className="text-sm font-medium text-foreground mb-2">
+                Color Themes
+              </h4>
               <div className="grid grid-cols-3 gap-2">
                 {availableThemes.slice(0, 6).map((themeOption) => (
                   <Button
@@ -361,7 +399,9 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
             {/* Advanced Features */}
             {showAdvancedFeatures && (
               <div>
-                <h4 className="text-sm font-medium text-foreground mb-2">Advanced</h4>
+                <h4 className="text-sm font-medium text-foreground mb-2">
+                  Advanced
+                </h4>
                 <div className="flex space-x-2">
                   <Button
                     size="sm"
@@ -399,4 +439,4 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
   );
 };
 
-export default ThemeManagementWidget; 
+export default ThemeManagementWidget;

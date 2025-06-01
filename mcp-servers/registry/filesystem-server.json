@@ -1,0 +1,87 @@
+{
+  "name": "filesystem-server",
+  "displayName": "StockPulse Filesystem Server",
+  "description": "Enterprise-grade MCP server for secure filesystem access with path validation and audit logging",
+  "version": "1.0.0",
+  "author": "StockPulse Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stockpulse/stockpulse.git",
+    "directory": "mcp-servers/filesystem-server"
+  },
+  "capabilities": {
+    "tools": [
+      {
+        "name": "browse_directory",
+        "description": "List contents of a directory with security filtering"
+      },
+      {
+        "name": "read_file",
+        "description": "Read contents of a file with security validation"
+      },
+      {
+        "name": "write_file",
+        "description": "Write content to a file with security validation"
+      },
+      {
+        "name": "delete_file",
+        "description": "Delete a file or directory with security validation"
+      },
+      {
+        "name": "get_file_info",
+        "description": "Get detailed information about a file or directory"
+      },
+      {
+        "name": "search_files",
+        "description": "Search for files and directories matching patterns"
+      }
+    ],
+    "resources": [
+      {
+        "scheme": "file",
+        "description": "Access file contents directly via URI"
+      },
+      {
+        "scheme": "directory",
+        "description": "Get directory listings via URI"
+      },
+      {
+        "scheme": "metadata",
+        "description": "Get file/directory metadata via URI"
+      },
+      {
+        "scheme": "system",
+        "description": "Server information and capabilities"
+      }
+    ]
+  },
+  "security": {
+    "pathValidation": true,
+    "accessControls": true,
+    "auditLogging": true,
+    "sandboxed": true
+  },
+  "configuration": {
+    "configFile": "config.json",
+    "environmentVariable": "MCP_FILESYSTEM_CONFIG",
+    "required": false
+  },
+  "installation": {
+    "command": "node",
+    "args": ["dist/index.js"],
+    "workingDirectory": "mcp-servers/filesystem-server",
+    "buildRequired": true,
+    "buildCommand": "npm run build"
+  },
+  "tags": [
+    "filesystem",
+    "security",
+    "enterprise",
+    "audit",
+    "mcp",
+    "stockpulse"
+  ],
+  "status": "stable",
+  "lastUpdated": "2025-01-06T12:38:00Z"
+} 

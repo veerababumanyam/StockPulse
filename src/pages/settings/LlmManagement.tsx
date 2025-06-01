@@ -264,9 +264,9 @@ const LlmManagement: React.FC = () => {
     form.reset();
     
     toast({
-      title: "Model Added",
+      title: 'Model Added',
       description: `${values.name} has been successfully added.`,
-      variant: "success",
+      variant: 'success',
     });
   };
 
@@ -291,7 +291,7 @@ const LlmManagement: React.FC = () => {
     if (!isEditingModel) return;
     
     // If this model is set as default, update other models
-    let updatedModels = configuredModels.map(model => {
+    const updatedModels = configuredModels.map(model => {
       if (model.id === isEditingModel) {
         return {
           ...model,
@@ -321,9 +321,9 @@ const LlmManagement: React.FC = () => {
     form.reset();
     
     toast({
-      title: "Model Updated",
+      title: 'Model Updated',
       description: `${values.name} has been successfully updated.`,
-      variant: "success",
+      variant: 'success',
     });
   };
 
@@ -331,9 +331,9 @@ const LlmManagement: React.FC = () => {
     setConfiguredModels(prev => prev.filter(model => model.id !== modelId));
     
     toast({
-      title: "Model Deleted",
-      description: "The model configuration has been removed.",
-      variant: "default",
+      title: 'Model Deleted',
+      description: 'The model configuration has been removed.',
+      variant: 'default',
     });
   };
 
@@ -346,9 +346,9 @@ const LlmManagement: React.FC = () => {
     setConfiguredModels(updatedModels);
     
     toast({
-      title: "Default Model Updated",
-      description: "The default model has been updated.",
-      variant: "success",
+      title: 'Default Model Updated',
+      description: 'The default model has been updated.',
+      variant: 'success',
     });
   };
 

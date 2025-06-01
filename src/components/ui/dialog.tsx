@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 interface DialogContextType {
   open: boolean;
@@ -12,7 +12,7 @@ const DialogContext = React.createContext<DialogContextType | undefined>(
 const useDialog = () => {
   const context = React.useContext(DialogContext);
   if (!context) {
-    throw new Error("Dialog components must be used within Dialog");
+    throw new Error('Dialog components must be used within Dialog');
   }
   return context;
 };
@@ -43,7 +43,7 @@ const Dialog: React.FC<DialogProps> = ({
 const DialogTrigger = React.forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement>
->(({ className = "", onClick, ...props }, ref) => {
+>(({ className = '', onClick, ...props }, ref) => {
   const { onOpenChange } = useDialog();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -55,12 +55,12 @@ const DialogTrigger = React.forwardRef<
     <button ref={ref} className={className} onClick={handleClick} {...props} />
   );
 });
-DialogTrigger.displayName = "DialogTrigger";
+DialogTrigger.displayName = 'DialogTrigger';
 
 const DialogContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className = "", children, ...props }, ref) => {
+>(({ className = '', children, ...props }, ref) => {
   const { open, onOpenChange } = useDialog();
 
   if (!open) return null;
@@ -84,55 +84,55 @@ const DialogContent = React.forwardRef<
     </div>
   );
 });
-DialogContent.displayName = "DialogContent";
+DialogContent.displayName = 'DialogContent';
 
 const DialogHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className = "", ...props }, ref) => (
+>(({ className = '', ...props }, ref) => (
   <div
     ref={ref}
     className={`flex flex-col space-y-1.5 text-center sm:text-left ${className}`}
     {...props}
   />
 ));
-DialogHeader.displayName = "DialogHeader";
+DialogHeader.displayName = 'DialogHeader';
 
 const DialogFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className = "", ...props }, ref) => (
+>(({ className = '', ...props }, ref) => (
   <div
     ref={ref}
     className={`flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 ${className}`}
     {...props}
   />
 ));
-DialogFooter.displayName = "DialogFooter";
+DialogFooter.displayName = 'DialogFooter';
 
 const DialogTitle = React.forwardRef<
   HTMLHeadingElement,
   React.HTMLAttributes<HTMLHeadingElement>
->(({ className = "", ...props }, ref) => (
+>(({ className = '', ...props }, ref) => (
   <h3
     ref={ref}
     className={`text-lg font-semibold leading-none tracking-tight ${className}`}
     {...props}
   />
 ));
-DialogTitle.displayName = "DialogTitle";
+DialogTitle.displayName = 'DialogTitle';
 
 const DialogDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
->(({ className = "", ...props }, ref) => (
+>(({ className = '', ...props }, ref) => (
   <p
     ref={ref}
     className={`text-sm text-muted-foreground ${className}`}
     {...props}
   />
 ));
-DialogDescription.displayName = "DialogDescription";
+DialogDescription.displayName = 'DialogDescription';
 
 export {
   Dialog,

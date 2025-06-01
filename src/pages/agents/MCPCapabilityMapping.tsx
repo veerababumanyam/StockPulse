@@ -491,9 +491,9 @@ const MCPCapabilityMapping: React.FC = () => {
     document.body.removeChild(link);
     
     toast({
-      title: "Map Exported",
-      description: "Capability map has been exported as JSON.",
-      variant: "success",
+      title: 'Map Exported',
+      description: 'Capability map has been exported as JSON.',
+      variant: 'success',
     });
     
     // Record in governance
@@ -513,9 +513,9 @@ const MCPCapabilityMapping: React.FC = () => {
     setLayoutDirection(prev => prev === 'horizontal' ? 'vertical' : 'horizontal');
     
     toast({
-      title: "Layout Changed",
+      title: 'Layout Changed',
       description: `Layout changed to ${layoutDirection === 'horizontal' ? 'vertical' : 'horizontal'}.`,
-      variant: "default",
+      variant: 'default',
     });
   };
   

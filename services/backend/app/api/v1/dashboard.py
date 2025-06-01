@@ -1,26 +1,28 @@
 """
 API Endpoints for User Dashboard Configuration
 """
+from typing import Any, Dict
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from uuid import UUID
-from typing import Dict, Any
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_user, CurrentUser
+from app.core.dependencies import CurrentUser, get_current_user
 from app.schemas.dashboard import (
-    DashboardConfigResponse,
     DashboardConfigCreate,
+    DashboardConfigResponse,
     DashboardConfigUpdate,
+    DashboardLayout,
     SaveLayoutRequest,
     SaveLayoutResponse,
-    DashboardLayout
 )
+
 # We'll need a service to handle database interactions
 # from app.services.dashboard_service import dashboard_config_service # Assuming this will be created
 
 # Assuming your User model is in app.models.user
-# from app.models.user import User 
+# from app.models.user import User
 
 # Assuming your DashboardConfig model is in app.models.dashboard
 # from app.models.dashboard import DashboardConfig as DBDashboardConfig # SQLAlchemy model
@@ -52,7 +54,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 0, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "portfolio-chart-1",
@@ -61,7 +63,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 3, "y": 0, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "watchlist-1",
@@ -70,7 +72,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 6, "y": 0, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "market-summary-1",
@@ -79,7 +81,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 9, "y": 0, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 # Row 2
                 {
@@ -89,7 +91,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 3, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "recent-transactions-1",
@@ -98,7 +100,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 3, "y": 3, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "performance-metrics-1",
@@ -107,7 +109,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 6, "y": 3, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "alerts-1",
@@ -116,7 +118,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 9, "y": 3, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 # Row 3
                 {
@@ -126,7 +128,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 6, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "sector-performance-1",
@@ -135,7 +137,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 3, "y": 6, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "top-movers-1",
@@ -144,7 +146,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 6, "y": 6, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "economic-calendar-1",
@@ -153,9 +155,9 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 9, "y": 6, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
-                }
-            ]
+                    "config": {},
+                },
+            ],
         },
         "md": {
             "breakpoint": "md",
@@ -172,7 +174,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 0, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "portfolio-chart-1",
@@ -181,7 +183,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 3, "y": 0, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 # Row 2
                 {
@@ -191,7 +193,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 3, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "market-summary-1",
@@ -200,7 +202,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 3, "y": 3, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 # Row 3
                 {
@@ -210,7 +212,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 6, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "recent-transactions-1",
@@ -219,7 +221,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 3, "y": 6, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 # Row 4
                 {
@@ -229,7 +231,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 9, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "alerts-1",
@@ -238,7 +240,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 3, "y": 9, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 # Row 5
                 {
@@ -248,7 +250,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 12, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "sector-performance-1",
@@ -257,7 +259,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 3, "y": 12, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 # Row 6
                 {
@@ -267,7 +269,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 15, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "economic-calendar-1",
@@ -276,9 +278,9 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 3, "y": 15, "w": 3, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
-                }
-            ]
+                    "config": {},
+                },
+            ],
         },
         "sm": {
             "breakpoint": "sm",
@@ -294,7 +296,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 0, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "portfolio-chart-1",
@@ -303,7 +305,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 2, "y": 0, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "watchlist-1",
@@ -312,7 +314,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 3, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "market-summary-1",
@@ -321,7 +323,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 2, "y": 3, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "ai-insights-1",
@@ -330,7 +332,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 6, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "recent-transactions-1",
@@ -339,7 +341,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 2, "y": 6, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "performance-metrics-1",
@@ -348,7 +350,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 9, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "alerts-1",
@@ -357,7 +359,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 2, "y": 9, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "news-feed-1",
@@ -366,7 +368,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 12, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "sector-performance-1",
@@ -375,7 +377,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 2, "y": 12, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "top-movers-1",
@@ -384,7 +386,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 15, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "economic-calendar-1",
@@ -393,9 +395,9 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 2, "y": 15, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
-                }
-            ]
+                    "config": {},
+                },
+            ],
         },
         "xs": {
             "breakpoint": "xs",
@@ -411,7 +413,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 0, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "portfolio-chart-1",
@@ -420,7 +422,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 3, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "watchlist-1",
@@ -429,7 +431,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 6, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "market-summary-1",
@@ -438,7 +440,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 9, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "ai-insights-1",
@@ -447,7 +449,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 12, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "recent-transactions-1",
@@ -456,7 +458,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 15, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "performance-metrics-1",
@@ -465,7 +467,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 18, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "alerts-1",
@@ -474,7 +476,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 21, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "news-feed-1",
@@ -483,7 +485,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 24, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "sector-performance-1",
@@ -492,7 +494,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 27, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "top-movers-1",
@@ -501,7 +503,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 30, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "economic-calendar-1",
@@ -510,9 +512,9 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 33, "w": 2, "h": 3},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
-                }
-            ]
+                    "config": {},
+                },
+            ],
         },
         "xxs": {
             "breakpoint": "xxs",
@@ -528,7 +530,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 0, "w": 1, "h": 4},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "market-summary-1",
@@ -537,7 +539,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 4, "w": 1, "h": 4},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "watchlist-1",
@@ -546,7 +548,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 8, "w": 1, "h": 6},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "news-feed-1",
@@ -555,9 +557,9 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 14, "w": 1, "h": 6},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
-                }
-            ]
+                    "config": {},
+                },
+            ],
         },
         "xl": {
             "breakpoint": "xl",
@@ -574,7 +576,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 0, "w": 4, "h": 4},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "portfolio-chart-1",
@@ -583,7 +585,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 4, "y": 0, "w": 4, "h": 4},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "watchlist-1",
@@ -592,7 +594,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 8, "y": 0, "w": 4, "h": 4},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "market-summary-1",
@@ -601,9 +603,9 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 12, "y": 0, "w": 4, "h": 4},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
-                # Row 2 - 4 widgets  
+                # Row 2 - 4 widgets
                 {
                     "id": "ai-insights-1",
                     "type": "ai-insights",
@@ -611,7 +613,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 4, "w": 4, "h": 4},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "recent-transactions-1",
@@ -620,7 +622,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 4, "y": 4, "w": 4, "h": 4},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "performance-metrics-1",
@@ -629,7 +631,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 8, "y": 4, "w": 4, "h": 4},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "alerts-1",
@@ -638,7 +640,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 12, "y": 4, "w": 4, "h": 4},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 # Row 3 - 4 widgets
                 {
@@ -648,7 +650,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 0, "y": 8, "w": 4, "h": 4},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "sector-performance-1",
@@ -657,7 +659,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 4, "y": 8, "w": 4, "h": 4},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "top-movers-1",
@@ -666,7 +668,7 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 8, "y": 8, "w": 4, "h": 4},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
+                    "config": {},
                 },
                 {
                     "id": "economic-calendar-1",
@@ -675,10 +677,10 @@ DEFAULT_DASHBOARD_CONFIG = {
                     "position": {"x": 12, "y": 8, "w": 4, "h": 4},
                     "isVisible": True,
                     "isLocked": False,
-                    "config": {}
-                }
-            ]
-        }
+                    "config": {},
+                },
+            ],
+        },
     },
     "metadata": {
         "createdAt": "2024-01-01T00:00:00Z",
@@ -686,36 +688,39 @@ DEFAULT_DASHBOARD_CONFIG = {
         "createdBy": "system",
         "lastAccessedAt": "2024-01-01T00:00:00Z",
         "accessCount": 0,
-        "tags": ["default", "starter"]
-    }
+        "tags": ["default", "starter"],
+    },
 }
+
 
 @router.get(
     "/{dashboard_id}",
     summary="Get dashboard configuration",
-    description="Retrieves a dashboard configuration by ID. Returns default configuration for 'default-dashboard'."
+    description="Retrieves a dashboard configuration by ID. Returns default configuration for 'default-dashboard'.",
 )
 async def get_dashboard_config(
     dashboard_id: str,
     current_user: CurrentUser = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Get dashboard configuration by ID.
     For now, returns a default configuration for any dashboard_id.
     In the future, this will fetch user-specific configurations from the database.
     """
-    print(f"[Dashboard API] Fetching dashboard config for ID: {dashboard_id}, User: {current_user.email}")
-    
+    print(
+        f"[Dashboard API] Fetching dashboard config for ID: {dashboard_id}, User: {current_user.email}"
+    )
+
     # For now, return the default configuration for any dashboard ID
     # In production, this would query the database for user-specific configurations
     if dashboard_id == "default-dashboard" or True:  # Always return default for now
         return {
             "success": True,
             "data": DEFAULT_DASHBOARD_CONFIG,
-            "message": "Dashboard configuration retrieved successfully"
+            "message": "Dashboard configuration retrieved successfully",
         }
-    
+
     # Future implementation would check database for user-specific dashboards
     # dashboard_config = await dashboard_service.get_user_dashboard(db, current_user.id, dashboard_id)
     # if not dashboard_config:
@@ -725,59 +730,64 @@ async def get_dashboard_config(
     #     )
     # return {"success": True, "data": dashboard_config}
 
+
 @router.put(
     "/{dashboard_id}",
     summary="Save dashboard configuration",
-    description="Saves or updates a dashboard configuration."
+    description="Saves or updates a dashboard configuration.",
 )
 async def save_dashboard_config(
     dashboard_id: str,
     config: Dict[str, Any],
     current_user: CurrentUser = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Save or update dashboard configuration.
     For now, this is a placeholder that returns success.
     In production, this would save to the database.
     """
-    print(f"[Dashboard API] Saving dashboard config for ID: {dashboard_id}, User: {current_user.email}")
+    print(
+        f"[Dashboard API] Saving dashboard config for ID: {dashboard_id}, User: {current_user.email}"
+    )
     print(f"[Dashboard API] Config data: {config}")
-    
+
     # Future implementation would save to database
     # saved_config = await dashboard_service.save_user_dashboard(db, current_user.id, dashboard_id, config)
-    
+
     return {
         "success": True,
         "data": config,
-        "message": "Dashboard configuration saved successfully"
+        "message": "Dashboard configuration saved successfully",
     }
+
 
 @router.post(
     "",
     summary="Create new dashboard",
-    description="Creates a new dashboard configuration."
+    description="Creates a new dashboard configuration.",
 )
 async def create_dashboard(
     config: Dict[str, Any],
     current_user: CurrentUser = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Create a new dashboard configuration.
     """
     print(f"[Dashboard API] Creating new dashboard for User: {current_user.email}")
-    
+
     # Future implementation would create in database
     # new_config = await dashboard_service.create_user_dashboard(db, current_user.id, config)
-    
+
     return {
         "success": True,
         "data": config,
-        "message": "Dashboard created successfully"
+        "message": "Dashboard created successfully",
     }
+
 
 # Add other endpoints (PATCH for widget config, DELETE for reset) later.
 
 # To be included in a parent router, e.g., in services/backend/app/api/v1/users.py (if you create one)
-# or potentially in services/backend/app/api/v1/auth.py if you want to extend it for /me sub-routes. 
+# or potentially in services/backend/app/api/v1/auth.py if you want to extend it for /me sub-routes.

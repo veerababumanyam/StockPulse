@@ -244,9 +244,9 @@ const ModelOrchestration: React.FC = () => {
     ));
     
     toast({
-      title: "Active Model Updated",
+      title: 'Active Model Updated',
       description: `Primary model for ${capabilities.find(c => c.id === capabilityId)?.name} has been updated.`,
-      variant: "success",
+      variant: 'success',
     });
   };
   
@@ -261,9 +261,9 @@ const ModelOrchestration: React.FC = () => {
     ));
     
     toast({
-      title: "Fallback Chain Updated",
+      title: 'Fallback Chain Updated',
       description: `Fallback chain for ${capabilities.find(c => c.id === capabilityId)?.name} has been updated.`,
-      variant: "success",
+      variant: 'success',
     });
     
     setShowFallbackDialog(false);
@@ -396,15 +396,15 @@ const ModelOrchestration: React.FC = () => {
       // Show success message
       const model = getModelById((result as any).modelId);
       toast({
-        title: "Orchestration Test Successful",
+        title: 'Orchestration Test Successful',
         description: `Operation completed using ${model?.name} (${model?.provider}).`,
-        variant: "success",
+        variant: 'success',
       });
     } catch (error) {
       toast({
-        title: "Orchestration Test Failed",
+        title: 'Orchestration Test Failed',
         description: `All models in the fallback chain failed: ${(error as Error).message}`,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -447,16 +447,16 @@ const ModelOrchestration: React.FC = () => {
               orchestration.setOrchestrationEnabled(!orchestration.isOrchestrationEnabled);
               
               toast({
-                title: orchestration.isOrchestrationEnabled ? "Orchestration Disabled" : "Orchestration Enabled",
+                title: orchestration.isOrchestrationEnabled ? 'Orchestration Disabled' : 'Orchestration Enabled',
                 description: orchestration.isOrchestrationEnabled 
-                  ? "Model orchestration has been disabled." 
-                  : "Model orchestration has been enabled.",
-                variant: "default",
+                  ? 'Model orchestration has been disabled.' 
+                  : 'Model orchestration has been enabled.',
+                variant: 'default',
               });
             }}
           >
             <Cpu size={16} />
-            {orchestration.isOrchestrationEnabled ? "Disable Orchestration" : "Enable Orchestration"}
+            {orchestration.isOrchestrationEnabled ? 'Disable Orchestration' : 'Enable Orchestration'}
           </Button>
           
           <Button className="gap-2">

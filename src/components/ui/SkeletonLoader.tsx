@@ -4,7 +4,7 @@
  * Includes animations and accessibility features
  */
 import React from 'react';
-import { cn } from '../../utils/tailwind';
+import { cn } from '../../utils/theme/tailwind';
 
 // Base skeleton component
 interface SkeletonProps {

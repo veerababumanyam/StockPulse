@@ -3,24 +3,24 @@
  * Advanced table component for displaying portfolio positions with sorting,
  * filtering, pagination, and accessibility features
  */
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Badge } from "../ui/badge";
+} from '../ui/card';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Badge } from '../ui/badge';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from '../ui/select';
 import {
   Search,
   Filter,
@@ -40,7 +40,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Settings,
-} from "lucide-react";
+} from 'lucide-react';
 import {
   Position,
   HoldingsFilter,
@@ -49,13 +49,13 @@ import {
   SortDirection,
   PositionAction,
   RealtimeData,
-} from "../../types/portfolio";
+} from '../../types/portfolio';
 import {
   formatCurrency,
   formatPercentage,
-} from "../../utils/portfolioCalculations";
-import ValueChangeDisplay from "../ui/ValueChangeDisplay";
-import { cn } from "../../utils/tailwind";
+} from '../../utils/portfolioCalculations';
+import ValueChangeDisplay from '../ui/ValueChangeDisplay';
+import { cn } from '../../utils/cn';
 
 interface HoldingsTableProps {
   positions: Position[];
@@ -84,7 +84,7 @@ const SortIndicator: React.FC<{
     return <ArrowUpDown className="ml-2 h-4 w-4 text-muted-foreground" />;
   }
 
-  return currentDirection === "asc" ? (
+  return currentDirection === 'asc' ? (
     <ChevronUp className="ml-2 h-4 w-4" />
   ) : (
     <ChevronDown className="ml-2 h-4 w-4" />
@@ -109,12 +109,12 @@ const RealTimePriceIndicator: React.FC<{
     <div className="flex items-center gap-1">
       <div
         className={cn(
-          "w-2 h-2 rounded-full",
-          isUpdated ? "bg-green-500 animate-pulse" : "bg-gray-400",
+          'w-2 h-2 rounded-full',
+          isUpdated ? 'bg-green-500 animate-pulse' : 'bg-gray-400',
         )}
       />
       <span className="text-xs text-muted-foreground">
-        {isUpdated ? "Live" : "Static"}
+        {isUpdated ? 'Live' : 'Static'}
       </span>
     </div>
   );
@@ -132,7 +132,7 @@ const PositionRow: React.FC<{
     const [showActions, setShowActions] = useState(false);
 
     const handleAction = useCallback(
-      (actionType: PositionAction["type"]) => {
+      (actionType: PositionAction['type']) => {
         onAction?.({
           type: actionType,
           symbol: position.symbol,
@@ -257,21 +257,21 @@ const PositionRow: React.FC<{
                 <div className="absolute right-0 top-8 z-10 w-48 bg-background border border-border rounded-md shadow-md py-1">
                   <button
                     className="w-full px-3 py-2 text-left text-sm hover:bg-muted flex items-center"
-                    onClick={() => handleAction("VIEW_DETAILS")}
+                    onClick={() => handleAction('VIEW_DETAILS')}
                   >
                     <Eye className="mr-2 h-4 w-4" />
                     View Details
                   </button>
                   <button
                     className="w-full px-3 py-2 text-left text-sm hover:bg-muted flex items-center"
-                    onClick={() => handleAction("BUY_MORE")}
+                    onClick={() => handleAction('BUY_MORE')}
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Buy More
                   </button>
                   <button
                     className="w-full px-3 py-2 text-left text-sm hover:bg-muted flex items-center"
-                    onClick={() => handleAction("SELL")}
+                    onClick={() => handleAction('SELL')}
                   >
                     <Minus className="mr-2 h-4 w-4" />
                     Sell Position
@@ -279,14 +279,14 @@ const PositionRow: React.FC<{
                   <div className="border-t border-border my-1" />
                   <button
                     className="w-full px-3 py-2 text-left text-sm hover:bg-muted flex items-center"
-                    onClick={() => handleAction("SET_ALERT")}
+                    onClick={() => handleAction('SET_ALERT')}
                   >
                     <AlertCircle className="mr-2 h-4 w-4" />
                     Set Alert
                   </button>
                   <button
                     className="w-full px-3 py-2 text-left text-sm hover:bg-muted flex items-center"
-                    onClick={() => handleAction("ANALYZE")}
+                    onClick={() => handleAction('ANALYZE')}
                   >
                     <TrendingUp className="mr-2 h-4 w-4" />
                     Analyze
@@ -301,7 +301,7 @@ const PositionRow: React.FC<{
   },
 );
 
-PositionRow.displayName = "PositionRow";
+PositionRow.displayName = 'PositionRow';
 
 // Main Holdings Table component
 export const HoldingsTable: React.FC<HoldingsTableProps> = React.memo(
@@ -330,9 +330,9 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = React.memo(
     const handleSort = useCallback(
       (column: HoldingsSortBy) => {
         const newDirection: SortDirection =
-          tableState.sortBy === column && tableState.sortDirection === "desc"
-            ? "asc"
-            : "desc";
+          tableState.sortBy === column && tableState.sortDirection === 'desc'
+            ? 'asc'
+            : 'desc';
 
         onUpdateTableState({
           sortBy: column,
@@ -449,7 +449,7 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = React.memo(
               </CardTitle>
               <CardDescription>
                 {tableState.totalItems} position
-                {tableState.totalItems !== 1 ? "s" : ""}
+                {tableState.totalItems !== 1 ? 's' : ''}
                 {positions.length !== tableState.totalItems && (
                   <span> • {positions.length} shown</span>
                 )}
@@ -471,7 +471,7 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = React.memo(
                   disabled={isRefreshing}
                 >
                   <RefreshCw
-                    className={cn("w-4 h-4", isRefreshing && "animate-spin")}
+                    className={cn('w-4 h-4', isRefreshing && 'animate-spin')}
                   />
                 </Button>
               )}
@@ -499,11 +499,11 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = React.memo(
 
             {/* Sector Filter */}
             <Select
-              value={tableState.filters.sector || "all"}
+              value={tableState.filters.sector || 'all'}
               onValueChange={(value) =>
                 handleFilterChange(
-                  "sector",
-                  value === "all" ? undefined : value,
+                  'sector',
+                  value === 'all' ? undefined : value,
                 )
               }
             >
@@ -523,12 +523,12 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = React.memo(
             {/* Profitable Only Filter */}
             <Button
               variant={
-                tableState.filters.profitableOnly ? "default" : "outline"
+                tableState.filters.profitableOnly ? 'default' : 'outline'
               }
               size="sm"
               onClick={() =>
                 handleFilterChange(
-                  "profitableOnly",
+                  'profitableOnly',
                   !tableState.filters.profitableOnly,
                 )
               }
@@ -548,84 +548,84 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = React.memo(
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer hover:bg-muted/50"
-                      onClick={() => handleSort("symbol")}
+                      onClick={() => handleSort('symbol')}
                     >
                       <div className="flex items-center">
                         Symbol
                         <SortIndicator
                           column="symbol"
-                          currentSort={tableState.sortBy || "marketValue"}
-                          currentDirection={tableState.sortDirection || "desc"}
+                          currentSort={tableState.sortBy || 'marketValue'}
+                          currentDirection={tableState.sortDirection || 'desc'}
                         />
                       </div>
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer hover:bg-muted/50"
-                      onClick={() => handleSort("shares")}
+                      onClick={() => handleSort('shares')}
                     >
                       <div className="flex items-center">
                         Shares
                         <SortIndicator
                           column="shares"
-                          currentSort={tableState.sortBy || "marketValue"}
-                          currentDirection={tableState.sortDirection || "desc"}
+                          currentSort={tableState.sortBy || 'marketValue'}
+                          currentDirection={tableState.sortDirection || 'desc'}
                         />
                       </div>
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer hover:bg-muted/50"
-                      onClick={() => handleSort("avgCost")}
+                      onClick={() => handleSort('avgCost')}
                     >
                       <div className="flex items-center">
                         Avg. Cost
                         <SortIndicator
                           column="avgCost"
-                          currentSort={tableState.sortBy || "marketValue"}
-                          currentDirection={tableState.sortDirection || "desc"}
+                          currentSort={tableState.sortBy || 'marketValue'}
+                          currentDirection={tableState.sortDirection || 'desc'}
                         />
                       </div>
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer hover:bg-muted/50"
-                      onClick={() => handleSort("currentPrice")}
+                      onClick={() => handleSort('currentPrice')}
                     >
                       <div className="flex items-center">
                         Current Price
                         <SortIndicator
                           column="currentPrice"
-                          currentSort={tableState.sortBy || "marketValue"}
-                          currentDirection={tableState.sortDirection || "desc"}
+                          currentSort={tableState.sortBy || 'marketValue'}
+                          currentDirection={tableState.sortDirection || 'desc'}
                         />
                       </div>
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer hover:bg-muted/50"
-                      onClick={() => handleSort("marketValue")}
+                      onClick={() => handleSort('marketValue')}
                     >
                       <div className="flex items-center">
                         Market Value
                         <SortIndicator
                           column="marketValue"
-                          currentSort={tableState.sortBy || "marketValue"}
-                          currentDirection={tableState.sortDirection || "desc"}
+                          currentSort={tableState.sortBy || 'marketValue'}
+                          currentDirection={tableState.sortDirection || 'desc'}
                         />
                       </div>
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer hover:bg-muted/50"
-                      onClick={() => handleSort("gainLoss")}
+                      onClick={() => handleSort('gainLoss')}
                     >
                       <div className="flex items-center">
                         Gain/Loss
                         <SortIndicator
                           column="gainLoss"
-                          currentSort={tableState.sortBy || "marketValue"}
-                          currentDirection={tableState.sortDirection || "desc"}
+                          currentSort={tableState.sortBy || 'marketValue'}
+                          currentDirection={tableState.sortDirection || 'desc'}
                         />
                       </div>
                     </th>
@@ -633,15 +633,15 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = React.memo(
                       <th
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer hover:bg-muted/50"
-                        onClick={() => handleSort("dayChange")}
+                        onClick={() => handleSort('dayChange')}
                       >
                         <div className="flex items-center">
                           Day Change
                           <SortIndicator
                             column="dayChange"
-                            currentSort={tableState.sortBy || "marketValue"}
+                            currentSort={tableState.sortBy || 'marketValue'}
                             currentDirection={
-                              tableState.sortDirection || "desc"
+                              tableState.sortDirection || 'desc'
                             }
                           />
                         </div>
@@ -675,8 +675,8 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = React.memo(
                         {tableState.filters.searchTerm ||
                         tableState.filters.profitableOnly ||
                         tableState.filters.sector
-                          ? "No positions match your filters"
-                          : "No positions found"}
+                          ? 'No positions match your filters'
+                          : 'No positions found'}
                       </td>
                     </tr>
                   ) : (
@@ -723,7 +723,7 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = React.memo(
 
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">
-                  {startIndex + 1}-{Math.min(endIndex, tableState.totalItems)}{" "}
+                  {startIndex + 1}-{Math.min(endIndex, tableState.totalItems)}{' '}
                   of {tableState.totalItems}
                 </span>
 
@@ -761,6 +761,6 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = React.memo(
   },
 );
 
-HoldingsTable.displayName = "HoldingsTable";
+HoldingsTable.displayName = 'HoldingsTable';
 
 export default HoldingsTable;

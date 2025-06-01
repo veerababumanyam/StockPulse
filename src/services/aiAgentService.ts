@@ -1,13 +1,13 @@
 import axios from 'axios';
-import { 
-  AIAgent, 
-  AgentCapability, 
-  AgentStatus, 
+import {
+  AIAgent,
+  AgentCapability,
+  AgentStatus,
   AgentMetrics,
   CreateAgentRequest,
   UpdateAgentRequest,
   AgentExecutionRequest,
-  AgentExecutionResult
+  AgentExecutionResult,
 } from '../types/aiAgent';
 import { getEnvVar } from '../utils/env';
 
@@ -31,25 +31,30 @@ const API_BASE_URL = getEnvVar('VITE_API_BASE_URL', '/api/v1');
 
 export const aiAgentService = {
   assessRegistrationFraud: async (
-    assessmentData: FraudAssessmentRequest
+    assessmentData: FraudAssessmentRequest,
   ): Promise<FraudAssessmentResponse> => {
-    const response = await fetch(`${API_BASE_URL}/agents/fraud-detection/assess-registration`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        // Potentially an API key or auth token if the agent endpoint is protected
-        // 'Authorization': `Bearer ${getAgentAuthToken()}`,
+    const response = await fetch(
+      `${API_BASE_URL}/agents/fraud-detection/assess-registration`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Potentially an API key or auth token if the agent endpoint is protected
+          // 'Authorization': `Bearer ${getAgentAuthToken()}`,
+        },
+        body: JSON.stringify(assessmentData),
       },
-      body: JSON.stringify(assessmentData),
-    });
+    );
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
-      const errorMessage = errorData?.message || `Fraud assessment failed with status: ${response.status}`;
+      const errorMessage =
+        errorData?.message ||
+        `Fraud assessment failed with status: ${response.status}`;
       // TODO: Define specific error types/codes for better handling
       throw new Error(errorMessage);
     }
 
     return response.json();
   },
-}; 
+};

@@ -7,6 +7,7 @@ The StockPulse Enhanced Theme System provides enterprise-grade theme management 
 ## 🚀 Key Features
 
 ### Performance Optimizations
+
 - ✅ **Memoized Context Values** - Prevents unnecessary re-renders across all consumers
 - ✅ **Cached DOM References** - Avoids repeated `document.documentElement` queries
 - ✅ **Batched DOM Updates** - Uses `requestAnimationFrame` for smooth theme application
@@ -15,6 +16,7 @@ The StockPulse Enhanced Theme System provides enterprise-grade theme management 
 - ✅ **Theme Preloading** - Loads theme assets before switching for instant transitions
 
 ### Mobile & Touch Enhancements
+
 - 📱 **Haptic Feedback** - Vibration on theme changes (configurable)
 - ✨ **Smooth Transitions** - Hardware-accelerated CSS transitions
 - ♿ **Reduced Motion Support** - Respects `prefers-reduced-motion` accessibility setting
@@ -22,6 +24,7 @@ The StockPulse Enhanced Theme System provides enterprise-grade theme management 
 - 📱 **Touch-Optimized** - Mobile-friendly controls and interactions
 
 ### Accessibility Features
+
 - 🔊 **Screen Reader Announcements** - Silent announcements for theme changes
 - 🎯 **Focus Management** - Maintains focus during theme transitions
 - 🌓 **High Contrast Support** - Respects `prefers-contrast` media query
@@ -29,6 +32,7 @@ The StockPulse Enhanced Theme System provides enterprise-grade theme management 
 - 🎨 **Color Vision Support** - Enhanced contrast ratios and patterns
 
 ### Advanced UX Patterns
+
 - 🎭 **Smooth Transitions** - Animated theme switching with easing curves
 - 🚀 **Theme Preloading** - Background loading of theme assets
 - 🛡️ **Progressive Enhancement** - Graceful fallbacks for unsupported features
@@ -40,9 +44,10 @@ The StockPulse Enhanced Theme System provides enterprise-grade theme management 
 ### Two Theme Systems
 
 #### 1. Enhanced ThemeContext (Context-based)
+
 ```typescript
 // Provider with configuration
-<ThemeProvider 
+<ThemeProvider
   config={{
     transitionDuration: 300,
     enableHaptics: true,
@@ -68,25 +73,23 @@ const {
 ```
 
 #### 2. Enhanced useTheme Hook (Hook-based)
+
 ```typescript
 // Basic usage
 const { theme, colorTheme, setTheme } = useTheme();
 
 // Advanced configuration
-const { 
-  isTransitioning, 
-  preloadTheme, 
-  resetToDefault 
-} = useTheme({
+const { isTransitioning, preloadTheme, resetToDefault } = useTheme({
   transitionDuration: 300,
   enableHaptics: true,
   enablePreloading: true,
   debounceMs: 150,
-  enableAnimations: true
+  enableAnimations: true,
 });
 ```
 
 ### File Structure
+
 ```
 src/
 ├── contexts/
@@ -107,14 +110,15 @@ src/
 ## 🎨 Usage Examples
 
 ### Basic Theme Switching
+
 ```typescript
 import { useTheme } from '../contexts/ThemeContext';
 
 function ThemeToggle() {
   const { mode, toggleMode, isTransitioning } = useTheme();
-  
+
   return (
-    <button 
+    <button
       onClick={toggleMode}
       disabled={isTransitioning}
       className={isTransitioning ? 'opacity-50' : 'hover-lift'}
@@ -127,6 +131,7 @@ function ThemeToggle() {
 ```
 
 ### Advanced Theme Control
+
 ```typescript
 function AdvancedThemeControls() {
   const {
@@ -163,6 +168,7 @@ function AdvancedThemeControls() {
 ```
 
 ### Configuration Examples
+
 ```typescript
 // Mobile-optimized configuration
 <ThemeProvider config={{
@@ -192,33 +198,36 @@ function AdvancedThemeControls() {
 ## ⚙️ Configuration Options
 
 ### ThemeProviderConfig
+
 ```typescript
 interface ThemeProviderConfig {
-  transitionDuration?: number;     // Animation duration (default: 250ms)
-  enableHaptics?: boolean;         // Mobile haptic feedback (default: true)
-  enablePreloading?: boolean;      // Theme preloading (default: true)
-  enableAnimations?: boolean;      // CSS transitions (default: true)
-  enableSystemSync?: boolean;      // System theme sync (default: true)
-  enableAnnouncements?: boolean;   // Screen reader support (default: true)
-  debounceMs?: number;            // Debounce rapid changes (default: 100ms)
-  enableMigration?: boolean;       // Auto-migrate old themes (default: true)
+  transitionDuration?: number; // Animation duration (default: 250ms)
+  enableHaptics?: boolean; // Mobile haptic feedback (default: true)
+  enablePreloading?: boolean; // Theme preloading (default: true)
+  enableAnimations?: boolean; // CSS transitions (default: true)
+  enableSystemSync?: boolean; // System theme sync (default: true)
+  enableAnnouncements?: boolean; // Screen reader support (default: true)
+  debounceMs?: number; // Debounce rapid changes (default: 100ms)
+  enableMigration?: boolean; // Auto-migrate old themes (default: true)
 }
 ```
 
 ### UseThemeConfig
+
 ```typescript
 interface UseThemeConfig {
-  transitionDuration?: number;     // Animation duration (default: 250ms)
-  enableHaptics?: boolean;         // Mobile haptic feedback (default: true)
-  enablePreloading?: boolean;      // Theme preloading (default: true)
-  debounceMs?: number;            // Debounce rapid changes (default: 100ms)
-  enableAnimations?: boolean;      // CSS transitions (default: true)
+  transitionDuration?: number; // Animation duration (default: 250ms)
+  enableHaptics?: boolean; // Mobile haptic feedback (default: true)
+  enablePreloading?: boolean; // Theme preloading (default: true)
+  debounceMs?: number; // Debounce rapid changes (default: 100ms)
+  enableAnimations?: boolean; // CSS transitions (default: true)
 }
 ```
 
 ## 🎭 CSS Integration
 
 ### Automatic Transition Classes
+
 ```css
 /* Added automatically during theme changes */
 .theme-transitioning {
@@ -237,6 +246,7 @@ interface UseThemeConfig {
 ```
 
 ### Enhanced Hover Effects
+
 ```css
 /* Universal hover utilities */
 .hover-lift:hover {
@@ -254,16 +264,18 @@ interface UseThemeConfig {
 ## 📱 Mobile Features
 
 ### Haptic Feedback
+
 ```typescript
 // Automatically triggered on theme changes
 const triggerHapticFeedback = (enabled: boolean) => {
-  if (enabled && 'vibrate' in navigator) {
+  if (enabled && "vibrate" in navigator) {
     navigator.vibrate(50); // Short, subtle feedback
   }
 };
 ```
 
 ### Touch-Optimized Controls
+
 - Minimum 44px touch targets
 - Smooth scale transitions
 - Visual feedback on tap
@@ -272,11 +284,12 @@ const triggerHapticFeedback = (enabled: boolean) => {
 ## ♿ Accessibility Features
 
 ### Screen Reader Support
+
 ```typescript
 // Automatic announcements
 const announceThemeChange = (theme: ColorTheme, isDark: boolean) => {
-  if ('speechSynthesis' in window) {
-    const message = `Theme switched to ${theme} ${isDark ? 'dark' : 'light'} mode`;
+  if ("speechSynthesis" in window) {
+    const message = `Theme switched to ${theme} ${isDark ? "dark" : "light"} mode`;
     const utterance = new SpeechSynthesisUtterance(message);
     utterance.volume = 0; // Silent announcement
     speechSynthesis.speak(utterance);
@@ -285,6 +298,7 @@ const announceThemeChange = (theme: ColorTheme, isDark: boolean) => {
 ```
 
 ### Media Query Respect
+
 - `prefers-reduced-motion: reduce` - Disables animations
 - `prefers-contrast: high` - Enhanced contrast
 - `prefers-color-scheme` - System theme detection
@@ -292,24 +306,28 @@ const announceThemeChange = (theme: ColorTheme, isDark: boolean) => {
 ## 🚀 Performance Optimizations
 
 ### Caching Strategy
+
 ```typescript
 // DOM root caching
 let domRootCache: HTMLElement | null = null;
-const getDOMRoot = () => domRootCache || (domRootCache = document.documentElement);
+const getDOMRoot = () =>
+  domRootCache || (domRootCache = document.documentElement);
 
 // System theme caching (5 second cache)
-let systemThemeCache: { value: 'light' | 'dark'; timestamp: number } | null = null;
+let systemThemeCache: { value: "light" | "dark"; timestamp: number } | null =
+  null;
 ```
 
 ### Batched Updates
+
 ```typescript
 // requestAnimationFrame for smooth DOM updates
 const applyTheme = (theme: ColorTheme, isDark: boolean) => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     requestAnimationFrame(() => {
       // Batch all DOM operations
       const root = getDOMRoot();
-      root.classList.toggle('dark', isDark);
+      root.classList.toggle("dark", isDark);
       // Apply all CSS variables at once
       Object.entries(palette).forEach(([prop, value]) => {
         root.style.setProperty(prop, value);
@@ -321,6 +339,7 @@ const applyTheme = (theme: ColorTheme, isDark: boolean) => {
 ```
 
 ### Debounced Operations
+
 ```typescript
 // Prevents excessive DOM manipulation
 const debouncedApplyTheme = createDebounce(applyTheme, 100);
@@ -329,6 +348,7 @@ const debouncedApplyTheme = createDebounce(applyTheme, 100);
 ## 🧪 Testing
 
 ### Manual Testing with Enhanced Theme Tester
+
 ```typescript
 import { EnhancedThemeTester } from '../components/debug/EnhancedThemeTester';
 
@@ -337,39 +357,39 @@ import { EnhancedThemeTester } from '../components/debug/EnhancedThemeTester';
 ```
 
 ### Automated Testing
+
 ```typescript
 // Test theme validation
-expect(validateTheme('default')).toBe(true);
-expect(validateTheme('invalid-theme')).toBe(false);
+expect(validateTheme("default")).toBe(true);
+expect(validateTheme("invalid-theme")).toBe(false);
 
 // Test preloading
-await preloadTheme('cyber-neon');
-expect(document.querySelector('[data-theme-preload="cyber-neon"]')).toBeTruthy();
+await preloadTheme("cyber-neon");
+expect(
+  document.querySelector('[data-theme-preload="cyber-neon"]'),
+).toBeTruthy();
 
 // Test transitions
-setColorTheme('ocean-depth');
+setColorTheme("ocean-depth");
 expect(isTransitioning).toBe(true);
 ```
 
 ## 🔧 Migration Guide
 
 ### From Basic to Enhanced Context
+
 ```typescript
 // Before
 const { theme, setTheme } = useTheme();
 
 // After
-const { 
-  mode, 
-  setMode, 
-  isTransitioning, 
-  preloadTheme,
-  config 
-} = useTheme();
+const { mode, setMode, isTransitioning, preloadTheme, config } = useTheme();
 ```
 
 ### Storage Migration
+
 The system automatically migrates old theme storage to the new format:
+
 ```typescript
 // Automatic migration from v1.x to v2.0
 localStorage: {
@@ -383,10 +403,11 @@ localStorage: {
 ### Common Issues
 
 #### Theme Not Applying
+
 ```typescript
 // Check if theme exists
 if (!validateTheme(themeName)) {
-  console.warn('Theme not found:', themeName);
+  console.warn("Theme not found:", themeName);
 }
 
 // Check console for errors
@@ -395,18 +416,20 @@ if (!validateTheme(themeName)) {
 ```
 
 #### Performance Issues
+
 ```typescript
 // Reduce animation duration
 <ThemeProvider config={{ transitionDuration: 100 }} />
 
 // Disable features for older devices
-<ThemeProvider config={{ 
+<ThemeProvider config={{
   enableAnimations: false,
-  enablePreloading: false 
+  enablePreloading: false
 }} />
 ```
 
 #### Mobile Issues
+
 ```typescript
 // Disable haptics if causing problems
 <ThemeProvider config={{ enableHaptics: false }} />
@@ -420,6 +443,7 @@ if ('ontouchstart' in window) {
 ## 🎯 Best Practices
 
 ### Performance
+
 1. Use memoized context values
 2. Enable preloading for frequently used themes
 3. Batch DOM updates with requestAnimationFrame
@@ -427,6 +451,7 @@ if ('ontouchstart' in window) {
 5. Respect user accessibility preferences
 
 ### Accessibility
+
 1. Always enable screen reader announcements
 2. Provide keyboard navigation
 3. Respect `prefers-reduced-motion`
@@ -434,6 +459,7 @@ if ('ontouchstart' in window) {
 5. Use semantic color names
 
 ### Mobile
+
 1. Enable haptic feedback for better UX
 2. Use touch-friendly controls (44px minimum)
 3. Optimize transition timing for mobile
@@ -441,6 +467,7 @@ if ('ontouchstart' in window) {
 5. Consider battery impact of animations
 
 ### Development
+
 1. Use the EnhancedThemeTester for testing
 2. Monitor console for theme validation warnings
 3. Test theme persistence across sessions
@@ -460,6 +487,7 @@ if ('ontouchstart' in window) {
 ## 📊 Performance Metrics
 
 ### Benchmarks
+
 - Theme switch time: < 16ms (60fps)
 - Memory usage: < 2MB additional
 - Bundle size impact: < 5KB gzipped
@@ -468,4 +496,4 @@ if ('ontouchstart' in window) {
 
 ---
 
-**🚀 The Enhanced Theme System provides enterprise-grade theme management with exceptional performance, accessibility, and user experience!** 
+**🚀 The Enhanced Theme System provides enterprise-grade theme management with exceptional performance, accessibility, and user experience!**

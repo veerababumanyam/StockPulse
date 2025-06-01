@@ -255,9 +255,9 @@ const MCPMobileManagement: React.FC = () => {
     const connection = connections.find(conn => conn.id === connectionId);
     
     toast({
-      title: connection?.mobileEnabled ? "Mobile Access Disabled" : "Mobile Access Enabled",
+      title: connection?.mobileEnabled ? 'Mobile Access Disabled' : 'Mobile Access Enabled',
       description: `${connection?.name} is now ${connection?.mobileEnabled ? 'disabled' : 'enabled'} for mobile access.`,
-      variant: "default",
+      variant: 'default',
     });
     
     // Record in telemetry
@@ -291,9 +291,9 @@ const MCPMobileManagement: React.FC = () => {
     const connection = connections.find(conn => conn.id === connectionId);
     
     toast({
-      title: connection?.notifications ? "Notifications Disabled" : "Notifications Enabled",
+      title: connection?.notifications ? 'Notifications Disabled' : 'Notifications Enabled',
       description: `Notifications for ${connection?.name} are now ${connection?.notifications ? 'disabled' : 'enabled'}.`,
-      variant: "default",
+      variant: 'default',
     });
     
     // Record in telemetry
@@ -326,9 +326,9 @@ const MCPMobileManagement: React.FC = () => {
     );
     
     toast({
-      title: "All Notifications Marked as Read",
-      description: "All notifications have been marked as read.",
-      variant: "default",
+      title: 'All Notifications Marked as Read',
+      description: 'All notifications have been marked as read.',
+      variant: 'default',
     });
     
     // Record in telemetry
@@ -342,9 +342,9 @@ const MCPMobileManagement: React.FC = () => {
     setNotifications([]);
     
     toast({
-      title: "All Notifications Cleared",
-      description: "All notifications have been cleared.",
-      variant: "default",
+      title: 'All Notifications Cleared',
+      description: 'All notifications have been cleared.',
+      variant: 'default',
     });
     
     // Record in telemetry
@@ -369,9 +369,9 @@ const MCPMobileManagement: React.FC = () => {
     setPushNotificationsEnabled(!pushNotificationsEnabled);
     
     toast({
-      title: pushNotificationsEnabled ? "Push Notifications Disabled" : "Push Notifications Enabled",
+      title: pushNotificationsEnabled ? 'Push Notifications Disabled' : 'Push Notifications Enabled',
       description: `Push notifications are now ${pushNotificationsEnabled ? 'disabled' : 'enabled'}.`,
-      variant: "default",
+      variant: 'default',
     });
     
     // Record in telemetry
@@ -396,9 +396,9 @@ const MCPMobileManagement: React.FC = () => {
     setMobileDataSaver(!mobileDataSaver);
     
     toast({
-      title: mobileDataSaver ? "Data Saver Disabled" : "Data Saver Enabled",
+      title: mobileDataSaver ? 'Data Saver Disabled' : 'Data Saver Enabled',
       description: `Mobile data saver mode is now ${mobileDataSaver ? 'disabled' : 'enabled'}.`,
-      variant: "default",
+      variant: 'default',
     });
     
     // Record in telemetry
@@ -412,9 +412,9 @@ const MCPMobileManagement: React.FC = () => {
     setOfflineMode(!offlineMode);
     
     toast({
-      title: offlineMode ? "Online Mode" : "Offline Mode",
+      title: offlineMode ? 'Online Mode' : 'Offline Mode',
       description: `App is now in ${offlineMode ? 'online' : 'offline'} mode.`,
-      variant: "default",
+      variant: 'default',
     });
     
     // Record in telemetry
@@ -842,7 +842,7 @@ const MCPMobileManagement: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Button 
-                  variant={layoutVariant === VARIANTS.LAYOUT.COMPACT ? "default" : "outline"} 
+                  variant={layoutVariant === VARIANTS.LAYOUT.COMPACT ? 'default' : 'outline'} 
                   size="sm"
                   onClick={() => {
                     setLayoutVariant(VARIANTS.LAYOUT.COMPACT);
@@ -858,7 +858,7 @@ const MCPMobileManagement: React.FC = () => {
                   Compact
                 </Button>
                 <Button 
-                  variant={layoutVariant === VARIANTS.LAYOUT.EXPANDED ? "default" : "outline"} 
+                  variant={layoutVariant === VARIANTS.LAYOUT.EXPANDED ? 'default' : 'outline'} 
                   size="sm"
                   onClick={() => {
                     setLayoutVariant(VARIANTS.LAYOUT.EXPANDED);
@@ -885,7 +885,7 @@ const MCPMobileManagement: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Button 
-                  variant={colorSchemeVariant === VARIANTS.COLOR_SCHEME.STANDARD ? "default" : "outline"} 
+                  variant={colorSchemeVariant === VARIANTS.COLOR_SCHEME.STANDARD ? 'default' : 'outline'} 
                   size="sm"
                   onClick={() => {
                     setColorSchemeVariant(VARIANTS.COLOR_SCHEME.STANDARD);
@@ -901,7 +901,7 @@ const MCPMobileManagement: React.FC = () => {
                   Standard
                 </Button>
                 <Button 
-                  variant={colorSchemeVariant === VARIANTS.COLOR_SCHEME.HIGH_CONTRAST ? "default" : "outline"} 
+                  variant={colorSchemeVariant === VARIANTS.COLOR_SCHEME.HIGH_CONTRAST ? 'default' : 'outline'} 
                   size="sm"
                   onClick={() => {
                     setColorSchemeVariant(VARIANTS.COLOR_SCHEME.HIGH_CONTRAST);
@@ -928,7 +928,7 @@ const MCPMobileManagement: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Button 
-                  variant={notificationStyleVariant === VARIANTS.NOTIFICATION_STYLE.MINIMAL ? "default" : "outline"} 
+                  variant={notificationStyleVariant === VARIANTS.NOTIFICATION_STYLE.MINIMAL ? 'default' : 'outline'} 
                   size="sm"
                   onClick={() => {
                     setNotificationStyleVariant(VARIANTS.NOTIFICATION_STYLE.MINIMAL);
@@ -944,7 +944,7 @@ const MCPMobileManagement: React.FC = () => {
                   Minimal
                 </Button>
                 <Button 
-                  variant={notificationStyleVariant === VARIANTS.NOTIFICATION_STYLE.DETAILED ? "default" : "outline"} 
+                  variant={notificationStyleVariant === VARIANTS.NOTIFICATION_STYLE.DETAILED ? 'default' : 'outline'} 
                   size="sm"
                   onClick={() => {
                     setNotificationStyleVariant(VARIANTS.NOTIFICATION_STYLE.DETAILED);

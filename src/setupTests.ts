@@ -1,23 +1,81 @@
 // src/setupTests.ts
 
-// Optional: Import jest-dom for custom Jest matchers for asserting on DOM nodes.
-// learn more: https://github.com/testing-library/jest-dom
+// Import testing library utilities
 import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 
-// Temporarily disabled MSW setup to resolve import issues
-// import { server } from './mocks/server';
+// Mock window.matchMedia
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
 
-// // Establish API mocking before all tests.
-// beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+// Mock ResizeObserver
+class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
 
-// // Reset any request handlers that we may add during the tests,
-// // so they don't affect other tests.
-// afterEach(() => server.resetHandlers());
+window.ResizeObserver = ResizeObserver;
 
-// // Clean up after the tests are finished.
-// afterAll(() => server.close());
+// Mock IntersectionObserver
+class MockIntersectionObserver {
+  readonly root: Element | null = null;
+  readonly rootMargin: string = '';
+  readonly thresholds: ReadonlyArray<number> = [];
+  
+  constructor(private callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {}
+  
+  observe(target: Element) {}
+  unobserve(target: Element) {}
+  disconnect() {}
+  takeRecords(): IntersectionObserverEntry[] { return []; }
+}
 
-// Polyfill for import.meta.env in Jest environment
+window.IntersectionObserver = MockIntersectionObserver as any;
+
+// Mock console methods
+const consoleError = console.error;
+const consoleWarn = console.warn;
+
+beforeAll(() => {
+  // Mock console.error to catch React warnings
+  console.error = vi.fn((...args) => {
+    // Ignore React warning about useLayoutEffect
+    if (typeof args[0] === 'string' && args[0].includes('useLayoutEffect')) {
+      return;
+    }
+    consoleError(...args);
+  });
+
+  // Mock console.warn
+  console.warn = vi.fn((...args) => {
+    consoleWarn(...args);
+  });
+});
+
+afterEach(() => {
+  // Clear all mocks after each test
+  vi.clearAllMocks();
+});
+
+afterAll(() => {
+  // Restore original console methods
+  console.error = consoleError;
+  console.warn = consoleWarn;
+});
+
+// Polyfill for import.meta.env in test environment
 if (typeof global !== 'undefined') {
   (global as any).importMeta = {
     env: {
@@ -25,7 +83,7 @@ if (typeof global !== 'undefined') {
       VITE_FMP_API_KEY: 'test-fmp-key',
       VITE_TAAPI_API_KEY: 'test-taapi-key',
       VITE_GITHUB_TOKEN: 'test-github-token',
-    }
+    },
   };
 }
 
@@ -38,17 +96,17 @@ Object.defineProperty(globalThis, 'import', {
         VITE_FMP_API_KEY: 'test-fmp-key',
         VITE_TAAPI_API_KEY: 'test-taapi-key',
         VITE_GITHUB_TOKEN: 'test-github-token',
-      }
-    }
+      },
+    },
   },
   writable: true,
-  configurable: true
+  configurable: true,
 });
 
 // Mock window.matchMedia for responsive design tests
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -72,4 +130,4 @@ global.IntersectionObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
   unobserve: jest.fn(),
   disconnect: jest.fn(),
-})); 
+}));

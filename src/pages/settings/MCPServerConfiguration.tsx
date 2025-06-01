@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MCPFederationService from '../../services/mcpFederationService';
+import mcpFederationService from '../../services/mcpFederationService';
 import { useToast } from '../../hooks/useToast';
 import { 
   Card, 
@@ -22,8 +22,8 @@ import {
 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert';
 
-// Initialize the MCP federation service
-const federationService = new MCPFederationService();
+// Use the already instantiated MCP federation service
+const federationService = mcpFederationService;
 
 const MCPServerConfiguration: React.FC = () => {
   const { toast } = useToast();
@@ -59,11 +59,11 @@ const MCPServerConfiguration: React.FC = () => {
       setIsLoading(false);
       
       toast({
-        title: isServerActive ? "Server Deactivated" : "Server Activated",
+        title: isServerActive ? 'Server Deactivated' : 'Server Activated',
         description: isServerActive 
-          ? "StockPulse MCP Server has been deactivated." 
-          : "StockPulse MCP Server is now active and accepting connections.",
-        variant: isServerActive ? "default" : "success",
+          ? 'StockPulse MCP Server has been deactivated.' 
+          : 'StockPulse MCP Server is now active and accepting connections.',
+        variant: isServerActive ? 'default' : 'success',
       });
       
       // Update metrics if server is activated
@@ -109,9 +109,9 @@ const MCPServerConfiguration: React.FC = () => {
       setIsLoading(false);
       
       toast({
-        title: "Server Registered",
-        description: "StockPulse MCP Server has been registered with the federation registry.",
-        variant: "success",
+        title: 'Server Registered',
+        description: 'StockPulse MCP Server has been registered with the federation registry.',
+        variant: 'success',
       });
     }, 1500);
   };
@@ -128,13 +128,13 @@ const MCPServerConfiguration: React.FC = () => {
         
         <div className="flex gap-2">
           <Button 
-            variant={isServerActive ? "destructive" : "default"}
+            variant={isServerActive ? 'destructive' : 'default'}
             className="gap-2"
             onClick={toggleServerStatus}
             disabled={isLoading}
           >
             <Server size={16} />
-            {isLoading ? "Processing..." : isServerActive ? "Deactivate Server" : "Activate Server"}
+            {isLoading ? 'Processing...' : isServerActive ? 'Deactivate Server' : 'Activate Server'}
           </Button>
           
           <Button 
@@ -150,7 +150,7 @@ const MCPServerConfiguration: React.FC = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className={isServerActive ? "border-green-500" : ""}>
+        <Card className={isServerActive ? 'border-green-500' : ''}>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
               <Server size={18} />
@@ -159,13 +159,13 @@ const MCPServerConfiguration: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2">
-              <div className={`h-3 w-3 rounded-full ${isServerActive ? "bg-green-500" : "bg-gray-300"}`}></div>
-              <span className="font-medium">{isServerActive ? "Active" : "Inactive"}</span>
+              <div className={`h-3 w-3 rounded-full ${isServerActive ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+              <span className="font-medium">{isServerActive ? 'Active' : 'Inactive'}</span>
             </div>
             <p className="text-sm text-muted-foreground mt-1">
               {isServerActive 
-                ? "Server is running and accepting connections" 
-                : "Server is currently offline"}
+                ? 'Server is running and accepting connections' 
+                : 'Server is currently offline'}
             </p>
           </CardContent>
           <CardFooter>
@@ -298,7 +298,7 @@ const MCPServerConfiguration: React.FC = () => {
               <div>
                 <label className="text-sm font-medium">Server URL</label>
                 <Input 
-                  value={`https://mcp.stockpulse.example.com/sse`}
+                  value={'https://mcp.stockpulse.example.com/sse'}
                   disabled={true}
                 />
                 <p className="text-xs text-muted-foreground mt-1">
@@ -314,7 +314,7 @@ const MCPServerConfiguration: React.FC = () => {
               {['market_data', 'technical_analysis', 'sentiment_analysis', 'order_execution', 'portfolio_management', 'risk_analysis', 'news_analysis', 'social_sentiment'].map(capability => (
                 <Badge 
                   key={capability}
-                  variant={serverConfig.capabilities.includes(capability) ? "default" : "outline"}
+                  variant={serverConfig.capabilities.includes(capability) ? 'default' : 'outline'}
                   className={`cursor-pointer ${isServerActive ? 'opacity-50' : ''}`}
                   onClick={() => {
                     if (isServerActive) return;
@@ -365,9 +365,9 @@ const MCPServerConfiguration: React.FC = () => {
               });
               
               toast({
-                title: "Configuration Reset",
-                description: "Server configuration has been reset to defaults.",
-                variant: "default",
+                title: 'Configuration Reset',
+                description: 'Server configuration has been reset to defaults.',
+                variant: 'default',
               });
             }}
           >
@@ -378,9 +378,9 @@ const MCPServerConfiguration: React.FC = () => {
             disabled={isServerActive}
             onClick={() => {
               toast({
-                title: "Configuration Saved",
-                description: "Server configuration has been saved.",
-                variant: "success",
+                title: 'Configuration Saved',
+                description: 'Server configuration has been saved.',
+                variant: 'success',
               });
             }}
           >

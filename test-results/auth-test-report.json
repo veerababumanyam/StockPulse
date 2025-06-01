@@ -1,0 +1,24 @@
+{
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "passRate": "0.00",
+    "totalDuration": "13.17",
+    "timestamp": "2025-06-01T13:02:17.025Z"
+  },
+  "results": [
+    {
+      "suite": "Setup",
+      "success": false,
+      "duration": 13.17,
+      "error": "Tests failed with exit code 1"
+    }
+  ],
+  "environment": {
+    "node": "v22.16.0",
+    "platform": "win32",
+    "arch": "x64",
+    "cwd": "C:\\Users\\admin\\Desktop\\StockPulse"
+  }
+}

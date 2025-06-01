@@ -2,15 +2,16 @@
 Financial Modeling Prep (FMP) Proxy API Endpoints
 Secure proxy endpoints for FMP API calls using stored encrypted API keys
 """
-from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List, Optional, Dict, Any
-from datetime import datetime, timedelta
 import logging
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.database import get_db
-from ...core.dependencies import get_current_user, CurrentUser
-from ...core.events import get_event_bus, EventBus
+from ...core.dependencies import CurrentUser, get_current_user
+from ...core.events import EventBus, get_event_bus
 from ...services.api_keys import APIKeyService
 from ...services.fmp_proxy import FMPProxyService
 
@@ -18,23 +19,30 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/fmp", tags=["Financial Modeling Prep Proxy"])
 
+
 # Dependency to get services
-async def get_api_key_service(event_bus: EventBus = Depends(get_event_bus)) -> APIKeyService:
+async def get_api_key_service(
+    event_bus: EventBus = Depends(get_event_bus),
+) -> APIKeyService:
     return APIKeyService(event_bus)
 
-async def get_fmp_service(api_key_service: APIKeyService = Depends(get_api_key_service)) -> FMPProxyService:
+
+async def get_fmp_service(
+    api_key_service: APIKeyService = Depends(get_api_key_service),
+) -> FMPProxyService:
     return FMPProxyService(api_key_service)
+
 
 # Portfolio Data Endpoints
 @router.get("/portfolio/overview")
 async def get_portfolio_overview(
     db: AsyncSession = Depends(get_db),
     current_user: CurrentUser = Depends(get_current_user),
-    fmp_service: FMPProxyService = Depends(get_fmp_service)
+    fmp_service: FMPProxyService = Depends(get_fmp_service),
 ):
     """
     Get portfolio overview data
-    
+
     Returns portfolio summary including total value, daily changes, and market context
     """
     try:
@@ -42,35 +50,42 @@ async def get_portfolio_overview(
         return {
             "success": True,
             "data": data,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Failed to get portfolio overview for user {current_user.id}: {e}")
+        logger.error(
+            f"Failed to get portfolio overview for user {current_user.id}: {e}"
+        )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve portfolio overview"
+            detail="Failed to retrieve portfolio overview",
         )
+
 
 @router.get("/portfolio/chart")
 async def get_portfolio_chart(
-    timeframe: str = Query("1M", description="Chart timeframe (1D, 1W, 1M, 3M, 1Y, 5Y)"),
+    timeframe: str = Query(
+        "1M", description="Chart timeframe (1D, 1W, 1M, 3M, 1Y, 5Y)"
+    ),
     db: AsyncSession = Depends(get_db),
     current_user: CurrentUser = Depends(get_current_user),
-    fmp_service: FMPProxyService = Depends(get_fmp_service)
+    fmp_service: FMPProxyService = Depends(get_fmp_service),
 ):
     """
     Get portfolio performance chart data
-    
+
     - **timeframe**: Chart timeframe (1D, 1W, 1M, 3M, 1Y, 5Y)
     """
     try:
-        data = await fmp_service.get_portfolio_chart_data(db, current_user.id, timeframe)
+        data = await fmp_service.get_portfolio_chart_data(
+            db, current_user.id, timeframe
+        )
         return {
             "success": True,
             "data": data,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
     except HTTPException:
         raise
@@ -78,8 +93,9 @@ async def get_portfolio_chart(
         logger.error(f"Failed to get portfolio chart for user {current_user.id}: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve portfolio chart data"
+            detail="Failed to retrieve portfolio chart data",
         )
+
 
 # Market Data Endpoints
 @router.get("/watchlist")
@@ -87,11 +103,11 @@ async def get_watchlist(
     symbols: Optional[str] = Query(None, description="Comma-separated list of symbols"),
     db: AsyncSession = Depends(get_db),
     current_user: CurrentUser = Depends(get_current_user),
-    fmp_service: FMPProxyService = Depends(get_fmp_service)
+    fmp_service: FMPProxyService = Depends(get_fmp_service),
 ):
     """
     Get watchlist data for specified symbols
-    
+
     - **symbols**: Optional comma-separated list of symbols (defaults to popular stocks)
     """
     try:
@@ -100,7 +116,7 @@ async def get_watchlist(
         return {
             "success": True,
             "data": data,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
     except HTTPException:
         raise
@@ -108,18 +124,19 @@ async def get_watchlist(
         logger.error(f"Failed to get watchlist for user {current_user.id}: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve watchlist data"
+            detail="Failed to retrieve watchlist data",
         )
+
 
 @router.get("/market/summary")
 async def get_market_summary(
     db: AsyncSession = Depends(get_db),
     current_user: CurrentUser = Depends(get_current_user),
-    fmp_service: FMPProxyService = Depends(get_fmp_service)
+    fmp_service: FMPProxyService = Depends(get_fmp_service),
 ):
     """
     Get market summary with major indices
-    
+
     Returns current values and changes for major market indices
     """
     try:
@@ -127,7 +144,7 @@ async def get_market_summary(
         return {
             "success": True,
             "data": data,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
     except HTTPException:
         raise
@@ -135,19 +152,20 @@ async def get_market_summary(
         logger.error(f"Failed to get market summary for user {current_user.id}: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve market summary"
+            detail="Failed to retrieve market summary",
         )
+
 
 @router.get("/market/sectors")
 async def get_sector_performance(
     timeframe: str = Query("1D", description="Performance timeframe"),
     db: AsyncSession = Depends(get_db),
     current_user: CurrentUser = Depends(get_current_user),
-    fmp_service: FMPProxyService = Depends(get_fmp_service)
+    fmp_service: FMPProxyService = Depends(get_fmp_service),
 ):
     """
     Get sector performance data
-    
+
     - **timeframe**: Performance timeframe (1D, 1W, 1M, etc.)
     """
     try:
@@ -155,16 +173,19 @@ async def get_sector_performance(
         return {
             "success": True,
             "data": data,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Failed to get sector performance for user {current_user.id}: {e}")
+        logger.error(
+            f"Failed to get sector performance for user {current_user.id}: {e}"
+        )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve sector performance"
+            detail="Failed to retrieve sector performance",
         )
+
 
 @router.get("/market/movers")
 async def get_top_movers(
@@ -172,11 +193,11 @@ async def get_top_movers(
     type: str = Query("gainers", description="Type (gainers, losers)"),
     db: AsyncSession = Depends(get_db),
     current_user: CurrentUser = Depends(get_current_user),
-    fmp_service: FMPProxyService = Depends(get_fmp_service)
+    fmp_service: FMPProxyService = Depends(get_fmp_service),
 ):
     """
     Get top movers (gainers/losers) for specified market
-    
+
     - **market**: Market to query (nasdaq, nyse)
     - **type**: Type of movers (gainers, losers)
     """
@@ -185,7 +206,7 @@ async def get_top_movers(
         return {
             "success": True,
             "data": data,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
     except HTTPException:
         raise
@@ -193,19 +214,20 @@ async def get_top_movers(
         logger.error(f"Failed to get top movers for user {current_user.id}: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve top movers"
+            detail="Failed to retrieve top movers",
         )
+
 
 @router.get("/news")
 async def get_news_feed(
     limit: int = Query(20, ge=1, le=100, description="Number of articles to return"),
     db: AsyncSession = Depends(get_db),
     current_user: CurrentUser = Depends(get_current_user),
-    fmp_service: FMPProxyService = Depends(get_fmp_service)
+    fmp_service: FMPProxyService = Depends(get_fmp_service),
 ):
     """
     Get financial news feed
-    
+
     - **limit**: Number of articles to return (1-100)
     """
     try:
@@ -213,7 +235,7 @@ async def get_news_feed(
         return {
             "success": True,
             "data": data,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
     except HTTPException:
         raise
@@ -224,19 +246,20 @@ async def get_news_feed(
             "success": False,
             "data": {"articles": []},
             "timestamp": datetime.utcnow().isoformat(),
-            "error": "Failed to retrieve news feed"
+            "error": "Failed to retrieve news feed",
         }
+
 
 @router.get("/economic/calendar")
 async def get_economic_calendar(
     date: Optional[str] = Query(None, description="Date in YYYY-MM-DD format"),
     db: AsyncSession = Depends(get_db),
     current_user: CurrentUser = Depends(get_current_user),
-    fmp_service: FMPProxyService = Depends(get_fmp_service)
+    fmp_service: FMPProxyService = Depends(get_fmp_service),
 ):
     """
     Get economic calendar events
-    
+
     - **date**: Date in YYYY-MM-DD format (defaults to today)
     """
     try:
@@ -244,7 +267,7 @@ async def get_economic_calendar(
         return {
             "success": True,
             "data": data,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
     except HTTPException:
         raise
@@ -255,18 +278,19 @@ async def get_economic_calendar(
             "success": False,
             "data": {"events": [], "date": date or datetime.now().strftime("%Y-%m-%d")},
             "timestamp": datetime.utcnow().isoformat(),
-            "error": "Failed to retrieve economic calendar"
+            "error": "Failed to retrieve economic calendar",
         }
+
 
 # AI Insights Endpoint (Mock for now)
 @router.get("/ai/insights")
 async def get_ai_insights(
     db: AsyncSession = Depends(get_db),
-    current_user: CurrentUser = Depends(get_current_user)
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """
     Get AI-generated market insights
-    
+
     Note: This is currently a mock endpoint. In production, this would integrate
     with AI services to provide real market analysis.
     """
@@ -281,7 +305,7 @@ async def get_ai_insights(
                 "sentiment": "bullish",
                 "confidence": 0.85,
                 "created_at": datetime.utcnow().isoformat(),
-                "tags": ["technology", "earnings", "growth"]
+                "tags": ["technology", "earnings", "growth"],
             },
             {
                 "id": "insight_2",
@@ -291,7 +315,7 @@ async def get_ai_insights(
                 "sentiment": "bearish",
                 "confidence": 0.72,
                 "created_at": datetime.utcnow().isoformat(),
-                "tags": ["volatility", "risk", "vix"]
+                "tags": ["volatility", "risk", "vix"],
             },
             {
                 "id": "insight_3",
@@ -301,14 +325,14 @@ async def get_ai_insights(
                 "sentiment": "neutral",
                 "confidence": 0.78,
                 "created_at": datetime.utcnow().isoformat(),
-                "tags": ["dividends", "income", "rates"]
-            }
+                "tags": ["dividends", "income", "rates"],
+            },
         ]
-        
+
         return {
             "success": True,
             "data": {"insights": insights},
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
     except Exception as e:
         logger.error(f"Failed to get AI insights for user {current_user.id}: {e}")
@@ -316,19 +340,20 @@ async def get_ai_insights(
             "success": False,
             "data": {"insights": []},
             "timestamp": datetime.utcnow().isoformat(),
-            "error": "Failed to retrieve AI insights"
+            "error": "Failed to retrieve AI insights",
         }
+
 
 # Recent Transactions Endpoint (Mock for now)
 @router.get("/portfolio/transactions")
 async def get_recent_transactions(
     limit: int = Query(10, ge=1, le=50, description="Number of transactions to return"),
     db: AsyncSession = Depends(get_db),
-    current_user: CurrentUser = Depends(get_current_user)
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """
     Get recent portfolio transactions
-    
+
     Note: This is currently a mock endpoint. In production, this would fetch
     real transaction data from the user's portfolio.
     """
@@ -343,7 +368,7 @@ async def get_recent_transactions(
                 "price": 175.50,
                 "total": 1755.00,
                 "timestamp": (datetime.utcnow() - timedelta(hours=2)).isoformat(),
-                "status": "completed"
+                "status": "completed",
             },
             {
                 "id": "txn_2",
@@ -353,7 +378,7 @@ async def get_recent_transactions(
                 "price": 142.30,
                 "total": 711.50,
                 "timestamp": (datetime.utcnow() - timedelta(days=1)).isoformat(),
-                "status": "completed"
+                "status": "completed",
             },
             {
                 "id": "txn_3",
@@ -363,14 +388,14 @@ async def get_recent_transactions(
                 "price": 378.20,
                 "total": 5673.00,
                 "timestamp": (datetime.utcnow() - timedelta(days=2)).isoformat(),
-                "status": "completed"
-            }
+                "status": "completed",
+            },
         ]
-        
+
         return {
             "success": True,
             "data": {"transactions": transactions[:limit]},
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
     except Exception as e:
         logger.error(f"Failed to get transactions for user {current_user.id}: {e}")
@@ -378,18 +403,19 @@ async def get_recent_transactions(
             "success": False,
             "data": {"transactions": []},
             "timestamp": datetime.utcnow().isoformat(),
-            "error": "Failed to retrieve transactions"
+            "error": "Failed to retrieve transactions",
         }
+
 
 # Performance Metrics Endpoint (Mock for now)
 @router.get("/portfolio/metrics")
 async def get_performance_metrics(
     db: AsyncSession = Depends(get_db),
-    current_user: CurrentUser = Depends(get_current_user)
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """
     Get portfolio performance metrics
-    
+
     Note: This is currently a mock endpoint. In production, this would calculate
     real performance metrics from the user's portfolio.
     """
@@ -400,57 +426,45 @@ async def get_performance_metrics(
                 "name": "Total Return",
                 "value": "14.32%",
                 "change": "+2.1%",
-                "trend": "up"
+                "trend": "up",
             },
-            {
-                "name": "Sharpe Ratio",
-                "value": "1.24",
-                "change": "+0.08",
-                "trend": "up"
-            },
+            {"name": "Sharpe Ratio", "value": "1.24", "change": "+0.08", "trend": "up"},
             {
                 "name": "Max Drawdown",
                 "value": "-8.5%",
                 "change": "+1.2%",
-                "trend": "up"
+                "trend": "up",
             },
-            {
-                "name": "Beta",
-                "value": "1.05",
-                "change": "-0.02",
-                "trend": "down"
-            },
-            {
-                "name": "Alpha",
-                "value": "2.8%",
-                "change": "+0.5%",
-                "trend": "up"
-            }
+            {"name": "Beta", "value": "1.05", "change": "-0.02", "trend": "down"},
+            {"name": "Alpha", "value": "2.8%", "change": "+0.5%", "trend": "up"},
         ]
-        
+
         return {
             "success": True,
             "data": {"metrics": metrics},
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
     except Exception as e:
-        logger.error(f"Failed to get performance metrics for user {current_user.id}: {e}")
+        logger.error(
+            f"Failed to get performance metrics for user {current_user.id}: {e}"
+        )
         return {
             "success": False,
             "data": {"metrics": []},
             "timestamp": datetime.utcnow().isoformat(),
-            "error": "Failed to retrieve performance metrics"
+            "error": "Failed to retrieve performance metrics",
         }
+
 
 # Alerts Endpoint (Mock for now)
 @router.get("/alerts")
 async def get_alerts(
     db: AsyncSession = Depends(get_db),
-    current_user: CurrentUser = Depends(get_current_user)
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """
     Get user alerts and notifications
-    
+
     Note: This is currently a mock endpoint. In production, this would fetch
     real alerts from the user's alert system.
     """
@@ -465,7 +479,7 @@ async def get_alerts(
                 "severity": "info",
                 "status": "active",
                 "created_at": datetime.utcnow().isoformat(),
-                "symbol": "AAPL"
+                "symbol": "AAPL",
             },
             {
                 "id": "alert_2",
@@ -474,7 +488,7 @@ async def get_alerts(
                 "message": "Your portfolio allocation has drifted from target. Consider rebalancing.",
                 "severity": "warning",
                 "status": "active",
-                "created_at": (datetime.utcnow() - timedelta(hours=4)).isoformat()
+                "created_at": (datetime.utcnow() - timedelta(hours=4)).isoformat(),
             },
             {
                 "id": "alert_3",
@@ -483,14 +497,14 @@ async def get_alerts(
                 "message": "Market volatility is elevated. Review your risk exposure.",
                 "severity": "high",
                 "status": "active",
-                "created_at": (datetime.utcnow() - timedelta(hours=6)).isoformat()
-            }
+                "created_at": (datetime.utcnow() - timedelta(hours=6)).isoformat(),
+            },
         ]
-        
+
         return {
             "success": True,
             "data": {"alerts": alerts},
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
     except Exception as e:
         logger.error(f"Failed to get alerts for user {current_user.id}: {e}")
@@ -498,5 +512,5 @@ async def get_alerts(
             "success": False,
             "data": {"alerts": []},
             "timestamp": datetime.utcnow().isoformat(),
-            "error": "Failed to retrieve alerts"
-        } 
+            "error": "Failed to retrieve alerts",
+        }

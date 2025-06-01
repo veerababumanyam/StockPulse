@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const Footer: React.FC = () => {
   return (
@@ -52,7 +52,7 @@ const Footer: React.FC = () => {
             
             {/* Copyright Text */}
             <p className="text-xs sm:text-sm text-center sm:text-left order-2 sm:order-1">
-              © 2025 StockPulse. All rights reserved to{" "}
+              © 2025 StockPulse. All rights reserved to{' '}
               <span className="font-medium">SAWAS</span>.
             </p>
             
@@ -67,7 +67,7 @@ const Footer: React.FC = () => {
                 <span className="hidden xs:inline">Online</span>
               </div>
               <span className="text-border">•</span>
-              <span className="font-mono">Version 0.2.1</span>
+              <span className="font-mono">Version 0.2.4</span>
             </div>
           </div>
         </div>

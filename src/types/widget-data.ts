@@ -61,7 +61,12 @@ export interface MarketSummaryData {
 }
 
 export type AIInsightSentiment = 'positive' | 'negative' | 'neutral' | 'mixed';
-export type AIInsightType = 'market_trend' | 'stock_signal' | 'portfolio_tip' | 'economic_event' | 'news_summary';
+export type AIInsightType =
+  | 'market_trend'
+  | 'stock_signal'
+  | 'portfolio_tip'
+  | 'economic_event'
+  | 'news_summary';
 
 export interface AIInsightItem {
   id: string;
@@ -81,8 +86,18 @@ export interface AIInsightsData {
   lastRefreshed: string;
 }
 
-export type TransactionType = 'buy' | 'sell' | 'dividend' | 'deposit' | 'withdrawal' | 'fee';
-export type TransactionStatus = 'completed' | 'pending' | 'failed' | 'cancelled';
+export type TransactionType =
+  | 'buy'
+  | 'sell'
+  | 'dividend'
+  | 'deposit'
+  | 'withdrawal'
+  | 'fee';
+export type TransactionStatus =
+  | 'completed'
+  | 'pending'
+  | 'failed'
+  | 'cancelled';
 
 export interface TransactionItem {
   id: string;
@@ -202,7 +217,16 @@ export interface TopMoversData {
 }
 
 export type EventImpact = 'low' | 'medium' | 'high';
-export type EventType = 'earnings' | 'dividend' | 'ipo' | 'split' | 'fed_meeting' | 'cpi_report' | 'gdp_report' | 'unemployment_report' | 'other_economic';
+export type EventType =
+  | 'earnings'
+  | 'dividend'
+  | 'ipo'
+  | 'split'
+  | 'fed_meeting'
+  | 'cpi_report'
+  | 'gdp_report'
+  | 'unemployment_report'
+  | 'other_economic';
 
 export interface CalendarEventItem {
   id: string;
@@ -230,4 +254,4 @@ export interface EconomicCalendarData {
 }
 
 // Add other widget-specific data interfaces here as we implement them
-// e.g., PortfolioChartData, WatchlistItem, MarketIndex, AIInsight, etc. 
+// e.g., PortfolioChartData, WatchlistItem, MarketIndex, AIInsight, etc.
