@@ -17,17 +17,17 @@ type FormatCurrencyOptions = {
  */
 export const formatCurrency = (
   amount: number,
-  options: FormatCurrencyOptions = {}
+  options: FormatCurrencyOptions = {},
 ): string => {
   const {
     minFractionDigits = 2,
     maxFractionDigits = 2,
-    currency = 'USD',
+    currency = "USD",
     locale = undefined,
   } = options;
 
   return new Intl.NumberFormat(locale, {
-    style: 'currency',
+    style: "currency",
     currency,
     minimumFractionDigits: minFractionDigits,
     maximumFractionDigits: maxFractionDigits,
@@ -49,7 +49,7 @@ type FormatChangeOptions = {
 export const formatChange = (
   value: number,
   percent: number,
-  options: FormatChangeOptions = {}
+  options: FormatChangeOptions = {},
 ): {
   formattedValue: string;
   isPositive: boolean;
@@ -59,14 +59,14 @@ export const formatChange = (
     showSign = true,
     showPercentage = true,
     showCurrency = true,
-    currency = 'USD',
+    currency = "USD",
   } = options;
 
   const isPositive = value >= 0;
-  const sign = showSign ? (isPositive ? '+' : '') : '';
+  const sign = showSign ? (isPositive ? "+" : "") : "";
   const absValue = Math.abs(value);
-  
-  let formattedValue = '';
+
+  let formattedValue = "";
   if (showCurrency) {
     formattedValue = formatCurrency(absValue, { currency });
   } else {
@@ -76,10 +76,10 @@ export const formatChange = (
     });
   }
 
-  const formattedPercent = `${isPositive ? '+' : ''}${percent.toFixed(2)}%`;
-  
+  const formattedPercent = `${isPositive ? "+" : ""}${percent.toFixed(2)}%`;
+
   return {
-    formattedValue: `${sign}${formattedValue}${showPercentage ? ` (${formattedPercent})` : ''}`,
+    formattedValue: `${sign}${formattedValue}${showPercentage ? ` (${formattedPercent})` : ""}`,
     isPositive,
     formattedPercent,
   };
@@ -94,19 +94,20 @@ export const formatChange = (
 export const formatDate = (
   date: Date | string | number,
   options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
     hour12: true,
-  }
+  },
 ): string => {
-  const dateObj = typeof date === 'string' || typeof date === 'number' 
-    ? new Date(date) 
-    : date;
-  
+  const dateObj =
+    typeof date === "string" || typeof date === "number"
+      ? new Date(date)
+      : date;
+
   return dateObj.toLocaleString(undefined, options);
 };
 
@@ -118,7 +119,7 @@ export const formatDate = (
  */
 export const formatNumber = (
   value: number,
-  options: Intl.NumberFormatOptions = {}
+  options: Intl.NumberFormatOptions = {},
 ): string => {
   return value.toLocaleString(undefined, {
     minimumFractionDigits: 0,
@@ -135,7 +136,10 @@ export const formatNumber = (
  */
 export const formatTimeAgo = (date: Date | string | number): string => {
   const now = new Date();
-  const target = typeof date === 'string' || typeof date === 'number' ? new Date(date) : date;
+  const target =
+    typeof date === "string" || typeof date === "number"
+      ? new Date(date)
+      : date;
   const diffInMs = now.getTime() - target.getTime();
   const diffInSeconds = Math.floor(diffInMs / 1000);
   const diffInMinutes = Math.floor(diffInSeconds / 60);
@@ -146,18 +150,18 @@ export const formatTimeAgo = (date: Date | string | number): string => {
   const diffInYears = Math.floor(diffInDays / 365);
 
   if (diffInSeconds < 60) {
-    return 'just now';
+    return "just now";
   } else if (diffInMinutes < 60) {
-    return `${diffInMinutes} minute${diffInMinutes === 1 ? '' : 's'} ago`;
+    return `${diffInMinutes} minute${diffInMinutes === 1 ? "" : "s"} ago`;
   } else if (diffInHours < 24) {
-    return `${diffInHours} hour${diffInHours === 1 ? '' : 's'} ago`;
+    return `${diffInHours} hour${diffInHours === 1 ? "" : "s"} ago`;
   } else if (diffInDays < 7) {
-    return `${diffInDays} day${diffInDays === 1 ? '' : 's'} ago`;
+    return `${diffInDays} day${diffInDays === 1 ? "" : "s"} ago`;
   } else if (diffInWeeks < 4) {
-    return `${diffInWeeks} week${diffInWeeks === 1 ? '' : 's'} ago`;
+    return `${diffInWeeks} week${diffInWeeks === 1 ? "" : "s"} ago`;
   } else if (diffInMonths < 12) {
-    return `${diffInMonths} month${diffInMonths === 1 ? '' : 's'} ago`;
+    return `${diffInMonths} month${diffInMonths === 1 ? "" : "s"} ago`;
   } else {
-    return `${diffInYears} year${diffInYears === 1 ? '' : 's'} ago`;
+    return `${diffInYears} year${diffInYears === 1 ? "" : "s"} ago`;
   }
 };

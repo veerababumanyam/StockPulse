@@ -46,7 +46,7 @@ export interface Transaction {
   id: string;
   portfolio_id: string;
   symbol: string;
-  transaction_type: 'BUY' | 'SELL' | 'DIVIDEND' | 'SPLIT' | 'TRANSFER';
+  transaction_type: "BUY" | "SELL" | "DIVIDEND" | "SPLIT" | "TRANSFER";
   quantity: number;
   price: number;
   total_amount: number;
@@ -60,11 +60,11 @@ export interface Transaction {
 export interface AIPortfolioInsight {
   id: string;
   portfolio_id: string;
-  insight_type: 'ANALYSIS' | 'RECOMMENDATION' | 'ALERT' | 'SUMMARY';
+  insight_type: "ANALYSIS" | "RECOMMENDATION" | "ALERT" | "SUMMARY";
   title: string;
   content: string;
   confidence_score: number;
-  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
   created_at: string;
   expires_at?: string;
   is_read: boolean;
@@ -97,7 +97,7 @@ export interface DashboardSummary {
 
 // Market summary data
 export interface MarketSummary {
-  market_status: 'OPEN' | 'CLOSED' | 'PRE_MARKET' | 'AFTER_HOURS';
+  market_status: "OPEN" | "CLOSED" | "PRE_MARKET" | "AFTER_HOURS";
   market_close_time?: string;
   sp500_price: number;
   sp500_change: number;
@@ -145,7 +145,7 @@ export interface AddPositionRequest {
   symbol: string;
   quantity: number;
   price: number;
-  transaction_type: 'BUY' | 'SELL';
+  transaction_type: "BUY" | "SELL";
   notes?: string;
 }
 
@@ -194,7 +194,7 @@ export interface PortfolioChartData {
   labels: string[];
   values: number[];
   changes: number[];
-  timeframe: 'DAY' | 'WEEK' | 'MONTH' | 'QUARTER' | 'YEAR' | 'ALL';
+  timeframe: "DAY" | "WEEK" | "MONTH" | "QUARTER" | "YEAR" | "ALL";
 }
 
 // Widget data for dashboard cards
@@ -204,24 +204,24 @@ export interface DashboardWidget {
   value: number | string;
   change?: number;
   change_percentage?: number;
-  trend: 'UP' | 'DOWN' | 'NEUTRAL';
+  trend: "UP" | "DOWN" | "NEUTRAL";
   subtitle?: string;
   icon?: string;
-  color?: 'green' | 'red' | 'blue' | 'gray';
+  color?: "green" | "red" | "blue" | "gray";
 }
 
 // Filter and sorting options
 export interface PortfolioFilters {
-  timeframe?: 'DAY' | 'WEEK' | 'MONTH' | 'QUARTER' | 'YEAR';
-  asset_type?: 'STOCK' | 'ETF' | 'CRYPTO' | 'BOND' | 'OPTION';
-  sort_by?: 'symbol' | 'value' | 'pnl' | 'percentage' | 'weight';
-  sort_order?: 'ASC' | 'DESC';
+  timeframe?: "DAY" | "WEEK" | "MONTH" | "QUARTER" | "YEAR";
+  asset_type?: "STOCK" | "ETF" | "CRYPTO" | "BOND" | "OPTION";
+  sort_by?: "symbol" | "value" | "pnl" | "percentage" | "weight";
+  sort_order?: "ASC" | "DESC";
   search?: string;
 }
 
 // Real-time updates
 export interface PortfolioUpdate {
-  type: 'PRICE_UPDATE' | 'POSITION_CHANGE' | 'TRANSACTION' | 'INSIGHT';
+  type: "PRICE_UPDATE" | "POSITION_CHANGE" | "TRANSACTION" | "INSIGHT";
   portfolio_id: string;
   data: any;
   timestamp: string;
@@ -266,18 +266,18 @@ export interface Holdings {
 }
 
 export type HoldingsSortBy =
-  | 'symbol'
-  | 'companyName'
-  | 'shares'
-  | 'avgCost'
-  | 'currentPrice'
-  | 'marketValue'
-  | 'gainLoss'
-  | 'gainLossPercentage'
-  | 'dayChange'
-  | 'weight';
+  | "symbol"
+  | "companyName"
+  | "shares"
+  | "avgCost"
+  | "currentPrice"
+  | "marketValue"
+  | "gainLoss"
+  | "gainLossPercentage"
+  | "dayChange"
+  | "weight";
 
-export type SortDirection = 'asc' | 'desc';
+export type SortDirection = "asc" | "desc";
 
 export interface HoldingsFilter {
   searchTerm: string;
@@ -350,12 +350,12 @@ export interface PriceUpdate {
 
 export interface RealtimeData {
   prices: Record<string, PriceUpdate>;
-  marketStatus: 'OPEN' | 'CLOSED' | 'PRE_MARKET' | 'AFTER_HOURS';
+  marketStatus: "OPEN" | "CLOSED" | "PRE_MARKET" | "AFTER_HOURS";
   lastUpdated: string;
 }
 
 export interface ExportOptions {
-  format: 'CSV' | 'PDF' | 'EXCEL';
+  format: "CSV" | "PDF" | "EXCEL";
   includeTransactions: boolean;
   includeAnalytics: boolean;
   dateRange?: {
@@ -367,12 +367,12 @@ export interface ExportOptions {
 
 export interface PositionAction {
   type:
-    | 'BUY_MORE'
-    | 'SELL'
-    | 'SET_ALERT'
-    | 'VIEW_DETAILS'
-    | 'VIEW_NEWS'
-    | 'ANALYZE';
+    | "BUY_MORE"
+    | "SELL"
+    | "SET_ALERT"
+    | "VIEW_DETAILS"
+    | "VIEW_NEWS"
+    | "ANALYZE";
   symbol: string;
   data?: any;
 }
@@ -384,14 +384,14 @@ export interface StockNews {
   summary: string;
   source: string;
   publishedAt: string;
-  sentiment: 'POSITIVE' | 'NEGATIVE' | 'NEUTRAL';
+  sentiment: "POSITIVE" | "NEGATIVE" | "NEUTRAL";
   url: string;
 }
 
 export interface PriceAlert {
   id: string;
   symbol: string;
-  alertType: 'PRICE_ABOVE' | 'PRICE_BELOW' | 'PERCENT_CHANGE' | 'VOLUME';
+  alertType: "PRICE_ABOVE" | "PRICE_BELOW" | "PERCENT_CHANGE" | "VOLUME";
   threshold: number;
   isActive: boolean;
   createdAt: string;

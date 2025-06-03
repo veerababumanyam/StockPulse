@@ -5,7 +5,7 @@ declare namespace NodeJS {
   interface Timeout {
     readonly [Symbol.toPrimitive]: () => number;
   }
-  
+
   interface Timer extends Timeout {}
 }
 
@@ -23,11 +23,17 @@ declare global {
   }
 
   interface IntersectionObserverCallback {
-    (entries: IntersectionObserverEntry[], observer: IntersectionObserver): void;
+    (
+      entries: IntersectionObserverEntry[],
+      observer: IntersectionObserver,
+    ): void;
   }
 
   class IntersectionObserver {
-    constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit);
+    constructor(
+      callback: IntersectionObserverCallback,
+      options?: IntersectionObserverInit,
+    );
     observe(target: Element): void;
     unobserve(target: Element): void;
     disconnect(): void;
@@ -59,7 +65,7 @@ declare global {
     readonly protocol: string;
     readonly readyState: number;
     readonly url: string;
-    
+
     close(code?: number, reason?: string): void;
     send(data: string | ArrayBufferLike | Blob | ArrayBufferView): void;
 
@@ -71,30 +77,36 @@ declare global {
     addEventListener<K extends keyof WebSocketEventMap>(
       type: K,
       listener: (this: WebSocket, ev: WebSocketEventMap[K]) => any,
-      options?: boolean | AddEventListenerOptions
+      options?: boolean | AddEventListenerOptions,
     ): void;
     addEventListener(
       type: string,
       listener: EventListenerOrEventListenerObject,
-      options?: boolean | AddEventListenerOptions
+      options?: boolean | AddEventListenerOptions,
     ): void;
     removeEventListener<K extends keyof WebSocketEventMap>(
       type: K,
       listener: (this: WebSocket, ev: WebSocketEventMap[K]) => any,
-      options?: boolean | EventListenerOptions
+      options?: boolean | EventListenerOptions,
     ): void;
     removeEventListener(
       type: string,
       listener: EventListenerOrEventListenerObject,
-      options?: boolean | EventListenerOptions
+      options?: boolean | EventListenerOptions,
     ): void;
   }
 
   // Binary type for WebSocket
-  type BinaryType = 'blob' | 'arraybuffer';
+  type BinaryType = "blob" | "arraybuffer";
 
   // XMLHttpRequest response types
-  type ResponseType = '' | 'arraybuffer' | 'blob' | 'document' | 'json' | 'text';
+  type ResponseType =
+    | ""
+    | "arraybuffer"
+    | "blob"
+    | "document"
+    | "json"
+    | "text";
 
   // Event listener types
   interface EventListenerOptions {
@@ -118,4 +130,4 @@ declare global {
   }
 }
 
-export {}; 
+export {};

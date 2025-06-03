@@ -4,8 +4,8 @@
  * analytics insights, and context-aware theme switching
  */
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Palette,
   Moon,
@@ -26,13 +26,13 @@ import {
   Battery,
   Smartphone,
   RefreshCw,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { AppContainer } from '../ui/AppContainer';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { useTheme } from '../../hooks/useTheme';
-import { cn } from '../../utils/cn';
+import { AppContainer } from "../ui/AppContainer";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { useTheme } from "../../hooks/useTheme";
+import { cn } from "../../utils/cn";
 
 interface ThemeManagementWidgetProps {
   className?: string;
@@ -42,7 +42,7 @@ interface ThemeManagementWidgetProps {
 }
 
 export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
-  className = '',
+  className = "",
   showAdvancedFeatures = true,
   enableRecommendations = true,
   showAnalytics = true,
@@ -70,7 +70,7 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
     enableAnalytics: true,
     enableRecommendations: true,
     enableCrossTabSync: true,
-    context: 'dashboard-widget',
+    context: "dashboard-widget",
   });
 
   // Refresh recommendations periodically
@@ -90,7 +90,7 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
     try {
       await refreshRecommendations();
     } catch (error) {
-      console.error('Failed to refresh recommendations:', error);
+      console.error("Failed to refresh recommendations:", error);
     } finally {
       setIsRefreshing(false);
     }
@@ -100,9 +100,9 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
   const handleExport = useCallback(async () => {
     try {
       const data = await exportThemeData();
-      const blob = new Blob([data], { type: 'application/json' });
+      const blob = new Blob([data], { type: "application/json" });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
       link.download = `stockpulse-theme-backup-${Date.now()}.json`;
       document.body.appendChild(link);
@@ -110,7 +110,7 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Failed to export theme data:', error);
+      console.error("Failed to export theme data:", error);
     }
   }, [exportThemeData]);
 
@@ -126,12 +126,12 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
           const data = e.target?.result as string;
           const success = await importThemeData(data);
           if (success) {
-            console.log('Theme data imported successfully');
+            console.log("Theme data imported successfully");
           } else {
-            console.error('Failed to import theme data');
+            console.error("Failed to import theme data");
           }
         } catch (error) {
-          console.error('Error importing theme data:', error);
+          console.error("Error importing theme data:", error);
         }
       };
       reader.readAsText(file);
@@ -142,11 +142,11 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
   // Get theme icon based on current theme
   const getThemeIcon = (themeMode: string) => {
     switch (themeMode) {
-      case 'light':
+      case "light":
         return Sun;
-      case 'dark':
+      case "dark":
         return Moon;
-      case 'system':
+      case "system":
         return Monitor;
       default:
         return Monitor;
@@ -155,9 +155,9 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
 
   // Get recommendation confidence color
   const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 0.8) return 'text-success bg-success/10';
-    if (confidence >= 0.6) return 'text-warning bg-warning/10';
-    return 'text-info bg-info/10';
+    if (confidence >= 0.8) return "text-success bg-success/10";
+    if (confidence >= 0.6) return "text-warning bg-warning/10";
+    return "text-info bg-info/10";
   };
 
   // Available themes for selection
@@ -172,7 +172,7 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
       padding="md"
       shadow="md"
       border
-      className={cn('transition-all duration-300', className)}
+      className={cn("transition-all duration-300", className)}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
@@ -195,7 +195,7 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
               className="h-8 w-8 p-0"
             >
               <RefreshCw
-                className={cn('w-4 h-4', isRefreshing && 'animate-spin')}
+                className={cn("w-4 h-4", isRefreshing && "animate-spin")}
               />
             </Button>
           )}
@@ -207,8 +207,8 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
           >
             <ChevronRight
               className={cn(
-                'w-4 h-4 transition-transform',
-                isExpanded && 'rotate-90',
+                "w-4 h-4 transition-transform",
+                isExpanded && "rotate-90",
               )}
             />
           </Button>
@@ -219,7 +219,7 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
       <div className="grid grid-cols-2 gap-3 mb-4">
         <div className="flex items-center space-x-2 p-2 rounded-lg bg-muted/50">
           {React.createElement(getThemeIcon(theme), {
-            className: 'w-4 h-4 text-muted-foreground',
+            className: "w-4 h-4 text-muted-foreground",
           })}
           <div>
             <div className="text-xs text-muted-foreground">Mode</div>
@@ -232,13 +232,14 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
           <div
             className="w-4 h-4 rounded-full"
             style={{
-              background: 'linear-gradient(45deg, var(--primary), var(--secondary))',
+              background:
+                "linear-gradient(45deg, var(--primary), var(--secondary))",
             }}
           />
           <div>
             <div className="text-xs text-muted-foreground">Theme</div>
             <div className="text-sm font-medium text-foreground capitalize">
-              {colorTheme.replace('-', ' ')}
+              {colorTheme.replace("-", " ")}
             </div>
           </div>
         </div>
@@ -248,8 +249,8 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
       <div className="flex space-x-2 mb-4">
         <Button
           size="sm"
-          variant={theme === 'light' ? 'default' : 'outline'}
-          onClick={() => setTheme('light')}
+          variant={theme === "light" ? "default" : "outline"}
+          onClick={() => setTheme("light")}
           className="flex-1 h-8"
           disabled={isTransitioning}
         >
@@ -258,8 +259,8 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
         </Button>
         <Button
           size="sm"
-          variant={theme === 'dark' ? 'default' : 'outline'}
-          onClick={() => setTheme('dark')}
+          variant={theme === "dark" ? "default" : "outline"}
+          onClick={() => setTheme("dark")}
           className="flex-1 h-8"
           disabled={isTransitioning}
         >
@@ -268,8 +269,8 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
         </Button>
         <Button
           size="sm"
-          variant={theme === 'system' ? 'default' : 'outline'}
-          onClick={() => setTheme('system')}
+          variant={theme === "system" ? "default" : "outline"}
+          onClick={() => setTheme("system")}
           className="flex-1 h-8"
           disabled={isTransitioning}
         >
@@ -300,7 +301,7 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
                 <div className="flex items-center space-x-2">
                   <Badge
                     className={cn(
-                      'text-xs',
+                      "text-xs",
                       getConfidenceColor(rec.confidence),
                     )}
                   >
@@ -308,7 +309,7 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
                   </Badge>
                   <div>
                     <div className="text-sm font-medium text-foreground capitalize">
-                      {rec.theme.replace('-', ' ')} ({rec.mode})
+                      {rec.theme.replace("-", " ")} ({rec.mode})
                     </div>
                     <div className="text-xs text-muted-foreground">
                       {rec.reason}
@@ -316,10 +317,10 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
                   </div>
                 </div>
                 <div className="flex items-center space-x-1">
-                  {rec.energyImpact === 'low' && (
+                  {rec.energyImpact === "low" && (
                     <Battery className="w-3 h-3 text-success" />
                   )}
-                  {rec.performanceImpact === 'low' && (
+                  {rec.performanceImpact === "low" && (
                     <Zap className="w-3 h-3 text-primary" />
                   )}
                   <ChevronRight className="w-3 h-3 text-muted-foreground" />
@@ -335,7 +336,7 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
         {isExpanded && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             className="border-t border-surface pt-4 space-y-4"
           >
@@ -350,7 +351,7 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
                   <div className="p-2 rounded bg-muted/30">
                     <div className="text-muted-foreground">Most Used</div>
                     <div className="font-medium text-foreground capitalize">
-                      {analytics.mostUsedTheme.replace('-', ' ')}
+                      {analytics.mostUsedTheme.replace("-", " ")}
                     </div>
                   </div>
                   <div className="p-2 rounded bg-muted/30">
@@ -368,7 +369,7 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
                   <div className="p-2 rounded bg-muted/30">
                     <div className="text-muted-foreground">Evening Mode</div>
                     <div className="font-medium text-foreground capitalize">
-                      {analytics.preferredModeByTime[20] || 'Dark'}
+                      {analytics.preferredModeByTime[20] || "Dark"}
                     </div>
                   </div>
                 </div>
@@ -385,12 +386,12 @@ export const ThemeManagementWidget: React.FC<ThemeManagementWidgetProps> = ({
                   <Button
                     key={themeOption}
                     size="sm"
-                    variant={colorTheme === themeOption ? 'default' : 'outline'}
+                    variant={colorTheme === themeOption ? "default" : "outline"}
                     onClick={() => setColorTheme(themeOption)}
                     className="h-8 text-xs"
                     disabled={isTransitioning}
                   >
-                    {themeOption.replace('-', ' ')}
+                    {themeOption.replace("-", " ")}
                   </Button>
                 ))}
               </div>

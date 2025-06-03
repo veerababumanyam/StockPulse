@@ -3,14 +3,17 @@
  * Enterprise-grade path validation and access control
  */
 
-import path from 'path';
-import fs from 'fs-extra';
-import { ConfigManager } from '../config/server-config.js';
+import path from "path";
+import fs from "fs-extra";
+import { ConfigManager } from "../config/server-config.js";
 
 export class PathValidationError extends Error {
-  constructor(message: string, public readonly code: string) {
+  constructor(
+    message: string,
+    public readonly code: string,
+  ) {
     super(message);
-    this.name = 'PathValidationError';
+    this.name = "PathValidationError";
   }
 }
 
@@ -22,8 +25,8 @@ export class SecurityValidator {
    * Prevents directory traversal and enforces security policies
    */
   public async validatePath(inputPath: string): Promise<string> {
-    if (!inputPath || typeof inputPath !== 'string') {
-      throw new PathValidationError('Invalid path provided', 'INVALID_PATH');
+    if (!inputPath || typeof inputPath !== "string") {
+      throw new PathValidationError("Invalid path provided", "INVALID_PATH");
     }
 
     // Normalize and resolve the path
@@ -31,10 +34,10 @@ export class SecurityValidator {
     const resolvedPath = path.resolve(normalizedPath);
 
     // Check for directory traversal attempts
-    if (normalizedPath.includes('..')) {
+    if (normalizedPath.includes("..")) {
       throw new PathValidationError(
-        'Directory traversal not allowed',
-        'TRAVERSAL_ATTEMPT'
+        "Directory traversal not allowed",
+        "TRAVERSAL_ATTEMPT",
       );
     }
 
@@ -42,7 +45,7 @@ export class SecurityValidator {
     if (!this.configManager.isPathAllowed(resolvedPath)) {
       throw new PathValidationError(
         `Access denied: Path outside allowed directories`,
-        'ACCESS_DENIED'
+        "ACCESS_DENIED",
       );
     }
 
@@ -54,16 +57,19 @@ export class SecurityValidator {
    */
   public async validateFileOperation(
     filePath: string,
-    operation: 'read' | 'write' | 'delete' | 'create'
+    operation: "read" | "write" | "delete" | "create",
   ): Promise<void> {
     const validatedPath = await this.validatePath(filePath);
     const config = this.configManager.getConfig();
 
     // Check read-only mode
-    if (config.security.readOnlyMode && ['write', 'delete', 'create'].includes(operation)) {
+    if (
+      config.security.readOnlyMode &&
+      ["write", "delete", "create"].includes(operation)
+    ) {
       throw new PathValidationError(
-        'Server is in read-only mode',
-        'READ_ONLY_MODE'
+        "Server is in read-only mode",
+        "READ_ONLY_MODE",
       );
     }
 
@@ -71,34 +77,31 @@ export class SecurityValidator {
     if (!this.configManager.isFileExtensionAllowed(validatedPath)) {
       throw new PathValidationError(
         `File extension not allowed: ${path.extname(validatedPath)}`,
-        'EXTENSION_NOT_ALLOWED'
+        "EXTENSION_NOT_ALLOWED",
       );
     }
 
     // Check if file exists for read/delete operations
-    if (['read', 'delete'].includes(operation)) {
+    if (["read", "delete"].includes(operation)) {
       const exists = await fs.pathExists(validatedPath);
       if (!exists) {
-        throw new PathValidationError(
-          'File not found',
-          'FILE_NOT_FOUND'
-        );
+        throw new PathValidationError("File not found", "FILE_NOT_FOUND");
       }
     }
 
     // Check file size for write operations
-    if (operation === 'write') {
+    if (operation === "write") {
       try {
         const stats = await fs.stat(validatedPath);
         if (stats.size > config.security.maxFileSize) {
           throw new PathValidationError(
             `File size exceeds limit: ${config.security.maxFileSize} bytes`,
-            'FILE_TOO_LARGE'
+            "FILE_TOO_LARGE",
           );
         }
       } catch (error) {
         // File doesn't exist, which is fine for create operations
-        if ((error as any).code !== 'ENOENT') {
+        if ((error as any).code !== "ENOENT") {
           throw error;
         }
       }
@@ -110,44 +113,50 @@ export class SecurityValidator {
    */
   public async validateDirectoryOperation(
     dirPath: string,
-    operation: 'read' | 'create' | 'delete'
+    operation: "read" | "create" | "delete",
   ): Promise<void> {
     const validatedPath = await this.validatePath(dirPath);
     const config = this.configManager.getConfig();
 
     // Check read-only mode
-    if (config.security.readOnlyMode && ['create', 'delete'].includes(operation)) {
+    if (
+      config.security.readOnlyMode &&
+      ["create", "delete"].includes(operation)
+    ) {
       throw new PathValidationError(
-        'Server is in read-only mode',
-        'READ_ONLY_MODE'
+        "Server is in read-only mode",
+        "READ_ONLY_MODE",
       );
     }
 
     // Check directory depth
     const rootPaths = config.security.allowedRootPaths;
-    const nearestRoot = rootPaths.find(root => 
-      validatedPath.startsWith(path.resolve(root))
+    const nearestRoot = rootPaths.find((root) =>
+      validatedPath.startsWith(path.resolve(root)),
     );
 
     if (nearestRoot) {
-      const relativePath = path.relative(path.resolve(nearestRoot), validatedPath);
+      const relativePath = path.relative(
+        path.resolve(nearestRoot),
+        validatedPath,
+      );
       const depth = relativePath.split(path.sep).length;
-      
+
       if (depth > config.security.maxDirectoryDepth) {
         throw new PathValidationError(
           `Directory depth exceeds limit: ${config.security.maxDirectoryDepth}`,
-          'DEPTH_EXCEEDED'
+          "DEPTH_EXCEEDED",
         );
       }
     }
 
     // Check if directory exists for read/delete operations
-    if (['read', 'delete'].includes(operation)) {
+    if (["read", "delete"].includes(operation)) {
       const exists = await fs.pathExists(validatedPath);
       if (!exists) {
         throw new PathValidationError(
-          'Directory not found',
-          'DIRECTORY_NOT_FOUND'
+          "Directory not found",
+          "DIRECTORY_NOT_FOUND",
         );
       }
     }
@@ -158,12 +167,12 @@ export class SecurityValidator {
    */
   public sanitizeContent(content: string, mimeType?: string): string {
     // Remove null bytes that could cause issues
-    let sanitized = content.replace(/\0/g, '');
+    let sanitized = content.replace(/\0/g, "");
 
     // For specific file types, apply additional sanitization
-    if (mimeType?.includes('text') || mimeType?.includes('json')) {
+    if (mimeType?.includes("text") || mimeType?.includes("json")) {
       // Remove potentially dangerous control characters
-      sanitized = sanitized.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
+      sanitized = sanitized.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "");
     }
 
     return sanitized;
@@ -174,16 +183,16 @@ export class SecurityValidator {
    */
   public async isBinaryFile(filePath: string): Promise<boolean> {
     try {
-      const buffer = await fs.readFile(filePath, { flag: 'r' });
+      const buffer = await fs.readFile(filePath, { flag: "r" });
       const chunk = buffer.slice(0, 8000);
-      
+
       // Check for null bytes (common in binary files)
       for (let i = 0; i < chunk.length; i++) {
         if (chunk[i] === 0) {
           return true;
         }
       }
-      
+
       return false;
     } catch (error) {
       return false;
@@ -195,22 +204,24 @@ export class SecurityValidator {
    */
   public async getSecureDirectoryListing(
     dirPath: string,
-    includeHidden: boolean = false
-  ): Promise<Array<{
-    name: string;
-    type: 'file' | 'directory';
-    size?: number;
-    modified?: Date;
-    accessible: boolean;
-  }>> {
+    includeHidden: boolean = false,
+  ): Promise<
+    Array<{
+      name: string;
+      type: "file" | "directory";
+      size?: number;
+      modified?: Date;
+      accessible: boolean;
+    }>
+  > {
     const validatedPath = await this.validatePath(dirPath);
     const config = this.configManager.getConfig();
-    
+
     try {
       const items = await fs.readdir(validatedPath, { withFileTypes: true });
       const result: Array<{
         name: string;
-        type: 'file' | 'directory';
+        type: "file" | "directory";
         size?: number;
         modified?: Date;
         accessible: boolean;
@@ -218,15 +229,17 @@ export class SecurityValidator {
 
       for (const item of items) {
         const itemPath = path.join(validatedPath, item.name);
-        
+
         // Skip hidden files unless explicitly requested
-        if (!includeHidden && item.name.startsWith('.')) {
+        if (!includeHidden && item.name.startsWith(".")) {
           continue;
         }
 
         // Check if item is accessible based on security rules
-        const accessible = this.configManager.isPathAllowed(itemPath) &&
-          (item.isDirectory() || this.configManager.isFileExtensionAllowed(itemPath));
+        const accessible =
+          this.configManager.isPathAllowed(itemPath) &&
+          (item.isDirectory() ||
+            this.configManager.isFileExtensionAllowed(itemPath));
 
         let size: number | undefined;
         let modified: Date | undefined;
@@ -243,7 +256,7 @@ export class SecurityValidator {
 
         result.push({
           name: item.name,
-          type: item.isDirectory() ? 'directory' : 'file',
+          type: item.isDirectory() ? "directory" : "file",
           ...(size !== undefined && { size }),
           ...(modified !== undefined && { modified }),
           accessible,
@@ -255,12 +268,14 @@ export class SecurityValidator {
     } catch (error) {
       throw new PathValidationError(
         `Failed to read directory: ${(error as Error).message}`,
-        'DIRECTORY_READ_ERROR'
+        "DIRECTORY_READ_ERROR",
       );
     }
   }
 }
 
-export const createSecurityValidator = (configManager: ConfigManager): SecurityValidator => {
+export const createSecurityValidator = (
+  configManager: ConfigManager,
+): SecurityValidator => {
   return new SecurityValidator(configManager);
-}; 
+};

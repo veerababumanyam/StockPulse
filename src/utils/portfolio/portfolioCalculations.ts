@@ -8,7 +8,7 @@ import {
   PortfolioPosition,
   Transaction,
   PerformanceMetrics,
-} from '../types/portfolio';
+} from "../types/portfolio";
 
 // Constants for calculations
 export const TRADING_DAYS_PER_YEAR = 252;
@@ -25,19 +25,19 @@ export const formatCurrency = (
   } = {},
 ): string => {
   const {
-    currency = 'USD',
+    currency = "USD",
     minimumFractionDigits = 2,
     maximumFractionDigits = 2,
     compact = false,
   } = options;
 
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
     currency,
     minimumFractionDigits,
     maximumFractionDigits,
-    notation: compact ? 'compact' : 'standard',
-    compactDisplay: 'short',
+    notation: compact ? "compact" : "standard",
+    compactDisplay: "short",
   });
 
   return formatter.format(value);
@@ -57,11 +57,11 @@ export const formatPercentage = (
     showSign = true,
   } = options;
 
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'percent',
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "percent",
     minimumFractionDigits,
     maximumFractionDigits,
-    signDisplay: showSign ? 'exceptZero' : 'auto',
+    signDisplay: showSign ? "exceptZero" : "auto",
   });
 
   return formatter.format(value / 100);
@@ -81,11 +81,11 @@ export const formatNumber = (
     compact = false,
   } = options;
 
-  const formatter = new Intl.NumberFormat('en-US', {
+  const formatter = new Intl.NumberFormat("en-US", {
     minimumFractionDigits,
     maximumFractionDigits,
-    notation: compact ? 'compact' : 'standard',
-    compactDisplay: 'short',
+    notation: compact ? "compact" : "standard",
+    compactDisplay: "short",
   });
 
   return formatter.format(value);
@@ -139,36 +139,36 @@ export const calculatePortfolioWeights = (
 };
 
 // Position sorting and filtering
-export type SortOption = 'symbol' | 'value' | 'pnl' | 'percentage' | 'weight';
-export type SortOrder = 'ASC' | 'DESC';
+export type SortOption = "symbol" | "value" | "pnl" | "percentage" | "weight";
+export type SortOrder = "ASC" | "DESC";
 
 export const sortPositions = (
   positions: PortfolioPosition[],
   sortBy: SortOption,
-  sortOrder: SortOrder = 'DESC',
+  sortOrder: SortOrder = "DESC",
 ): PortfolioPosition[] => {
   const sortedPositions = [...positions].sort((a, b) => {
     let aValue: number | string;
     let bValue: number | string;
 
     switch (sortBy) {
-      case 'symbol':
+      case "symbol":
         aValue = a.symbol;
         bValue = b.symbol;
         break;
-      case 'value':
+      case "value":
         aValue = a.market_value;
         bValue = b.market_value;
         break;
-      case 'pnl':
+      case "pnl":
         aValue = a.unrealized_pnl;
         bValue = b.unrealized_pnl;
         break;
-      case 'percentage':
+      case "percentage":
         aValue = a.unrealized_pnl_percentage;
         bValue = b.unrealized_pnl_percentage;
         break;
-      case 'weight':
+      case "weight":
         aValue = a.weight_percentage;
         bValue = b.weight_percentage;
         break;
@@ -177,8 +177,8 @@ export const sortPositions = (
         bValue = b.market_value;
     }
 
-    if (typeof aValue === 'string' && typeof bValue === 'string') {
-      return sortOrder === 'ASC'
+    if (typeof aValue === "string" && typeof bValue === "string") {
+      return sortOrder === "ASC"
         ? aValue.localeCompare(bValue)
         : bValue.localeCompare(aValue);
     }
@@ -186,7 +186,7 @@ export const sortPositions = (
     const numA = Number(aValue);
     const numB = Number(bValue);
 
-    return sortOrder === 'ASC' ? numA - numB : numB - numA;
+    return sortOrder === "ASC" ? numA - numB : numB - numA;
   });
 
   return sortedPositions;
@@ -339,13 +339,13 @@ export const calculateTradingCosts = (transactions: Transaction[]): number => {
 export const calculateTurnoverRate = (
   transactions: Transaction[],
   averagePortfolioValue: number,
-  timeframe: 'monthly' | 'quarterly' | 'annual' = 'annual',
+  timeframe: "monthly" | "quarterly" | "annual" = "annual",
 ): number => {
   if (averagePortfolioValue === 0) return 0;
 
   const totalTraded = transactions
     .filter(
-      (t) => t.transaction_type === 'BUY' || t.transaction_type === 'SELL',
+      (t) => t.transaction_type === "BUY" || t.transaction_type === "SELL",
     )
     .reduce(
       (total, transaction) => total + Math.abs(transaction.total_amount),
@@ -354,13 +354,13 @@ export const calculateTurnoverRate = (
 
   let multiplier = 1;
   switch (timeframe) {
-    case 'monthly':
+    case "monthly":
       multiplier = 12;
       break;
-    case 'quarterly':
+    case "quarterly":
       multiplier = 4;
       break;
-    case 'annual':
+    case "annual":
       multiplier = 1;
       break;
   }
@@ -390,9 +390,9 @@ export const createCalculationKey = (
 ): string => {
   const positionHash = positions
     .map((p) => `${p.id}-${p.current_price}-${p.quantity}`)
-    .join('|');
+    .join("|");
 
-  const additionalHash = additionalData ? JSON.stringify(additionalData) : '';
+  const additionalHash = additionalData ? JSON.stringify(additionalData) : "";
 
   return `${positionHash}-${additionalHash}`;
 };
@@ -412,7 +412,7 @@ export const transformPositionsForChart = (
 
 export const groupTransactionsByDate = (
   transactions: Transaction[],
-  groupBy: 'day' | 'week' | 'month' = 'day',
+  groupBy: "day" | "week" | "month" = "day",
 ): Record<string, Transaction[]> => {
   const grouped: Record<string, Transaction[]> = {};
 
@@ -421,19 +421,19 @@ export const groupTransactionsByDate = (
     let key: string;
 
     switch (groupBy) {
-      case 'day':
-        key = date.toISOString().split('T')[0];
+      case "day":
+        key = date.toISOString().split("T")[0];
         break;
-      case 'week':
+      case "week":
         const startOfWeek = new Date(date);
         startOfWeek.setDate(date.getDate() - date.getDay());
-        key = startOfWeek.toISOString().split('T')[0];
+        key = startOfWeek.toISOString().split("T")[0];
         break;
-      case 'month':
-        key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      case "month":
+        key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
         break;
       default:
-        key = date.toISOString().split('T')[0];
+        key = date.toISOString().split("T")[0];
     }
 
     if (!grouped[key]) {
@@ -449,9 +449,9 @@ export const groupTransactionsByDate = (
 export const validatePortfolioData = (portfolio: Portfolio): boolean => {
   return !!(
     portfolio &&
-    typeof portfolio.total_value === 'number' &&
-    typeof portfolio.cash_balance === 'number' &&
-    typeof portfolio.total_cost === 'number' &&
+    typeof portfolio.total_value === "number" &&
+    typeof portfolio.cash_balance === "number" &&
+    typeof portfolio.total_cost === "number" &&
     portfolio.total_value >= 0 &&
     portfolio.cash_balance >= 0 &&
     portfolio.total_cost >= 0
@@ -462,9 +462,9 @@ export const validatePositionData = (position: PortfolioPosition): boolean => {
   return !!(
     position &&
     position.symbol &&
-    typeof position.quantity === 'number' &&
-    typeof position.current_price === 'number' &&
-    typeof position.market_value === 'number' &&
+    typeof position.quantity === "number" &&
+    typeof position.current_price === "number" &&
+    typeof position.market_value === "number" &&
     position.quantity >= 0 &&
     position.current_price >= 0 &&
     position.market_value >= 0

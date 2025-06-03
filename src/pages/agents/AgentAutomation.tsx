@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -6,7 +6,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '../../components/ui/card';
+} from "../../components/ui/card";
 import {
   Table,
   TableBody,
@@ -14,7 +14,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '../../components/ui/table';
+} from "../../components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -23,7 +23,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../../components/ui/dialog';
+} from "../../components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -32,17 +32,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../../components/ui/form';
-import { Input } from '../../components/ui/input';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+} from "../../components/ui/form";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
+import { Badge } from "../../components/ui/badge";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '../../components/ui/tabs';
-import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert';
+} from "../../components/ui/tabs";
+import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert";
 import {
   AlertCircle,
   CheckCircle,
@@ -56,26 +56,26 @@ import {
   BarChart4,
   Sliders,
   Users,
-} from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { useToast } from '../../hooks/useToast';
-import { Switch } from '../../components/ui/switch';
-import { Textarea } from '../../components/ui/textarea';
-import { Progress } from '../../components/ui/progress';
+} from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useToast } from "../../hooks/useToast";
+import { Switch } from "../../components/ui/switch";
+import { Textarea } from "../../components/ui/textarea";
+import { Progress } from "../../components/ui/progress";
 
 // Type definitions
 interface AutomationConfig {
   id: string;
   name: string;
   description: string;
-  status: 'active' | 'inactive';
+  status: "active" | "inactive";
   schedule: string;
   lastRun: string | null;
   nextRun: string | null;
   successRate: number;
-  riskLevel: 'low' | 'medium' | 'high';
+  riskLevel: "low" | "medium" | "high";
   mcpEnabled: boolean;
   mcpServers: string[];
   createdAt: string;
@@ -85,108 +85,108 @@ interface MCPServer {
   id: string;
   name: string;
   description: string;
-  type: 'server' | 'client';
-  status: 'active' | 'inactive';
+  type: "server" | "client";
+  status: "active" | "inactive";
   capabilities: string[];
 }
 
 // Mock data for automation configurations
 const initialAutomations: AutomationConfig[] = [
   {
-    id: '1',
-    name: 'Market Open Scanner',
-    description: 'Scans for trading opportunities at market open',
-    status: 'active',
-    schedule: '09:30 AM ET (Market Open)',
-    lastRun: '2025-05-27T09:30:00Z',
-    nextRun: '2025-05-28T09:30:00Z',
+    id: "1",
+    name: "Market Open Scanner",
+    description: "Scans for trading opportunities at market open",
+    status: "active",
+    schedule: "09:30 AM ET (Market Open)",
+    lastRun: "2025-05-27T09:30:00Z",
+    nextRun: "2025-05-28T09:30:00Z",
     successRate: 98.5,
-    riskLevel: 'medium',
+    riskLevel: "medium",
     mcpEnabled: true,
-    mcpServers: ['1', '2'],
-    createdAt: '2025-04-10T10:30:00Z',
+    mcpServers: ["1", "2"],
+    createdAt: "2025-04-10T10:30:00Z",
   },
   {
-    id: '2',
-    name: 'Daily Portfolio Rebalancer',
+    id: "2",
+    name: "Daily Portfolio Rebalancer",
     description:
-      'Automatically rebalances portfolio based on target allocations',
-    status: 'active',
-    schedule: '04:00 PM ET (Market Close)',
-    lastRun: '2025-05-26T16:00:00Z',
-    nextRun: '2025-05-27T16:00:00Z',
+      "Automatically rebalances portfolio based on target allocations",
+    status: "active",
+    schedule: "04:00 PM ET (Market Close)",
+    lastRun: "2025-05-26T16:00:00Z",
+    nextRun: "2025-05-27T16:00:00Z",
     successRate: 100,
-    riskLevel: 'low',
+    riskLevel: "low",
     mcpEnabled: true,
-    mcpServers: ['2'],
-    createdAt: '2025-04-12T14:15:00Z',
+    mcpServers: ["2"],
+    createdAt: "2025-04-12T14:15:00Z",
   },
   {
-    id: '3',
-    name: 'Earnings Announcement Trader',
-    description: 'Executes trades based on earnings announcements',
-    status: 'inactive',
-    schedule: 'Event-based',
-    lastRun: '2025-05-20T15:45:00Z',
+    id: "3",
+    name: "Earnings Announcement Trader",
+    description: "Executes trades based on earnings announcements",
+    status: "inactive",
+    schedule: "Event-based",
+    lastRun: "2025-05-20T15:45:00Z",
     nextRun: null,
     successRate: 76.2,
-    riskLevel: 'high',
+    riskLevel: "high",
     mcpEnabled: false,
     mcpServers: [],
-    createdAt: '2025-04-15T09:20:00Z',
+    createdAt: "2025-04-15T09:20:00Z",
   },
   {
-    id: '4',
-    name: 'Technical Breakout Scanner',
-    description: 'Identifies stocks breaking out of technical patterns',
-    status: 'active',
-    schedule: 'Every 30 minutes (Market Hours)',
-    lastRun: '2025-05-27T11:00:00Z',
-    nextRun: '2025-05-27T11:30:00Z',
+    id: "4",
+    name: "Technical Breakout Scanner",
+    description: "Identifies stocks breaking out of technical patterns",
+    status: "active",
+    schedule: "Every 30 minutes (Market Hours)",
+    lastRun: "2025-05-27T11:00:00Z",
+    nextRun: "2025-05-27T11:30:00Z",
     successRate: 82.7,
-    riskLevel: 'medium',
+    riskLevel: "medium",
     mcpEnabled: true,
-    mcpServers: ['1'],
-    createdAt: '2025-04-18T11:45:00Z',
+    mcpServers: ["1"],
+    createdAt: "2025-04-18T11:45:00Z",
   },
 ];
 
 // Mock data for MCP servers (simplified from AIAgents.tsx)
 const mcpServers: MCPServer[] = [
   {
-    id: '1',
-    name: 'StockData MCP Server',
-    description: 'Financial data and market analysis tools',
-    type: 'server',
-    status: 'active',
-    capabilities: ['market_data', 'technical_analysis', 'sentiment_analysis'],
+    id: "1",
+    name: "StockData MCP Server",
+    description: "Financial data and market analysis tools",
+    type: "server",
+    status: "active",
+    capabilities: ["market_data", "technical_analysis", "sentiment_analysis"],
   },
   {
-    id: '2',
-    name: 'Trading API MCP Server',
-    description: 'Trading execution and order management',
-    type: 'server',
-    status: 'active',
-    capabilities: ['order_execution', 'portfolio_management', 'risk_analysis'],
+    id: "2",
+    name: "Trading API MCP Server",
+    description: "Trading execution and order management",
+    type: "server",
+    status: "active",
+    capabilities: ["order_execution", "portfolio_management", "risk_analysis"],
   },
   {
-    id: '3',
-    name: 'News Analysis MCP Client',
-    description: 'External news analysis service',
-    type: 'client',
-    status: 'active',
+    id: "3",
+    name: "News Analysis MCP Client",
+    description: "External news analysis service",
+    type: "client",
+    status: "active",
     capabilities: [],
   },
 ];
 
 // Form schema for adding/editing automation
 const automationFormSchema = z.object({
-  name: z.string().min(3, { message: 'Name must be at least 3 characters' }),
+  name: z.string().min(3, { message: "Name must be at least 3 characters" }),
   description: z
     .string()
-    .min(5, { message: 'Description must be at least 5 characters' }),
-  schedule: z.string().min(1, { message: 'Schedule is required' }),
-  riskLevel: z.enum(['low', 'medium', 'high']),
+    .min(5, { message: "Description must be at least 5 characters" }),
+  schedule: z.string().min(1, { message: "Schedule is required" }),
+  riskLevel: z.enum(["low", "medium", "high"]),
   mcpEnabled: z.boolean(),
   mcpServers: z.array(z.string()).optional(),
 });
@@ -200,16 +200,16 @@ const AgentAutomation: React.FC = () => {
   const [isEditingAutomation, setIsEditingAutomation] = useState<string | null>(
     null,
   );
-  const [activeTab, setActiveTab] = useState('all');
+  const [activeTab, setActiveTab] = useState("all");
   const { toast } = useToast();
 
   const form = useForm<AutomationFormValues>({
     resolver: zodResolver(automationFormSchema),
     defaultValues: {
-      name: '',
-      description: '',
-      schedule: '',
-      riskLevel: 'medium',
+      name: "",
+      description: "",
+      schedule: "",
+      riskLevel: "medium",
       mcpEnabled: false,
       mcpServers: [],
     },
@@ -220,7 +220,7 @@ const AgentAutomation: React.FC = () => {
       id: Date.now().toString(),
       name: values.name,
       description: values.description,
-      status: 'inactive',
+      status: "inactive",
       schedule: values.schedule,
       lastRun: null,
       nextRun: null,
@@ -236,9 +236,9 @@ const AgentAutomation: React.FC = () => {
     form.reset();
 
     toast({
-      title: 'Automation Added',
+      title: "Automation Added",
       description: `${values.name} has been successfully added.`,
-      variant: 'success',
+      variant: "success",
     });
   };
 
@@ -283,9 +283,9 @@ const AgentAutomation: React.FC = () => {
     form.reset();
 
     toast({
-      title: 'Automation Updated',
+      title: "Automation Updated",
       description: `${values.name} has been successfully updated.`,
-      variant: 'success',
+      variant: "success",
     });
   };
 
@@ -295,9 +295,9 @@ const AgentAutomation: React.FC = () => {
     );
 
     toast({
-      title: 'Automation Deleted',
-      description: 'The automation has been removed.',
-      variant: 'default',
+      title: "Automation Deleted",
+      description: "The automation has been removed.",
+      variant: "default",
     });
   };
 
@@ -305,13 +305,13 @@ const AgentAutomation: React.FC = () => {
     const updatedAutomations = automations.map(
       (automation): AutomationConfig => {
         if (automation.id === automationId) {
-          const newStatus: 'active' | 'inactive' =
-            automation.status === 'active' ? 'inactive' : 'active';
+          const newStatus: "active" | "inactive" =
+            automation.status === "active" ? "inactive" : "active";
           return {
             ...automation,
             status: newStatus,
             nextRun:
-              newStatus === 'active'
+              newStatus === "active"
                 ? new Date(Date.now() + 3600000).toISOString()
                 : null,
           };
@@ -325,9 +325,9 @@ const AgentAutomation: React.FC = () => {
     const automation = updatedAutomations.find((a) => a.id === automationId);
 
     toast({
-      title: `Automation ${automation?.status === 'active' ? 'Activated' : 'Deactivated'}`,
+      title: `Automation ${automation?.status === "active" ? "Activated" : "Deactivated"}`,
       description: `${automation?.name} is now ${automation?.status}.`,
-      variant: automation?.status === 'active' ? 'success' : 'default',
+      variant: automation?.status === "active" ? "success" : "default",
     });
   };
 
@@ -352,33 +352,33 @@ const AgentAutomation: React.FC = () => {
       const automation = updatedAutomations.find((a) => a.id === automationId);
 
       toast({
-        title: 'Automation Executed',
+        title: "Automation Executed",
         description: `${automation?.name} was executed successfully.`,
-        variant: 'success',
+        variant: "success",
       });
     }, 1500);
   };
 
   const filteredAutomations =
-    activeTab === 'all'
+    activeTab === "all"
       ? automations
       : automations.filter((automation) => {
-          if (activeTab === 'active') return automation.status === 'active';
-          if (activeTab === 'inactive') return automation.status === 'inactive';
-          if (activeTab === 'mcp') return automation.mcpEnabled;
+          if (activeTab === "active") return automation.status === "active";
+          if (activeTab === "inactive") return automation.status === "inactive";
+          if (activeTab === "mcp") return automation.mcpEnabled;
           return true;
         });
 
   const getRiskLevelColor = (level: string) => {
     switch (level) {
-      case 'low':
-        return 'bg-green-500';
-      case 'medium':
-        return 'bg-yellow-500';
-      case 'high':
-        return 'bg-red-500';
+      case "low":
+        return "bg-green-500";
+      case "medium":
+        return "bg-yellow-500";
+      case "high":
+        return "bg-red-500";
       default:
-        return 'bg-gray-500';
+        return "bg-gray-500";
     }
   };
 
@@ -388,7 +388,7 @@ const AgentAutomation: React.FC = () => {
         const server = mcpServers.find((s) => s.id === id);
         return server ? server.name : id;
       })
-      .join(', ');
+      .join(", ");
   };
 
   return (
@@ -533,7 +533,7 @@ const AgentAutomation: React.FC = () => {
                   )}
                 />
 
-                {form.watch('mcpEnabled') && (
+                {form.watch("mcpEnabled") && (
                   <FormField
                     control={form.control}
                     name="mcpServers"
@@ -547,8 +547,8 @@ const AgentAutomation: React.FC = () => {
                                 key={server.id}
                                 variant={
                                   field.value?.includes(server.id)
-                                    ? 'default'
-                                    : 'outline'
+                                    ? "default"
+                                    : "outline"
                                 }
                                 className="cursor-pointer"
                                 onClick={() => {
@@ -731,7 +731,7 @@ const AgentAutomation: React.FC = () => {
                   )}
                 />
 
-                {form.watch('mcpEnabled') && (
+                {form.watch("mcpEnabled") && (
                   <FormField
                     control={form.control}
                     name="mcpServers"
@@ -745,8 +745,8 @@ const AgentAutomation: React.FC = () => {
                                 key={server.id}
                                 variant={
                                   field.value?.includes(server.id)
-                                    ? 'default'
-                                    : 'outline'
+                                    ? "default"
+                                    : "outline"
                                 }
                                 className="cursor-pointer"
                                 onClick={() => {
@@ -798,11 +798,11 @@ const AgentAutomation: React.FC = () => {
             All Automations ({automations.length})
           </TabsTrigger>
           <TabsTrigger value="active">
-            Active ({automations.filter((a) => a.status === 'active').length})
+            Active ({automations.filter((a) => a.status === "active").length})
           </TabsTrigger>
           <TabsTrigger value="inactive">
             Inactive (
-            {automations.filter((a) => a.status === 'inactive').length})
+            {automations.filter((a) => a.status === "inactive").length})
           </TabsTrigger>
           <TabsTrigger value="mcp">
             MCP Enabled ({automations.filter((a) => a.mcpEnabled).length})
@@ -859,16 +859,16 @@ const AgentAutomation: React.FC = () => {
                         <TableCell>
                           <div className="flex flex-col text-xs">
                             <span>
-                              Last:{' '}
+                              Last:{" "}
                               {automation.lastRun
                                 ? new Date(automation.lastRun).toLocaleString()
-                                : 'Never'}
+                                : "Never"}
                             </span>
                             <span>
-                              Next:{' '}
+                              Next:{" "}
                               {automation.nextRun
                                 ? new Date(automation.nextRun).toLocaleString()
-                                : 'Not scheduled'}
+                                : "Not scheduled"}
                             </span>
                           </div>
                         </TableCell>
@@ -880,10 +880,10 @@ const AgentAutomation: React.FC = () => {
                                 className="h-2"
                                 variant={
                                   automation.successRate > 90
-                                    ? 'success'
+                                    ? "success"
                                     : automation.successRate > 70
-                                      ? 'warning'
-                                      : 'destructive'
+                                      ? "warning"
+                                      : "destructive"
                                 }
                               />
                               <span className="text-xs">
@@ -925,14 +925,14 @@ const AgentAutomation: React.FC = () => {
                         <TableCell>
                           <Badge
                             variant={
-                              automation.status === 'active'
-                                ? 'success'
-                                : 'destructive'
+                              automation.status === "active"
+                                ? "success"
+                                : "destructive"
                             }
                           >
-                            {automation.status === 'active'
-                              ? 'Active'
-                              : 'Inactive'}
+                            {automation.status === "active"
+                              ? "Active"
+                              : "Inactive"}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
@@ -941,21 +941,21 @@ const AgentAutomation: React.FC = () => {
                               variant="outline"
                               size="sm"
                               onClick={() => handleRunNow(automation.id)}
-                              disabled={automation.status !== 'active'}
+                              disabled={automation.status !== "active"}
                             >
                               <Zap size={14} className="mr-1" />
                               Run Now
                             </Button>
                             <Button
                               variant={
-                                automation.status === 'active'
-                                  ? 'destructive'
-                                  : 'outline'
+                                automation.status === "active"
+                                  ? "destructive"
+                                  : "outline"
                               }
                               size="sm"
                               onClick={() => handleToggleStatus(automation.id)}
                             >
-                              {automation.status === 'active' ? (
+                              {automation.status === "active" ? (
                                 <span className="flex items-center gap-1">
                                   <Trash2 size={14} />
                                   Stop
@@ -1051,13 +1051,13 @@ const AgentAutomation: React.FC = () => {
                     Active Automations
                   </span>
                   <span className="text-sm font-bold">
-                    {automations.filter((a) => a.status === 'active').length} /{' '}
+                    {automations.filter((a) => a.status === "active").length} /{" "}
                     {automations.length}
                   </span>
                 </div>
                 <Progress
                   value={
-                    (automations.filter((a) => a.status === 'active').length /
+                    (automations.filter((a) => a.status === "active").length /
                       automations.length) *
                     100
                   }
@@ -1069,7 +1069,7 @@ const AgentAutomation: React.FC = () => {
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-sm font-medium">MCP Integration</span>
                   <span className="text-sm font-bold">
-                    {automations.filter((a) => a.mcpEnabled).length} /{' '}
+                    {automations.filter((a) => a.mcpEnabled).length} /{" "}
                     {automations.length}
                   </span>
                 </div>
@@ -1093,7 +1093,7 @@ const AgentAutomation: React.FC = () => {
                       <div className="h-3 w-3 rounded-full bg-green-500"></div>
                     </div>
                     <div className="text-lg font-bold">
-                      {automations.filter((a) => a.riskLevel === 'low').length}
+                      {automations.filter((a) => a.riskLevel === "low").length}
                     </div>
                     <div className="text-xs text-muted-foreground">
                       Low Risk
@@ -1105,7 +1105,7 @@ const AgentAutomation: React.FC = () => {
                     </div>
                     <div className="text-lg font-bold">
                       {
-                        automations.filter((a) => a.riskLevel === 'medium')
+                        automations.filter((a) => a.riskLevel === "medium")
                           .length
                       }
                     </div>
@@ -1118,7 +1118,7 @@ const AgentAutomation: React.FC = () => {
                       <div className="h-3 w-3 rounded-full bg-red-500"></div>
                     </div>
                     <div className="text-lg font-bold">
-                      {automations.filter((a) => a.riskLevel === 'high').length}
+                      {automations.filter((a) => a.riskLevel === "high").length}
                     </div>
                     <div className="text-xs text-muted-foreground">
                       High Risk
@@ -1216,7 +1216,7 @@ const AgentAutomation: React.FC = () => {
                       className="flex items-center justify-between bg-muted p-2 rounded-md"
                     >
                       <div className="flex items-center gap-2">
-                        {server.type === 'server' ? (
+                        {server.type === "server" ? (
                           <Server size={14} />
                         ) : (
                           <Laptop size={14} />
@@ -1227,7 +1227,7 @@ const AgentAutomation: React.FC = () => {
                       </div>
                       <Badge
                         variant={
-                          server.status === 'active' ? 'success' : 'destructive'
+                          server.status === "active" ? "success" : "destructive"
                         }
                         className="text-xs"
                       >
@@ -1242,15 +1242,15 @@ const AgentAutomation: React.FC = () => {
                 <h4 className="text-sm font-semibold mb-2">MCP Capabilities</h4>
                 <div className="flex flex-wrap gap-2">
                   {[
-                    'market_data',
-                    'technical_analysis',
-                    'sentiment_analysis',
-                    'order_execution',
-                    'portfolio_management',
-                    'risk_analysis',
+                    "market_data",
+                    "technical_analysis",
+                    "sentiment_analysis",
+                    "order_execution",
+                    "portfolio_management",
+                    "risk_analysis",
                   ].map((capability) => (
                     <Badge key={capability} variant="outline">
-                      {capability.replace('_', ' ')}
+                      {capability.replace("_", " ")}
                     </Badge>
                   ))}
                 </div>
@@ -1343,13 +1343,13 @@ const AgentAutomation: React.FC = () => {
                   onClick={() => {
                     setIsAddingAutomation(true);
                     form.reset({
-                      name: 'Market Open Scanner',
+                      name: "Market Open Scanner",
                       description:
-                        'Scans for trading opportunities at market open',
-                      schedule: '09:30 AM ET (Market Open)',
-                      riskLevel: 'medium',
+                        "Scans for trading opportunities at market open",
+                      schedule: "09:30 AM ET (Market Open)",
+                      riskLevel: "medium",
                       mcpEnabled: true,
-                      mcpServers: ['1', '2'],
+                      mcpServers: ["1", "2"],
                     });
                   }}
                 >
@@ -1404,13 +1404,13 @@ const AgentAutomation: React.FC = () => {
                   onClick={() => {
                     setIsAddingAutomation(true);
                     form.reset({
-                      name: 'Daily Portfolio Rebalancer',
+                      name: "Daily Portfolio Rebalancer",
                       description:
-                        'Automatically rebalances portfolio based on target allocations',
-                      schedule: '04:00 PM ET (Market Close)',
-                      riskLevel: 'low',
+                        "Automatically rebalances portfolio based on target allocations",
+                      schedule: "04:00 PM ET (Market Close)",
+                      riskLevel: "low",
                       mcpEnabled: true,
-                      mcpServers: ['2'],
+                      mcpServers: ["2"],
                     });
                   }}
                 >
@@ -1467,13 +1467,13 @@ const AgentAutomation: React.FC = () => {
                   onClick={() => {
                     setIsAddingAutomation(true);
                     form.reset({
-                      name: 'Technical Breakout Scanner',
+                      name: "Technical Breakout Scanner",
                       description:
-                        'Identifies stocks breaking out of technical patterns',
-                      schedule: 'Every 30 minutes (Market Hours)',
-                      riskLevel: 'medium',
+                        "Identifies stocks breaking out of technical patterns",
+                      schedule: "Every 30 minutes (Market Hours)",
+                      riskLevel: "medium",
                       mcpEnabled: true,
-                      mcpServers: ['1'],
+                      mcpServers: ["1"],
                     });
                   }}
                 >
@@ -1527,11 +1527,11 @@ const AgentAutomation: React.FC = () => {
                   onClick={() => {
                     setIsAddingAutomation(true);
                     form.reset({
-                      name: 'Earnings Announcement Trader',
+                      name: "Earnings Announcement Trader",
                       description:
-                        'Executes trades based on earnings announcements',
-                      schedule: 'Event-based',
-                      riskLevel: 'high',
+                        "Executes trades based on earnings announcements",
+                      schedule: "Event-based",
+                      riskLevel: "high",
                       mcpEnabled: false,
                       mcpServers: [],
                     });
@@ -1588,13 +1588,13 @@ const AgentAutomation: React.FC = () => {
                   onClick={() => {
                     setIsAddingAutomation(true);
                     form.reset({
-                      name: 'Sentiment Analysis Trader',
+                      name: "Sentiment Analysis Trader",
                       description:
-                        'Trades based on news and social media sentiment',
-                      schedule: 'Hourly',
-                      riskLevel: 'medium',
+                        "Trades based on news and social media sentiment",
+                      schedule: "Hourly",
+                      riskLevel: "medium",
                       mcpEnabled: true,
-                      mcpServers: ['1', '3'],
+                      mcpServers: ["1", "3"],
                     });
                   }}
                 >
@@ -1647,13 +1647,13 @@ const AgentAutomation: React.FC = () => {
                   onClick={() => {
                     setIsAddingAutomation(true);
                     form.reset({
-                      name: 'Volatility Arbitrage',
+                      name: "Volatility Arbitrage",
                       description:
-                        'Exploits differences between implied and realized volatility',
-                      schedule: 'Daily (10:00 AM ET)',
-                      riskLevel: 'high',
+                        "Exploits differences between implied and realized volatility",
+                      schedule: "Daily (10:00 AM ET)",
+                      riskLevel: "high",
                       mcpEnabled: true,
-                      mcpServers: ['1', '2'],
+                      mcpServers: ["1", "2"],
                     });
                   }}
                 >

@@ -3,9 +3,9 @@
  * Enterprise-grade configuration management with security controls
  */
 
-import Joi from 'joi';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import Joi from "joi";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -37,7 +37,7 @@ export interface FileSystemConfig {
     rateLimitPerMinute: number;
   };
   logging: {
-    level: 'debug' | 'info' | 'warn' | 'error';
+    level: "debug" | "info" | "warn" | "error";
     logFile?: string;
     enableConsole: boolean;
   };
@@ -51,7 +51,7 @@ const configSchema = Joi.object<FileSystemConfig>({
     port: Joi.number().port().optional(),
     host: Joi.string().hostname().optional(),
   }).required(),
-  
+
   security: Joi.object({
     allowedRootPaths: Joi.array().items(Joi.string()).min(1).required(),
     readOnlyMode: Joi.boolean().required(),
@@ -61,22 +61,22 @@ const configSchema = Joi.object<FileSystemConfig>({
     blockedPatterns: Joi.array().items(Joi.string()).required(),
     enableAuditLog: Joi.boolean().required(),
   }).required(),
-  
+
   features: Joi.object({
     enableFileWatch: Joi.boolean().required(),
     enableSearch: Joi.boolean().required(),
     enableBinaryFiles: Joi.boolean().required(),
     cacheDirectoryListings: Joi.boolean().required(),
   }).required(),
-  
+
   limits: Joi.object({
     maxFilesPerRequest: Joi.number().positive().max(1000).required(),
     maxConcurrentOperations: Joi.number().positive().max(50).required(),
     rateLimitPerMinute: Joi.number().positive().required(),
   }).required(),
-  
+
   logging: Joi.object({
-    level: Joi.string().valid('debug', 'info', 'warn', 'error').required(),
+    level: Joi.string().valid("debug", "info", "warn", "error").required(),
     logFile: Joi.string().optional(),
     enableConsole: Joi.boolean().required(),
   }).required(),
@@ -85,37 +85,57 @@ const configSchema = Joi.object<FileSystemConfig>({
 // Default configuration
 const defaultConfig: FileSystemConfig = {
   server: {
-    name: 'stockpulse-filesystem-mcp',
-    version: '1.0.0',
+    name: "stockpulse-filesystem-mcp",
+    version: "1.0.0",
     port: 3001,
-    host: 'localhost',
+    host: "localhost",
   },
   security: {
     allowedRootPaths: [
-      path.resolve(__dirname, '../../../..'), // StockPulse root
+      path.resolve(__dirname, "../../../.."), // StockPulse root
     ],
     readOnlyMode: false,
     maxFileSize: 10 * 1024 * 1024, // 10MB
     maxDirectoryDepth: 10,
     allowedFileExtensions: [
-      '.ts', '.tsx', '.js', '.jsx', '.json', '.md', '.txt',
-      '.yml', '.yaml', '.env.example', '.gitignore', '.css',
-      '.html', '.svg', '.png', '.jpg', '.jpeg', '.gif',
-      '.py', '.sql', '.sh', '.bat', '.ps1', '.xml'
+      ".ts",
+      ".tsx",
+      ".js",
+      ".jsx",
+      ".json",
+      ".md",
+      ".txt",
+      ".yml",
+      ".yaml",
+      ".env.example",
+      ".gitignore",
+      ".css",
+      ".html",
+      ".svg",
+      ".png",
+      ".jpg",
+      ".jpeg",
+      ".gif",
+      ".py",
+      ".sql",
+      ".sh",
+      ".bat",
+      ".ps1",
+      ".xml",
     ],
     blockedPatterns: [
-      '**/node_modules/**',
-      '**/.git/**',
-      '**/.env',
-      '**/*.log',
-      '**/dist/**',
-      '**/build/**',
-      '**/.next/**',
-      '**/coverage/**',
-      '**/*.pem',
-      '**/*.key',
-      '**/*.p12',
-      '**/*.jks'
+      "**/node_modules/**",
+      "**/.git/**",
+      "**/.env",
+      "**/*.log",
+      "**/dist/**",
+      "**/build/**",
+      "**/.next/**",
+      "**/coverage/**",
+      "**/*.pem",
+      "**/*.key",
+      "**/*.p12",
+      "**/*.jks",
     ],
     enableAuditLog: true,
   },
@@ -131,8 +151,8 @@ const defaultConfig: FileSystemConfig = {
     rateLimitPerMinute: 1000,
   },
   logging: {
-    level: 'info',
-    logFile: path.join(__dirname, '../../logs/filesystem-server.log'),
+    level: "info",
+    logFile: path.join(__dirname, "../../logs/filesystem-server.log"),
     enableConsole: true,
   },
 };
@@ -147,7 +167,7 @@ export class ConfigManager {
 
   private mergeConfig(
     defaultConf: FileSystemConfig,
-    customConf: Partial<FileSystemConfig>
+    customConf: Partial<FileSystemConfig>,
   ): FileSystemConfig {
     return {
       ...defaultConf,
@@ -178,42 +198,46 @@ export class ConfigManager {
 
   public isPathAllowed(targetPath: string): boolean {
     const resolvedPath = path.resolve(targetPath);
-    
+
     // Check if path is within allowed root paths
     const isWithinAllowed = this.config.security.allowedRootPaths.some(
-      allowedPath => resolvedPath.startsWith(path.resolve(allowedPath))
+      (allowedPath) => resolvedPath.startsWith(path.resolve(allowedPath)),
     );
-    
+
     if (!isWithinAllowed) {
       return false;
     }
-    
+
     // Check against blocked patterns
-    const isBlocked = this.config.security.blockedPatterns.some(
-      pattern => this.matchesPattern(resolvedPath, pattern)
+    const isBlocked = this.config.security.blockedPatterns.some((pattern) =>
+      this.matchesPattern(resolvedPath, pattern),
     );
-    
+
     return !isBlocked;
   }
 
   private matchesPattern(filePath: string, pattern: string): boolean {
     // Convert glob pattern to regex
     const regexPattern = pattern
-      .replace(/\*\*/g, '.*')
-      .replace(/\*/g, '[^/]*')
-      .replace(/\?/g, '[^/]');
-    
+      .replace(/\*\*/g, ".*")
+      .replace(/\*/g, "[^/]*")
+      .replace(/\?/g, "[^/]");
+
     const regex = new RegExp(`^${regexPattern}$`);
     return regex.test(filePath);
   }
 
   public isFileExtensionAllowed(filePath: string): boolean {
     const ext = path.extname(filePath).toLowerCase();
-    return this.config.security.allowedFileExtensions.includes(ext) || 
-           this.config.security.allowedFileExtensions.includes('*');
+    return (
+      this.config.security.allowedFileExtensions.includes(ext) ||
+      this.config.security.allowedFileExtensions.includes("*")
+    );
   }
 }
 
-export const createConfigManager = (customConfig?: Partial<FileSystemConfig>): ConfigManager => {
+export const createConfigManager = (
+  customConfig?: Partial<FileSystemConfig>,
+): ConfigManager => {
   return new ConfigManager(customConfig);
-}; 
+};

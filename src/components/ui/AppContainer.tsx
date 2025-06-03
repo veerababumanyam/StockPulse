@@ -1,5 +1,5 @@
-import React from 'react';
-import { cn } from '../../utils/cn';
+import React from "react";
+import { cn } from "../../utils/cn";
 
 /**
  * AppContainer is a reusable, theme-driven container for all major layouts, cards, and modals.
@@ -14,28 +14,28 @@ import { cn } from '../../utils/cn';
  */
 export interface AppContainerProps {
   children: React.ReactNode;
-  variant?: 'surface' | 'elevated' | 'muted';
+  variant?: "surface" | "elevated" | "muted";
   className?: string;
-  padding?: 'none' | 'sm' | 'md' | 'lg';
-  shadow?: 'none' | 'md' | 'lg';
+  padding?: "none" | "sm" | "md" | "lg";
+  shadow?: "none" | "md" | "lg";
   border?: boolean;
 }
 
 export const AppContainer: React.FC<AppContainerProps> = ({
   children,
-  variant = 'surface',
+  variant = "surface",
   className,
-  padding = 'md',
-  shadow = 'md',
+  padding = "md",
+  shadow = "md",
   border = false,
 }) => (
   <div
     className={cn(
-      'app-container',
+      "app-container",
       `bg-${variant}`,
-      padding !== 'none' && `p-${padding}`,
-      shadow !== 'none' && `shadow-${shadow}`,
-      border && 'border border-surface',
+      padding !== "none" && `p-${padding}`,
+      shadow !== "none" && `shadow-${shadow}`,
+      border && "border border-surface",
       className,
     )}
     data-variant={variant}

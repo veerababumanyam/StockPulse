@@ -1,1 +1,1 @@
-export { PerformanceMetricsPreview as default } from './index';
+export { PerformanceMetricsPreview as default } from "./index";

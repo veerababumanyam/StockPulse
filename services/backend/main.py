@@ -11,11 +11,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
+from app.api.v1.websocket import start_market_data_simulator, stop_market_data_simulator
 from app.core.config import get_settings
 from app.core.database import init_database
 from app.core.redis import init_redis
 from app.middleware.security import security_headers_middleware
-from app.api.v1.websocket import start_market_data_simulator, stop_market_data_simulator
 
 # Configure logging
 logging.basicConfig(
@@ -59,7 +59,7 @@ async def lifespan(app: FastAPI):
 
         # Shutdown - cleanup resources
         logger.info("Shutting down StockPulse backend...")
-        
+
         # Stop WebSocket market data simulator
         logger.info("Stopping WebSocket market data simulator...")
         await stop_market_data_simulator()

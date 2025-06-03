@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 // import Navbar from '@components/layout/Navbar'; // REMOVE: MainLayout provides the Navbar
 // import Footer from '@components/layout/Footer'; // REMOVE: MainLayout provides the Footer (if configured)
-import { Link } from 'react-router-dom';
-import { TrendingUp, BarChart3, Clock, Activity, Zap } from 'lucide-react';
+import { Link } from "react-router-dom";
+import { TrendingUp, BarChart3, Clock, Activity, Zap } from "lucide-react";
 
 const TradingDashboard: React.FC = () => {
   return (

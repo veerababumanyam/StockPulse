@@ -38,61 +38,61 @@ log_error() {
 # Check prerequisites
 check_prerequisites() {
     log_info "Checking prerequisites..."
-    
+
     if ! command -v docker &> /dev/null; then
         log_error "Docker is not installed or not in PATH"
         exit 1
     fi
-    
+
     if ! command -v docker-compose &> /dev/null; then
         log_error "Docker Compose is not installed or not in PATH"
         exit 1
     fi
-    
+
     if [ ! -f "$STAGING_COMPOSE_FILE" ]; then
         log_error "Staging compose file not found: $STAGING_COMPOSE_FILE"
         exit 1
     fi
-    
+
     log_success "Prerequisites check passed"
 }
 
 # Cleanup previous deployment
 cleanup_previous() {
     log_info "Cleaning up previous staging deployment..."
-    
+
     # Stop and remove containers
     docker-compose -f "$STAGING_COMPOSE_FILE" -p "$PROJECT_NAME" down --remove-orphans || true
-    
+
     # Remove unused images and volumes (optional)
     # docker system prune -f
-    
+
     log_success "Cleanup completed"
 }
 
 # Build and deploy
 deploy() {
     log_info "Building and deploying staging environment..."
-    
+
     # Build images
     log_info "Building application images..."
     docker-compose -f "$STAGING_COMPOSE_FILE" -p "$PROJECT_NAME" build --no-cache
-    
+
     # Start services
     log_info "Starting services..."
     docker-compose -f "$STAGING_COMPOSE_FILE" -p "$PROJECT_NAME" up -d
-    
+
     # Wait for services to be healthy
     log_info "Waiting for services to become healthy..."
     sleep 30
-    
+
     log_success "Deployment completed"
 }
 
 # Health checks
 run_health_checks() {
     log_info "Running health checks..."
-    
+
     # Check MCP Auth Server
     if curl -f http://localhost:8002/health &> /dev/null; then
         log_success "MCP Auth Server is healthy"
@@ -100,14 +100,14 @@ run_health_checks() {
         log_error "MCP Auth Server health check failed"
         return 1
     fi
-    
+
     # Check MCP Registry
     if curl -f http://localhost:8001/health &> /dev/null; then
         log_success "MCP Registry is healthy"
     else
         log_warning "MCP Registry health check failed (may be expected)"
     fi
-    
+
     # Check Database
     if docker exec stockpulse-postgres-staging pg_isready -U stockpulse_user -d stockpulse &> /dev/null; then
         log_success "Database is healthy"
@@ -115,7 +115,7 @@ run_health_checks() {
         log_error "Database health check failed"
         return 1
     fi
-    
+
     # Check Redis
     if docker exec stockpulse-redis-staging redis-cli -a stockpulse_redis_password ping &> /dev/null; then
         log_success "Redis is healthy"
@@ -123,7 +123,7 @@ run_health_checks() {
         log_error "Redis health check failed"
         return 1
     fi
-    
+
     log_success "All health checks passed"
 }
 
@@ -158,10 +158,10 @@ show_deployment_info() {
 # Create test data
 setup_test_data() {
     log_info "Setting up test data..."
-    
+
     # Wait a bit more for services to fully initialize
     sleep 10
-    
+
     # Test authentication endpoint
     if curl -X POST http://localhost:8002/tools/call \
         -H "Content-Type: application/json" \
@@ -184,7 +184,7 @@ main() {
     echo "🏗️  StockPulse Staging Deployment"
     echo "=================================="
     echo ""
-    
+
     check_prerequisites
     cleanup_previous
     deploy
@@ -221,4 +221,4 @@ case "${1:-deploy}" in
         echo "  status         - Show service status"
         exit 1
         ;;
-esac 
+esac

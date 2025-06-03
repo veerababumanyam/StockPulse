@@ -3,8 +3,8 @@
  * Handles all watchlist management functionality for Story 2.4
  */
 
-import { apiClient } from './api';
-import { WatchlistData, WatchlistItem } from '../types/widget-data';
+import { apiClient } from "./api";
+import { WatchlistData, WatchlistItem } from "../types/widget-data";
 
 export interface AddWatchlistSymbolRequest {
   symbol: string;
@@ -51,27 +51,36 @@ export class WatchlistService {
   /**
    * Get current user's watchlist
    */
-  async getUserWatchlist(forceRefresh: boolean = false): Promise<WatchlistData> {
+  async getUserWatchlist(
+    forceRefresh: boolean = false,
+  ): Promise<WatchlistData> {
     const now = Date.now();
-    
+
     // Return cached data if still fresh and not forcing refresh
-    if (!forceRefresh && this.watchlistCache && (now - this.cacheTimestamp) < this.CACHE_DURATION) {
+    if (
+      !forceRefresh &&
+      this.watchlistCache &&
+      now - this.cacheTimestamp < this.CACHE_DURATION
+    ) {
       return this.watchlistCache;
     }
 
     try {
-      const response = await apiClient.get('/api/v1/users/me/watchlist');
-      
+      const response = await apiClient.get("/api/v1/users/me/watchlist");
+
       if (response.data.success) {
         this.watchlistCache = response.data.data;
         this.cacheTimestamp = now;
         return this.watchlistCache;
       } else {
-        throw new Error(response.data.message || 'Failed to fetch watchlist');
+        throw new Error(response.data.message || "Failed to fetch watchlist");
       }
     } catch (error: any) {
-      console.warn('[WatchlistService] API failed, using fallback:', error.message);
-      
+      console.warn(
+        "[WatchlistService] API failed, using fallback:",
+        error.message,
+      );
+
       // Fallback to mock data if API fails
       const fallbackData = await this.getFallbackWatchlistData();
       this.watchlistCache = fallbackData;
@@ -83,11 +92,14 @@ export class WatchlistService {
   /**
    * Add a symbol to the user's watchlist
    */
-  async addSymbolToWatchlist(symbol: string, name?: string): Promise<WatchlistAPIResponse> {
+  async addSymbolToWatchlist(
+    symbol: string,
+    name?: string,
+  ): Promise<WatchlistAPIResponse> {
     if (!symbol || symbol.trim().length === 0) {
       return {
         success: false,
-        message: 'Symbol is required'
+        message: "Symbol is required",
       };
     }
 
@@ -96,47 +108,52 @@ export class WatchlistService {
     try {
       // Check if symbol already exists
       const currentWatchlist = await this.getUserWatchlist();
-      const existingItem = currentWatchlist.items.find(item => item.symbol === normalizedSymbol);
-      
+      const existingItem = currentWatchlist.items.find(
+        (item) => item.symbol === normalizedSymbol,
+      );
+
       if (existingItem) {
         return {
           success: false,
-          message: `${normalizedSymbol} is already in your watchlist`
+          message: `${normalizedSymbol} is already in your watchlist`,
         };
       }
 
       // Make API call to add symbol
-      const response = await apiClient.post('/api/v1/users/me/watchlist', {
+      const response = await apiClient.post("/api/v1/users/me/watchlist", {
         symbol: normalizedSymbol,
-        name: name
+        name: name,
       });
 
       if (response.data.success) {
         // Invalidate cache to force refresh
         this.invalidateCache();
-        
+
         return {
           success: true,
           data: response.data.data,
-          message: `${normalizedSymbol} added to watchlist successfully`
+          message: `${normalizedSymbol} added to watchlist successfully`,
         };
       } else {
         return {
           success: false,
-          message: response.data.message || 'Failed to add symbol to watchlist'
+          message: response.data.message || "Failed to add symbol to watchlist",
         };
       }
     } catch (error: any) {
-      console.error('[WatchlistService] Error adding symbol:', error);
-      
+      console.error("[WatchlistService] Error adding symbol:", error);
+
       // For demo purposes, simulate success with mock data
-      if (error.response?.status === 404 || error.code === 'ECONNREFUSED') {
+      if (error.response?.status === 404 || error.code === "ECONNREFUSED") {
         return await this.simulateAddSymbol(normalizedSymbol, name);
       }
-      
+
       return {
         success: false,
-        message: error.response?.data?.message || error.message || 'Network error occurred'
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Network error occurred",
       };
     }
   }
@@ -144,11 +161,13 @@ export class WatchlistService {
   /**
    * Remove a symbol from the user's watchlist
    */
-  async removeSymbolFromWatchlist(symbol: string): Promise<WatchlistAPIResponse> {
+  async removeSymbolFromWatchlist(
+    symbol: string,
+  ): Promise<WatchlistAPIResponse> {
     if (!symbol || symbol.trim().length === 0) {
       return {
         success: false,
-        message: 'Symbol is required'
+        message: "Symbol is required",
       };
     }
 
@@ -157,44 +176,52 @@ export class WatchlistService {
     try {
       // Check if symbol exists in watchlist
       const currentWatchlist = await this.getUserWatchlist();
-      const existingItem = currentWatchlist.items.find(item => item.symbol === normalizedSymbol);
-      
+      const existingItem = currentWatchlist.items.find(
+        (item) => item.symbol === normalizedSymbol,
+      );
+
       if (!existingItem) {
         return {
           success: false,
-          message: `${normalizedSymbol} is not in your watchlist`
+          message: `${normalizedSymbol} is not in your watchlist`,
         };
       }
 
       // Make API call to remove symbol
-      const response = await apiClient.delete(`/api/v1/users/me/watchlist/${normalizedSymbol}`);
+      const response = await apiClient.delete(
+        `/api/v1/users/me/watchlist/${normalizedSymbol}`,
+      );
 
       if (response.data.success) {
         // Invalidate cache to force refresh
         this.invalidateCache();
-        
+
         return {
           success: true,
           data: response.data.data,
-          message: `${normalizedSymbol} removed from watchlist successfully`
+          message: `${normalizedSymbol} removed from watchlist successfully`,
         };
       } else {
         return {
           success: false,
-          message: response.data.message || 'Failed to remove symbol from watchlist'
+          message:
+            response.data.message || "Failed to remove symbol from watchlist",
         };
       }
     } catch (error: any) {
-      console.error('[WatchlistService] Error removing symbol:', error);
-      
+      console.error("[WatchlistService] Error removing symbol:", error);
+
       // For demo purposes, simulate success with mock data
-      if (error.response?.status === 404 || error.code === 'ECONNREFUSED') {
+      if (error.response?.status === 404 || error.code === "ECONNREFUSED") {
         return await this.simulateRemoveSymbol(normalizedSymbol);
       }
-      
+
       return {
         success: false,
-        message: error.response?.data?.message || error.message || 'Network error occurred'
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Network error occurred",
       };
     }
   }
@@ -205,13 +232,16 @@ export class WatchlistService {
   async getSymbolQuote(symbol: string): Promise<WatchlistSymbolQuote | null> {
     try {
       const response = await apiClient.get(`/api/v1/market/quote/${symbol}`);
-      
+
       if (response.data.success) {
         return response.data.data;
       }
       return null;
     } catch (error) {
-      console.warn(`[WatchlistService] Failed to get quote for ${symbol}:`, error);
+      console.warn(
+        `[WatchlistService] Failed to get quote for ${symbol}:`,
+        error,
+      );
       return null;
     }
   }
@@ -219,47 +249,60 @@ export class WatchlistService {
   /**
    * Validate if a symbol exists and can be added to watchlist
    */
-  async validateSymbol(symbol: string): Promise<{ valid: boolean; name?: string; message?: string }> {
+  async validateSymbol(
+    symbol: string,
+  ): Promise<{ valid: boolean; name?: string; message?: string }> {
     if (!symbol || symbol.trim().length === 0) {
-      return { valid: false, message: 'Symbol cannot be empty' };
+      return { valid: false, message: "Symbol cannot be empty" };
     }
 
     const normalizedSymbol = symbol.trim().toUpperCase();
 
     // Basic symbol format validation
     if (!/^[A-Z]{1,5}$/.test(normalizedSymbol)) {
-      return { valid: false, message: 'Symbol must be 1-5 letters only' };
+      return { valid: false, message: "Symbol must be 1-5 letters only" };
     }
 
     try {
       const quote = await this.getSymbolQuote(normalizedSymbol);
-      
+
       if (quote) {
-        return { 
-          valid: true, 
+        return {
+          valid: true,
           name: quote.name,
-          message: `${normalizedSymbol} is valid` 
+          message: `${normalizedSymbol} is valid`,
         };
       } else {
-        return { 
-          valid: false, 
-          message: `${normalizedSymbol} is not a valid symbol` 
+        return {
+          valid: false,
+          message: `${normalizedSymbol} is not a valid symbol`,
         };
       }
     } catch (error) {
       // For demo purposes, assume common symbols are valid
-      const commonSymbols = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'META', 'NVDA', 'NFLX', 'AMD', 'CRM'];
+      const commonSymbols = [
+        "AAPL",
+        "GOOGL",
+        "MSFT",
+        "TSLA",
+        "AMZN",
+        "META",
+        "NVDA",
+        "NFLX",
+        "AMD",
+        "CRM",
+      ];
       if (commonSymbols.includes(normalizedSymbol)) {
-        return { 
-          valid: true, 
+        return {
+          valid: true,
           name: `${normalizedSymbol} Corp.`,
-          message: `${normalizedSymbol} is valid (demo mode)` 
+          message: `${normalizedSymbol} is valid (demo mode)`,
         };
       }
-      
-      return { 
-        valid: false, 
-        message: `Could not validate ${normalizedSymbol}` 
+
+      return {
+        valid: false,
+        message: `Could not validate ${normalizedSymbol}`,
       };
     }
   }
@@ -275,13 +318,15 @@ export class WatchlistService {
   /**
    * Subscribe to real-time updates for watchlist symbols
    */
-  subscribeToRealTimeUpdates(callback: (data: WatchlistItem) => void): () => void {
+  subscribeToRealTimeUpdates(
+    callback: (data: WatchlistItem) => void,
+  ): () => void {
     // This will be implemented with WebSocket integration
-    console.log('[WatchlistService] Real-time updates subscription started');
-    
+    console.log("[WatchlistService] Real-time updates subscription started");
+
     // Return unsubscribe function
     return () => {
-      console.log('[WatchlistService] Real-time updates subscription ended');
+      console.log("[WatchlistService] Real-time updates subscription ended");
     };
   }
 
@@ -289,47 +334,50 @@ export class WatchlistService {
 
   private async getFallbackWatchlistData(): Promise<WatchlistData> {
     return {
-      watchlistId: 'demo-watchlist',
-      name: 'My Watchlist',
+      watchlistId: "demo-watchlist",
+      name: "My Watchlist",
       items: [
         {
-          id: 'watch-1',
-          symbol: 'AAPL',
-          name: 'Apple Inc.',
+          id: "watch-1",
+          symbol: "AAPL",
+          name: "Apple Inc.",
           price: 185.42,
           change: 2.34,
           changePercent: 1.28,
           volume: 45678912,
           marketCap: 2890000000000,
-          logoUrl: 'https://logo.clearbit.com/apple.com',
+          logoUrl: "https://logo.clearbit.com/apple.com",
         },
         {
-          id: 'watch-2',
-          symbol: 'GOOGL',
-          name: 'Alphabet Inc.',
+          id: "watch-2",
+          symbol: "GOOGL",
+          name: "Alphabet Inc.",
           price: 142.78,
           change: -1.56,
           changePercent: -1.08,
           volume: 23456789,
           marketCap: 1780000000000,
-          logoUrl: 'https://logo.clearbit.com/google.com',
+          logoUrl: "https://logo.clearbit.com/google.com",
         },
         {
-          id: 'watch-3',
-          symbol: 'MSFT',
-          name: 'Microsoft Corporation',
+          id: "watch-3",
+          symbol: "MSFT",
+          name: "Microsoft Corporation",
           price: 378.91,
           change: 4.23,
           changePercent: 1.13,
           volume: 34567890,
           marketCap: 2810000000000,
-          logoUrl: 'https://logo.clearbit.com/microsoft.com',
+          logoUrl: "https://logo.clearbit.com/microsoft.com",
         },
       ],
     };
   }
 
-  private async simulateAddSymbol(symbol: string, name?: string): Promise<WatchlistAPIResponse> {
+  private async simulateAddSymbol(
+    symbol: string,
+    name?: string,
+  ): Promise<WatchlistAPIResponse> {
     // Simulate adding to cache for demo
     if (this.watchlistCache) {
       const newItem: WatchlistItem = {
@@ -349,19 +397,23 @@ export class WatchlistService {
 
     return {
       success: true,
-      message: `${symbol} added to watchlist (demo mode)`
+      message: `${symbol} added to watchlist (demo mode)`,
     };
   }
 
-  private async simulateRemoveSymbol(symbol: string): Promise<WatchlistAPIResponse> {
+  private async simulateRemoveSymbol(
+    symbol: string,
+  ): Promise<WatchlistAPIResponse> {
     // Simulate removing from cache for demo
     if (this.watchlistCache) {
-      this.watchlistCache.items = this.watchlistCache.items.filter(item => item.symbol !== symbol);
+      this.watchlistCache.items = this.watchlistCache.items.filter(
+        (item) => item.symbol !== symbol,
+      );
     }
 
     return {
       success: true,
-      message: `${symbol} removed from watchlist (demo mode)`
+      message: `${symbol} removed from watchlist (demo mode)`,
     };
   }
 }
@@ -370,17 +422,17 @@ export class WatchlistService {
 export const watchlistService = WatchlistService.getInstance();
 
 // Export convenience functions
-export const getUserWatchlist = (forceRefresh?: boolean) => 
+export const getUserWatchlist = (forceRefresh?: boolean) =>
   watchlistService.getUserWatchlist(forceRefresh);
 
-export const addSymbolToWatchlist = (symbol: string, name?: string) => 
+export const addSymbolToWatchlist = (symbol: string, name?: string) =>
   watchlistService.addSymbolToWatchlist(symbol, name);
 
-export const removeSymbolFromWatchlist = (symbol: string) => 
+export const removeSymbolFromWatchlist = (symbol: string) =>
   watchlistService.removeSymbolFromWatchlist(symbol);
 
-export const validateSymbol = (symbol: string) => 
+export const validateSymbol = (symbol: string) =>
   watchlistService.validateSymbol(symbol);
 
-export const invalidateWatchlistCache = () => 
-  watchlistService.invalidateCache(); 
+export const invalidateWatchlistCache = () =>
+  watchlistService.invalidateCache();

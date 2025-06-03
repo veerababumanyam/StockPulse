@@ -1,6 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   Brain,
@@ -22,8 +27,8 @@ import {
   LineChart,
   DollarSign,
   Target,
-  Briefcase
-} from 'lucide-react';
+  Briefcase,
+} from "lucide-react";
 
 const LandingPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,94 +48,98 @@ const LandingPage = () => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({
         x: (e.clientX - window.innerWidth / 2) / 50,
-        y: (e.clientY - window.innerHeight / 2) / 50
+        y: (e.clientY - window.innerHeight / 2) / 50,
       });
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
     setIsLoaded(true);
 
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   // Navigation handlers
   const handleSignIn = () => {
-    navigate('/auth/login');
+    navigate("/auth/login");
   };
 
   const handleGetStarted = () => {
-    navigate('/auth/register');
+    navigate("/auth/register");
   };
 
   const handleWatchDemo = () => {
     // For now, scroll to features section or show a demo modal
-    const featuresSection = document.getElementById('features');
+    const featuresSection = document.getElementById("features");
     if (featuresSection) {
-      featuresSection.scrollIntoView({ behavior: 'smooth' });
+      featuresSection.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   const handleNavigation = (section: string) => {
     setIsMenuOpen(false);
-    
+
     // Handle different navigation cases
     switch (section.toLowerCase()) {
-      case 'features':
-        const featuresSection = document.getElementById('features');
+      case "features":
+        const featuresSection = document.getElementById("features");
         if (featuresSection) {
-          featuresSection.scrollIntoView({ behavior: 'smooth' });
+          featuresSection.scrollIntoView({ behavior: "smooth" });
         }
         break;
-      case 'pricing':
-        navigate('/pricing');
+      case "pricing":
+        navigate("/pricing");
         break;
-      case 'about':
-        navigate('/about');
+      case "about":
+        navigate("/about");
         break;
-      case 'contact':
-        navigate('/contact');
+      case "contact":
+        navigate("/contact");
         break;
       default:
         // For sections that exist on the page, scroll to them
         const element = document.getElementById(section.toLowerCase());
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
+          element.scrollIntoView({ behavior: "smooth" });
         }
     }
   };
 
   // Stock chart animation data
   const stockData = [
-    { time: '9:30', price: 150, volume: 1200 },
-    { time: '10:00', price: 155, volume: 1800 },
-    { time: '10:30', price: 148, volume: 2100 },
-    { time: '11:00', price: 162, volume: 1600 },
-    { time: '11:30', price: 158, volume: 1900 },
-    { time: '12:00', price: 165, volume: 2400 },
-    { time: '12:30', price: 172, volume: 2800 },
-    { time: '13:00', price: 168, volume: 2200 },
-    { time: '13:30', price: 175, volume: 3100 },
-    { time: '14:00', price: 180, volume: 2600 },
+    { time: "9:30", price: 150, volume: 1200 },
+    { time: "10:00", price: 155, volume: 1800 },
+    { time: "10:30", price: 148, volume: 2100 },
+    { time: "11:00", price: 162, volume: 1600 },
+    { time: "11:30", price: 158, volume: 1900 },
+    { time: "12:00", price: 165, volume: 2400 },
+    { time: "12:30", price: 172, volume: 2800 },
+    { time: "13:00", price: 168, volume: 2200 },
+    { time: "13:30", price: 175, volume: 3100 },
+    { time: "14:00", price: 180, volume: 2600 },
   ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 }
-    }
+      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+    },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } }
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
   };
 
   const floatingVariants = {
     animate: {
       y: [-10, 10, -10],
-      transition: { duration: 6, repeat: Infinity, ease: 'easeInOut' }
-    }
+      transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
+    },
   };
 
   // Stock Chart Component
@@ -140,9 +149,9 @@ const LandingPage = () => {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1, delay: 1.5 }}
       className="absolute right-10 top-20 w-80 h-48 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 hidden lg:block"
-      style={{ 
+      style={{
         x: mousePosition.x * -0.2,
-        y: mousePosition.y * -0.2 
+        y: mousePosition.y * -0.2,
       }}
     >
       <div className="flex items-center justify-between mb-3">
@@ -155,16 +164,22 @@ const LandingPage = () => {
           <p className="text-white/60 text-xs">Real-time</p>
         </div>
       </div>
-      
+
       <div className="relative h-24">
         <svg className="w-full h-full" viewBox="0 0 320 96">
           <defs>
-            <linearGradient id="stockGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.3"/>
-              <stop offset="100%" stopColor="#06b6d4" stopOpacity="0"/>
+            <linearGradient
+              id="stockGradient"
+              x1="0%"
+              y1="0%"
+              x2="0%"
+              y2="100%"
+            >
+              <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
             </linearGradient>
           </defs>
-          
+
           {/* Chart line */}
           <motion.path
             d="M 0 80 Q 32 70 64 75 T 128 60 T 192 45 T 256 35 T 320 25"
@@ -175,7 +190,7 @@ const LandingPage = () => {
             animate={{ pathLength: 1 }}
             transition={{ duration: 2, delay: 2 }}
           />
-          
+
           {/* Chart area */}
           <motion.path
             d="M 0 80 Q 32 70 64 75 T 128 60 T 192 45 T 256 35 T 320 25 L 320 96 L 0 96 Z"
@@ -185,7 +200,7 @@ const LandingPage = () => {
             transition={{ duration: 2, delay: 2.2 }}
           />
         </svg>
-        
+
         {/* Animated price points */}
         {[...Array(5)].map((_, i) => (
           <motion.div
@@ -193,7 +208,7 @@ const LandingPage = () => {
             className="absolute w-2 h-2 bg-cyan-400 rounded-full"
             style={{
               left: `${20 + i * 20}%`,
-              top: `${60 - i * 8}%`
+              top: `${60 - i * 8}%`,
             }}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -211,9 +226,9 @@ const LandingPage = () => {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1, delay: 2 }}
       className="absolute left-10 bottom-32 w-72 h-40 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 hidden lg:block"
-      style={{ 
+      style={{
         x: mousePosition.x * 0.3,
-        y: mousePosition.y * 0.3 
+        y: mousePosition.y * 0.3,
       }}
     >
       <div className="flex items-center justify-between mb-4">
@@ -223,12 +238,27 @@ const LandingPage = () => {
         </h3>
         <span className="text-green-400 text-sm">+2.4%</span>
       </div>
-      
+
       <div className="space-y-2">
         {[
-          { symbol: 'AAPL', value: '$45,230', change: '+5.2%', color: 'bg-green-500' },
-          { symbol: 'GOOGL', value: '$32,100', change: '+2.1%', color: 'bg-blue-500' },
-          { symbol: 'TSLA', value: '$28,950', change: '-1.3%', color: 'bg-red-500' }
+          {
+            symbol: "AAPL",
+            value: "$45,230",
+            change: "+5.2%",
+            color: "bg-green-500",
+          },
+          {
+            symbol: "GOOGL",
+            value: "$32,100",
+            change: "+2.1%",
+            color: "bg-blue-500",
+          },
+          {
+            symbol: "TSLA",
+            value: "$28,950",
+            change: "-1.3%",
+            color: "bg-red-500",
+          },
         ].map((stock, i) => (
           <motion.div
             key={stock.symbol}
@@ -243,7 +273,9 @@ const LandingPage = () => {
             </div>
             <div className="text-right">
               <p className="text-white text-sm">{stock.value}</p>
-              <p className={`text-xs ${stock.change.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
+              <p
+                className={`text-xs ${stock.change.startsWith("+") ? "text-green-400" : "text-red-400"}`}
+              >
                 {stock.change}
               </p>
             </div>
@@ -260,9 +292,9 @@ const LandingPage = () => {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1, delay: 1.8 }}
       className="absolute right-10 bottom-20 w-64 h-32 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 hidden lg:block"
-      style={{ 
+      style={{
         x: mousePosition.x * -0.1,
-        y: mousePosition.y * -0.1 
+        y: mousePosition.y * -0.1,
       }}
     >
       <div className="flex items-center justify-between mb-3">
@@ -272,7 +304,7 @@ const LandingPage = () => {
         </h3>
         <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
       </div>
-      
+
       <div className="grid grid-cols-2 gap-3">
         <div>
           <p className="text-white/60 text-xs">S&P 500</p>
@@ -291,16 +323,16 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-x-hidden">
       {/* Glassmorphic Navigation */}
-      <motion.nav 
+      <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
         className="fixed top-0 w-full z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-2xl"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 md:h-20">
             {/* Logo with animation */}
-            <motion.div 
+            <motion.div
               className="flex items-center space-x-3 group cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -322,24 +354,26 @@ const LandingPage = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              {['Features', 'Pricing', 'About', 'Contact'].map((item, index) => (
-                <motion.button
-                  key={item}
-                  onClick={() => handleNavigation(item)}
-                  className="relative text-white/70 hover:text-white transition-all duration-300 font-medium cursor-pointer"
-                  whileHover={{ y: -2 }}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 + 0.5 }}
-                >
-                  {item}
-                  <motion.div
-                    className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400"
-                    whileHover={{ width: '100%' }}
-                    transition={{ duration: 0.3 }}
-                  />
-                </motion.button>
-              ))}
+              {["Features", "Pricing", "About", "Contact"].map(
+                (item, index) => (
+                  <motion.button
+                    key={item}
+                    onClick={() => handleNavigation(item)}
+                    className="relative text-white/70 hover:text-white transition-all duration-300 font-medium cursor-pointer"
+                    whileHover={{ y: -2 }}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 + 0.5 }}
+                  >
+                    {item}
+                    <motion.div
+                      className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400"
+                      whileHover={{ width: "100%" }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </motion.button>
+                ),
+              )}
             </div>
 
             {/* Auth Buttons */}
@@ -355,7 +389,10 @@ const LandingPage = () => {
               <motion.button
                 onClick={handleGetStarted}
                 className="bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-semibold px-6 py-2.5 rounded-xl shadow-lg hover:shadow-cyan-500/25 transition-all duration-300"
-                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(6, 182, 212, 0.3)' }}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 20px 40px rgba(6, 182, 212, 0.3)",
+                }}
                 whileTap={{ scale: 0.95 }}
               >
                 Get Started
@@ -400,24 +437,26 @@ const LandingPage = () => {
           {isMenuOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
               className="md:hidden backdrop-blur-xl bg-black/20 border-t border-white/10"
             >
               <div className="px-4 py-6 space-y-4">
-                {['Features', 'Pricing', 'About', 'Contact'].map((item, index) => (
-                  <motion.button
-                    key={item}
-                    onClick={() => handleNavigation(item)}
-                    className="block py-3 text-lg text-white/70 hover:text-white transition-colors w-full text-left"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    {item}
-                  </motion.button>
-                ))}
+                {["Features", "Pricing", "About", "Contact"].map(
+                  (item, index) => (
+                    <motion.button
+                      key={item}
+                      onClick={() => handleNavigation(item)}
+                      className="block py-3 text-lg text-white/70 hover:text-white transition-colors w-full text-left"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      {item}
+                    </motion.button>
+                  ),
+                )}
                 <hr className="border-white/10 my-4" />
                 <motion.button
                   onClick={handleSignIn}
@@ -450,18 +489,18 @@ const LandingPage = () => {
         <div className="absolute inset-0">
           <motion.div
             className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-cyan-400/20 to-purple-400/20 rounded-full blur-3xl"
-            style={{ 
+            style={{
               x: mousePosition.x * 0.5,
-              y: mousePosition.y * 0.5 
+              y: mousePosition.y * 0.5,
             }}
             variants={floatingVariants}
             animate="animate"
           />
           <motion.div
             className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"
-            style={{ 
+            style={{
               x: mousePosition.x * -0.3,
-              y: mousePosition.y * -0.3 
+              y: mousePosition.y * -0.3,
             }}
             variants={floatingVariants}
             animate="animate"
@@ -469,18 +508,23 @@ const LandingPage = () => {
           />
           <motion.div
             className="absolute top-1/2 left-1/2 w-64 h-64 bg-gradient-to-r from-emerald-400/10 to-cyan-400/10 rounded-full blur-2xl"
-            style={{ 
+            style={{
               x: mousePosition.x * 0.2,
-              y: mousePosition.y * 0.2 
+              y: mousePosition.y * 0.2,
             }}
             variants={floatingVariants}
             animate="animate"
             transition={{ delay: 2 }}
           />
-          
+
           {/* Animated grid */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent bg-[size:50px_50px] opacity-20" 
-               style={{ backgroundImage: 'radial-gradient(circle, #06b6d4 1px, transparent 1px)' }} />
+          <div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent bg-[size:50px_50px] opacity-20"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle, #06b6d4 1px, transparent 1px)",
+            }}
+          />
         </div>
 
         {/* Stock Graphics Components */}
@@ -501,7 +545,9 @@ const LandingPage = () => {
             className="inline-flex items-center space-x-2 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/20 rounded-full px-4 py-2 mb-8"
           >
             <Sparkles className="w-4 h-4 text-cyan-400" />
-            <span className="text-sm text-cyan-300 font-medium">AI-Powered Trading Platform</span>
+            <span className="text-sm text-cyan-300 font-medium">
+              AI-Powered Trading Platform
+            </span>
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
           </motion.div>
 
@@ -510,19 +556,19 @@ const LandingPage = () => {
             variants={itemVariants}
             className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-extrabold mb-6 leading-tight"
           >
-            The Future of{' '}
+            The Future of{" "}
             <motion.span
               className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
               animate={{
-                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
               }}
               transition={{
                 duration: 5,
                 repeat: Infinity,
-                ease: 'linear'
+                ease: "linear",
               }}
               style={{
-                backgroundSize: '200% 200%'
+                backgroundSize: "200% 200%",
               }}
             >
               Smart Trading
@@ -534,8 +580,9 @@ const LandingPage = () => {
             variants={itemVariants}
             className="text-xl sm:text-2xl text-white/70 mb-12 max-w-4xl mx-auto leading-relaxed"
           >
-            Experience next-generation stock analysis powered by advanced AI. Make informed decisions with 
-            real-time insights, elegant analytics, and intuitive tools designed for modern investors.
+            Experience next-generation stock analysis powered by advanced AI.
+            Make informed decisions with real-time insights, elegant analytics,
+            and intuitive tools designed for modern investors.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -546,9 +593,9 @@ const LandingPage = () => {
             <motion.button
               onClick={handleGetStarted}
               className="group relative bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-bold text-lg px-8 py-4 rounded-2xl shadow-2xl overflow-hidden"
-              whileHover={{ 
+              whileHover={{
                 scale: 1.05,
-                boxShadow: '0 25px 50px rgba(6, 182, 212, 0.4)'
+                boxShadow: "0 25px 50px rgba(6, 182, 212, 0.4)",
               }}
               whileTap={{ scale: 0.98 }}
             >
@@ -563,7 +610,7 @@ const LandingPage = () => {
                 </motion.div>
               </div>
             </motion.button>
-            
+
             <motion.button
               onClick={handleWatchDemo}
               className="group flex items-center gap-2 text-white border-2 border-white/20 hover:border-white/40 backdrop-blur-sm px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:bg-white/5"
@@ -606,14 +653,19 @@ const LandingPage = () => {
         >
           <motion.div
             animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             className="flex flex-col items-center text-white/40"
           >
             <span className="text-sm mb-2 font-medium">Scroll to explore</span>
             <div className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center">
               <motion.div
                 animate={{ y: [0, 12, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.5,
+                }}
                 className="w-1 h-3 bg-white/40 rounded-full mt-2"
               />
             </div>
@@ -624,7 +676,7 @@ const LandingPage = () => {
       {/* Features Section with Modern Cards */}
       <section id="features" className="py-20 lg:py-32 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/50 to-transparent" />
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -634,13 +686,14 @@ const LandingPage = () => {
             className="text-center mb-20"
           >
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-              Built for{' '}
+              Built for{" "}
               <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
                 Smart Investors
               </span>
             </h2>
             <p className="text-xl text-white/70 max-w-3xl mx-auto">
-              Discover the cutting-edge tools that will transform your trading experience.
+              Discover the cutting-edge tools that will transform your trading
+              experience.
             </p>
           </motion.div>
 
@@ -648,40 +701,46 @@ const LandingPage = () => {
             {[
               {
                 icon: Brain,
-                title: 'AGI-Powered Analysis',
-                description: 'Advanced AI analyzes market patterns and provides intelligent insights for superior decision-making.',
-                gradient: 'from-purple-500 to-pink-500'
+                title: "AGI-Powered Analysis",
+                description:
+                  "Advanced AI analyzes market patterns and provides intelligent insights for superior decision-making.",
+                gradient: "from-purple-500 to-pink-500",
               },
               {
                 icon: TrendingUp,
-                title: 'Real-Time Data',
-                description: 'Access live market data, dynamic charts, and instant notifications to stay ahead.',
-                gradient: 'from-cyan-500 to-blue-500'
+                title: "Real-Time Data",
+                description:
+                  "Access live market data, dynamic charts, and instant notifications to stay ahead.",
+                gradient: "from-cyan-500 to-blue-500",
               },
               {
                 icon: Shield,
-                title: 'Bank-Level Security',
-                description: 'Military-grade encryption with secure data storage to protect your investments.',
-                gradient: 'from-emerald-500 to-teal-500'
+                title: "Bank-Level Security",
+                description:
+                  "Military-grade encryption with secure data storage to protect your investments.",
+                gradient: "from-emerald-500 to-teal-500",
               },
               {
                 icon: Smartphone,
-                title: 'Mobile-First Design',
-                description: 'Optimized for all devices with touch-friendly interfaces and responsive design.',
-                gradient: 'from-orange-500 to-red-500'
+                title: "Mobile-First Design",
+                description:
+                  "Optimized for all devices with touch-friendly interfaces and responsive design.",
+                gradient: "from-orange-500 to-red-500",
               },
               {
                 icon: PieChart,
-                title: 'Advanced Analytics',
-                description: 'Comprehensive portfolio tracking with AI-powered insights and predictive analysis.',
-                gradient: 'from-indigo-500 to-purple-500'
+                title: "Advanced Analytics",
+                description:
+                  "Comprehensive portfolio tracking with AI-powered insights and predictive analysis.",
+                gradient: "from-indigo-500 to-purple-500",
               },
               {
                 icon: Zap,
-                title: 'Lightning Speed',
-                description: 'Ultra-fast execution with sub-millisecond latency for time-sensitive opportunities.',
-                gradient: 'from-yellow-500 to-orange-500'
-              }
+                title: "Lightning Speed",
+                description:
+                  "Ultra-fast execution with sub-millisecond latency for time-sensitive opportunities.",
+                gradient: "from-yellow-500 to-orange-500",
+              },
             ].map((feature, index) => (
               <motion.div
                 key={feature.title}
@@ -692,12 +751,12 @@ const LandingPage = () => {
                 className="group relative"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
-                
+
                 <motion.div
                   className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 h-full hover:border-white/20 transition-all duration-500"
-                  whileHover={{ 
+                  whileHover={{
                     y: -10,
-                    transition: { duration: 0.3, ease: 'easeOut' }
+                    transition: { duration: 0.3, ease: "easeOut" },
                   }}
                 >
                   <motion.div
@@ -707,7 +766,7 @@ const LandingPage = () => {
                   >
                     <feature.icon className="w-8 h-8 text-white" />
                   </motion.div>
-                  
+
                   <h3 className="text-2xl font-bold mb-4 group-hover:text-cyan-300 transition-colors">
                     {feature.title}
                   </h3>
@@ -727,7 +786,7 @@ const LandingPage = () => {
       <section className="py-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 via-purple-600/20 to-pink-600/20" />
         <div className="absolute inset-0 backdrop-blur-3xl" />
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -737,10 +796,30 @@ const LandingPage = () => {
             className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
           >
             {[
-              { number: '50K+', label: 'Active Traders', icon: Users, color: 'from-cyan-400 to-blue-400' },
-              { number: '$2.5B+', label: 'Trading Volume', icon: TrendingUp, color: 'from-purple-400 to-pink-400' },
-              { number: '99.9%', label: 'Uptime', icon: Activity, color: 'from-emerald-400 to-teal-400' },
-              { number: '24/7', label: 'Support', icon: Award, color: 'from-orange-400 to-red-400' }
+              {
+                number: "50K+",
+                label: "Active Traders",
+                icon: Users,
+                color: "from-cyan-400 to-blue-400",
+              },
+              {
+                number: "$2.5B+",
+                label: "Trading Volume",
+                icon: TrendingUp,
+                color: "from-purple-400 to-pink-400",
+              },
+              {
+                number: "99.9%",
+                label: "Uptime",
+                icon: Activity,
+                color: "from-emerald-400 to-teal-400",
+              },
+              {
+                number: "24/7",
+                label: "Support",
+                icon: Award,
+                color: "from-orange-400 to-red-400",
+              },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -756,8 +835,12 @@ const LandingPage = () => {
                 >
                   <stat.icon className="w-10 h-10 text-white" />
                 </motion.div>
-                <div className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-2">{stat.number}</div>
-                <div className="text-lg text-white/70 group-hover:text-white transition-colors">{stat.label}</div>
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-lg text-white/70 group-hover:text-white transition-colors">
+                  {stat.label}
+                </div>
               </motion.div>
             ))}
           </motion.div>
@@ -775,20 +858,21 @@ const LandingPage = () => {
             className="max-w-3xl mx-auto"
           >
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-              Ready to Transform Your{' '}
+              Ready to Transform Your{" "}
               <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
                 Trading?
               </span>
             </h2>
             <p className="text-xl text-white/70 mb-12">
-              Join thousands of successful traders who trust StockPulse for their investment journey.
+              Join thousands of successful traders who trust StockPulse for
+              their investment journey.
             </p>
             <motion.button
               onClick={handleGetStarted}
               className="bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-bold text-lg px-12 py-6 rounded-2xl shadow-2xl inline-flex items-center gap-3"
-              whileHover={{ 
+              whileHover={{
                 scale: 1.05,
-                boxShadow: '0 25px 50px rgba(6, 182, 212, 0.4)'
+                boxShadow: "0 25px 50px rgba(6, 182, 212, 0.4)",
               }}
               whileTap={{ scale: 0.98 }}
             >
@@ -812,20 +896,20 @@ const LandingPage = () => {
               </span>
             </div>
             <div className="flex space-x-6 text-white/50">
-              <button 
-                onClick={() => handleNavigation('privacy')} 
+              <button
+                onClick={() => handleNavigation("privacy")}
                 className="hover:text-cyan-400 transition-colors"
               >
                 Privacy
               </button>
-              <button 
-                onClick={() => handleNavigation('terms')} 
+              <button
+                onClick={() => handleNavigation("terms")}
                 className="hover:text-cyan-400 transition-colors"
               >
                 Terms
               </button>
-              <button 
-                onClick={() => handleNavigation('contact')} 
+              <button
+                onClick={() => handleNavigation("contact")}
                 className="hover:text-cyan-400 transition-colors"
               >
                 Contact

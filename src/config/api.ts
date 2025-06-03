@@ -2,24 +2,24 @@
  * API Configuration
  * Centralized configuration for API endpoints and settings
  */
-import axios from 'axios';
+import axios from "axios";
 
 // Helper function to safely access import.meta.env
-const getEnvVar = (key: string, defaultValue: string = ''): string => {
+const getEnvVar = (key: string, defaultValue: string = ""): string => {
   try {
     // Check if we're in a Vite environment
-    if (typeof window !== 'undefined' && (window as any).import?.meta?.env) {
+    if (typeof window !== "undefined" && (window as any).import?.meta?.env) {
       return (window as any).import.meta.env[key] || defaultValue;
     }
     // Check for global import.meta (set by setupTests.ts)
     if (
-      typeof globalThis !== 'undefined' &&
+      typeof globalThis !== "undefined" &&
       (globalThis as any).import?.meta?.env
     ) {
       return (globalThis as any).import.meta.env[key] || defaultValue;
     }
     // Fallback for Jest/Node environment
-    if (typeof process !== 'undefined' && process.env) {
+    if (typeof process !== "undefined" && process.env) {
       return process.env[key] || defaultValue;
     }
     return defaultValue;
@@ -30,8 +30,8 @@ const getEnvVar = (key: string, defaultValue: string = ''): string => {
 
 // API Base URL - use environment variable or default to localhost
 export const API_BASE_URL = getEnvVar(
-  'VITE_API_BASE_URL',
-  'http://localhost:8000',
+  "VITE_API_BASE_URL",
+  "http://localhost:8000",
 );
 
 // API Configuration object
@@ -42,8 +42,8 @@ export const API_CONFIG = {
   RETRY_DELAY: 1000, // 1 second
   WITH_CREDENTIALS: true, // Essential for HttpOnly cookies
   DEFAULT_HEADERS: {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
+    "Content-Type": "application/json",
+    Accept: "application/json",
   },
 };
 
@@ -51,22 +51,22 @@ export const API_CONFIG = {
 export const API_ENDPOINTS = {
   // Authentication
   AUTH: {
-    LOGIN: '/api/v1/auth/login',
-    LOGOUT: '/api/v1/auth/logout',
-    REGISTER: '/api/v1/auth/register',
-    REFRESH: '/api/v1/auth/refresh',
-    ME: '/api/v1/auth/me',
-    FORGOT_PASSWORD: '/api/v1/auth/forgot-password',
+    LOGIN: "/api/v1/auth/login",
+    LOGOUT: "/api/v1/auth/logout",
+    REGISTER: "/api/v1/auth/register",
+    REFRESH: "/api/v1/auth/refresh",
+    ME: "/api/v1/auth/me",
+    FORGOT_PASSWORD: "/api/v1/auth/forgot-password",
   },
 
   // Portfolio Management
   PORTFOLIO: {
-    LIST: '/api/v1/portfolio',
-    CREATE: '/api/v1/portfolio',
+    LIST: "/api/v1/portfolio",
+    CREATE: "/api/v1/portfolio",
     DETAIL: (id: string) => `/api/v1/portfolio/${id}`,
     UPDATE: (id: string) => `/api/v1/portfolio/${id}`,
     DELETE: (id: string) => `/api/v1/portfolio/${id}`,
-    DASHBOARD: '/api/v1/portfolio/dashboard',
+    DASHBOARD: "/api/v1/portfolio/dashboard",
     POSITIONS: (id: string) => `/api/v1/portfolio/${id}/positions`,
     TRANSACTIONS: (id: string) => `/api/v1/portfolio/${id}/transactions`,
     AI_INSIGHTS: (id: string) => `/api/v1/portfolio/${id}/insights`,
@@ -74,20 +74,20 @@ export const API_ENDPOINTS = {
 
   // API Key Management
   API_KEYS: {
-    LIST: '/api/v1/api-keys',
-    CREATE: '/api/v1/api-keys',
+    LIST: "/api/v1/api-keys",
+    CREATE: "/api/v1/api-keys",
     UPDATE: (id: string) => `/api/v1/api-keys/${id}`,
     DELETE: (id: string) => `/api/v1/api-keys/${id}`,
     VALIDATE: (id: string) => `/api/v1/api-keys/${id}/validate`,
-    PROVIDERS: '/api/v1/api-keys/providers',
-    STATS: '/api/v1/api-keys/stats',
+    PROVIDERS: "/api/v1/api-keys/providers",
+    STATS: "/api/v1/api-keys/stats",
   },
 
   // Market Data
   MARKET: {
-    QUOTE: '/api/v1/market/quote',
-    SEARCH: '/api/v1/market/search',
-    HISTORY: '/api/v1/market/history',
+    QUOTE: "/api/v1/market/quote",
+    SEARCH: "/api/v1/market/search",
+    HISTORY: "/api/v1/market/history",
   },
 };
 
@@ -116,14 +116,14 @@ export const TIMEOUTS = {
 
 // Error message mappings
 export const ERROR_MESSAGES = {
-  NETWORK_ERROR: 'Network error. Please check your connection and try again.',
-  TIMEOUT_ERROR: 'Request timeout. Please try again.',
-  UNAUTHORIZED: 'You are not authorized to perform this action.',
-  FORBIDDEN: 'Access forbidden. Please check your permissions.',
-  NOT_FOUND: 'The requested resource was not found.',
-  VALIDATION_ERROR: 'Please check your input and try again.',
-  SERVER_ERROR: 'Server error. Please try again later.',
-  UNKNOWN_ERROR: 'An unexpected error occurred. Please try again.',
+  NETWORK_ERROR: "Network error. Please check your connection and try again.",
+  TIMEOUT_ERROR: "Request timeout. Please try again.",
+  UNAUTHORIZED: "You are not authorized to perform this action.",
+  FORBIDDEN: "Access forbidden. Please check your permissions.",
+  NOT_FOUND: "The requested resource was not found.",
+  VALIDATION_ERROR: "Please check your input and try again.",
+  SERVER_ERROR: "Server error. Please try again later.",
+  UNKNOWN_ERROR: "An unexpected error occurred. Please try again.",
 } as const;
 
 // API Client Configuration - Axios instance for API calls
@@ -154,7 +154,7 @@ apiClient.interceptors.response.use(
     // Handle 401 unauthorized responses
     if (error.response?.status === 401) {
       // Dispatch event for AuthContext to handle
-      window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+      window.dispatchEvent(new CustomEvent("auth:unauthorized"));
     }
     return Promise.reject(error);
   },
@@ -170,11 +170,11 @@ export const getApiUrl = (endpoint: string): string => {
 
 // Debug function to log API configuration
 export const debugApiConfig = (): void => {
-  console.log('🔧 API Configuration:');
-  console.log('Base URL:', API_CONFIG.BASE_URL);
-  console.log('Environment Variable:', getEnvVar('VITE_API_BASE_URL'));
-  console.log('Current Origin:', window.location.origin);
-  console.log('Auth Endpoints:', {
+  console.log("🔧 API Configuration:");
+  console.log("Base URL:", API_CONFIG.BASE_URL);
+  console.log("Environment Variable:", getEnvVar("VITE_API_BASE_URL"));
+  console.log("Current Origin:", window.location.origin);
+  console.log("Auth Endpoints:", {
     login: getApiUrl(API_ENDPOINTS.AUTH.LOGIN),
     register: getApiUrl(API_ENDPOINTS.AUTH.REGISTER),
     logout: getApiUrl(API_ENDPOINTS.AUTH.LOGOUT),
@@ -184,18 +184,18 @@ export const debugApiConfig = (): void => {
 
 // API configuration for Financial Modeling Prep
 // Use environment variables in production
-export const FMP_API_KEY = getEnvVar('VITE_FMP_API_KEY', 'YOUR_FMP_API_KEY');
-export const FMP_BASE_URL = 'https://financialmodelingprep.com/api/v3';
+export const FMP_API_KEY = getEnvVar("VITE_FMP_API_KEY", "YOUR_FMP_API_KEY");
+export const FMP_BASE_URL = "https://financialmodelingprep.com/api/v3";
 
 // API configuration for TAAPI.IO
 // Use environment variables in production
 export const TAAPI_API_KEY = getEnvVar(
-  'VITE_TAAPI_API_KEY',
-  'YOUR_TAAPI_API_KEY',
+  "VITE_TAAPI_API_KEY",
+  "YOUR_TAAPI_API_KEY",
 );
-export const TAAPI_BASE_URL = 'https://api.taapi.io';
+export const TAAPI_BASE_URL = "https://api.taapi.io";
 
 // GitHub configuration
 // These should be configured in your CI/CD pipeline, not in source code
-export const GITHUB_REPO = 'https://github.com/veerababumanyam/StockPulse.git';
-export const GITHUB_TOKEN = getEnvVar('VITE_GITHUB_TOKEN', '') || ''; // Never hardcode tokens
+export const GITHUB_REPO = "https://github.com/veerababumanyam/StockPulse.git";
+export const GITHUB_TOKEN = getEnvVar("VITE_GITHUB_TOKEN", "") || ""; // Never hardcode tokens

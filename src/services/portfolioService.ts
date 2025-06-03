@@ -3,7 +3,7 @@
  * Handles API communication for portfolio management
  * Follows enterprise patterns with proper error handling and caching
  */
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError } from "axios";
 import {
   Portfolio,
   PortfolioPosition,
@@ -19,8 +19,8 @@ import {
   PortfolioError,
   MarketSummary,
   PerformanceMetrics,
-} from '../types/portfolio';
-import apiClient, { API_ENDPOINTS } from '../config/api';
+} from "../types/portfolio";
+import apiClient, { API_ENDPOINTS } from "../config/api";
 
 // Cache configuration
 interface CacheEntry<T> {
@@ -33,9 +33,9 @@ class PortfolioService {
   private cache = new Map<string, CacheEntry<any>>();
   private readonly CACHE_TTL = {
     DASHBOARD_SUMMARY: 30 * 1000, // 30 seconds
-    PORTFOLIO_LIST: 60 * 1000,    // 1 minute
-    PORTFOLIO_DETAIL: 30 * 1000,  // 30 seconds
-    MARKET_SUMMARY: 60 * 1000,    // 1 minute
+    PORTFOLIO_LIST: 60 * 1000, // 1 minute
+    PORTFOLIO_DETAIL: 30 * 1000, // 30 seconds
+    MARKET_SUMMARY: 60 * 1000, // 1 minute
   };
 
   /**
@@ -80,14 +80,14 @@ class PortfolioService {
    * Get dashboard summary with portfolio overview and market data
    */
   async getDashboardSummary(portfolioId?: string): Promise<DashboardSummary> {
-    const cacheKey = `dashboard_summary_${portfolioId || 'default'}`;
+    const cacheKey = `dashboard_summary_${portfolioId || "default"}`;
     const cached = this.getCached<DashboardSummary>(cacheKey);
     if (cached) return cached;
 
     try {
       // Use the correct API endpoint for dashboard summary
-      const url = '/api/v1/portfolio/summary/dashboard';
-      
+      const url = "/api/v1/portfolio/summary/dashboard";
+
       const response = await apiClient.get(url);
       const summary: DashboardSummary = response.data;
 
@@ -105,12 +105,12 @@ class PortfolioService {
    * Get list of user's portfolios
    */
   async getPortfolios(): Promise<PortfolioListResponse> {
-    const cacheKey = 'portfolio_list';
+    const cacheKey = "portfolio_list";
     const cached = this.getCached<PortfolioListResponse>(cacheKey);
     if (cached) return cached;
 
     try {
-      const response = await apiClient.get('/api/v1/portfolio/');
+      const response = await apiClient.get("/api/v1/portfolio/");
       const portfolios: PortfolioListResponse = response.data;
 
       // Cache the result
@@ -126,7 +126,9 @@ class PortfolioService {
   /**
    * Get detailed portfolio information
    */
-  async getPortfolioDetail(portfolioId: string): Promise<PortfolioDetailResponse> {
+  async getPortfolioDetail(
+    portfolioId: string,
+  ): Promise<PortfolioDetailResponse> {
     const cacheKey = `portfolio_detail_${portfolioId}`;
     const cached = this.getCached<PortfolioDetailResponse>(cacheKey);
     if (cached) return cached;
@@ -150,11 +152,11 @@ class PortfolioService {
    */
   async createPortfolio(request: CreatePortfolioRequest): Promise<Portfolio> {
     try {
-      const response = await apiClient.post('/api/v1/portfolio/', request);
+      const response = await apiClient.post("/api/v1/portfolio/", request);
       const portfolio: Portfolio = response.data;
 
       // Clear list cache to force refresh
-      this.clearCache('portfolio_list');
+      this.clearCache("portfolio_list");
 
       return portfolio;
     } catch (error) {
@@ -167,16 +169,19 @@ class PortfolioService {
    * Update portfolio information
    */
   async updatePortfolio(
-    portfolioId: string, 
-    request: UpdatePortfolioRequest
+    portfolioId: string,
+    request: UpdatePortfolioRequest,
   ): Promise<Portfolio> {
     try {
-      const response = await apiClient.put(`/api/v1/portfolio/${portfolioId}`, request);
+      const response = await apiClient.put(
+        `/api/v1/portfolio/${portfolioId}`,
+        request,
+      );
       const portfolio: Portfolio = response.data;
 
       // Clear relevant caches
       this.clearCache(`portfolio_detail_${portfolioId}`);
-      this.clearCache('portfolio_list');
+      this.clearCache("portfolio_list");
       this.clearCache(`dashboard_summary_${portfolioId}`);
 
       return portfolio;
@@ -195,7 +200,7 @@ class PortfolioService {
 
       // Clear all related caches
       this.clearCache(`portfolio_detail_${portfolioId}`);
-      this.clearCache('portfolio_list');
+      this.clearCache("portfolio_list");
       this.clearCache(`dashboard_summary_${portfolioId}`);
     } catch (error) {
       this.handlePortfolioError(error as AxiosError);
@@ -208,7 +213,9 @@ class PortfolioService {
    */
   async getPositions(portfolioId: string): Promise<PortfolioPosition[]> {
     try {
-      const response = await apiClient.get(`/api/v1/portfolio/${portfolioId}/positions`);
+      const response = await apiClient.get(
+        `/api/v1/portfolio/${portfolioId}/positions`,
+      );
       return response.data.positions || [];
     } catch (error) {
       this.handlePortfolioError(error as AxiosError);
@@ -220,13 +227,13 @@ class PortfolioService {
    * Add a new position to portfolio
    */
   async addPosition(
-    portfolioId: string, 
-    request: AddPositionRequest
+    portfolioId: string,
+    request: AddPositionRequest,
   ): Promise<PortfolioPosition> {
     try {
       const response = await apiClient.post(
-        `/api/v1/portfolio/${portfolioId}/positions`, 
-        request
+        `/api/v1/portfolio/${portfolioId}/positions`,
+        request,
       );
       const position: PortfolioPosition = response.data;
 
@@ -247,12 +254,12 @@ class PortfolioService {
   async updatePosition(
     portfolioId: string,
     positionId: string,
-    request: UpdatePositionRequest
+    request: UpdatePositionRequest,
   ): Promise<PortfolioPosition> {
     try {
       const response = await apiClient.put(
         `/api/v1/portfolio/${portfolioId}/positions/${positionId}`,
-        request
+        request,
       );
       const position: PortfolioPosition = response.data;
 
@@ -272,7 +279,9 @@ class PortfolioService {
    */
   async deletePosition(portfolioId: string, positionId: string): Promise<void> {
     try {
-      await apiClient.delete(`/api/v1/portfolio/${portfolioId}/positions/${positionId}`);
+      await apiClient.delete(
+        `/api/v1/portfolio/${portfolioId}/positions/${positionId}`,
+      );
 
       // Clear relevant caches
       this.clearCache(`portfolio_detail_${portfolioId}`);
@@ -289,12 +298,12 @@ class PortfolioService {
   async getTransactions(
     portfolioId: string,
     limit: number = 50,
-    offset: number = 0
+    offset: number = 0,
   ): Promise<Transaction[]> {
     try {
       const response = await apiClient.get(
         `/api/v1/portfolio/${portfolioId}/transactions`,
-        { params: { limit, offset } }
+        { params: { limit, offset } },
       );
       return response.data.transactions || [];
     } catch (error) {
@@ -308,12 +317,12 @@ class PortfolioService {
    */
   async getAIInsights(
     portfolioId: string,
-    limit: number = 10
+    limit: number = 10,
   ): Promise<AIPortfolioInsight[]> {
     try {
       const response = await apiClient.get(
         `/api/v1/portfolio/${portfolioId}/insights`,
-        { params: { limit } }
+        { params: { limit } },
       );
       return response.data.insights || [];
     } catch (error) {
@@ -327,11 +336,11 @@ class PortfolioService {
    */
   async markInsightAsRead(
     portfolioId: string,
-    insightId: string
+    insightId: string,
   ): Promise<void> {
     try {
       await apiClient.patch(
-        `/api/v1/portfolio/${portfolioId}/insights/${insightId}/read`
+        `/api/v1/portfolio/${portfolioId}/insights/${insightId}/read`,
       );
 
       // Clear dashboard cache to reflect updated insights
@@ -346,12 +355,12 @@ class PortfolioService {
    * Get market summary data
    */
   async getMarketSummary(): Promise<MarketSummary> {
-    const cacheKey = 'market_summary';
+    const cacheKey = "market_summary";
     const cached = this.getCached<MarketSummary>(cacheKey);
     if (cached) return cached;
 
     try {
-      const response = await apiClient.get('/api/v1/portfolio/market-summary');
+      const response = await apiClient.get("/api/v1/portfolio/market-summary");
       const summary: MarketSummary = response.data;
 
       // Cache the result
@@ -369,12 +378,12 @@ class PortfolioService {
    */
   async getPerformanceMetrics(
     portfolioId: string,
-    timeframe: 'DAY' | 'WEEK' | 'MONTH' | 'QUARTER' | 'YEAR' = 'DAY'
+    timeframe: "DAY" | "WEEK" | "MONTH" | "QUARTER" | "YEAR" = "DAY",
   ): Promise<PerformanceMetrics> {
     try {
       const response = await apiClient.get(
         `/api/v1/portfolio/${portfolioId}/performance`,
-        { params: { timeframe } }
+        { params: { timeframe } },
       );
       return response.data;
     } catch (error) {
@@ -388,13 +397,15 @@ class PortfolioService {
    */
   async refreshPortfolio(portfolioId: string): Promise<Portfolio> {
     try {
-      const response = await apiClient.post(`/api/v1/portfolio/${portfolioId}/refresh`);
+      const response = await apiClient.post(
+        `/api/v1/portfolio/${portfolioId}/refresh`,
+      );
       const portfolio: Portfolio = response.data;
 
       // Clear all related caches to force fresh data
       this.clearCache(`portfolio_detail_${portfolioId}`);
       this.clearCache(`dashboard_summary_${portfolioId}`);
-      this.clearCache('portfolio_list');
+      this.clearCache("portfolio_list");
 
       return portfolio;
     } catch (error) {
@@ -408,7 +419,7 @@ class PortfolioService {
    */
   private handlePortfolioError(error: AxiosError): void {
     // Log error for debugging
-    console.error('Portfolio API Error:', {
+    console.error("Portfolio API Error:", {
       status: error.response?.status,
       data: error.response?.data,
       url: error.config?.url,
@@ -418,22 +429,22 @@ class PortfolioService {
     // Handle specific error cases
     if (error.response?.status === 401) {
       // Unauthorized - dispatch auth event
-      window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+      window.dispatchEvent(new CustomEvent("auth:unauthorized"));
     } else if (error.response?.status === 404) {
       // Portfolio not found
-      console.warn('Portfolio not found:', error.config?.url);
+      console.warn("Portfolio not found:", error.config?.url);
     } else if (error.response?.status >= 500) {
       // Server error - might want to show user-friendly message
-      console.error('Server error occurred:', error.response?.data);
+      console.error("Server error occurred:", error.response?.data);
     }
   }
 
   /**
    * Utility method to format currency values
    */
-  formatCurrency(value: number, currency: string = 'USD'): string {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
+  formatCurrency(value: number, currency: string = "USD"): string {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
       currency,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -444,8 +455,8 @@ class PortfolioService {
    * Utility method to format percentage values
    */
   formatPercentage(value: number): string {
-    return new Intl.NumberFormat('en-US', {
-      style: 'percent',
+    return new Intl.NumberFormat("en-US", {
+      style: "percent",
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value / 100);
@@ -454,13 +465,13 @@ class PortfolioService {
   /**
    * Utility method to determine trend color
    */
-  getTrendColor(value: number): 'green' | 'red' | 'gray' {
-    if (value > 0) return 'green';
-    if (value < 0) return 'red';
-    return 'gray';
+  getTrendColor(value: number): "green" | "red" | "gray" {
+    if (value > 0) return "green";
+    if (value < 0) return "red";
+    return "gray";
   }
 }
 
 // Export singleton instance
 export const portfolioService = new PortfolioService();
-export default portfolioService; 
+export default portfolioService;

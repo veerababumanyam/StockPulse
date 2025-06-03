@@ -3,14 +3,14 @@
  * Handles API communication for authentication with MCP Auth Server
  * Adapted to work with MCP protocol while maintaining REST interface
  */
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError } from "axios";
 import {
   LoginCredentials,
   LoginResponse,
   User,
   RegisterCredentials,
-} from '../types/auth';
-import { API_CONFIG, API_ENDPOINTS, debugApiConfig } from '../config/api';
+} from "../types/auth";
+import { API_CONFIG, API_ENDPOINTS, debugApiConfig } from "../config/api";
 
 // API Client Configuration - Updated for MCP Auth Server
 const apiClient = axios.create({
@@ -107,7 +107,7 @@ class AuthService {
       this.clearCsrfToken();
     } catch (error) {
       // Don't throw logout errors to prevent UX issues
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
       this.clearCsrfToken();
     }
   }
@@ -142,19 +142,22 @@ class AuthService {
    * Register new user via FastAPI Auth Server
    * Now creates user in pending approval status
    */
-  async register(credentials: RegisterCredentials): Promise<{ 
-    message: string; 
-    status: string; 
-    user_id: string; 
+  async register(credentials: RegisterCredentials): Promise<{
+    message: string;
+    status: string;
+    user_id: string;
   }> {
     try {
-      console.log('🚀 Registration Debug Info:');
-      console.log('API Base URL:', apiClient.defaults.baseURL);
-      console.log('Full URL:', `${apiClient.defaults.baseURL}${API_ENDPOINTS.AUTH.REGISTER}`);
-      console.log('Credentials:', {
+      console.log("🚀 Registration Debug Info:");
+      console.log("API Base URL:", apiClient.defaults.baseURL);
+      console.log(
+        "Full URL:",
+        `${apiClient.defaults.baseURL}${API_ENDPOINTS.AUTH.REGISTER}`,
+      );
+      console.log("Credentials:", {
         ...credentials,
-        password: '[HIDDEN]',
-        confirmPassword: '[HIDDEN]',
+        password: "[HIDDEN]",
+        confirmPassword: "[HIDDEN]",
       });
 
       // Call FastAPI auth registration endpoint using proper API endpoint
@@ -165,18 +168,21 @@ class AuthService {
         confirm_password: credentials.confirmPassword,
       });
 
-      console.log('✅ Registration successful (pending approval):', response.data);
+      console.log(
+        "✅ Registration successful (pending approval):",
+        response.data,
+      );
 
       // Return the registration response (no auto-login anymore)
       return response.data;
     } catch (error) {
-      console.error('❌ Registration error:', error);
+      console.error("❌ Registration error:", error);
       if (error instanceof AxiosError) {
-        console.error('Response data:', error.response?.data);
-        console.error('Response status:', error.response?.status);
-        console.error('Request URL:', error.config?.url);
+        console.error("Response data:", error.response?.data);
+        console.error("Response status:", error.response?.status);
+        console.error("Request URL:", error.config?.url);
         console.error(
-          'Full Request URL:',
+          "Full Request URL:",
           `${error.config?.baseURL || apiClient.defaults.baseURL}${error.config?.url}`,
         );
       }
@@ -194,7 +200,7 @@ class AuthService {
       this.clearCsrfToken();
 
       // Dispatch event for AuthContext to handle
-      window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+      window.dispatchEvent(new CustomEvent("auth:unauthorized"));
     }
   }
 }
@@ -203,14 +209,14 @@ class AuthService {
 apiClient.interceptors.request.use(
   (config) => {
     // Add session token to MCP tool calls that need authentication
-    if (config.url === '/tools/call' && csrfToken) {
+    if (config.url === "/tools/call" && csrfToken) {
       // For MCP calls that need authentication, add token to parameters
       if (
         config.data?.tool &&
         [
-          'get_user_profile',
-          'update_user_profile',
-          'invalidate_session',
+          "get_user_profile",
+          "update_user_profile",
+          "invalidate_session",
         ].includes(config.data.tool)
       ) {
         config.data.parameters = config.data.parameters || {};
@@ -229,10 +235,10 @@ apiClient.interceptors.response.use(
     if (
       response.data &&
       !response.data.success &&
-      response.data.error?.includes('Invalid token')
+      response.data.error?.includes("Invalid token")
     ) {
       csrfToken = null;
-      window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+      window.dispatchEvent(new CustomEvent("auth:unauthorized"));
     }
     return response;
   },
@@ -242,7 +248,7 @@ apiClient.interceptors.response.use(
       csrfToken = null;
 
       // Dispatch unauthorized event
-      window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+      window.dispatchEvent(new CustomEvent("auth:unauthorized"));
     }
 
     return Promise.reject(error);

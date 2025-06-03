@@ -105,24 +105,24 @@ StockPulse can connect to external MCP servers to leverage their capabilities. T
 ```typescript
 // Connect to an MCP server
 const mcpClient = await MCPClientFactory.create({
-  serverUrl: 'https://mcp.example.com/sse',
-  apiKey: 'your-api-key',
+  serverUrl: "https://mcp.example.com/sse",
+  apiKey: "your-api-key",
   connectionPool: {
     maxConnections: 10,
-    idleTimeout: 60000
+    idleTimeout: 60000,
   },
   rateLimit: {
-    requestsPerMinute: 100
+    requestsPerMinute: 100,
   },
   cache: {
     enabled: true,
-    ttl: 60 // seconds
-  }
+    ttl: 60, // seconds
+  },
 });
 
 // Use a capability
-const result = await mcpClient.invoke('market_data', 'getQuote', {
-  symbol: 'AAPL'
+const result = await mcpClient.invoke("market_data", "getQuote", {
+  symbol: "AAPL",
 });
 
 console.log(result);
@@ -153,23 +153,23 @@ StockPulse can expose its capabilities as an MCP server for other clients to use
 // Create an MCP server
 const mcpServer = await MCPServerFactory.create({
   port: 8080,
-  path: '/mcp/sse',
+  path: "/mcp/sse",
   security: {
-    authMethod: 'jwt+mtls',
+    authMethod: "jwt+mtls",
     jwtSecret: process.env.JWT_SECRET,
-    tlsCert: fs.readFileSync('server.crt'),
-    tlsKey: fs.readFileSync('server.key')
+    tlsCert: fs.readFileSync("server.crt"),
+    tlsKey: fs.readFileSync("server.key"),
   },
   rateLimit: {
     requestsPerMinute: 100,
-    limitBy: 'ip'
-  }
+    limitBy: "ip",
+  },
 });
 
 // Register a capability
-mcpServer.registerCapability('market_data', {
-  name: 'Market Data',
-  description: 'Real-time and historical market data',
+mcpServer.registerCapability("market_data", {
+  name: "Market Data",
+  description: "Real-time and historical market data",
   methods: {
     getQuote: async (params) => {
       // Implementation
@@ -177,9 +177,11 @@ mcpServer.registerCapability('market_data', {
     },
     getHistoricalData: async (params) => {
       // Implementation
-      return { /* historical data */ };
-    }
-  }
+      return {
+        /* historical data */
+      };
+    },
+  },
 });
 
 // Start the server
@@ -211,23 +213,23 @@ Dynamic discovery enables automatic finding and connecting to MCP servers:
 ```typescript
 // Configure federation
 const federationClient = await FederationClientFactory.create({
-  registryUrl: 'https://mcp-federation.example.com',
-  advertisedCapabilities: ['market_data', 'technical_analysis'],
+  registryUrl: "https://mcp-federation.example.com",
+  advertisedCapabilities: ["market_data", "technical_analysis"],
   discoveryInterval: 300000, // 5 minutes
-  healthCheckInterval: 60000 // 1 minute
+  healthCheckInterval: 60000, // 1 minute
 });
 
 // Register with federation
 await federationClient.register({
-  name: 'StockPulse MCP Server',
-  description: 'Financial analysis and market data MCP server',
-  url: 'https://stockpulse.example.com/mcp/sse',
-  capabilities: ['market_data', 'technical_analysis']
+  name: "StockPulse MCP Server",
+  description: "Financial analysis and market data MCP server",
+  url: "https://stockpulse.example.com/mcp/sse",
+  capabilities: ["market_data", "technical_analysis"],
 });
 
 // Discover servers with specific capabilities
 const servers = await federationClient.discoverServers({
-  requiredCapabilities: ['sentiment_analysis']
+  requiredCapabilities: ["sentiment_analysis"],
 });
 
 console.log(servers);
@@ -268,47 +270,47 @@ The implementation follows these security best practices:
 ```typescript
 // Configure security for client
 const secureClient = await MCPClientFactory.create({
-  serverUrl: 'https://mcp.example.com/sse',
+  serverUrl: "https://mcp.example.com/sse",
   security: {
-    method: 'mutual_tls',
-    clientCert: fs.readFileSync('client.crt'),
-    clientKey: fs.readFileSync('client.key'),
-    caCert: fs.readFileSync('ca.crt')
-  }
+    method: "mutual_tls",
+    clientCert: fs.readFileSync("client.crt"),
+    clientKey: fs.readFileSync("client.key"),
+    caCert: fs.readFileSync("ca.crt"),
+  },
 });
 
 // Configure security for server
 const secureServer = await MCPServerFactory.create({
   port: 8080,
-  path: '/mcp/sse',
+  path: "/mcp/sse",
   security: {
-    methods: ['jwt', 'mutual_tls'],
+    methods: ["jwt", "mutual_tls"],
     jwt: {
       secret: process.env.JWT_SECRET,
-      expiresIn: '1h'
+      expiresIn: "1h",
     },
     tls: {
-      cert: fs.readFileSync('server.crt'),
-      key: fs.readFileSync('server.key'),
-      ca: fs.readFileSync('ca.crt'),
+      cert: fs.readFileSync("server.crt"),
+      key: fs.readFileSync("server.key"),
+      ca: fs.readFileSync("ca.crt"),
       requestCert: true,
-      rejectUnauthorized: true
-    }
+      rejectUnauthorized: true,
+    },
   },
   accessControl: {
     rules: [
       {
-        capability: 'market_data',
-        methods: ['getQuote'],
-        allow: ['public']
+        capability: "market_data",
+        methods: ["getQuote"],
+        allow: ["public"],
       },
       {
-        capability: 'technical_analysis',
-        methods: ['*'],
-        allow: ['premium_users', 'admin']
-      }
-    ]
-  }
+        capability: "technical_analysis",
+        methods: ["*"],
+        allow: ["premium_users", "admin"],
+      },
+    ],
+  },
 });
 ```
 
@@ -346,36 +348,39 @@ Automatic anomaly detection identifies potential issues:
 ```typescript
 // Configure telemetry for client
 const observableClient = await MCPClientFactory.create({
-  serverUrl: 'https://mcp.example.com/sse',
+  serverUrl: "https://mcp.example.com/sse",
   telemetry: {
     metrics: {
       enabled: true,
-      endpoint: 'https://metrics.example.com'
+      endpoint: "https://metrics.example.com",
     },
     tracing: {
       enabled: true,
-      exporter: 'otlp',
-      endpoint: 'https://tracing.example.com'
+      exporter: "otlp",
+      endpoint: "https://tracing.example.com",
     },
     logging: {
-      level: 'info',
-      destination: 'console+file',
-      filePath: '/var/log/stockpulse/mcp-client.log'
-    }
-  }
+      level: "info",
+      destination: "console+file",
+      filePath: "/var/log/stockpulse/mcp-client.log",
+    },
+  },
 });
 
 // Use with tracing
 const tracer = observableClient.getTracer();
-const span = tracer.startSpan('get_market_data');
+const span = tracer.startSpan("get_market_data");
 try {
-  const result = await observableClient.invoke('market_data', 'getQuote', {
-    symbol: 'AAPL'
+  const result = await observableClient.invoke("market_data", "getQuote", {
+    symbol: "AAPL",
   });
-  span.setAttributes({ 'result.status': 'success' });
+  span.setAttributes({ "result.status": "success" });
   return result;
 } catch (error) {
-  span.setAttributes({ 'result.status': 'error', 'error.message': error.message });
+  span.setAttributes({
+    "result.status": "error",
+    "error.message": error.message,
+  });
   throw error;
 } finally {
   span.end();
@@ -416,32 +421,32 @@ Efficient serialization reduces bandwidth and processing time:
 ```typescript
 // Configure performance optimizations
 const highPerformanceClient = await MCPClientFactory.create({
-  serverUrl: 'https://mcp.example.com/sse',
+  serverUrl: "https://mcp.example.com/sse",
   performance: {
     connectionPool: {
       maxConnections: 20,
       minConnections: 5,
       idleTimeout: 60000,
-      validateOnBorrow: true
+      validateOnBorrow: true,
     },
     cache: {
       enabled: true,
       ttl: 60,
-      storage: 'redis',
-      redisUrl: 'redis://localhost:6379',
-      maxSize: '100mb'
+      storage: "redis",
+      redisUrl: "redis://localhost:6379",
+      maxSize: "100mb",
     },
     serialization: {
-      format: 'messagepack',
-      compression: 'gzip',
-      compressionLevel: 6
+      format: "messagepack",
+      compression: "gzip",
+      compressionLevel: 6,
     },
     batching: {
       enabled: true,
       maxBatchSize: 10,
-      maxWaitTime: 50 // ms
-    }
-  }
+      maxWaitTime: 50, // ms
+    },
+  },
 });
 ```
 
@@ -479,25 +484,25 @@ The user interface is adapted for mobile devices:
 ```typescript
 // Configure mobile-specific options
 const mobileClient = await MCPClientFactory.create({
-  serverUrl: 'https://mcp.example.com/sse',
+  serverUrl: "https://mcp.example.com/sse",
   mobile: {
     dataSaver: true,
     offlineMode: {
       enabled: true,
-      cacheStrategy: 'stale-while-revalidate',
-      maxCacheSize: '50mb'
+      cacheStrategy: "stale-while-revalidate",
+      maxCacheSize: "50mb",
     },
-    syncFrequency: '15min',
+    syncFrequency: "15min",
     pushNotifications: {
       enabled: true,
-      topics: ['critical_alerts', 'connection_status', 'capability_updates'],
+      topics: ["critical_alerts", "connection_status", "capability_updates"],
       quietHours: {
         enabled: true,
-        start: '22:00',
-        end: '07:00'
-      }
-    }
-  }
+        start: "22:00",
+        end: "07:00",
+      },
+    },
+  },
 });
 ```
 
@@ -535,32 +540,32 @@ Risk management features protect against potential issues:
 ```typescript
 // Configure governance features
 const governedClient = await MCPClientFactory.create({
-  serverUrl: 'https://mcp.example.com/sse',
+  serverUrl: "https://mcp.example.com/sse",
   governance: {
     dataLineage: {
       enabled: true,
-      trackingLevel: 'detailed'
+      trackingLevel: "detailed",
     },
     auditTrail: {
       enabled: true,
-      detailLevel: 'comprehensive',
-      retention: '7y'
+      detailLevel: "comprehensive",
+      retention: "7y",
     },
     compliance: {
-      frameworks: ['gdpr', 'hipaa', 'sox'],
+      frameworks: ["gdpr", "hipaa", "sox"],
       dataResidency: {
-        allowedRegions: ['us-east', 'eu-west'],
-        enforcementLevel: 'strict'
-      }
+        allowedRegions: ["us-east", "eu-west"],
+        enforcementLevel: "strict",
+      },
     },
     riskManagement: {
-      assessmentFrequency: 'daily',
+      assessmentFrequency: "daily",
       autoMitigation: {
         enabled: true,
-        actions: ['rate_limit', 'circuit_break', 'alert']
-      }
-    }
-  }
+        actions: ["rate_limit", "circuit_break", "alert"],
+      },
+    },
+  },
 });
 ```
 
@@ -591,33 +596,33 @@ Comprehensive model management features:
 const orchestrationClient = await MCPClientFactory.create({
   orchestration: {
     modelSelection: {
-      strategy: 'capability_match',
-      fallbackStrategy: 'chain',
-      fallbackChain: ['primary', 'secondary', 'tertiary']
+      strategy: "capability_match",
+      fallbackStrategy: "chain",
+      fallbackChain: ["primary", "secondary", "tertiary"],
     },
     routing: {
       rules: [
         {
-          capability: 'market_data',
-          preferredModel: 'financial_specialist',
-          fallbackModel: 'general_purpose'
+          capability: "market_data",
+          preferredModel: "financial_specialist",
+          fallbackModel: "general_purpose",
         },
         {
-          capability: 'sentiment_analysis',
-          preferredModel: 'sentiment_specialist',
-          fallbackModel: 'financial_specialist'
-        }
-      ]
+          capability: "sentiment_analysis",
+          preferredModel: "sentiment_specialist",
+          fallbackModel: "financial_specialist",
+        },
+      ],
     },
     aggregation: {
-      strategy: 'weighted_average',
+      strategy: "weighted_average",
       weights: {
-        'financial_specialist': 0.7,
-        'sentiment_specialist': 0.2,
-        'general_purpose': 0.1
-      }
-    }
-  }
+        financial_specialist: 0.7,
+        sentiment_specialist: 0.2,
+        general_purpose: 0.1,
+      },
+    },
+  },
 });
 ```
 
@@ -656,24 +661,24 @@ Chaos testing ensures resilience under adverse conditions:
 // Configure mock server for testing
 const mockServer = await MCPMockServerFactory.create({
   port: 8081,
-  path: '/mcp/sse',
+  path: "/mcp/sse",
   capabilities: {
-    'market_data': {
+    market_data: {
       methods: {
-        'getQuote': {
+        getQuote: {
           response: (params) => ({
             symbol: params.symbol,
             price: Math.random() * 1000,
-            timestamp: Date.now()
+            timestamp: Date.now(),
           }),
           latency: {
             min: 10,
-            max: 50
+            max: 50,
           },
-          errorRate: 0.05
-        }
-      }
-    }
+          errorRate: 0.05,
+        },
+      },
+    },
   },
   chaos: {
     enabled: true,
@@ -681,14 +686,14 @@ const mockServer = await MCPMockServerFactory.create({
     latencyInjection: {
       enabled: true,
       probability: 0.1,
-      range: [100, 5000]
+      range: [100, 5000],
     },
     errorInjection: {
       enabled: true,
       probability: 0.05,
-      errors: ['timeout', 'server_error', 'validation_error']
-    }
-  }
+      errors: ["timeout", "server_error", "validation_error"],
+    },
+  },
 });
 ```
 

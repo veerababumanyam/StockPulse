@@ -3,22 +3,22 @@
  * Displays key market indices and their performance.
  * Part of Story 2.2: Customizable Widget System
  */
-'use client';
+"use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { WidgetComponentProps } from '../../types/dashboard';
-import { MarketSummaryData, MarketIndexData } from '../../types/widget-data';
-import { useTheme } from '../../contexts/ThemeContext';
-import { apiClient } from '../../services/api';
+import React, { useState, useEffect, useCallback } from "react";
+import { WidgetComponentProps } from "../../types/dashboard";
+import { MarketSummaryData, MarketIndexData } from "../../types/widget-data";
+import { useTheme } from "../../contexts/ThemeContext";
+import { apiClient } from "../../services/api";
 import {
   Landmark,
   RefreshCw,
   AlertCircle,
   ArrowUpRight,
   ArrowDownRight,
-} from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { cn } from '../../utils/cn';
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { cn } from "../../utils/cn";
 
 const MarketSummary: React.FC<WidgetComponentProps> = ({
   widgetId,
@@ -41,7 +41,7 @@ const MarketSummary: React.FC<WidgetComponentProps> = ({
       setSummaryData(data);
     } catch (err: any) {
       console.error(`[${widgetId}] Error fetching market summary:`, err);
-      setError(err.message || 'An unexpected error occurred.');
+      setError(err.message || "An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
@@ -73,8 +73,8 @@ const MarketSummary: React.FC<WidgetComponentProps> = ({
       </p>
       <div
         className={cn(
-          'text-xs flex items-center',
-          index.change >= 0 ? 'text-success-fg' : 'text-danger-fg',
+          "text-xs flex items-center",
+          index.change >= 0 ? "text-success-fg" : "text-danger-fg",
         )}
       >
         {index.change >= 0 ? (
@@ -91,12 +91,12 @@ const MarketSummary: React.FC<WidgetComponentProps> = ({
 
   if (isLoading) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center">
               <Landmark className="h-4 w-4 mr-2 text-primary" />
-              {config.title || 'Market Summary'}
+              {config.title || "Market Summary"}
             </CardTitle>
             <RefreshCw className="h-4 w-4 text-muted-foreground animate-spin" />
           </div>
@@ -110,12 +110,12 @@ const MarketSummary: React.FC<WidgetComponentProps> = ({
 
   if (error) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center text-danger-fg">
               <AlertCircle className="h-4 w-4 mr-2" />
-              {config.title || 'Market Summary'}
+              {config.title || "Market Summary"}
             </CardTitle>
             <button onClick={fetchData} title="Retry loading market data">
               <RefreshCw className="h-4 w-4 text-muted-foreground hover:text-primary" />
@@ -131,12 +131,12 @@ const MarketSummary: React.FC<WidgetComponentProps> = ({
 
   if (!summaryData || summaryData.majorIndices.length === 0) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center">
               <Landmark className="h-4 w-4 mr-2 text-primary" />
-              {config.title || 'Market Summary'}
+              {config.title || "Market Summary"}
             </CardTitle>
             <button onClick={fetchData} title="Reload market data">
               <RefreshCw className="h-4 w-4 text-muted-foreground hover:text-primary" />
@@ -151,12 +151,12 @@ const MarketSummary: React.FC<WidgetComponentProps> = ({
   }
 
   return (
-    <Card className={cn('h-full flex flex-col', config.className)}>
+    <Card className={cn("h-full flex flex-col", config.className)}>
       <CardHeader className="pb-2 pt-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold flex items-center">
             <Landmark className="h-4 w-4 mr-2 text-primary" />
-            {config.title || 'Market Summary'}
+            {config.title || "Market Summary"}
           </CardTitle>
           <button onClick={fetchData} title="Refresh market data">
             <RefreshCw className="h-4 w-4 text-muted-foreground hover:text-primary" />

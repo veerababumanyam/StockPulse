@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail,
   Phone,
@@ -16,8 +16,8 @@ import {
   CheckCircle,
   MessageCircle,
   Clock,
-  Users
-} from 'lucide-react';
+  Users,
+} from "lucide-react";
 
 const ContactPage: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,41 +26,41 @@ const ContactPage: React.FC = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
   });
 
   const handleSignIn = () => {
-    navigate('/auth/login');
+    navigate("/auth/login");
   };
 
   const handleGetStarted = () => {
-    navigate('/auth/register');
+    navigate("/auth/register");
   };
 
   const handleNavigation = (section: string) => {
     setIsMenuOpen(false);
-    
+
     switch (section.toLowerCase()) {
-      case 'features':
-        navigate('/');
+      case "features":
+        navigate("/");
         // After navigation, scroll to features
         setTimeout(() => {
-          const featuresSection = document.getElementById('features');
+          const featuresSection = document.getElementById("features");
           if (featuresSection) {
-            featuresSection.scrollIntoView({ behavior: 'smooth' });
+            featuresSection.scrollIntoView({ behavior: "smooth" });
           }
         }, 100);
         break;
-      case 'pricing':
-        navigate('/auth/pricing');
+      case "pricing":
+        navigate("/auth/pricing");
         break;
-      case 'about':
-        navigate('/about');
+      case "about":
+        navigate("/about");
         break;
-      case 'contact':
+      case "contact":
         // Already on contact page
         break;
       default:
@@ -100,7 +100,7 @@ const ContactPage: React.FC = () => {
             y: [-10, 10, -10],
             x: [-5, 5, -5],
           }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
           className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"
@@ -108,25 +108,33 @@ const ContactPage: React.FC = () => {
             y: [10, -10, 10],
             x: [5, -5, 5],
           }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
-        
+
         {/* Animated grid */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent bg-[size:50px_50px] opacity-20" 
-             style={{ backgroundImage: 'radial-gradient(circle, #06b6d4 1px, transparent 1px)' }} />
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent bg-[size:50px_50px] opacity-20"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, #06b6d4 1px, transparent 1px)",
+          }}
+        />
       </div>
 
       {/* Modern Navigation */}
-      <motion.nav 
+      <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
         className="fixed top-0 w-full z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-2xl"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3 group cursor-pointer">
+            <Link
+              to="/"
+              className="flex items-center space-x-3 group cursor-pointer"
+            >
               <div className="relative">
                 <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-xl flex items-center justify-center">
                   <TrendingUp className="w-6 h-6 text-white" />
@@ -144,31 +152,33 @@ const ContactPage: React.FC = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              {['Features', 'Pricing', 'About', 'Contact'].map((item, index) => (
-                <motion.button
-                  key={item}
-                  onClick={() => handleNavigation(item)}
-                  className={`relative transition-all duration-300 font-medium cursor-pointer ${
-                    item === 'Contact' 
-                      ? 'text-cyan-400' 
-                      : 'text-white/70 hover:text-white'
-                  }`}
-                  whileHover={{ y: -2 }}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 + 0.5 }}
-                >
-                  {item}
-                  {item === 'Contact' && (
-                    <motion.div
-                      className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400"
-                      initial={{ width: 0 }}
-                      animate={{ width: '100%' }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  )}
-                </motion.button>
-              ))}
+              {["Features", "Pricing", "About", "Contact"].map(
+                (item, index) => (
+                  <motion.button
+                    key={item}
+                    onClick={() => handleNavigation(item)}
+                    className={`relative transition-all duration-300 font-medium cursor-pointer ${
+                      item === "Contact"
+                        ? "text-cyan-400"
+                        : "text-white/70 hover:text-white"
+                    }`}
+                    whileHover={{ y: -2 }}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 + 0.5 }}
+                  >
+                    {item}
+                    {item === "Contact" && (
+                      <motion.div
+                        className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400"
+                        initial={{ width: 0 }}
+                        animate={{ width: "100%" }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    )}
+                  </motion.button>
+                ),
+              )}
             </div>
 
             {/* Auth Buttons */}
@@ -184,7 +194,10 @@ const ContactPage: React.FC = () => {
               <motion.button
                 onClick={handleGetStarted}
                 className="bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-semibold px-6 py-2.5 rounded-xl shadow-lg hover:shadow-cyan-500/25 transition-all duration-300"
-                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(6, 182, 212, 0.3)' }}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 20px 40px rgba(6, 182, 212, 0.3)",
+                }}
                 whileTap={{ scale: 0.95 }}
               >
                 Get Started
@@ -229,28 +242,30 @@ const ContactPage: React.FC = () => {
           {isMenuOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
               className="md:hidden backdrop-blur-xl bg-black/20 border-t border-white/10"
             >
               <div className="px-4 py-6 space-y-4">
-                {['Features', 'Pricing', 'About', 'Contact'].map((item, index) => (
-                  <motion.button
-                    key={item}
-                    onClick={() => handleNavigation(item)}
-                    className={`block py-3 text-lg transition-colors w-full text-left ${
-                      item === 'Contact' 
-                        ? 'text-cyan-400' 
-                        : 'text-white/70 hover:text-white'
-                    }`}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    {item}
-                  </motion.button>
-                ))}
+                {["Features", "Pricing", "About", "Contact"].map(
+                  (item, index) => (
+                    <motion.button
+                      key={item}
+                      onClick={() => handleNavigation(item)}
+                      className={`block py-3 text-lg transition-colors w-full text-left ${
+                        item === "Contact"
+                          ? "text-cyan-400"
+                          : "text-white/70 hover:text-white"
+                      }`}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      {item}
+                    </motion.button>
+                  ),
+                )}
                 <hr className="border-white/10 my-4" />
                 <motion.button
                   onClick={handleSignIn}
@@ -298,13 +313,14 @@ const ContactPage: React.FC = () => {
               </motion.div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-                Get in{' '}
+                Get in{" "}
                 <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
                   Touch
                 </span>
               </h1>
               <p className="text-xl text-white/70 max-w-3xl mx-auto">
-                Have questions about StockPulse? We're here to help. Reach out to our team and we'll get back to you within 24 hours.
+                Have questions about StockPulse? We're here to help. Reach out
+                to our team and we'll get back to you within 24 hours.
               </p>
             </motion.div>
           </div>
@@ -325,7 +341,7 @@ const ContactPage: React.FC = () => {
                   <h2 className="text-2xl font-bold text-white mb-6">
                     Send us a message
                   </h2>
-                  
+
                   {isSubmitted ? (
                     <motion.div
                       initial={{ opacity: 0, scale: 0.9 }}
@@ -335,7 +351,11 @@ const ContactPage: React.FC = () => {
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                        transition={{
+                          delay: 0.2,
+                          type: "spring",
+                          stiffness: 200,
+                        }}
                         className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl"
                       >
                         <CheckCircle className="w-8 h-8 text-white" />
@@ -343,14 +363,20 @@ const ContactPage: React.FC = () => {
 
                       <div className="bg-green-500/10 backdrop-blur-xl border border-green-500/20 rounded-xl p-4 mb-6">
                         <p className="text-sm text-green-200">
-                          Thank you for your message! We'll get back to you within 24 hours.
+                          Thank you for your message! We'll get back to you
+                          within 24 hours.
                         </p>
                       </div>
 
                       <motion.button
                         onClick={() => {
                           setIsSubmitted(false);
-                          setFormData({ name: '', email: '', subject: '', message: '' });
+                          setFormData({
+                            name: "",
+                            email: "",
+                            subject: "",
+                            message: "",
+                          });
                         }}
                         className="bg-gradient-to-r from-cyan-500 to-purple-500 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-cyan-500/50"
                         whileHover={{ scale: 1.02 }}
@@ -414,12 +440,24 @@ const ContactPage: React.FC = () => {
                           className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-300"
                           required
                         >
-                          <option value="" className="bg-slate-800">Select a subject</option>
-                          <option value="general" className="bg-slate-800">General Inquiry</option>
-                          <option value="support" className="bg-slate-800">Technical Support</option>
-                          <option value="sales" className="bg-slate-800">Sales & Pricing</option>
-                          <option value="partnership" className="bg-slate-800">Partnership</option>
-                          <option value="feedback" className="bg-slate-800">Feedback</option>
+                          <option value="" className="bg-slate-800">
+                            Select a subject
+                          </option>
+                          <option value="general" className="bg-slate-800">
+                            General Inquiry
+                          </option>
+                          <option value="support" className="bg-slate-800">
+                            Technical Support
+                          </option>
+                          <option value="sales" className="bg-slate-800">
+                            Sales & Pricing
+                          </option>
+                          <option value="partnership" className="bg-slate-800">
+                            Partnership
+                          </option>
+                          <option value="feedback" className="bg-slate-800">
+                            Feedback
+                          </option>
                         </select>
                       </div>
                       <div>
@@ -477,7 +515,8 @@ const ContactPage: React.FC = () => {
                       Contact Information
                     </h2>
                     <p className="text-white/70 mb-8">
-                      Have a question or need help? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+                      Have a question or need help? We'd love to hear from you.
+                      Send us a message and we'll respond as soon as possible.
                     </p>
                   </div>
 
@@ -485,21 +524,22 @@ const ContactPage: React.FC = () => {
                     {[
                       {
                         icon: Mail,
-                        title: 'Email',
-                        content: 'support@stockpulse.ai',
-                        subtitle: 'Send us an email anytime',
+                        title: "Email",
+                        content: "support@stockpulse.ai",
+                        subtitle: "Send us an email anytime",
                       },
                       {
                         icon: Phone,
-                        title: 'Phone',
-                        content: '+1 (555) 123-4567',
-                        subtitle: 'Mon-Fri from 8am to 5pm PST',
+                        title: "Phone",
+                        content: "+1 (555) 123-4567",
+                        subtitle: "Mon-Fri from 8am to 5pm PST",
                       },
                       {
                         icon: MapPin,
-                        title: 'Office',
-                        content: '123 Financial District, San Francisco, CA 94105',
-                        subtitle: 'Visit us in person',
+                        title: "Office",
+                        content:
+                          "123 Financial District, San Francisco, CA 94105",
+                        subtitle: "Visit us in person",
                       },
                     ].map((item, index) => (
                       <motion.div
@@ -535,10 +575,13 @@ const ContactPage: React.FC = () => {
                   >
                     <div className="flex items-center mb-4">
                       <Clock className="w-6 h-6 text-cyan-400 mr-3" />
-                      <h3 className="font-semibold text-white">Response Time</h3>
+                      <h3 className="font-semibold text-white">
+                        Response Time
+                      </h3>
                     </div>
                     <p className="text-white/80 mb-4">
-                      We typically respond within 24 hours during business days. For urgent matters, please call us directly.
+                      We typically respond within 24 hours during business days.
+                      For urgent matters, please call us directly.
                     </p>
                     <motion.button
                       onClick={handleGetStarted}
@@ -584,12 +627,18 @@ const ContactPage: React.FC = () => {
               <h3 className="font-semibold text-white mb-4">Product</h3>
               <ul className="space-y-2 text-white/70">
                 <li>
-                  <button onClick={() => handleNavigation('features')} className="hover:text-cyan-400 transition-colors">
+                  <button
+                    onClick={() => handleNavigation("features")}
+                    className="hover:text-cyan-400 transition-colors"
+                  >
                     Features
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => handleNavigation('pricing')} className="hover:text-cyan-400 transition-colors">
+                  <button
+                    onClick={() => handleNavigation("pricing")}
+                    className="hover:text-cyan-400 transition-colors"
+                  >
                     Pricing
                   </button>
                 </li>
@@ -610,7 +659,10 @@ const ContactPage: React.FC = () => {
               <h3 className="font-semibold text-white mb-4">Company</h3>
               <ul className="space-y-2 text-white/70">
                 <li>
-                  <button onClick={() => handleNavigation('about')} className="hover:text-cyan-400 transition-colors">
+                  <button
+                    onClick={() => handleNavigation("about")}
+                    className="hover:text-cyan-400 transition-colors"
+                  >
                     About
                   </button>
                 </li>
@@ -625,7 +677,10 @@ const ContactPage: React.FC = () => {
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => handleNavigation('contact')} className="hover:text-cyan-400 transition-colors">
+                  <button
+                    onClick={() => handleNavigation("contact")}
+                    className="hover:text-cyan-400 transition-colors"
+                  >
                     Contact
                   </button>
                 </li>
@@ -668,4 +723,4 @@ const ContactPage: React.FC = () => {
   );
 };
 
-export default ContactPage; 
+export default ContactPage;

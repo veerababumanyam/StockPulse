@@ -3,9 +3,9 @@
  * Ensures only authenticated users can access protected routes
  * Story 1.5: Authentication Security Hardening
  */
-import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import React from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -20,9 +20,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const location = useLocation();
 
   // Development mode bypass for testing
-  const isDevelopment = import.meta.env.MODE === 'development';
+  const isDevelopment = import.meta.env.MODE === "development";
   const bypassAuth =
-    isDevelopment && localStorage.getItem('dev-bypass-auth') === 'true';
+    isDevelopment && localStorage.getItem("dev-bypass-auth") === "true";
 
   if (bypassAuth) {
     return <>{children}</>;
@@ -42,7 +42,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
               <p>Development Mode: To bypass auth for testing,</p>
               <button
                 onClick={() => {
-                  localStorage.setItem('dev-bypass-auth', 'true');
+                  localStorage.setItem("dev-bypass-auth", "true");
                   window.location.reload();
                 }}
                 className="underline text-blue-500 hover:text-blue-700"
@@ -63,7 +63,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // Check admin requirement if specified
-  if (requireAdmin && !user.role?.includes('ADMIN')) {
+  if (requireAdmin && !user.role?.includes("ADMIN")) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-secondary-900">
         <div className="text-center">

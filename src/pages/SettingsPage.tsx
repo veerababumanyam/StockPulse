@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import {
   Settings,
   User,
@@ -11,51 +11,53 @@ import {
   BarChart3,
   Sparkles,
   Clock,
-} from 'lucide-react';
-import { UnifiedThemeSelector } from '../components/common/UnifiedThemeSelector';
-import { useTheme } from '../hooks/useTheme'; // Enhanced hook
-import { PageLayout, Card } from '../components/layout/PageLayout';
+} from "lucide-react";
+import { UnifiedThemeSelector } from "../components/common/UnifiedThemeSelector";
+import { useTheme } from "../hooks/useTheme"; // Enhanced hook
+import { PageLayout, Card } from "../components/layout/PageLayout";
 
 const SettingsPage: React.FC = () => {
   // Use enhanced theme hook with all features
-  const { 
-    mode, 
-    colorTheme, 
-    isDark, 
-    analytics, 
-    recommendations, 
+  const {
+    mode,
+    colorTheme,
+    isDark,
+    analytics,
+    recommendations,
     autoSwitch,
     toggleAutoSwitch,
     exportThemeData,
-    importThemeData
+    importThemeData,
   } = useTheme({
     enableAnalytics: true,
     enableRecommendations: true,
-    context: 'settings-page'
+    context: "settings-page",
   });
-  
-  const [activeTab, setActiveTab] = useState('appearance');
+
+  const [activeTab, setActiveTab] = useState("appearance");
 
   const tabs = [
-    { id: 'appearance', label: 'Appearance', icon: <Palette /> },
-    { id: 'account', label: 'Account', icon: <User /> },
-    { id: 'security', label: 'Security', icon: <Shield /> },
-    { id: 'notifications', label: 'Notifications', icon: <Bell /> },
-    { id: 'help', label: 'Help & Support', icon: <HelpCircle /> },
+    { id: "appearance", label: "Appearance", icon: <Palette /> },
+    { id: "account", label: "Account", icon: <User /> },
+    { id: "security", label: "Security", icon: <Shield /> },
+    { id: "notifications", label: "Notifications", icon: <Bell /> },
+    { id: "help", label: "Help & Support", icon: <HelpCircle /> },
   ];
 
   const handleExportTheme = async () => {
     try {
       const data = await exportThemeData();
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: "application/json",
+      });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
       a.download = `stockpulse-theme-${Date.now()}.json`;
       a.click();
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Failed to export theme data:', error);
+      console.error("Failed to export theme data:", error);
     }
   };
 
@@ -68,9 +70,9 @@ const SettingsPage: React.FC = () => {
       try {
         const data = JSON.parse(e.target?.result as string);
         await importThemeData(data);
-        console.log('Theme data imported successfully');
+        console.log("Theme data imported successfully");
       } catch (error) {
-        console.error('Failed to import theme data:', error);
+        console.error("Failed to import theme data:", error);
       }
     };
     reader.readAsText(file);
@@ -93,8 +95,8 @@ const SettingsPage: React.FC = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-150 ${
                     activeTab === tab.id
-                      ? 'bg-primary/10 text-primary'
-                      : 'text-text hover:bg-surface/50'
+                      ? "bg-primary/10 text-primary"
+                      : "text-text hover:bg-surface/50"
                   }`}
                 >
                   <span className="mr-3 h-5 w-5">{tab.icon}</span>
@@ -112,7 +114,7 @@ const SettingsPage: React.FC = () => {
         {/* Main content */}
         <div className="flex-1">
           <Card padding="lg">
-            {activeTab === 'appearance' && (
+            {activeTab === "appearance" && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -130,8 +132,9 @@ const SettingsPage: React.FC = () => {
                       Theme & Colors
                     </h4>
                     <p className="text-sm text-text/60 mb-6">
-                      Customize StockPulse with AI-powered theme recommendations, 
-                      analytics, and advanced theme management features.
+                      Customize StockPulse with AI-powered theme
+                      recommendations, analytics, and advanced theme management
+                      features.
                     </p>
 
                     {/* Unified Theme Selector - Full Featured */}
@@ -158,24 +161,29 @@ const SettingsPage: React.FC = () => {
                         </h5>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div className="p-3 rounded-lg bg-background/50">
-                            <div className="text-sm text-text/60">Total Changes</div>
+                            <div className="text-sm text-text/60">
+                              Total Changes
+                            </div>
                             <div className="text-lg font-semibold text-text">
                               {analytics.totalChanges || 0}
                             </div>
                           </div>
                           <div className="p-3 rounded-lg bg-background/50">
-                            <div className="text-sm text-text/60">Most Used Theme</div>
+                            <div className="text-sm text-text/60">
+                              Most Used Theme
+                            </div>
                             <div className="text-lg font-semibold text-text">
                               {analytics.mostUsedTheme || colorTheme}
                             </div>
                           </div>
                           <div className="p-3 rounded-lg bg-background/50">
-                            <div className="text-sm text-text/60">Usage Time</div>
+                            <div className="text-sm text-text/60">
+                              Usage Time
+                            </div>
                             <div className="text-lg font-semibold text-text">
-                              {analytics.totalUsageTime ? 
-                                `${Math.round(analytics.totalUsageTime / 1000 / 60)}m` : 
-                                '0m'
-                              }
+                              {analytics.totalUsageTime
+                                ? `${Math.round(analytics.totalUsageTime / 1000 / 60)}m`
+                                : "0m"}
                             </div>
                           </div>
                         </div>
@@ -191,9 +199,16 @@ const SettingsPage: React.FC = () => {
                         </h5>
                         <div className="space-y-3">
                           {recommendations.slice(0, 3).map((rec, index) => (
-                            <div key={index} className="p-3 rounded-lg bg-background/50 border border-border/50">
-                              <div className="text-sm font-medium text-text">{rec.theme}</div>
-                              <div className="text-xs text-text/60 mt-1">{rec.reason}</div>
+                            <div
+                              key={index}
+                              className="p-3 rounded-lg bg-background/50 border border-border/50"
+                            >
+                              <div className="text-sm font-medium text-text">
+                                {rec.theme}
+                              </div>
+                              <div className="text-xs text-text/60 mt-1">
+                                {rec.reason}
+                              </div>
                               <div className="text-xs text-primary mt-1">
                                 Confidence: {Math.round(rec.confidence * 100)}%
                               </div>
@@ -211,9 +226,12 @@ const SettingsPage: React.FC = () => {
                       </h5>
                       <div className="flex items-center justify-between">
                         <div>
-                          <div className="text-sm font-medium text-text">Smart Auto-Switch</div>
+                          <div className="text-sm font-medium text-text">
+                            Smart Auto-Switch
+                          </div>
                           <div className="text-xs text-text/60 mt-1">
-                            Automatically switch themes based on time, system preference, and usage patterns
+                            Automatically switch themes based on time, system
+                            preference, and usage patterns
                           </div>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
@@ -242,7 +260,9 @@ const SettingsPage: React.FC = () => {
 
                     {/* Theme Data Management */}
                     <div className="p-6 rounded-xl border border-border bg-surface/20">
-                      <h5 className="font-medium mb-4 text-text">Theme Data Management</h5>
+                      <h5 className="font-medium mb-4 text-text">
+                        Theme Data Management
+                      </h5>
                       <div className="flex flex-wrap gap-3">
                         <button
                           onClick={handleExportTheme}
@@ -261,7 +281,8 @@ const SettingsPage: React.FC = () => {
                         </label>
                       </div>
                       <div className="text-xs text-text/60 mt-3">
-                        Export your theme preferences and analytics data, or import settings from another device.
+                        Export your theme preferences and analytics data, or
+                        import settings from another device.
                       </div>
                     </div>
                   </div>
@@ -272,15 +293,19 @@ const SettingsPage: React.FC = () => {
                       Layout Preferences
                     </h4>
                     <p className="text-sm text-text/60 mb-4">
-                      Customize how information is displayed throughout the application.
+                      Customize how information is displayed throughout the
+                      application.
                     </p>
 
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h5 className="font-medium text-text">Compact Mode</h5>
+                          <h5 className="font-medium text-text">
+                            Compact Mode
+                          </h5>
                           <p className="text-sm text-text/60">
-                            Reduce padding and spacing to fit more content on screen
+                            Reduce padding and spacing to fit more content on
+                            screen
                           </p>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
@@ -295,7 +320,9 @@ const SettingsPage: React.FC = () => {
 
                       <div className="flex items-center justify-between">
                         <div>
-                          <h5 className="font-medium text-text">Show Grid Lines</h5>
+                          <h5 className="font-medium text-text">
+                            Show Grid Lines
+                          </h5>
                           <p className="text-sm text-text/60">
                             Display grid lines in charts and tables
                           </p>
@@ -333,7 +360,9 @@ const SettingsPage: React.FC = () => {
 
                   {/* Font Settings */}
                   <div>
-                    <h4 className="text-md font-medium mb-4 text-text">Font Settings</h4>
+                    <h4 className="text-md font-medium mb-4 text-text">
+                      Font Settings
+                    </h4>
                     <p className="text-sm text-text/60 mb-4">
                       Adjust typography settings for better readability.
                     </p>
@@ -345,7 +374,9 @@ const SettingsPage: React.FC = () => {
                         </label>
                         <select className="block w-full px-3 py-2 border border-border rounded-lg bg-background text-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
                           <option value="small">Small</option>
-                          <option value="medium" selected>Medium</option>
+                          <option value="medium" selected>
+                            Medium
+                          </option>
                           <option value="large">Large</option>
                         </select>
                       </div>
@@ -368,47 +399,63 @@ const SettingsPage: React.FC = () => {
             )}
 
             {/* Other tabs content */}
-            {activeTab === 'account' && (
+            {activeTab === "account" && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
               >
-                <h3 className="text-lg font-medium mb-6 text-text">Account Settings</h3>
-                <p className="text-text/60">Account settings content goes here...</p>
+                <h3 className="text-lg font-medium mb-6 text-text">
+                  Account Settings
+                </h3>
+                <p className="text-text/60">
+                  Account settings content goes here...
+                </p>
               </motion.div>
             )}
 
-            {activeTab === 'security' && (
+            {activeTab === "security" && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
               >
-                <h3 className="text-lg font-medium mb-6 text-text">Security Settings</h3>
-                <p className="text-text/60">Security settings content goes here...</p>
+                <h3 className="text-lg font-medium mb-6 text-text">
+                  Security Settings
+                </h3>
+                <p className="text-text/60">
+                  Security settings content goes here...
+                </p>
               </motion.div>
             )}
 
-            {activeTab === 'notifications' && (
+            {activeTab === "notifications" && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
               >
-                <h3 className="text-lg font-medium mb-6 text-text">Notification Settings</h3>
-                <p className="text-text/60">Notification settings content goes here...</p>
+                <h3 className="text-lg font-medium mb-6 text-text">
+                  Notification Settings
+                </h3>
+                <p className="text-text/60">
+                  Notification settings content goes here...
+                </p>
               </motion.div>
             )}
 
-            {activeTab === 'help' && (
+            {activeTab === "help" && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
               >
-                <h3 className="text-lg font-medium mb-6 text-text">Help & Support</h3>
-                <p className="text-text/60">Help and support content goes here...</p>
+                <h3 className="text-lg font-medium mb-6 text-text">
+                  Help & Support
+                </h3>
+                <p className="text-text/60">
+                  Help and support content goes here...
+                </p>
               </motion.div>
             )}
           </Card>

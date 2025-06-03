@@ -56,10 +56,12 @@ The implementation includes robust security measures:
 StockPulse exposes the following capabilities as an MCP server:
 
 1. **Market Data Tools**:
+
    - `get_stock_price`: Real-time and historical stock prices
    - `get_technical_indicators`: Calculate technical indicators for stocks
 
 2. **Trading Tools**:
+
    - `place_order`: Execute trading orders
    - `get_portfolio`: Retrieve portfolio holdings
 

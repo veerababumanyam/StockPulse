@@ -4,17 +4,35 @@
     "version": "1.0.0"
   },
   "security": {
-    "allowedRootPaths": [
-      "C:\\Users\\admin\\Desktop\\StockPulse"
-    ],
+    "allowedRootPaths": ["C:\\Users\\admin\\Desktop\\StockPulse"],
     "readOnlyMode": false,
     "maxFileSize": 10485760,
     "maxDirectoryDepth": 10,
     "allowedFileExtensions": [
-      ".ts", ".tsx", ".js", ".jsx", ".json", ".md", ".txt",
-      ".yml", ".yaml", ".env.example", ".gitignore", ".css",
-      ".html", ".svg", ".png", ".jpg", ".jpeg", ".gif",
-      ".py", ".sql", ".sh", ".bat", ".ps1", ".xml"
+      ".ts",
+      ".tsx",
+      ".js",
+      ".jsx",
+      ".json",
+      ".md",
+      ".txt",
+      ".yml",
+      ".yaml",
+      ".env.example",
+      ".gitignore",
+      ".css",
+      ".html",
+      ".svg",
+      ".png",
+      ".jpg",
+      ".jpeg",
+      ".gif",
+      ".py",
+      ".sql",
+      ".sh",
+      ".bat",
+      ".ps1",
+      ".xml"
     ],
     "blockedPatterns": [
       "**/node_modules/**",
@@ -47,4 +65,4 @@
     "level": "info",
     "enableConsole": true
   }
-} 
+}

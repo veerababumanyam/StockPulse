@@ -7,8 +7,8 @@
  * the dashboard remains functional during development.
  */
 
-import axios, { AxiosInstance } from 'axios';
-import { DashboardConfig, DashboardAPIResponse } from '../types/dashboard';
+import axios, { AxiosInstance } from "axios";
+import { DashboardConfig, DashboardAPIResponse } from "../types/dashboard";
 import {
   PortfolioOverviewData,
   PortfolioChartData,
@@ -41,7 +41,7 @@ import {
   CalendarEventItem,
   EventImpact,
   EventType,
-} from '../types/widget-data';
+} from "../types/widget-data";
 
 // Extend AxiosInstance to include our custom methods
 interface ExtendedAxiosInstance extends AxiosInstance {
@@ -54,21 +54,23 @@ interface ExtendedAxiosInstance extends AxiosInstance {
   getPortfolioChartData(timeframe?: string): Promise<PortfolioChartData>;
   getPerformanceMetricsData(): Promise<PerformanceMetricsData>;
   getSectorPerformanceData(timeframe?: string): Promise<SectorPerformanceData>;
-  getAIInsightsData(count?: number): Promise<{ success: boolean; data: AIInsightsData; message?: string }>;
+  getAIInsightsData(
+    count?: number,
+  ): Promise<{ success: boolean; data: AIInsightsData; message?: string }>;
   getRecentTransactionsData(limit?: number): Promise<RecentTransactionsData>;
   getEconomicCalendarData(date?: string): Promise<EconomicCalendarData>;
 }
 
 // --- Backend API Configuration ---
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
 // Create axios instance with authentication
 const apiClient = axios.create({
   baseURL: `${API_BASE_URL}/api/v1`,
   withCredentials: true, // Include cookies for authentication
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 }) as ExtendedAxiosInstance;
 
@@ -89,7 +91,7 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Handle authentication errors
-      console.error('Authentication required');
+      console.error("Authentication required");
       // Redirect to login or refresh token
     }
     return Promise.reject(error);
@@ -103,10 +105,10 @@ const handleApiResponse = async <T>(apiCall: Promise<any>): Promise<T> => {
     if (response.data.success) {
       return response.data.data;
     } else {
-      throw new Error(response.data.error || 'API call failed');
+      throw new Error(response.data.error || "API call failed");
     }
   } catch (error) {
-    console.error('API call failed:', error);
+    console.error("API call failed:", error);
     throw error;
   }
 };
@@ -118,7 +120,7 @@ export const getDashboardConfig = async (): Promise<DashboardConfig> => {
 
   // Return mock dashboard config for now
   // In production, this would fetch from the backend
-  throw new Error('Dashboard config API not implemented yet');
+  throw new Error("Dashboard config API not implemented yet");
 };
 
 export const saveDashboardConfig = async (
@@ -131,7 +133,7 @@ export const saveDashboardConfig = async (
   // In production, this would save to the backend
   return {
     success: true,
-    message: 'Dashboard configuration saved successfully',
+    message: "Dashboard configuration saved successfully",
     timestamp: new Date().toISOString(),
   };
 };
@@ -141,15 +143,15 @@ export const saveDashboardConfig = async (
 export const getPortfolioOverview =
   async (): Promise<PortfolioOverviewData> => {
     return handleApiResponse<PortfolioOverviewData>(
-      apiClient.get('/fmp/portfolio/overview'),
+      apiClient.get("/fmp/portfolio/overview"),
     );
   };
 
 export const getPortfolioChartData = async (
-  timeframe: string = '1M',
+  timeframe: string = "1M",
 ): Promise<PortfolioChartData> => {
   return handleApiResponse<PortfolioChartData>(
-    apiClient.get('/fmp/portfolio/chart', { params: { timeframe } }),
+    apiClient.get("/fmp/portfolio/chart", { params: { timeframe } }),
   );
 };
 
@@ -159,9 +161,9 @@ export const getWatchlistData = async (
   try {
     const params =
       symbols && Array.isArray(symbols) && symbols.length > 0
-        ? { symbols: symbols.join(',') }
+        ? { symbols: symbols.join(",") }
         : {};
-    const response = await apiClient.get('/fmp/watchlist', { params });
+    const response = await apiClient.get("/fmp/watchlist", { params });
     if (response.data.success) {
       return response.data.data;
     } else {
@@ -169,62 +171,62 @@ export const getWatchlistData = async (
       return generateMockWatchlist();
     }
   } catch (error) {
-    console.debug('Watchlist API failed, returning mock data:', error);
+    console.debug("Watchlist API failed, returning mock data:", error);
     return generateMockWatchlist();
   }
 };
 
 export const getMarketSummary = async (): Promise<MarketSummaryData> => {
   return handleApiResponse<MarketSummaryData>(
-    apiClient.get('/fmp/market/summary'),
+    apiClient.get("/fmp/market/summary"),
   );
 };
 
 export const getAIInsights = async (): Promise<AIInsightsData> => {
-  return handleApiResponse<AIInsightsData>(apiClient.get('/fmp/ai/insights'));
+  return handleApiResponse<AIInsightsData>(apiClient.get("/fmp/ai/insights"));
 };
 
 export const getRecentTransactions = async (
   limit: number = 10,
 ): Promise<RecentTransactionsData> => {
   return handleApiResponse<RecentTransactionsData>(
-    apiClient.get('/fmp/portfolio/transactions', { params: { limit } }),
+    apiClient.get("/fmp/portfolio/transactions", { params: { limit } }),
   );
 };
 
 export const getPerformanceMetrics =
   async (): Promise<PerformanceMetricsData> => {
     return handleApiResponse<PerformanceMetricsData>(
-      apiClient.get('/fmp/portfolio/metrics'),
+      apiClient.get("/fmp/portfolio/metrics"),
     );
   };
 
 export const getAlerts = async (): Promise<AlertsData> => {
-  return handleApiResponse<AlertsData>(apiClient.get('/fmp/alerts'));
+  return handleApiResponse<AlertsData>(apiClient.get("/fmp/alerts"));
 };
 
 export const getNewsFeed = async (
   limit: number = 20,
 ): Promise<NewsFeedData> => {
   return handleApiResponse<NewsFeedData>(
-    apiClient.get('/fmp/news', { params: { limit } }),
+    apiClient.get("/fmp/news", { params: { limit } }),
   );
 };
 
 export const getSectorPerformance = async (
-  timeframe: string = '1D',
+  timeframe: string = "1D",
 ): Promise<SectorPerformanceData> => {
   return handleApiResponse<SectorPerformanceData>(
-    apiClient.get('/fmp/market/sectors', { params: { timeframe } }),
+    apiClient.get("/fmp/market/sectors", { params: { timeframe } }),
   );
 };
 
 export const getTopMovers = async (
-  market: string = 'nasdaq',
-  type: string = 'gainers',
+  market: string = "nasdaq",
+  type: string = "gainers",
 ): Promise<TopMoversData> => {
   return handleApiResponse<TopMoversData>(
-    apiClient.get('/fmp/market/movers', { params: { market, type } }),
+    apiClient.get("/fmp/market/movers", { params: { market, type } }),
   );
 };
 
@@ -233,7 +235,7 @@ export const getEconomicCalendar = async (
 ): Promise<EconomicCalendarData> => {
   const params = date ? { date } : {};
   return handleApiResponse<EconomicCalendarData>(
-    apiClient.get('/fmp/economic/calendar', { params }),
+    apiClient.get("/fmp/economic/calendar", { params }),
   );
 };
 
@@ -243,7 +245,7 @@ export { apiClient };
 // Add widget-specific methods to apiClient object
 apiClient.getPortfolioOverview = async (): Promise<PortfolioOverviewData> => {
   try {
-    const response = await apiClient.get('/fmp/portfolio/overview');
+    const response = await apiClient.get("/fmp/portfolio/overview");
     if (response.data.success) {
       return response.data.data;
     } else {
@@ -251,14 +253,14 @@ apiClient.getPortfolioOverview = async (): Promise<PortfolioOverviewData> => {
       return generateMockPortfolioOverview();
     }
   } catch (error) {
-    console.debug('Portfolio overview API failed, returning mock data');
+    console.debug("Portfolio overview API failed, returning mock data");
     return generateMockPortfolioOverview();
   }
 };
 
 apiClient.getMarketSummaryData = async (): Promise<MarketSummaryData> => {
   try {
-    const response = await apiClient.get('/fmp/market/summary');
+    const response = await apiClient.get("/fmp/market/summary");
     if (response.data.success) {
       return response.data.data;
     } else {
@@ -266,7 +268,7 @@ apiClient.getMarketSummaryData = async (): Promise<MarketSummaryData> => {
       return generateMockMarketSummary();
     }
   } catch (error) {
-    console.debug('Market summary API failed, returning mock data');
+    console.debug("Market summary API failed, returning mock data");
     return generateMockMarketSummary();
   }
 };
@@ -277,9 +279,9 @@ apiClient.getWatchlistData = async (
   try {
     const params =
       symbols && Array.isArray(symbols) && symbols.length > 0
-        ? { symbols: symbols.join(',') }
+        ? { symbols: symbols.join(",") }
         : {};
-    const response = await apiClient.get('/fmp/watchlist', { params });
+    const response = await apiClient.get("/fmp/watchlist", { params });
     if (response.data.success) {
       return response.data.data;
     } else {
@@ -287,7 +289,7 @@ apiClient.getWatchlistData = async (
       return generateMockWatchlist();
     }
   } catch (error) {
-    console.debug('Watchlist API failed, returning mock data');
+    console.debug("Watchlist API failed, returning mock data");
     return generateMockWatchlist();
   }
 };
@@ -299,7 +301,7 @@ apiClient.getNewsFeedData = async (
   try {
     const params: any = { limit };
     if (filters?.keywords) params.keywords = filters.keywords;
-    const response = await apiClient.get('/fmp/news', { params });
+    const response = await apiClient.get("/fmp/news", { params });
     if (response.data.success) {
       return response.data.data;
     } else {
@@ -307,7 +309,7 @@ apiClient.getNewsFeedData = async (
       return generateMockNewsFeed(limit);
     }
   } catch (error) {
-    console.debug('News feed API failed, returning mock data');
+    console.debug("News feed API failed, returning mock data");
     return generateMockNewsFeed(limit);
   }
 };
@@ -319,7 +321,7 @@ apiClient.getAlertsData = async (
   try {
     const params: any = { limit };
     if (filters) Object.assign(params, filters);
-    const response = await apiClient.get('/fmp/alerts', { params });
+    const response = await apiClient.get("/fmp/alerts", { params });
     if (response.data.success) {
       return response.data.data;
     } else {
@@ -327,18 +329,18 @@ apiClient.getAlertsData = async (
       return generateMockAlerts(limit);
     }
   } catch (error) {
-    console.debug('Alerts API failed, returning mock data');
+    console.debug("Alerts API failed, returning mock data");
     return generateMockAlerts(limit);
   }
 };
 
 apiClient.getTopMoversData = async (
-  market: string = 'US Equities',
+  market: string = "US Equities",
   count: number = 5,
 ): Promise<TopMoversData> => {
   try {
-    const response = await apiClient.get('/fmp/market/movers', {
-      params: { market: market.toLowerCase().replace(' ', '_'), count },
+    const response = await apiClient.get("/fmp/market/movers", {
+      params: { market: market.toLowerCase().replace(" ", "_"), count },
     });
     if (response.data.success) {
       return response.data.data;
@@ -347,17 +349,17 @@ apiClient.getTopMoversData = async (
       return generateMockTopMovers(market, count);
     }
   } catch (error) {
-    console.debug('Top movers API failed, returning mock data');
+    console.debug("Top movers API failed, returning mock data");
     return generateMockTopMovers(market, count);
   }
 };
 
 // Add missing API functions that widgets are calling
 apiClient.getPortfolioChartData = async (
-  timeframe: string = '1M',
+  timeframe: string = "1M",
 ): Promise<PortfolioChartData> => {
   try {
-    const response = await apiClient.get('/fmp/portfolio/chart', {
+    const response = await apiClient.get("/fmp/portfolio/chart", {
       params: { timeframe },
     });
     if (response.data.success) {
@@ -366,7 +368,7 @@ apiClient.getPortfolioChartData = async (
       return generateMockPortfolioChart(timeframe);
     }
   } catch (error) {
-    console.debug('Portfolio chart API failed, returning mock data');
+    console.debug("Portfolio chart API failed, returning mock data");
     return generateMockPortfolioChart(timeframe);
   }
 };
@@ -374,23 +376,23 @@ apiClient.getPortfolioChartData = async (
 apiClient.getPerformanceMetricsData =
   async (): Promise<PerformanceMetricsData> => {
     try {
-      const response = await apiClient.get('/fmp/portfolio/performance');
+      const response = await apiClient.get("/fmp/portfolio/performance");
       if (response.data.success) {
         return response.data.data;
       } else {
         return generateMockPerformanceMetrics();
       }
     } catch (error) {
-      console.debug('Performance metrics API failed, returning mock data');
+      console.debug("Performance metrics API failed, returning mock data");
       return generateMockPerformanceMetrics();
     }
   };
 
 apiClient.getSectorPerformanceData = async (
-  timeframe: string = '1D',
+  timeframe: string = "1D",
 ): Promise<SectorPerformanceData> => {
   try {
-    const response = await apiClient.get('/fmp/market/sectors', {
+    const response = await apiClient.get("/fmp/market/sectors", {
       params: { timeframe },
     });
     if (response.data.success) {
@@ -399,14 +401,18 @@ apiClient.getSectorPerformanceData = async (
       return generateMockSectorPerformance(timeframe);
     }
   } catch (error) {
-    console.debug('Sector performance API failed, returning mock data');
+    console.debug("Sector performance API failed, returning mock data");
     return generateMockSectorPerformance(timeframe);
   }
 };
 
-apiClient.getAIInsightsData = async (count: number = 5): Promise<{ success: boolean; data: AIInsightsData; message?: string }> => {
+apiClient.getAIInsightsData = async (
+  count: number = 5,
+): Promise<{ success: boolean; data: AIInsightsData; message?: string }> => {
   try {
-    const response = await apiClient.get('/fmp/ai/insights', { params: { count } });
+    const response = await apiClient.get("/fmp/ai/insights", {
+      params: { count },
+    });
     if (response.data.success) {
       return response.data;
     } else {
@@ -417,7 +423,7 @@ apiClient.getAIInsightsData = async (count: number = 5): Promise<{ success: bool
       };
     }
   } catch (error) {
-    console.debug('AI insights API failed, returning mock data');
+    console.debug("AI insights API failed, returning mock data");
     return {
       success: true,
       data: generateMockAIInsights(),
@@ -429,7 +435,7 @@ apiClient.getRecentTransactionsData = async (
   limit: number = 10,
 ): Promise<RecentTransactionsData> => {
   try {
-    const response = await apiClient.get('/fmp/portfolio/transactions', {
+    const response = await apiClient.get("/fmp/portfolio/transactions", {
       params: { limit },
     });
     if (response.data.success) {
@@ -438,7 +444,7 @@ apiClient.getRecentTransactionsData = async (
       return generateMockRecentTransactions(limit);
     }
   } catch (error) {
-    console.debug('Recent transactions API failed, returning mock data');
+    console.debug("Recent transactions API failed, returning mock data");
     return generateMockRecentTransactions(limit);
   }
 };
@@ -448,14 +454,14 @@ apiClient.getEconomicCalendarData = async (
 ): Promise<EconomicCalendarData> => {
   try {
     const params = date ? { date } : {};
-    const response = await apiClient.get('/fmp/economic/calendar', { params });
+    const response = await apiClient.get("/fmp/economic/calendar", { params });
     if (response.data.success) {
       return response.data.data;
     } else {
       return generateMockEconomicCalendar(date);
     }
   } catch (error) {
-    console.debug('Economic calendar API failed, returning mock data');
+    console.debug("Economic calendar API failed, returning mock data");
     return generateMockEconomicCalendar(date);
   }
 };
@@ -511,25 +517,25 @@ const generateMockMarketSummary = (): MarketSummaryData => {
   return {
     majorIndices: [
       {
-        id: 'spy',
-        name: 'S&P 500',
-        shortName: 'S&P 500',
+        id: "spy",
+        name: "S&P 500",
+        shortName: "S&P 500",
         value: 445.67,
         change: 8.23,
         changePercent: 1.88,
       },
       {
-        id: 'qqq',
-        name: 'NASDAQ 100',
-        shortName: 'NASDAQ',
+        id: "qqq",
+        name: "NASDAQ 100",
+        shortName: "NASDAQ",
         value: 378.45,
         change: -2.15,
         changePercent: -0.56,
       },
       {
-        id: 'dia',
-        name: 'Dow Jones Industrial Average',
-        shortName: 'Dow',
+        id: "dia",
+        name: "Dow Jones Industrial Average",
+        shortName: "Dow",
         value: 347.23,
         change: 5.67,
         changePercent: 1.66,
@@ -541,52 +547,52 @@ const generateMockMarketSummary = (): MarketSummaryData => {
 
 const generateMockWatchlist = (): WatchlistData => {
   return {
-    watchlistId: 'default-watchlist',
-    name: 'My Watchlist',
+    watchlistId: "default-watchlist",
+    name: "My Watchlist",
     items: [
       {
-        id: 'watch-1',
-        symbol: 'AAPL',
-        name: 'Apple Inc.',
+        id: "watch-1",
+        symbol: "AAPL",
+        name: "Apple Inc.",
         price: 185.42,
         change: 2.34,
         changePercent: 1.28,
         volume: 45678912,
         marketCap: 2890000000000,
-        logoUrl: 'https://logo.clearbit.com/apple.com',
+        logoUrl: "https://logo.clearbit.com/apple.com",
       },
       {
-        id: 'watch-2',
-        symbol: 'GOOGL',
-        name: 'Alphabet Inc.',
+        id: "watch-2",
+        symbol: "GOOGL",
+        name: "Alphabet Inc.",
         price: 142.78,
         change: -1.56,
         changePercent: -1.08,
         volume: 23456789,
         marketCap: 1780000000000,
-        logoUrl: 'https://logo.clearbit.com/google.com',
+        logoUrl: "https://logo.clearbit.com/google.com",
       },
       {
-        id: 'watch-3',
-        symbol: 'MSFT',
-        name: 'Microsoft Corporation',
+        id: "watch-3",
+        symbol: "MSFT",
+        name: "Microsoft Corporation",
         price: 378.91,
         change: 4.23,
         changePercent: 1.13,
         volume: 34567890,
         marketCap: 2810000000000,
-        logoUrl: 'https://logo.clearbit.com/microsoft.com',
+        logoUrl: "https://logo.clearbit.com/microsoft.com",
       },
       {
-        id: 'watch-4',
-        symbol: 'TSLA',
-        name: 'Tesla Inc.',
+        id: "watch-4",
+        symbol: "TSLA",
+        name: "Tesla Inc.",
         price: 248.5,
         change: -8.75,
         changePercent: -3.4,
         volume: 78901234,
         marketCap: 789000000000,
-        logoUrl: 'https://logo.clearbit.com/tesla.com',
+        logoUrl: "https://logo.clearbit.com/tesla.com",
       },
     ],
   };
@@ -602,15 +608,16 @@ const generateMockNewsFeed = (limit: number): NewsFeedData => {
     );
     articles.push({
       id: `news-${i + 1}`,
-      title: `Market Analysis: ${['Tech Stocks Rally', 'Fed Decision Impact', 'Earnings Beat Expectations', 'Oil Prices Surge', 'Crypto Market Update'][i % 5]}`,
-      summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      title: `Market Analysis: ${["Tech Stocks Rally", "Fed Decision Impact", "Earnings Beat Expectations", "Oil Prices Surge", "Crypto Market Update"][i % 5]}`,
+      summary:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       url: `https://example.com/news/${i + 1}`,
-      source: ['Reuters', 'Bloomberg', 'CNBC', 'MarketWatch', 'Yahoo Finance'][
+      source: ["Reuters", "Bloomberg", "CNBC", "MarketWatch", "Yahoo Finance"][
         i % 5
       ],
       publishedAt: publishedAt.toISOString(),
       imageUrl: `https://picsum.photos/320/200?random=${i + 1}`,
-      symbols: i % 2 === 0 ? ['AAPL', 'MSFT'] : ['GOOGL', 'TSLA'],
+      symbols: i % 2 === 0 ? ["AAPL", "MSFT"] : ["GOOGL", "TSLA"],
     });
   }
 
@@ -631,19 +638,19 @@ const generateMockAlerts = (limit: number): AlertsData => {
     );
     alerts.push({
       id: `alert-${i + 1}`,
-      title: `${['Price Alert', 'Volume Spike', 'News Alert', 'Technical Signal', 'Earnings Alert'][i % 5]}`,
-      description: `${['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN'][i % 5]} has triggered your alert condition.`,
-      severity: (['info', 'warning', 'critical'] as AlertSeverity[])[i % 3],
-      status: (['active', 'acknowledged', 'resolved'] as AlertStatus[])[i % 3],
+      title: `${["Price Alert", "Volume Spike", "News Alert", "Technical Signal", "Earnings Alert"][i % 5]}`,
+      description: `${["AAPL", "GOOGL", "MSFT", "TSLA", "AMZN"][i % 5]} has triggered your alert condition.`,
+      severity: (["info", "warning", "critical"] as AlertSeverity[])[i % 3],
+      status: (["active", "acknowledged", "resolved"] as AlertStatus[])[i % 3],
       timestamp: timestamp.toISOString(),
-      symbol: ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN'][i % 5],
+      symbol: ["AAPL", "GOOGL", "MSFT", "TSLA", "AMZN"][i % 5],
       link: `https://example.com/alert/${i + 1}`,
     });
   }
 
   return {
     alerts,
-    filter: { status: ['active', 'acknowledged'] },
+    filter: { status: ["active", "acknowledged"] },
     lastRefreshed: new Date().toISOString(),
   };
 };
@@ -652,26 +659,26 @@ const generateMockTopMovers = (
   market: string,
   count: number,
 ): TopMoversData => {
-  const generateMovers = (type: 'gain' | 'loss' | 'active'): TopMoverItem[] => {
+  const generateMovers = (type: "gain" | "loss" | "active"): TopMoverItem[] => {
     const movers: TopMoverItem[] = [];
     const symbols = [
-      'AAPL',
-      'GOOGL',
-      'MSFT',
-      'TSLA',
-      'AMZN',
-      'META',
-      'NVDA',
-      'NFLX',
-      'AMD',
-      'CRM',
+      "AAPL",
+      "GOOGL",
+      "MSFT",
+      "TSLA",
+      "AMZN",
+      "META",
+      "NVDA",
+      "NFLX",
+      "AMD",
+      "CRM",
     ];
 
     for (let i = 0; i < Math.min(count, symbols.length); i++) {
       const changeMultiplier =
-        type === 'gain'
+        type === "gain"
           ? 1
-          : type === 'loss'
+          : type === "loss"
             ? -1
             : Math.random() > 0.5
               ? 1
@@ -696,9 +703,9 @@ const generateMockTopMovers = (
 
   return {
     market,
-    gainers: generateMovers('gain'),
-    losers: generateMovers('loss'),
-    mostActive: generateMovers('active'),
+    gainers: generateMovers("gain"),
+    losers: generateMovers("loss"),
+    mostActive: generateMovers("active"),
     lastUpdated: new Date().toISOString(),
   };
 };
@@ -725,21 +732,21 @@ const generateMockSectorPerformance = (
   timeframe: string,
 ): SectorPerformanceData => {
   const sectors = [
-    'Technology',
-    'Healthcare',
-    'Financials',
-    'Consumer Discretionary',
-    'Communication Services',
-    'Industrials',
-    'Consumer Staples',
-    'Energy',
-    'Utilities',
-    'Real Estate',
-    'Materials',
+    "Technology",
+    "Healthcare",
+    "Financials",
+    "Consumer Discretionary",
+    "Communication Services",
+    "Industrials",
+    "Consumer Staples",
+    "Energy",
+    "Utilities",
+    "Real Estate",
+    "Materials",
   ];
 
   const sectorData = sectors.map((name, index) => ({
-    id: name.toLowerCase().replace(/\s+/g, '-'),
+    id: name.toLowerCase().replace(/\s+/g, "-"),
     name,
     performance: Math.round((Math.random() * 10 - 5) * 100) / 100,
     marketCap: Math.floor(Math.random() * 5000000000000) + 1000000000000,
@@ -757,62 +764,67 @@ const generateMockSectorPerformance = (
 const generateMockAIInsights = (): AIInsightsData => {
   const insights: AIInsightItem[] = [
     {
-      id: 'insight-1',
-      title: 'Market Sentiment Analysis',
-      summary: 'Current market sentiment is bullish with increasing institutional buying. Technical indicators suggest continued upward momentum in the technology sector.',
-      source: 'AI Market Analysis Engine',
-      referenceSymbol: 'SPY',
+      id: "insight-1",
+      title: "Market Sentiment Analysis",
+      summary:
+        "Current market sentiment is bullish with increasing institutional buying. Technical indicators suggest continued upward momentum in the technology sector.",
+      source: "AI Market Analysis Engine",
+      referenceSymbol: "SPY",
       timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-      sentiment: 'positive',
-      insightType: 'market_trend',
+      sentiment: "positive",
+      insightType: "market_trend",
       confidenceScore: 0.87,
-      tags: ['bullish', 'institutional', 'technology'],
+      tags: ["bullish", "institutional", "technology"],
     },
     {
-      id: 'insight-2',
-      title: 'Technical Pattern Detection',
-      summary: 'Ascending triangle pattern identified in Apple Inc. stock. This pattern typically indicates a potential bullish breakout above the $185 resistance level.',
-      source: 'Technical Analysis AI',
-      referenceSymbol: 'AAPL',
+      id: "insight-2",
+      title: "Technical Pattern Detection",
+      summary:
+        "Ascending triangle pattern identified in Apple Inc. stock. This pattern typically indicates a potential bullish breakout above the $185 resistance level.",
+      source: "Technical Analysis AI",
+      referenceSymbol: "AAPL",
       timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
-      sentiment: 'positive',
-      insightType: 'stock_signal',
+      sentiment: "positive",
+      insightType: "stock_signal",
       confidenceScore: 0.72,
-      tags: ['technical', 'pattern', 'breakout'],
+      tags: ["technical", "pattern", "breakout"],
     },
     {
-      id: 'insight-3',
-      title: 'Portfolio Risk Assessment',
-      summary: 'Portfolio concentration risk detected in technology sector. Current allocation of 65% in tech stocks exceeds recommended 40% threshold for balanced portfolios.',
-      source: 'Risk Management AI',
-      referenceSymbol: 'TECH',
+      id: "insight-3",
+      title: "Portfolio Risk Assessment",
+      summary:
+        "Portfolio concentration risk detected in technology sector. Current allocation of 65% in tech stocks exceeds recommended 40% threshold for balanced portfolios.",
+      source: "Risk Management AI",
+      referenceSymbol: "TECH",
       timestamp: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-      sentiment: 'negative',
-      insightType: 'portfolio_tip',
+      sentiment: "negative",
+      insightType: "portfolio_tip",
       confidenceScore: 0.91,
-      tags: ['risk', 'diversification', 'allocation'],
+      tags: ["risk", "diversification", "allocation"],
     },
     {
-      id: 'insight-4',
-      title: 'Economic Event Impact',
-      summary: 'Federal Reserve meeting scheduled for next week. Historical data suggests 0.25% rate cut could boost equity markets by 2-3% on average.',
-      source: 'Economic Calendar AI',
+      id: "insight-4",
+      title: "Economic Event Impact",
+      summary:
+        "Federal Reserve meeting scheduled for next week. Historical data suggests 0.25% rate cut could boost equity markets by 2-3% on average.",
+      source: "Economic Calendar AI",
       timestamp: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
-      sentiment: 'neutral',
-      insightType: 'economic_event',
+      sentiment: "neutral",
+      insightType: "economic_event",
       confidenceScore: 0.78,
-      tags: ['fed', 'rates', 'economic'],
+      tags: ["fed", "rates", "economic"],
     },
     {
-      id: 'insight-5',
-      title: 'News Sentiment Summary',
-      summary: 'Recent earnings reports from major tech companies show strong Q3 performance. AI sentiment analysis of 150+ news articles indicates positive market outlook.',
-      source: 'News Sentiment AI',
+      id: "insight-5",
+      title: "News Sentiment Summary",
+      summary:
+        "Recent earnings reports from major tech companies show strong Q3 performance. AI sentiment analysis of 150+ news articles indicates positive market outlook.",
+      source: "News Sentiment AI",
       timestamp: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
-      sentiment: 'positive',
-      insightType: 'news_summary',
+      sentiment: "positive",
+      insightType: "news_summary",
       confidenceScore: 0.83,
-      tags: ['earnings', 'sentiment', 'tech'],
+      tags: ["earnings", "sentiment", "tech"],
     },
   ];
 
@@ -826,8 +838,8 @@ const generateMockRecentTransactions = (
   limit: number,
 ): RecentTransactionsData => {
   const transactions = [];
-  const symbols = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN'];
-  const types = ['buy', 'sell'] as const;
+  const symbols = ["AAPL", "GOOGL", "MSFT", "TSLA", "AMZN"];
+  const types = ["buy", "sell"] as const;
 
   for (let i = 0; i < Math.min(limit, 10); i++) {
     const symbol = symbols[i % symbols.length];
@@ -847,7 +859,7 @@ const generateMockRecentTransactions = (
       total: Math.round(quantity * price * 100) / 100,
       timestamp: timestamp.toISOString(),
       fees: Math.round(quantity * price * 0.001 * 100) / 100,
-      status: 'completed' as const,
+      status: "completed" as const,
     });
   }
 
@@ -861,57 +873,57 @@ const generateMockRecentTransactions = (
 const generateMockEconomicCalendar = (date?: string): EconomicCalendarData => {
   const events = [
     {
-      id: 'event-1',
-      title: 'Federal Reserve Interest Rate Decision',
-      description: 'FOMC announces federal funds rate decision',
-      date: new Date().toISOString().split('T')[0],
-      time: '14:00',
-      impact: 'high' as const,
-      country: 'US',
-      category: 'Monetary Policy',
+      id: "event-1",
+      title: "Federal Reserve Interest Rate Decision",
+      description: "FOMC announces federal funds rate decision",
+      date: new Date().toISOString().split("T")[0],
+      time: "14:00",
+      impact: "high" as const,
+      country: "US",
+      category: "Monetary Policy",
       actual: null,
-      forecast: '5.25%',
-      previous: '5.00%',
+      forecast: "5.25%",
+      previous: "5.00%",
     },
     {
-      id: 'event-2',
-      title: 'Non-Farm Payrolls',
-      description: 'Monthly employment change excluding farm workers',
+      id: "event-2",
+      title: "Non-Farm Payrolls",
+      description: "Monthly employment change excluding farm workers",
       date: new Date(Date.now() + 24 * 60 * 60 * 1000)
         .toISOString()
-        .split('T')[0],
-      time: '08:30',
-      impact: 'high' as const,
-      country: 'US',
-      category: 'Employment',
+        .split("T")[0],
+      time: "08:30",
+      impact: "high" as const,
+      country: "US",
+      category: "Employment",
       actual: null,
-      forecast: '200K',
-      previous: '187K',
+      forecast: "200K",
+      previous: "187K",
     },
     {
-      id: 'event-3',
-      title: 'Consumer Price Index',
-      description: 'Monthly inflation measurement',
+      id: "event-3",
+      title: "Consumer Price Index",
+      description: "Monthly inflation measurement",
       date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
         .toISOString()
-        .split('T')[0],
-      time: '08:30',
-      impact: 'medium' as const,
-      country: 'US',
-      category: 'Inflation',
+        .split("T")[0],
+      time: "08:30",
+      impact: "medium" as const,
+      country: "US",
+      category: "Inflation",
       actual: null,
-      forecast: '3.2%',
-      previous: '3.0%',
+      forecast: "3.2%",
+      previous: "3.0%",
     },
   ];
 
   return {
     events: date ? events.filter((e) => e.date === date) : events,
     dateRange: {
-      start: new Date().toISOString().split('T')[0],
+      start: new Date().toISOString().split("T")[0],
       end: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
         .toISOString()
-        .split('T')[0],
+        .split("T")[0],
     },
     lastUpdated: new Date().toISOString(),
   };

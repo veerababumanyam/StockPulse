@@ -7,6 +7,7 @@ This guide covers the complete process for deploying StockPulse to a staging env
 ## Prerequisites
 
 ### System Requirements
+
 - Docker Engine 20.10+ with Docker Compose
 - Node.js 18+ (for local development)
 - Git 2.30+
@@ -14,6 +15,7 @@ This guide covers the complete process for deploying StockPulse to a staging env
 - 10GB+ available disk space
 
 ### Verification Commands
+
 ```bash
 docker --version
 docker-compose --version
@@ -24,6 +26,7 @@ git --version
 ## Quick Start
 
 ### 1. Deploy Staging Environment
+
 ```bash
 # Clone and navigate to project
 git clone <repository-url>
@@ -34,13 +37,16 @@ cd StockPulse
 ```
 
 ### 2. Access Application
+
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8000
 - **MCP Auth Server**: http://localhost:8002
 - **Traefik Dashboard**: http://localhost:8080
 
 ### 3. Test Authentication
+
 **Test Credentials:**
+
 - Email: `testuser@example.com`
 - Password: `Password123!`
 
@@ -53,22 +59,22 @@ graph TB
     subgraph "Frontend Layer"
         FE[React Frontend<br/>:3000]
     end
-    
+
     subgraph "API Gateway"
         TF[Traefik<br/>:80, :443]
         BE[Backend API<br/>:8000]
     end
-    
+
     subgraph "MCP Layer"
         REG[MCP Registry<br/>:8001]
         AUTH[MCP Auth Server<br/>:8002]
     end
-    
+
     subgraph "Data Layer"
         PG[(PostgreSQL<br/>:5432)]
         RD[(Redis<br/>:6379)]
     end
-    
+
     FE --> TF
     TF --> BE
     FE --> AUTH
@@ -122,13 +128,16 @@ curl http://localhost:8002/tools/list
 ### Test Scenarios
 
 #### 1. Authentication Flow
+
 1. **Login Process**
+
    - Navigate to http://localhost:3000
    - Enter test credentials
    - Verify successful login
    - Check user session persistence
 
 2. **Session Management**
+
    - Refresh page after login
    - Verify user remains logged in
    - Test logout functionality
@@ -140,7 +149,9 @@ curl http://localhost:8002/tools/list
    - Verify secure session handling
 
 #### 2. Error Handling
+
 1. **Invalid Credentials**
+
    - Test with wrong password
    - Test with non-existent email
    - Verify appropriate error messages
@@ -151,7 +162,9 @@ curl http://localhost:8002/tools/list
    - Test reconnection behavior
 
 #### 3. User Experience
+
 1. **Form Validation**
+
    - Test email format validation
    - Test password requirements
    - Verify real-time feedback
@@ -164,6 +177,7 @@ curl http://localhost:8002/tools/list
 ### UAT Checklist
 
 - [ ] **Authentication**
+
   - [ ] Login with valid credentials
   - [ ] Login failure with invalid credentials
   - [ ] Session persistence across page refreshes
@@ -171,12 +185,14 @@ curl http://localhost:8002/tools/list
   - [ ] Session timeout handling
 
 - [ ] **Security**
+
   - [ ] HttpOnly cookies are set
   - [ ] No sensitive data in localStorage
   - [ ] CSRF token protection
   - [ ] Secure password handling
 
 - [ ] **User Experience**
+
   - [ ] Form validation works correctly
   - [ ] Loading states are clear
   - [ ] Error messages are helpful
@@ -192,6 +208,7 @@ curl http://localhost:8002/tools/list
 ## Monitoring & Observability
 
 ### Health Check Endpoints
+
 ```bash
 # Application health
 curl http://localhost:8002/health
@@ -204,6 +221,7 @@ docker exec stockpulse-postgres-staging pg_isready
 ```
 
 ### Log Monitoring
+
 ```bash
 # Real-time logs
 docker-compose -f docker-compose.staging.yml logs -f
@@ -216,6 +234,7 @@ docker-compose -f docker-compose.staging.yml logs --since 10m | grep ERROR
 ```
 
 ### Metrics Dashboard
+
 - **Traefik Dashboard**: http://localhost:8080
 - **Application Metrics**: Integrated in service logs
 - **Database Metrics**: PostgreSQL logs
@@ -225,6 +244,7 @@ docker-compose -f docker-compose.staging.yml logs --since 10m | grep ERROR
 ### Common Issues
 
 #### 1. Service Not Starting
+
 ```bash
 # Check service status
 docker-compose -f docker-compose.staging.yml ps
@@ -237,6 +257,7 @@ docker-compose -f docker-compose.staging.yml restart [service-name]
 ```
 
 #### 2. Authentication Failures
+
 ```bash
 # Verify MCP auth server is healthy
 curl http://localhost:8002/health
@@ -251,6 +272,7 @@ curl -X POST http://localhost:8002/tools/call \
 ```
 
 #### 3. Database Connection Issues
+
 ```bash
 # Check PostgreSQL status
 docker exec stockpulse-postgres-staging pg_isready -U stockpulse_user
@@ -265,6 +287,7 @@ docker exec stockpulse-redis-staging redis-cli -a stockpulse_redis_password ping
 ### Recovery Procedures
 
 #### Full Environment Reset
+
 ```bash
 # Stop all services
 ./scripts/stop-staging.sh full
@@ -277,6 +300,7 @@ docker system prune -f
 ```
 
 #### Database Recovery
+
 ```bash
 # Backup current data
 docker exec stockpulse-postgres-staging pg_dump -U stockpulse_user stockpulse > backup.sql
@@ -289,12 +313,14 @@ docker exec stockpulse-postgres-staging pg_dump -U stockpulse_user stockpulse > 
 ## Performance Considerations
 
 ### Resource Usage
+
 - **Memory**: ~2GB total for all services
 - **CPU**: 2 cores recommended
 - **Storage**: ~5GB for logs and data
 - **Network**: Minimal external bandwidth
 
 ### Scaling Notes
+
 - Staging environment is single-node
 - Production should use container orchestration
 - Database should be externalized for production
@@ -303,12 +329,14 @@ docker exec stockpulse-postgres-staging pg_dump -U stockpulse_user stockpulse > 
 ## Security Notes
 
 ### Staging-Specific Security
+
 - Uses test credentials and data
 - JWT secrets are development-grade
 - HTTPS not enforced (development only)
 - Debug logging enabled
 
 ### Production Differences
+
 - All secrets must be rotated
 - HTTPS enforcement required
 - Production-grade JWT secrets
@@ -318,14 +346,17 @@ docker exec stockpulse-postgres-staging pg_dump -U stockpulse_user stockpulse > 
 ## Next Steps
 
 ### Story 1.3 Development
+
 After successful staging deployment:
 
 1. **Frontend Context Enhancement**
+
    - Implement advanced AuthContext features
    - Add user preference management
    - Enhance error handling
 
 2. **MCP Agent Integration**
+
    - Connect trading agents to auth system
    - Implement user context propagation
    - Add agent authorization
@@ -336,6 +367,7 @@ After successful staging deployment:
    - Enhanced monitoring
 
 ### Production Readiness
+
 - [ ] External database configuration
 - [ ] Secret management system
 - [ ] HTTPS/TLS certificates
@@ -346,11 +378,13 @@ After successful staging deployment:
 ## Support
 
 ### Documentation
+
 - [Architecture Plan](./authentication-architecture-plan.md)
 - [MCP Integration Guide](./mcp-integration-tutorial.md)
 - [Story 1.2 Implementation](../docs/stories/story-1.2.md)
 
 ### Commands Reference
+
 ```bash
 # Deploy staging
 ./scripts/deploy-staging.sh
@@ -366,4 +400,4 @@ After successful staging deployment:
 
 # Full cleanup
 ./scripts/stop-staging.sh full
-``` 
+```

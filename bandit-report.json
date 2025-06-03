@@ -1,17 +1,17 @@
 {
   "errors": [],
-  "generated_at": "2025-05-31T19:29:38Z",
+  "generated_at": "2025-06-01T16:57:50Z",
   "metrics": {
     "_totals": {
-      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.HIGH": 4,
       "CONFIDENCE.LOW": 0,
       "CONFIDENCE.MEDIUM": 2,
       "CONFIDENCE.UNDEFINED": 0,
       "SEVERITY.HIGH": 0,
-      "SEVERITY.LOW": 1,
+      "SEVERITY.LOW": 5,
       "SEVERITY.MEDIUM": 1,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 14570,
+      "loc": 15402,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -154,7 +154,33 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 21,
+      "loc": 23,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "services/backend/app\\api\\v1\\users.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 319,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "services/backend/app\\api\\v1\\websocket.py": {
+      "CONFIDENCE.HIGH": 4,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 4,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 243,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -444,6 +470,19 @@
       "nosec": 0,
       "skipped_tests": 0
     },
+    "services/backend/app\\models\\watchlist.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 94,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
     "services/backend/app\\schemas\\__init__.py": {
       "CONFIDENCE.HIGH": 0,
       "CONFIDENCE.LOW": 0,
@@ -506,6 +545,19 @@
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
       "loc": 286,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "services/backend/app\\schemas\\watchlist.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 174,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -889,6 +941,78 @@
   },
   "results": [
     {
+      "code": "272         # Generate mock market data\n273         base_price = 100 + random.random() * 200  # $100-$300\n274         change = (random.random() - 0.5) * 10  # -$5 to +$5\n",
+      "col_offset": 27,
+      "end_col_offset": 42,
+      "filename": "services/backend/app\\api\\v1\\websocket.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 273,
+      "line_range": [273],
+      "more_info": "https://bandit.readthedocs.io/en/0.0.0/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "273         base_price = 100 + random.random() * 200  # $100-$300\n274         change = (random.random() - 0.5) * 10  # -$5 to +$5\n275         change_percent = (change / base_price) * 100\n",
+      "col_offset": 18,
+      "end_col_offset": 33,
+      "filename": "services/backend/app\\api\\v1\\websocket.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 274,
+      "line_range": [274],
+      "more_info": "https://bandit.readthedocs.io/en/0.0.0/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "282             \"changePercent\": round(change_percent, 4),\n283             \"volume\": random.randint(1000000, 10000000),\n284             \"timestamp\": datetime.utcnow().isoformat() + \"Z\",\n",
+      "col_offset": 22,
+      "end_col_offset": 55,
+      "filename": "services/backend/app\\api\\v1\\websocket.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 283,
+      "line_range": [283],
+      "more_info": "https://bandit.readthedocs.io/en/0.0.0/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "306 \n307             await asyncio.sleep(random.uniform(3.0, 5.0))\n308 \n",
+      "col_offset": 32,
+      "end_col_offset": 56,
+      "filename": "services/backend/app\\api\\v1\\websocket.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 330,
+        "link": "https://cwe.mitre.org/data/definitions/330.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+      "line_number": 307,
+      "line_range": [307],
+      "more_info": "https://bandit.readthedocs.io/en/0.0.0/blacklists/blacklist_calls.html#b311-random",
+      "test_id": "B311",
+      "test_name": "blacklist"
+    },
+    {
       "code": "16     DEBUG: bool = False\n17     HOST: str = \"0.0.0.0\"\n18     PORT: int = 8000\n",
       "col_offset": 16,
       "end_col_offset": 25,
@@ -901,9 +1025,7 @@
       "issue_severity": "MEDIUM",
       "issue_text": "Possible binding to all interfaces.",
       "line_number": 17,
-      "line_range": [
-        17
-      ],
+      "line_range": [17],
       "more_info": "https://bandit.readthedocs.io/en/0.0.0/plugins/b104_hardcoded_bind_all_interfaces.html",
       "test_id": "B104",
       "test_name": "hardcoded_bind_all_interfaces"
@@ -921,9 +1043,7 @@
       "issue_severity": "LOW",
       "issue_text": "Possible hardcoded password: 'password_change'",
       "line_number": 29,
-      "line_range": [
-        29
-      ],
+      "line_range": [29],
       "more_info": "https://bandit.readthedocs.io/en/0.0.0/plugins/b105_hardcoded_password_string.html",
       "test_id": "B105",
       "test_name": "hardcoded_password_string"

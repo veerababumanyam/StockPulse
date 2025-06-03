@@ -3,7 +3,7 @@
  * Displays user's stock watchlist with real-time price updates
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 import {
   Eye,
   TrendingUp,
@@ -12,19 +12,19 @@ import {
   Search,
   Star,
   Activity,
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../ui/card';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Badge } from '../ui/badge';
-import { cn } from '../../utils/cn';
+} from "../ui/card";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Badge } from "../ui/badge";
+import { cn } from "../../utils/cn";
 
 interface WatchlistWidgetProps {
   widgetId: string;
@@ -48,60 +48,60 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({
   className,
   showHeader = true,
 }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [isAddingStock, setIsAddingStock] = useState(false);
 
   // Mock watchlist data - in real app, this would come from a service
   const watchlistStocks = useMemo(
     (): WatchlistStock[] => [
       {
-        symbol: 'AAPL',
-        name: 'Apple Inc.',
+        symbol: "AAPL",
+        name: "Apple Inc.",
         price: 175.43,
         change: 2.15,
         changePercent: 1.24,
         volume: 45678900,
-        marketCap: '2.8T',
+        marketCap: "2.8T",
         isWatched: true,
       },
       {
-        symbol: 'GOOGL',
-        name: 'Alphabet Inc.',
+        symbol: "GOOGL",
+        name: "Alphabet Inc.",
         price: 2847.63,
         change: -15.32,
         changePercent: -0.53,
         volume: 1234567,
-        marketCap: '1.8T',
+        marketCap: "1.8T",
         isWatched: true,
       },
       {
-        symbol: 'MSFT',
-        name: 'Microsoft Corp.',
+        symbol: "MSFT",
+        name: "Microsoft Corp.",
         price: 378.85,
         change: 4.22,
         changePercent: 1.13,
         volume: 23456789,
-        marketCap: '2.9T',
+        marketCap: "2.9T",
         isWatched: true,
       },
       {
-        symbol: 'TSLA',
-        name: 'Tesla Inc.',
+        symbol: "TSLA",
+        name: "Tesla Inc.",
         price: 248.5,
         change: -8.75,
         changePercent: -3.4,
         volume: 87654321,
-        marketCap: '789B',
+        marketCap: "789B",
         isWatched: true,
       },
       {
-        symbol: 'NVDA',
-        name: 'NVIDIA Corp.',
+        symbol: "NVDA",
+        name: "NVIDIA Corp.",
         price: 875.28,
         change: 12.45,
         changePercent: 1.44,
         volume: 34567890,
-        marketCap: '2.2T',
+        marketCap: "2.2T",
         isWatched: true,
       },
     ],
@@ -137,7 +137,7 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({
   };
 
   return (
-    <Card className={cn('h-full flex flex-col', className)}>
+    <Card className={cn("h-full flex flex-col", className)}>
       {showHeader && (
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
@@ -200,10 +200,10 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({
                       >
                         <Star
                           className={cn(
-                            'h-3 w-3',
+                            "h-3 w-3",
                             stock.isWatched
-                              ? 'fill-yellow-400 text-yellow-400'
-                              : 'text-muted-foreground',
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-muted-foreground",
                           )}
                         />
                       </Button>
@@ -214,10 +214,10 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({
                             {stock.symbol}
                           </p>
                           <Badge
-                            variant={isPositive ? 'default' : 'destructive'}
+                            variant={isPositive ? "default" : "destructive"}
                             className="text-xs px-1 py-0"
                           >
-                            {isPositive ? '+' : ''}
+                            {isPositive ? "+" : ""}
                             {stock.changePercent.toFixed(2)}%
                           </Badge>
                         </div>
@@ -233,8 +233,8 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({
                       </p>
                       <p
                         className={cn(
-                          'text-xs flex items-center',
-                          isPositive ? 'text-green-600' : 'text-red-600',
+                          "text-xs flex items-center",
+                          isPositive ? "text-green-600" : "text-red-600",
                         )}
                       >
                         {isPositive ? (
@@ -242,7 +242,7 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({
                         ) : (
                           <TrendingDown className="h-3 w-3 mr-1" />
                         )}
-                        {isPositive ? '+' : ''}$
+                        {isPositive ? "+" : ""}$
                         {Math.abs(stock.change).toFixed(2)}
                       </p>
                     </div>
@@ -252,7 +252,7 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{
-                      height: 'auto',
+                      height: "auto",
                       opacity: 1,
                       transition: { duration: 0.2 },
                     }}
@@ -278,7 +278,7 @@ const WatchlistWidget: React.FC<WatchlistWidgetProps> = ({
           >
             <Activity className="h-8 w-8 text-muted-foreground mb-2" />
             <p className="text-sm text-muted-foreground">
-              {searchTerm ? 'No stocks found' : 'No stocks in watchlist'}
+              {searchTerm ? "No stocks found" : "No stocks in watchlist"}
             </p>
             <Button
               variant="outline"

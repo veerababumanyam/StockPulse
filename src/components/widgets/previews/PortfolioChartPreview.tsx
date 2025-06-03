@@ -1,1 +1,1 @@
-export { PortfolioChartPreview as default } from './index';
+export { PortfolioChartPreview as default } from "./index";

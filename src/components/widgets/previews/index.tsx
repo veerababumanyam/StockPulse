@@ -3,12 +3,12 @@
  * Exports all preview components with fallback support
  */
 
-import React from 'react';
-import { WidgetType } from '../../../types/dashboard';
+import React from "react";
+import { WidgetType } from "../../../types/dashboard";
 
 // Import existing previews
-import PortfolioOverviewPreview from './PortfolioOverviewPreview';
-import MarketSummaryPreview from './MarketSummaryPreview';
+import PortfolioOverviewPreview from "./PortfolioOverviewPreview";
+import MarketSummaryPreview from "./MarketSummaryPreview";
 
 // Generic fallback preview component
 const GenericPreview: React.FC<{
@@ -130,18 +130,18 @@ export const PREVIEW_COMPONENTS: Record<
   WidgetType,
   React.ComponentType<any>
 > = {
-  'portfolio-overview': PortfolioOverviewPreview,
-  'portfolio-chart': PortfolioChartPreview,
+  "portfolio-overview": PortfolioOverviewPreview,
+  "portfolio-chart": PortfolioChartPreview,
   watchlist: WatchlistPreview,
-  'market-summary': MarketSummaryPreview,
-  'ai-insights': AIInsightsPreview,
-  'recent-transactions': RecentTransactionsPreview,
-  'performance-metrics': PerformanceMetricsPreview,
+  "market-summary": MarketSummaryPreview,
+  "ai-insights": AIInsightsPreview,
+  "recent-transactions": RecentTransactionsPreview,
+  "performance-metrics": PerformanceMetricsPreview,
   alerts: AlertsPreview,
-  'news-feed': NewsFeedPreview,
-  'sector-performance': SectorPerformancePreview,
-  'top-movers': TopMoversPreview,
-  'economic-calendar': EconomicCalendarPreview,
+  "news-feed": NewsFeedPreview,
+  "sector-performance": SectorPerformancePreview,
+  "top-movers": TopMoversPreview,
+  "economic-calendar": EconomicCalendarPreview,
 };
 
 export default PREVIEW_COMPONENTS;

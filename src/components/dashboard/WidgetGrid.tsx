@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * StockPulse Widget Grid - Enterprise-Grade
@@ -6,8 +6,8 @@
  * Integrates with central theme and Story 2.2 requirements.
  */
 
-import React, { useMemo, useCallback, useEffect, useState } from 'react';
-import { Responsive, WidthProvider, Layout, Layouts } from 'react-grid-layout';
+import React, { useMemo, useCallback, useEffect, useState } from "react";
+import { Responsive, WidthProvider, Layout, Layouts } from "react-grid-layout";
 import {
   WidgetConfig,
   DashboardBreakpoints,
@@ -17,38 +17,38 @@ import {
   WidgetType,
   WIDGET_LIBRARY,
   WidgetMetadata,
-} from '../../types/dashboard';
-import { useTheme } from '../../contexts/ThemeContext';
-import { Settings, GripVertical, Edit3, Trash2 } from 'lucide-react';
+} from "../../types/dashboard";
+import { useTheme } from "../../contexts/ThemeContext";
+import { Settings, GripVertical, Edit3, Trash2 } from "lucide-react";
 
 // Import widget components directly instead of lazy loading
-import PortfolioOverview from '../widgets/PortfolioOverview';
-import PortfolioChart from '../widgets/PortfolioChart';
-import Watchlist from '../widgets/Watchlist';
-import MarketSummary from '../widgets/MarketSummary';
-import AIInsightsWidget from '../widgets/AIInsightsWidget';
-import RecentTransactions from '../widgets/RecentTransactions';
-import PerformanceMetrics from '../widgets/PerformanceMetrics';
-import Alerts from '../widgets/Alerts';
-import NewsFeed from '../widgets/NewsFeed';
-import SectorPerformance from '../widgets/SectorPerformance';
-import TopMovers from '../widgets/TopMovers';
-import EconomicCalendar from '../widgets/EconomicCalendar';
+import PortfolioOverview from "../widgets/PortfolioOverview";
+import PortfolioChart from "../widgets/PortfolioChart";
+import Watchlist from "../widgets/Watchlist";
+import MarketSummary from "../widgets/MarketSummary";
+import AIInsightsWidget from "../widgets/AIInsightsWidget";
+import RecentTransactions from "../widgets/RecentTransactions";
+import PerformanceMetrics from "../widgets/PerformanceMetrics";
+import Alerts from "../widgets/Alerts";
+import NewsFeed from "../widgets/NewsFeed";
+import SectorPerformance from "../widgets/SectorPerformance";
+import TopMovers from "../widgets/TopMovers";
+import EconomicCalendar from "../widgets/EconomicCalendar";
 
 // Widget components mapping
 const widgetComponents = {
-  'portfolio-overview': PortfolioOverview,
-  'portfolio-chart': PortfolioChart,
+  "portfolio-overview": PortfolioOverview,
+  "portfolio-chart": PortfolioChart,
   watchlist: Watchlist,
-  'market-summary': MarketSummary,
-  'ai-insights': AIInsightsWidget,
-  'recent-transactions': RecentTransactions,
-  'performance-metrics': PerformanceMetrics,
+  "market-summary": MarketSummary,
+  "ai-insights": AIInsightsWidget,
+  "recent-transactions": RecentTransactions,
+  "performance-metrics": PerformanceMetrics,
   alerts: Alerts,
-  'news-feed': NewsFeed,
-  'sector-performance': SectorPerformance,
-  'top-movers': TopMovers,
-  'economic-calendar': EconomicCalendar,
+  "news-feed": NewsFeed,
+  "sector-performance": SectorPerformance,
+  "top-movers": TopMovers,
+  "economic-calendar": EconomicCalendar,
 };
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -125,8 +125,8 @@ const EnterpriseWidgetGrid: React.FC<EnterpriseWidgetGridProps> = ({
       return (
         <div
           style={{
-            padding: 'var(--spacing-md)',
-            color: 'var(--color-danger-fg)',
+            padding: "var(--spacing-md)",
+            color: "var(--color-danger-fg)",
           }}
         >
           Widget config not found: {widgetId}
@@ -139,8 +139,8 @@ const EnterpriseWidgetGrid: React.FC<EnterpriseWidgetGridProps> = ({
       return (
         <div
           style={{
-            padding: 'var(--spacing-md)',
-            color: 'var(--color-danger-fg)',
+            padding: "var(--spacing-md)",
+            color: "var(--color-danger-fg)",
           }}
         >
           Widget type not supported: {widgetConfig.type}
@@ -155,10 +155,10 @@ const EnterpriseWidgetGrid: React.FC<EnterpriseWidgetGridProps> = ({
         isEditMode={isEditMode}
         className={`widget-component-wrapper`}
         style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
         }}
       />
     );
@@ -172,9 +172,9 @@ const EnterpriseWidgetGrid: React.FC<EnterpriseWidgetGridProps> = ({
     return (
       <div
         style={{
-          minHeight: '500px',
-          width: '100%',
-          backgroundColor: 'var(--color-background-muted)',
+          minHeight: "500px",
+          width: "100%",
+          backgroundColor: "var(--color-background-muted)",
         }}
       />
     );
@@ -189,13 +189,13 @@ const EnterpriseWidgetGrid: React.FC<EnterpriseWidgetGridProps> = ({
 
   return (
     <div
-      className={`widget-grid-container ${isDarkMode ? 'dark-mode' : 'light-mode'}`}
+      className={`widget-grid-container ${isDarkMode ? "dark-mode" : "light-mode"}`}
       style={{
-        fontFamily: 'var(--font-family-primary)',
-        width: '100%',
-        maxWidth: '100%',
-        minHeight: '100%',
-        position: 'relative',
+        fontFamily: "var(--font-family-primary)",
+        width: "100%",
+        maxWidth: "100%",
+        minHeight: "100%",
+        position: "relative",
       }}
     >
       <ResponsiveGridLayout
@@ -232,15 +232,15 @@ const EnterpriseWidgetGrid: React.FC<EnterpriseWidgetGridProps> = ({
         isResizable={isEditMode}
         measureBeforeMount={false}
         useCSSTransforms={true}
-        compactType={'vertical'}
+        compactType={"vertical"}
         preventCollision={false}
         autoSize={true}
         width="100%"
-        style={{ 
-          width: '100%',
-          maxWidth: '100%',
-          height: '100%',
-          overflow: 'visible'
+        style={{
+          width: "100%",
+          maxWidth: "100%",
+          height: "100%",
+          overflow: "visible",
         }}
       >
         {currentLayoutForRGL.map((item: CustomLayout) => {
@@ -253,52 +253,52 @@ const EnterpriseWidgetGrid: React.FC<EnterpriseWidgetGridProps> = ({
           return (
             <div
               key={item.i}
-              className={`widget-wrapper ${isEditMode ? 'widget-editable' : ''}`}
+              className={`widget-wrapper ${isEditMode ? "widget-editable" : ""}`}
               style={{
-                backgroundColor: 'var(--color-surface)',
-                border: '1px solid var(--color-border-subtle)',
-                borderRadius: 'var(--border-radius-md)',
-                boxShadow: 'var(--shadow-sm)',
-                overflow: 'hidden',
-                display: 'flex',
-                flexDirection: 'column',
-                width: '100%',
-                height: '100%',
-                boxSizing: 'border-box',
+                backgroundColor: "var(--color-surface)",
+                border: "1px solid var(--color-border-subtle)",
+                borderRadius: "var(--border-radius-md)",
+                boxShadow: "var(--shadow-sm)",
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                height: "100%",
+                boxSizing: "border-box",
               }}
             >
               {isEditMode && (
                 <div
                   className="widget-edit-toolbar widget-drag-handle"
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: 'var(--spacing-xs) var(--spacing-sm)',
-                    backgroundColor: 'var(--color-surface-hover)',
-                    borderBottom: '1px solid var(--color-border-muted)',
-                    cursor: 'move',
-                    color: 'var(--color-text-secondary)',
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "var(--spacing-xs) var(--spacing-sm)",
+                    backgroundColor: "var(--color-surface-hover)",
+                    borderBottom: "1px solid var(--color-border-muted)",
+                    cursor: "move",
+                    color: "var(--color-text-secondary)",
                   }}
                 >
                   <div
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 'var(--spacing-xs)',
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "var(--spacing-xs)",
                     }}
                   >
                     <GripVertical size={16} />
                     <span
                       style={{
-                        fontSize: 'var(--font-size-sm)',
-                        fontWeight: 'var(--font-weight-medium)',
+                        fontSize: "var(--font-size-sm)",
+                        fontWeight: "var(--font-weight-medium)",
                       }}
                     >
                       {widgetConfig.title || widgetMeta?.name}
                     </span>
                   </div>
-                  <div style={{ display: 'flex', gap: 'var(--spacing-xs)' }}>
+                  <div style={{ display: "flex", gap: "var(--spacing-xs)" }}>
                     {onWidgetDuplicate && (
                       <button
                         title="Duplicate Widget"
@@ -322,7 +322,7 @@ const EnterpriseWidgetGrid: React.FC<EnterpriseWidgetGridProps> = ({
                       onClick={() => onWidgetRemove(item.i)}
                       style={{
                         ...iconButtonStyle,
-                        color: 'var(--color-danger-fg)',
+                        color: "var(--color-danger-fg)",
                       }}
                     >
                       <Trash2 size={14} />
@@ -334,12 +334,12 @@ const EnterpriseWidgetGrid: React.FC<EnterpriseWidgetGridProps> = ({
                 className="widget-content"
                 style={{
                   flexGrow: 1,
-                  overflowY: 'auto',
-                  overflowX: 'hidden',
-                  padding: 'var(--spacing-sm)',
-                  width: '100%',
-                  height: '100%',
-                  boxSizing: 'border-box',
+                  overflowY: "auto",
+                  overflowX: "hidden",
+                  padding: "var(--spacing-sm)",
+                  width: "100%",
+                  height: "100%",
+                  boxSizing: "border-box",
                 }}
               >
                 {renderWidget(item.i)}
@@ -353,14 +353,14 @@ const EnterpriseWidgetGrid: React.FC<EnterpriseWidgetGridProps> = ({
 };
 
 const iconButtonStyle: React.CSSProperties = {
-  background: 'none',
-  border: 'none',
-  padding: 'var(--spacing-xxs)',
-  cursor: 'pointer',
-  color: 'var(--color-text-secondary)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  background: "none",
+  border: "none",
+  padding: "var(--spacing-xxs)",
+  cursor: "pointer",
+  color: "var(--color-text-secondary)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 };
 
 export default EnterpriseWidgetGrid;

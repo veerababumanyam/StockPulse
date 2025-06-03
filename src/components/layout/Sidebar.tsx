@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Home,
   BarChart3,
@@ -39,20 +39,20 @@ import {
   Menu,
   Minimize2,
   Maximize2,
-} from 'lucide-react';
-import Logo from '../ui/Logo';
-import { Button } from '../ui/button';
-import { Switch } from '../ui/switch';
-import { cn } from '../../utils/cn';
-import { useAuth } from '../../contexts/AuthContext';
+} from "lucide-react";
+import Logo from "../ui/Logo";
+import { Button } from "../ui/button";
+import { Switch } from "../ui/switch";
+import { cn } from "../../utils/cn";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface NavigationItem {
   id: string;
   label: string;
   icon: React.ReactNode;
   path: string;
-  category: 'core' | 'trading' | 'ai' | 'mcp' | 'settings' | 'admin';
-  roleRequired?: 'user' | 'trader' | 'admin' | 'analyst';
+  category: "core" | "trading" | "ai" | "mcp" | "settings" | "admin";
+  roleRequired?: "user" | "trader" | "admin" | "analyst";
   badge?: string;
   isNew?: boolean;
   visible: boolean;
@@ -100,241 +100,241 @@ type IconName = keyof typeof iconMap;
 // Enhanced navigation items with proper icon mapping
 const defaultNavigationItems: (Omit<
   NavigationItem,
-  'visible' | 'order' | 'icon'
+  "visible" | "order" | "icon"
 > & { iconName: IconName })[] = [
   // Core
   {
-    id: 'dashboard',
-    label: 'Dashboard',
-    iconName: 'home',
-    path: '/dashboard',
-    category: 'core',
+    id: "dashboard",
+    label: "Dashboard",
+    iconName: "home",
+    path: "/dashboard",
+    category: "core",
   },
   {
-    id: 'portfolio',
-    label: 'Portfolio',
-    iconName: 'briefcase',
-    path: '/portfolio',
-    category: 'core',
+    id: "portfolio",
+    label: "Portfolio",
+    iconName: "briefcase",
+    path: "/portfolio",
+    category: "core",
   },
   {
-    id: 'screener',
-    label: 'Stock Screener',
-    iconName: 'search',
-    path: '/screener',
-    category: 'core',
+    id: "screener",
+    label: "Stock Screener",
+    iconName: "search",
+    path: "/screener",
+    category: "core",
   },
   {
-    id: 'stock-analysis',
-    label: 'Stock Analysis',
-    iconName: 'pieChart',
-    path: '/analysis/stocks',
-    category: 'core',
-    roleRequired: 'analyst',
+    id: "stock-analysis",
+    label: "Stock Analysis",
+    iconName: "pieChart",
+    path: "/analysis/stocks",
+    category: "core",
+    roleRequired: "analyst",
   },
 
   // Trading
   {
-    id: 'trading-dashboard',
-    label: 'Trading Dashboard',
-    iconName: 'barChart3',
-    path: '/trading',
-    category: 'trading',
-    roleRequired: 'trader',
+    id: "trading-dashboard",
+    label: "Trading Dashboard",
+    iconName: "barChart3",
+    path: "/trading",
+    category: "trading",
+    roleRequired: "trader",
   },
   {
-    id: 'intraday',
-    label: 'Intraday Trading',
-    iconName: 'clock',
-    path: '/trading/intraday',
-    category: 'trading',
-    roleRequired: 'trader',
+    id: "intraday",
+    label: "Intraday Trading",
+    iconName: "clock",
+    path: "/trading/intraday",
+    category: "trading",
+    roleRequired: "trader",
   },
   {
-    id: 'options',
-    label: 'Options Trading',
-    iconName: 'target',
-    path: '/trading/options',
-    category: 'trading',
-    roleRequired: 'trader',
+    id: "options",
+    label: "Options Trading",
+    iconName: "target",
+    path: "/trading/options",
+    category: "trading",
+    roleRequired: "trader",
   },
   {
-    id: 'positional',
-    label: 'Positional Trading',
-    iconName: 'lineChart',
-    path: '/trading/positional',
-    category: 'trading',
-    roleRequired: 'trader',
+    id: "positional",
+    label: "Positional Trading",
+    iconName: "lineChart",
+    path: "/trading/positional",
+    category: "trading",
+    roleRequired: "trader",
   },
   {
-    id: 'long-term',
-    label: 'Long Term Investing',
-    iconName: 'trendingUp',
-    path: '/trading/long-term',
-    category: 'trading',
+    id: "long-term",
+    label: "Long Term Investing",
+    iconName: "trendingUp",
+    path: "/trading/long-term",
+    category: "trading",
   },
   {
-    id: 'workspace',
-    label: 'Trading Workspace',
-    iconName: 'workflow',
-    path: '/trading/workspace',
-    category: 'trading',
-    roleRequired: 'trader',
+    id: "workspace",
+    label: "Trading Workspace",
+    iconName: "workflow",
+    path: "/trading/workspace",
+    category: "trading",
+    roleRequired: "trader",
   },
 
   // AI & Agents
   {
-    id: 'ai-agents',
-    label: 'AI Agents',
-    iconName: 'bot',
-    path: '/agents/ai-agents',
-    category: 'ai',
+    id: "ai-agents",
+    label: "AI Agents",
+    iconName: "bot",
+    path: "/agents/ai-agents",
+    category: "ai",
   },
   {
-    id: 'automation',
-    label: 'Agent Automation',
-    iconName: 'zap',
-    path: '/agents/automation',
-    category: 'ai',
+    id: "automation",
+    label: "Agent Automation",
+    iconName: "zap",
+    path: "/agents/automation",
+    category: "ai",
   },
   {
-    id: 'orchestration',
-    label: 'Model Orchestration',
-    iconName: 'gitBranch',
-    path: '/agents/orchestration',
-    category: 'ai',
+    id: "orchestration",
+    label: "Model Orchestration",
+    iconName: "gitBranch",
+    path: "/agents/orchestration",
+    category: "ai",
   },
   {
-    id: 'compliance',
-    label: 'Compliance & Governance',
-    iconName: 'fileCheck',
-    path: '/agents/compliance',
-    category: 'ai',
-    roleRequired: 'admin',
+    id: "compliance",
+    label: "Compliance & Governance",
+    iconName: "fileCheck",
+    path: "/agents/compliance",
+    category: "ai",
+    roleRequired: "admin",
   },
 
   // MCP Services
   {
-    id: 'mcp-federation',
-    label: 'MCP Federation Registry',
-    iconName: 'globe',
-    path: '/agents/federation',
-    category: 'mcp',
-    badge: 'New',
+    id: "mcp-federation",
+    label: "MCP Federation Registry",
+    iconName: "globe",
+    path: "/agents/federation",
+    category: "mcp",
+    badge: "New",
   },
   {
-    id: 'mcp-setup',
-    label: 'MCP Setup Wizard',
-    iconName: 'settings',
-    path: '/agents/setup',
-    category: 'mcp',
-    badge: 'New',
+    id: "mcp-setup",
+    label: "MCP Setup Wizard",
+    iconName: "settings",
+    path: "/agents/setup",
+    category: "mcp",
+    badge: "New",
   },
   {
-    id: 'mcp-capabilities',
-    label: 'MCP Capability Mapping',
-    iconName: 'map',
-    path: '/agents/capabilities',
-    category: 'mcp',
-    badge: 'New',
+    id: "mcp-capabilities",
+    label: "MCP Capability Mapping",
+    iconName: "map",
+    path: "/agents/capabilities",
+    category: "mcp",
+    badge: "New",
   },
   {
-    id: 'mcp-observability',
-    label: 'MCP Observability',
-    iconName: 'eye',
-    path: '/agents/observability',
-    category: 'mcp',
-    badge: 'New',
+    id: "mcp-observability",
+    label: "MCP Observability",
+    iconName: "eye",
+    path: "/agents/observability",
+    category: "mcp",
+    badge: "New",
   },
   {
-    id: 'mcp-security',
-    label: 'MCP Security',
-    iconName: 'shield',
-    path: '/agents/security',
-    category: 'mcp',
-    badge: 'New',
+    id: "mcp-security",
+    label: "MCP Security",
+    iconName: "shield",
+    path: "/agents/security",
+    category: "mcp",
+    badge: "New",
   },
   {
-    id: 'mcp-mobile',
-    label: 'MCP Mobile Management',
-    iconName: 'smartphone',
-    path: '/agents/mobile',
-    category: 'mcp',
-    badge: 'New',
+    id: "mcp-mobile",
+    label: "MCP Mobile Management",
+    iconName: "smartphone",
+    path: "/agents/mobile",
+    category: "mcp",
+    badge: "New",
   },
 
   // Settings
   {
-    id: 'general-settings',
-    label: 'General Settings',
-    iconName: 'settings',
-    path: '/settings',
-    category: 'settings',
+    id: "general-settings",
+    label: "General Settings",
+    iconName: "settings",
+    path: "/settings",
+    category: "settings",
   },
   {
-    id: 'api-keys',
-    label: 'API Key Management',
-    iconName: 'key',
-    path: '/settings/api-keys',
-    category: 'settings',
+    id: "api-keys",
+    label: "API Key Management",
+    iconName: "key",
+    path: "/settings/api-keys",
+    category: "settings",
   },
   {
-    id: 'llm-management',
-    label: 'LLM Management',
-    iconName: 'brain',
-    path: '/settings/llm',
-    category: 'settings',
+    id: "llm-management",
+    label: "LLM Management",
+    iconName: "brain",
+    path: "/settings/llm",
+    category: "settings",
   },
   {
-    id: 'mcp-config',
-    label: 'MCP Configuration',
-    iconName: 'server',
-    path: '/settings/mcp',
-    category: 'settings',
+    id: "mcp-config",
+    label: "MCP Configuration",
+    iconName: "server",
+    path: "/settings/mcp",
+    category: "settings",
   },
 
   // Admin
   {
-    id: 'user-approval',
-    label: 'User Approval',
-    iconName: 'users',
-    path: '/admin/user-approval',
-    category: 'admin',
-    roleRequired: 'admin',
+    id: "user-approval",
+    label: "User Approval",
+    iconName: "users",
+    path: "/admin/user-approval",
+    category: "admin",
+    roleRequired: "admin",
   },
   {
-    id: 'onboarding',
-    label: 'Onboarding',
-    iconName: 'userPlus',
-    path: '/onboarding',
-    category: 'admin',
+    id: "onboarding",
+    label: "Onboarding",
+    iconName: "userPlus",
+    path: "/onboarding",
+    category: "admin",
   },
 ];
 
 // Category configuration for modern styling
 const categoryConfig = {
   core: {
-    label: 'Core',
+    label: "Core",
     icon: <Layers className="w-4 h-4" />,
   },
   trading: {
-    label: 'Trading',
+    label: "Trading",
     icon: <TrendingUp className="w-4 h-4" />,
   },
   ai: {
-    label: 'AI & Agents',
+    label: "AI & Agents",
     icon: <Bot className="w-4 h-4" />,
   },
   mcp: {
-    label: 'MCP Services',
+    label: "MCP Services",
     icon: <Server className="w-4 h-4" />,
   },
   settings: {
-    label: 'Settings',
+    label: "Settings",
     icon: <Settings className="w-4 h-4" />,
   },
   admin: {
-    label: 'Admin',
+    label: "Admin",
     icon: <Shield className="w-4 h-4" />,
   },
 };
@@ -354,19 +354,19 @@ const Sidebar: React.FC<SidebarProps> = ({
   const { user } = useAuth();
 
   // Map user role from auth context to navigation role type
-  const getUserRole = (): 'user' | 'trader' | 'admin' | 'analyst' => {
-    if (!user?.role) return 'user';
+  const getUserRole = (): "user" | "trader" | "admin" | "analyst" => {
+    if (!user?.role) return "user";
 
     switch (user.role.toLowerCase()) {
-      case 'admin':
-      case 'administrator':
-        return 'admin';
-      case 'trader':
-        return 'trader';
-      case 'analyst':
-        return 'analyst';
+      case "admin":
+      case "administrator":
+        return "admin";
+      case "trader":
+        return "trader";
+      case "analyst":
+        return "analyst";
       default:
-        return 'user';
+        return "user";
     }
   };
 
@@ -380,9 +380,9 @@ const Sidebar: React.FC<SidebarProps> = ({
         visible:
           !item.roleRequired ||
           item.roleRequired === userRole ||
-          userRole === 'admin' ||
+          userRole === "admin" ||
           // Show admin items when user data isn't loaded yet (temporary fix)
-          (item.roleRequired === 'admin' && !user),
+          (item.roleRequired === "admin" && !user),
         order: index,
       }))
       .sort((a, b) => a.order - b.order);
@@ -402,15 +402,15 @@ const Sidebar: React.FC<SidebarProps> = ({
 
     // Include version to force cache refresh when navigation structure changes
     const navigationData = {
-      version: '1.2', // Increment this when navigation structure changes
+      version: "1.2", // Increment this when navigation structure changes
       items: storableItems,
     };
 
-    localStorage.setItem('sidebar-navigation', JSON.stringify(navigationData));
+    localStorage.setItem("sidebar-navigation", JSON.stringify(navigationData));
   }, [userRole, user]);
 
   useEffect(() => {
-    const savedData = localStorage.getItem('sidebar-navigation');
+    const savedData = localStorage.getItem("sidebar-navigation");
     if (savedData) {
       try {
         const parsedData = JSON.parse(savedData);
@@ -418,9 +418,9 @@ const Sidebar: React.FC<SidebarProps> = ({
         // Check if we have new versioned format
         if (parsedData.version && parsedData.items) {
           // Check version compatibility
-          if (parsedData.version !== '1.2') {
+          if (parsedData.version !== "1.2") {
             console.warn(
-              'Navigation cache version mismatch, resetting to defaults.',
+              "Navigation cache version mismatch, resetting to defaults.",
             );
             initializeDefaultItems();
             return;
@@ -435,7 +435,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             );
           if (!isValid) {
             console.warn(
-              'Invalid saved navigation schema, resetting to defaults.',
+              "Invalid saved navigation schema, resetting to defaults.",
             );
             initializeDefaultItems();
             return;
@@ -448,12 +448,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         } else {
           // Old format without version, reset to defaults
           console.warn(
-            'Old navigation cache format detected, resetting to defaults.',
+            "Old navigation cache format detected, resetting to defaults.",
           );
           initializeDefaultItems();
         }
       } catch (error) {
-        console.warn('Failed to parse saved navigation items:', error);
+        console.warn("Failed to parse saved navigation items:", error);
         initializeDefaultItems();
       }
     } else {
@@ -472,11 +472,11 @@ const Sidebar: React.FC<SidebarProps> = ({
     }));
 
     const navigationData = {
-      version: '1.2',
+      version: "1.2",
       items: storableItems,
     };
 
-    localStorage.setItem('sidebar-navigation', JSON.stringify(navigationData));
+    localStorage.setItem("sidebar-navigation", JSON.stringify(navigationData));
   };
 
   const toggleItemVisibility = (itemId: string) => {
@@ -488,12 +488,12 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const handleDragStart = (e: React.DragEvent, itemId: string) => {
     setDraggedItem(itemId);
-    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.effectAllowed = "move";
   };
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
+    e.dataTransfer.dropEffect = "move";
   };
 
   const handleDrop = (e: React.DragEvent, targetId: string) => {
@@ -532,7 +532,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   // Keyboard navigation handlers
   const handleKeyDown = (e: React.KeyboardEvent, item: NavigationItem) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       if (!isCustomizing) {
         handleNavigation(item.path);
@@ -541,7 +541,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const resetToDefaults = () => {
-    localStorage.removeItem('sidebar-navigation');
+    localStorage.removeItem("sidebar-navigation");
     initializeDefaultItems();
     setIsCustomizing(false);
   };
@@ -565,7 +565,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     {} as Record<string, NavigationItem[]>,
   );
 
-  const sidebarWidth = isCollapsed ? 'w-16' : 'w-80';
+  const sidebarWidth = isCollapsed ? "w-16" : "w-80";
 
   return (
     <>
@@ -581,14 +581,14 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed top-0 left-0 z-50 h-full',
-          'bg-background/95 backdrop-blur-xl',
-          'border-r border-border/50',
-          'shadow-xl',
-          'transform transition-all duration-300 ease-out',
-          'lg:translate-x-0 lg:static lg:inset-0',
+          "fixed top-0 left-0 z-50 h-full",
+          "bg-background/95 backdrop-blur-xl",
+          "border-r border-border/50",
+          "shadow-xl",
+          "transform transition-all duration-300 ease-out",
+          "lg:translate-x-0 lg:static lg:inset-0",
           sidebarWidth,
-          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         )}
         role="navigation"
         aria-label="Main navigation"
@@ -596,14 +596,14 @@ const Sidebar: React.FC<SidebarProps> = ({
         {/* Header */}
         <header
           className={cn(
-            'relative flex items-center justify-between h-16 px-4',
-            'border-b border-border/30 bg-surface/30',
+            "relative flex items-center justify-between h-16 px-4",
+            "border-b border-border/30 bg-surface/30",
           )}
         >
           {!isCollapsed && (
             <button
               className="flex items-center space-x-3 cursor-pointer group p-2 -m-2 rounded-lg transition-all duration-200 hover:bg-surface/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
-              onClick={() => handleNavigation('/dashboard')}
+              onClick={() => handleNavigation("/dashboard")}
               aria-label="Go to dashboard"
             >
               <div className="relative">
@@ -624,7 +624,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <div className="flex justify-center w-full">
               <button
                 className="relative group p-2 rounded-lg transition-all duration-200 hover:bg-surface/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                onClick={() => handleNavigation('/dashboard')}
+                onClick={() => handleNavigation("/dashboard")}
                 aria-label="Go to dashboard"
               >
                 <Logo className="h-8 w-8 transition-transform group-hover:scale-105" />
@@ -639,7 +639,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               size="sm"
               onClick={onToggleCollapse}
               className="hidden lg:flex p-2 h-auto w-auto rounded-lg transition-all duration-200 focus:ring-2 focus:ring-primary/50"
-              aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
               {isCollapsed ? (
                 <ChevronRight className="w-4 h-4" />
@@ -654,11 +654,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                 size="sm"
                 onClick={() => setIsCustomizing(!isCustomizing)}
                 className={cn(
-                  'p-2 h-auto w-auto rounded-lg transition-all duration-200 focus:ring-2 focus:ring-primary/50',
-                  isCustomizing && 'bg-accent/20 text-accent',
+                  "p-2 h-auto w-auto rounded-lg transition-all duration-200 focus:ring-2 focus:ring-primary/50",
+                  isCustomizing && "bg-accent/20 text-accent",
                 )}
                 aria-label={
-                  isCustomizing ? 'Exit customization' : 'Customize sidebar'
+                  isCustomizing ? "Exit customization" : "Customize sidebar"
                 }
                 aria-pressed={isCustomizing}
               >
@@ -786,9 +786,9 @@ const Sidebar: React.FC<SidebarProps> = ({
                             onDragOver={handleDragOver}
                             onDrop={(e) => handleDrop(e, item.id)}
                             className={cn(
-                              'relative group',
-                              isCustomizing && !isCollapsed && 'cursor-move',
-                              draggedItem === item.id && 'opacity-50 scale-95',
+                              "relative group",
+                              isCustomizing && !isCollapsed && "cursor-move",
+                              draggedItem === item.id && "opacity-50 scale-95",
                             )}
                             role="listitem"
                           >
@@ -801,28 +801,28 @@ const Sidebar: React.FC<SidebarProps> = ({
                               onBlur={() => setFocusedItemId(null)}
                               tabIndex={0}
                               role="button"
-                              aria-label={`Navigate to ${item.label}${item.badge ? ` (${item.badge})` : ''}`}
-                              aria-current={isActive ? 'page' : undefined}
+                              aria-label={`Navigate to ${item.label}${item.badge ? ` (${item.badge})` : ""}`}
+                              aria-current={isActive ? "page" : undefined}
                               className={cn(
-                                'flex items-center w-full px-3 py-3 text-sm font-medium rounded-xl transition-all duration-200 cursor-pointer relative overflow-hidden min-h-[44px]',
-                                'focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1',
+                                "flex items-center w-full px-3 py-3 text-sm font-medium rounded-xl transition-all duration-200 cursor-pointer relative overflow-hidden min-h-[44px]",
+                                "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1",
                                 isActive
-                                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25 scale-[0.98] border-2 border-primary/30'
+                                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25 scale-[0.98] border-2 border-primary/30"
                                   : cn(
-                                      'text-foreground border-2 border-transparent bg-background/50',
-                                      'hover:bg-muted hover:text-foreground hover:border-border hover:shadow-md hover:scale-[0.99] hover:bg-muted/80',
-                                      'active:scale-[0.97] active:bg-muted',
-                                      'transition-all duration-150 ease-out',
+                                      "text-foreground border-2 border-transparent bg-background/50",
+                                      "hover:bg-muted hover:text-foreground hover:border-border hover:shadow-md hover:scale-[0.99] hover:bg-muted/80",
+                                      "active:scale-[0.97] active:bg-muted",
+                                      "transition-all duration-150 ease-out",
                                     ),
                                 isCustomizing &&
                                   !isCollapsed &&
-                                  'hover:bg-destructive/10 hover:border-destructive/30 hover:text-destructive-foreground',
-                                isCollapsed && 'justify-center px-2',
+                                  "hover:bg-destructive/10 hover:border-destructive/30 hover:text-destructive-foreground",
+                                isCollapsed && "justify-center px-2",
                                 isFocused &&
                                   !isActive &&
-                                  'ring-2 ring-primary/40 bg-muted/70 border-primary/20',
+                                  "ring-2 ring-primary/40 bg-muted/70 border-primary/20",
                                 draggedItem === item.id &&
-                                  'shadow-xl shadow-primary/20',
+                                  "shadow-xl shadow-primary/20",
                               )}
                             >
                               {/* Drag handle */}
@@ -839,8 +839,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                                   React.cloneElement(
                                     item.icon as React.ReactElement,
                                     {
-                                      className: 'w-5 h-5',
-                                      'aria-hidden': true,
+                                      className: "w-5 h-5",
+                                      "aria-hidden": true,
                                     },
                                   )
                                 ) : (
@@ -862,10 +862,10 @@ const Sidebar: React.FC<SidebarProps> = ({
                                     {item.badge && (
                                       <span
                                         className={cn(
-                                          'px-2 py-0.5 text-xs rounded-full font-semibold',
+                                          "px-2 py-0.5 text-xs rounded-full font-semibold",
                                           isActive
-                                            ? 'bg-primary-foreground/20 text-primary-foreground'
-                                            : 'bg-accent text-accent-foreground',
+                                            ? "bg-primary-foreground/20 text-primary-foreground"
+                                            : "bg-accent text-accent-foreground",
                                         )}
                                         aria-label={`Badge: ${item.badge}`}
                                       >

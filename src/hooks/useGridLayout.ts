@@ -3,9 +3,9 @@
  * Advanced layout management with React Grid Layout integration
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { Layout, Layouts, ResponsiveProps } from 'react-grid-layout';
-import { WidgetType, WidgetInstance, WIDGET_SIZES } from '../types/dashboard';
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Layout, Layouts, ResponsiveProps } from "react-grid-layout";
+import { WidgetType, WidgetInstance, WIDGET_SIZES } from "../types/dashboard";
 
 // Grid configuration
 export const GRID_CONFIG = {
@@ -18,7 +18,7 @@ export const GRID_CONFIG = {
   isDraggable: true,
   isResizable: true,
   preventCollision: false,
-  compactType: 'vertical' as const,
+  compactType: "vertical" as const,
   useCSSTransforms: true,
 } as const;
 
@@ -83,7 +83,7 @@ export const useGridLayout = (
     initialWidgets = [],
     initialLayouts = {},
     persistLayout = true,
-    layoutId = 'default',
+    layoutId = "default",
     onLayoutChange,
     onWidgetAdd,
     onWidgetRemove,
@@ -92,7 +92,7 @@ export const useGridLayout = (
 
   // State
   const [layouts, setLayouts] = useState<Layouts>(initialLayouts);
-  const [currentBreakpoint, setCurrentBreakpoint] = useState('lg');
+  const [currentBreakpoint, setCurrentBreakpoint] = useState("lg");
   const [widgets, setWidgets] = useState<WidgetInstance[]>(initialWidgets);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -217,7 +217,7 @@ export const useGridLayout = (
   const duplicateWidget = useCallback(
     (widgetId: string): string => {
       const originalWidget = widgets.find((w) => w.id === widgetId);
-      if (!originalWidget) return '';
+      if (!originalWidget) return "";
 
       const newWidgetId = addWidget(originalWidget.type);
       updateWidget(newWidgetId, {
@@ -288,7 +288,7 @@ export const useGridLayout = (
       );
       return true;
     } catch (error) {
-      console.error('Failed to save layout:', error);
+      console.error("Failed to save layout:", error);
       return false;
     }
   }, [persistLayout, layoutId, layouts, widgets]);
@@ -304,7 +304,7 @@ export const useGridLayout = (
       setWidgets(layoutData.widgets || []);
       return true;
     } catch (error) {
-      console.error('Failed to load layout:', error);
+      console.error("Failed to load layout:", error);
       return false;
     }
   }, []);

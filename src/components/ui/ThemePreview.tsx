@@ -1,8 +1,8 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { useTheme } from '@/contexts/ThemeContext';
-import { THEME_METADATA } from '@/types/theme';
-import type { ColorTheme } from '@/types/theme';
+import React from "react";
+import { motion } from "framer-motion";
+import { useTheme } from "@/contexts/ThemeContext";
+import { THEME_METADATA } from "@/types/theme";
+import type { ColorTheme } from "@/types/theme";
 
 interface ThemePreviewProps {
   className?: string;
@@ -10,7 +10,7 @@ interface ThemePreviewProps {
 }
 
 const ThemePreview: React.FC<ThemePreviewProps> = ({
-  className = '',
+  className = "",
   showAllThemes = false,
 }) => {
   const { colorTheme, setColorTheme, getThemeMetadata } = useTheme();
@@ -32,8 +32,8 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({
           relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200
           ${
             isActive
-              ? 'border-primary ring-2 ring-primary/20 bg-surface'
-              : 'border-border hover:border-primary/50 bg-surface/50'
+              ? "border-primary ring-2 ring-primary/20 bg-surface"
+              : "border-border hover:border-primary/50 bg-surface/50"
           }
         `}
         onClick={() => setColorTheme(theme)}
@@ -119,7 +119,7 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({
                   <strong>Description:</strong> {currentTheme.description}
                 </li>
                 <li>
-                  <strong>Colors:</strong> {currentTheme.primaryColors.length}{' '}
+                  <strong>Colors:</strong> {currentTheme.primaryColors.length}{" "}
                   primary colors
                 </li>
               </ul>
@@ -157,13 +157,13 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({
         {/* Theme Statistics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
           {[
-            'Modern',
-            'Dark',
-            'Natural',
-            'Warm',
-            'Cool',
-            'Vibrant',
-            'Minimal',
+            "Modern",
+            "Dark",
+            "Natural",
+            "Warm",
+            "Cool",
+            "Vibrant",
+            "Minimal",
           ].map((category) => {
             const count = allThemes.filter(
               (theme) => theme.category === category,

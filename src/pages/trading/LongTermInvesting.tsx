@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { useTheme } from '../../contexts/ThemeContext';
-import DCFCalculator from '../../components/trading/longterm/DCFCalculator';
-import DividendChart from '../../components/trading/longterm/DividendChart';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../contexts/ThemeContext";
+import DCFCalculator from "../../components/trading/longterm/DCFCalculator";
+import DividendChart from "../../components/trading/longterm/DividendChart";
 import {
   TrendingUp,
   Calendar,
@@ -11,25 +11,25 @@ import {
   BarChart2,
   PieChart,
   Info,
-} from 'lucide-react';
+} from "lucide-react";
 
 const LongTermInvesting: React.FC = () => {
   const { colorTheme } = useTheme();
   const navigate = useNavigate();
-  const [activeSymbol, setActiveSymbol] = useState<string>('AAPL');
-  const [activeTab, setActiveTab] = useState<string>('overview');
+  const [activeSymbol, setActiveSymbol] = useState<string>("AAPL");
+  const [activeTab, setActiveTab] = useState<string>("overview");
   const [watchlist, setWatchlist] = useState<string[]>([
-    'AAPL',
-    'MSFT',
-    'GOOGL',
-    'AMZN',
-    'BRK.B',
+    "AAPL",
+    "MSFT",
+    "GOOGL",
+    "AMZN",
+    "BRK.B",
   ]);
 
   // Mock stock data
   const stockData = {
     AAPL: {
-      name: 'Apple Inc.',
+      name: "Apple Inc.",
       price: 182.63,
       change: 1.25,
       changePercent: 0.69,
@@ -38,7 +38,7 @@ const LongTermInvesting: React.FC = () => {
       yield: 0.53,
     },
     MSFT: {
-      name: 'Microsoft Corp.',
+      name: "Microsoft Corp.",
       price: 337.22,
       change: -2.15,
       changePercent: -0.63,
@@ -47,7 +47,7 @@ const LongTermInvesting: React.FC = () => {
       yield: 0.89,
     },
     GOOGL: {
-      name: 'Alphabet Inc.',
+      name: "Alphabet Inc.",
       price: 131.86,
       change: 0.54,
       changePercent: 0.41,
@@ -56,7 +56,7 @@ const LongTermInvesting: React.FC = () => {
       yield: 0,
     },
     AMZN: {
-      name: 'Amazon.com Inc.',
+      name: "Amazon.com Inc.",
       price: 178.22,
       change: 3.45,
       changePercent: 1.97,
@@ -64,8 +64,8 @@ const LongTermInvesting: React.FC = () => {
       dividend: 0,
       yield: 0,
     },
-    'BRK.B': {
-      name: 'Berkshire Hathaway',
+    "BRK.B": {
+      name: "Berkshire Hathaway",
       price: 406.11,
       change: -1.02,
       changePercent: -0.25,
@@ -78,18 +78,18 @@ const LongTermInvesting: React.FC = () => {
   // Get primary color based on current theme
   const getPrimaryColor = () => {
     switch (colorTheme) {
-      case 'tropical-jungle':
-        return '#29A329';
-      case 'ocean-sunset':
-        return '#008B8B';
-      case 'desert-storm':
-        return '#C19A6B';
-      case 'berry-fields':
-        return '#8E4585';
-      case 'arctic-moss':
-        return '#4682B4';
+      case "tropical-jungle":
+        return "#29A329";
+      case "ocean-sunset":
+        return "#008B8B";
+      case "desert-storm":
+        return "#C19A6B";
+      case "berry-fields":
+        return "#8E4585";
+      case "arctic-moss":
+        return "#4682B4";
       default:
-        return '#FF1493';
+        return "#FF1493";
     }
   };
 
@@ -115,8 +115,8 @@ const LongTermInvesting: React.FC = () => {
                       onClick={() => setActiveSymbol(symbol)}
                       className={`w-full flex justify-between items-center p-2 rounded-md text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 ${
                         activeSymbol === symbol
-                          ? 'bg-primary/10 text-primary border border-primary/20'
-                          : 'hover:bg-surface/80 text-text'
+                          ? "bg-primary/10 text-primary border border-primary/20"
+                          : "hover:bg-surface/80 text-text"
                       }`}
                     >
                       <span className="font-medium">{symbol}</span>
@@ -124,14 +124,14 @@ const LongTermInvesting: React.FC = () => {
                         className={`${
                           stockData[symbol as keyof typeof stockData].change >=
                           0
-                            ? 'text-green-600'
-                            : 'text-red-600'
+                            ? "text-green-600"
+                            : "text-red-600"
                         }`}
                       >
                         {stockData[symbol as keyof typeof stockData]
                           .changePercent >= 0
-                          ? '+'
-                          : ''}
+                          ? "+"
+                          : ""}
                         {stockData[
                           symbol as keyof typeof stockData
                         ].changePercent.toFixed(2)}
@@ -202,22 +202,22 @@ const LongTermInvesting: React.FC = () => {
                       className={`ml-2 ${
                         stockData[activeSymbol as keyof typeof stockData]
                           .change >= 0
-                          ? 'text-green-600'
-                          : 'text-red-600'
+                          ? "text-green-600"
+                          : "text-red-600"
                       }`}
                     >
                       {stockData[activeSymbol as keyof typeof stockData]
                         .change >= 0
-                        ? '+'
-                        : ''}
+                        ? "+"
+                        : ""}
                       {stockData[
                         activeSymbol as keyof typeof stockData
-                      ].change.toFixed(2)}{' '}
+                      ].change.toFixed(2)}{" "}
                       (
                       {stockData[activeSymbol as keyof typeof stockData]
                         .changePercent >= 0
-                        ? '+'
-                        : ''}
+                        ? "+"
+                        : ""}
                       {stockData[
                         activeSymbol as keyof typeof stockData
                       ].changePercent.toFixed(2)}
@@ -236,41 +236,41 @@ const LongTermInvesting: React.FC = () => {
 
               <div className="flex border-b border-border mt-6">
                 <button
-                  onClick={() => setActiveTab('overview')}
+                  onClick={() => setActiveTab("overview")}
                   className={`px-4 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                    activeTab === 'overview'
-                      ? 'border-b-2 border-primary text-primary'
-                      : 'text-text/70 hover:text-text'
+                    activeTab === "overview"
+                      ? "border-b-2 border-primary text-primary"
+                      : "text-text/70 hover:text-text"
                   }`}
                 >
                   Overview
                 </button>
                 <button
-                  onClick={() => setActiveTab('valuation')}
+                  onClick={() => setActiveTab("valuation")}
                   className={`px-4 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                    activeTab === 'valuation'
-                      ? 'border-b-2 border-primary text-primary'
-                      : 'text-text/70 hover:text-text'
+                    activeTab === "valuation"
+                      ? "border-b-2 border-primary text-primary"
+                      : "text-text/70 hover:text-text"
                   }`}
                 >
                   Valuation
                 </button>
                 <button
-                  onClick={() => setActiveTab('dividends')}
+                  onClick={() => setActiveTab("dividends")}
                   className={`px-4 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                    activeTab === 'dividends'
-                      ? 'border-b-2 border-primary text-primary'
-                      : 'text-text/70 hover:text-text'
+                    activeTab === "dividends"
+                      ? "border-b-2 border-primary text-primary"
+                      : "text-text/70 hover:text-text"
                   }`}
                 >
                   Dividends
                 </button>
                 <button
-                  onClick={() => setActiveTab('financials')}
+                  onClick={() => setActiveTab("financials")}
                   className={`px-4 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                    activeTab === 'financials'
-                      ? 'border-b-2 border-primary text-primary'
-                      : 'text-text/70 hover:text-text'
+                    activeTab === "financials"
+                      ? "border-b-2 border-primary text-primary"
+                      : "text-text/70 hover:text-text"
                   }`}
                 >
                   Financials
@@ -278,7 +278,7 @@ const LongTermInvesting: React.FC = () => {
               </div>
             </div>
 
-            {activeTab === 'overview' && (
+            {activeTab === "overview" && (
               <div className="space-y-6">
                 <div className="bg-surface rounded-lg border border-border shadow-sm p-4">
                   <h2 className="text-lg font-semibold mb-4 text-text">
@@ -374,19 +374,19 @@ const LongTermInvesting: React.FC = () => {
               </div>
             )}
 
-            {activeTab === 'valuation' && (
+            {activeTab === "valuation" && (
               <div className="space-y-6">
                 <DCFCalculator symbol={activeSymbol} />
               </div>
             )}
 
-            {activeTab === 'dividends' && (
+            {activeTab === "dividends" && (
               <div className="space-y-6">
                 <DividendChart symbol={activeSymbol} />
               </div>
             )}
 
-            {activeTab === 'financials' && (
+            {activeTab === "financials" && (
               <div className="space-y-6">
                 <div className="bg-surface rounded-lg border border-border shadow-sm p-4">
                   <h2 className="text-lg font-semibold mb-4 text-text">

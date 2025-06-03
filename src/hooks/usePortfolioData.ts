@@ -3,7 +3,7 @@
  * Custom React hook for managing portfolio data with real-time updates,
  * caching, error handling, and optimized state management
  */
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import {
   Position,
   PortfolioSummary,
@@ -19,7 +19,7 @@ import {
   PriceAlert,
   HoldingsSortBy,
   SortDirection,
-} from '../types/portfolio';
+} from "../types/portfolio";
 
 // Hook configuration
 interface UsePortfolioDataOptions {
@@ -69,7 +69,7 @@ interface UsePortfolioDataReturn {
     quantity: number,
     price: number,
   ) => Promise<boolean>;
-  setAlert: (alert: Omit<PriceAlert, 'id' | 'createdAt'>) => Promise<boolean>;
+  setAlert: (alert: Omit<PriceAlert, "id" | "createdAt">) => Promise<boolean>;
 
   // Configuration
   config: PortfolioPageConfig;
@@ -96,13 +96,13 @@ const DEFAULT_TABLE_STATE: TableState = {
   pageSize: 20,
   totalItems: 0,
   totalPages: 0,
-  sortBy: 'marketValue',
-  sortDirection: 'desc',
+  sortBy: "marketValue",
+  sortDirection: "desc",
   filters: {
-    searchTerm: '',
+    searchTerm: "",
     profitableOnly: false,
-    sortBy: 'marketValue',
-    sortDirection: 'desc',
+    sortBy: "marketValue",
+    sortDirection: "desc",
   },
 };
 
@@ -182,9 +182,9 @@ class PortfolioDataService {
 
     const positions: Position[] = [
       {
-        id: '1',
-        symbol: 'AAPL',
-        companyName: 'Apple Inc.',
+        id: "1",
+        symbol: "AAPL",
+        companyName: "Apple Inc.",
         shares: 50,
         avgCost: 165.32,
         currentPrice: 182.63,
@@ -194,13 +194,13 @@ class PortfolioDataService {
         dayChange: 123.45,
         dayChangePercentage: 1.37,
         weight: 7.33,
-        sector: 'Technology',
+        sector: "Technology",
         lastUpdated: new Date().toISOString(),
       },
       {
-        id: '2',
-        symbol: 'MSFT',
-        companyName: 'Microsoft Corp.',
+        id: "2",
+        symbol: "MSFT",
+        companyName: "Microsoft Corp.",
         shares: 25,
         avgCost: 380.45,
         currentPrice: 415.32,
@@ -210,13 +210,13 @@ class PortfolioDataService {
         dayChange: 234.56,
         dayChangePercentage: 2.31,
         weight: 8.33,
-        sector: 'Technology',
+        sector: "Technology",
         lastUpdated: new Date().toISOString(),
       },
       {
-        id: '3',
-        symbol: 'GOOGL',
-        companyName: 'Alphabet Inc.',
+        id: "3",
+        symbol: "GOOGL",
+        companyName: "Alphabet Inc.",
         shares: 30,
         avgCost: 180.23,
         currentPrice: 175.98,
@@ -226,13 +226,13 @@ class PortfolioDataService {
         dayChange: -45.67,
         dayChangePercentage: -0.86,
         weight: 4.24,
-        sector: 'Technology',
+        sector: "Technology",
         lastUpdated: new Date().toISOString(),
       },
       {
-        id: '4',
-        symbol: 'AMZN',
-        companyName: 'Amazon.com Inc.',
+        id: "4",
+        symbol: "AMZN",
+        companyName: "Amazon.com Inc.",
         shares: 15,
         avgCost: 165.78,
         currentPrice: 178.15,
@@ -242,13 +242,13 @@ class PortfolioDataService {
         dayChange: 67.89,
         dayChangePercentage: 2.61,
         weight: 2.14,
-        sector: 'Consumer Discretionary',
+        sector: "Consumer Discretionary",
         lastUpdated: new Date().toISOString(),
       },
       {
-        id: '5',
-        symbol: 'NVDA',
-        companyName: 'NVIDIA Corp.',
+        id: "5",
+        symbol: "NVDA",
+        companyName: "NVIDIA Corp.",
         shares: 10,
         avgCost: 850.32,
         currentPrice: 924.73,
@@ -258,7 +258,7 @@ class PortfolioDataService {
         dayChange: 156.78,
         dayChangePercentage: 1.72,
         weight: 7.42,
-        sector: 'Technology',
+        sector: "Technology",
         lastUpdated: new Date().toISOString(),
       },
     ];
@@ -300,28 +300,28 @@ class PortfolioDataService {
       },
       diversificationMetrics: {
         sectorAllocation: [
-          { sector: 'Technology', percentage: 65.2, value: 81234.56 },
+          { sector: "Technology", percentage: 65.2, value: 81234.56 },
           {
-            sector: 'Consumer Discretionary',
+            sector: "Consumer Discretionary",
             percentage: 21.4,
             value: 26678.9,
           },
-          { sector: 'Healthcare', percentage: 13.4, value: 16655.46 },
+          { sector: "Healthcare", percentage: 13.4, value: 16655.46 },
         ],
         geographicAllocation: [
-          { region: 'United States', percentage: 85.6, value: 106655.46 },
-          { region: 'International', percentage: 14.4, value: 17913.46 },
+          { region: "United States", percentage: 85.6, value: 106655.46 },
+          { region: "International", percentage: 14.4, value: 17913.46 },
         ],
         marketCapAllocation: [
-          { category: 'Large Cap', percentage: 78.9, value: 98270.65 },
-          { category: 'Mid Cap', percentage: 15.3, value: 19050.88 },
-          { category: 'Small Cap', percentage: 5.8, value: 7247.39 },
+          { category: "Large Cap", percentage: 78.9, value: 98270.65 },
+          { category: "Mid Cap", percentage: 15.3, value: 19050.88 },
+          { category: "Small Cap", percentage: 5.8, value: 7247.39 },
         ],
         concentrationRisk: 0.25,
         herfindahlIndex: 0.18,
       },
       comparisonData: {
-        benchmark: 'S&P 500',
+        benchmark: "S&P 500",
         portfolioReturn: 13.94,
         benchmarkReturn: 11.2,
         alpha: 2.74,
@@ -351,7 +351,7 @@ class PortfolioDataService {
 
     return {
       prices,
-      marketStatus: 'OPEN',
+      marketStatus: "OPEN",
       lastUpdated: new Date().toISOString(),
     };
   }
@@ -370,7 +370,7 @@ export const usePortfolioData = (
   options: UsePortfolioDataOptions = {},
 ): UsePortfolioDataReturn => {
   const {
-    portfolioId = '1',
+    portfolioId = "1",
     enableRealTime = true,
     refreshInterval = 30000,
     autoLoad = true,
@@ -439,13 +439,13 @@ export const usePortfolioData = (
       let bValue: any = b[sortBy as keyof Position];
 
       // Handle string comparison
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
+      if (typeof aValue === "string" && typeof bValue === "string") {
         aValue = aValue.toLowerCase();
         bValue = bValue.toLowerCase();
       }
 
-      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+      if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
       return 0;
     });
 
@@ -469,8 +469,8 @@ export const usePortfolioData = (
   const handleError = useCallback((err: any) => {
     if (!mountedRef.current) return;
 
-    console.error('Portfolio data error:', err);
-    setError(err.message || 'An unexpected error occurred');
+    console.error("Portfolio data error:", err);
+    setError(err.message || "An unexpected error occurred");
     setIsLoading(false);
     setIsRefreshing(false);
   }, []);
@@ -570,7 +570,7 @@ export const usePortfolioData = (
       // Save to localStorage
       const updatedConfig = { ...config, ...newConfig };
       localStorage.setItem(
-        'portfolio-page-config',
+        "portfolio-page-config",
         JSON.stringify(updatedConfig),
       );
     },
@@ -635,7 +635,7 @@ export const usePortfolioData = (
   );
 
   const setAlert = useCallback(
-    async (alert: Omit<PriceAlert, 'id' | 'createdAt'>): Promise<boolean> => {
+    async (alert: Omit<PriceAlert, "id" | "createdAt">): Promise<boolean> => {
       try {
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 500));
@@ -669,7 +669,7 @@ export const usePortfolioData = (
           setRealtimeData(data);
         }
       } catch (err) {
-        console.error('Real-time data update failed:', err);
+        console.error("Real-time data update failed:", err);
       }
     };
 
@@ -693,13 +693,13 @@ export const usePortfolioData = (
 
   // Load configuration from localStorage
   useEffect(() => {
-    const savedConfig = localStorage.getItem('portfolio-page-config');
+    const savedConfig = localStorage.getItem("portfolio-page-config");
     if (savedConfig) {
       try {
         const parsed = JSON.parse(savedConfig);
         setConfig({ ...DEFAULT_CONFIG, ...parsed });
       } catch (err) {
-        console.warn('Failed to load portfolio page configuration:', err);
+        console.warn("Failed to load portfolio page configuration:", err);
       }
     }
   }, []);

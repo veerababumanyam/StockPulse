@@ -3,28 +3,28 @@
  * Displays portfolio summary and key metrics with improved architecture and performance
  * Part of Story 2.2: Customizable Widget System
  */
-'use client';
+"use client";
 
-import React, { useCallback } from 'react';
-import { WidgetComponentProps } from '../../types/dashboard';
-import { PortfolioOverviewData } from '../../types/widget-data';
-import { useTheme } from '../../contexts/ThemeContext';
-import { 
-  Briefcase, 
-  TrendingUp, 
-  DollarSign, 
-  AlertTriangle, 
-  RefreshCw, 
+import React, { useCallback } from "react";
+import { WidgetComponentProps } from "../../types/dashboard";
+import { PortfolioOverviewData } from "../../types/widget-data";
+import { useTheme } from "../../contexts/ThemeContext";
+import {
+  Briefcase,
+  TrendingUp,
+  DollarSign,
+  AlertTriangle,
+  RefreshCw,
   AlertCircle,
-  Clock
-} from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { cn } from '../../utils/cn';
-import { WidgetErrorBoundary } from '../common/ErrorBoundary';
-import { MetricCard, MetricItem } from './MetricCard';
-import { usePortfolioOverview } from '../../hooks/usePortfolioOverview';
-import { formatDate } from '../../utils/common/format';
+  Clock,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Badge } from "../ui/badge";
+import { cn } from "../../utils/cn";
+import { WidgetErrorBoundary } from "../common/ErrorBoundary";
+import { MetricCard, MetricItem } from "./MetricCard";
+import { usePortfolioOverview } from "../../hooks/usePortfolioOverview";
+import { formatDate } from "../../utils/common/format";
 
 const PortfolioOverviewContent: React.FC<WidgetComponentProps> = ({
   widgetId,
@@ -33,18 +33,13 @@ const PortfolioOverviewContent: React.FC<WidgetComponentProps> = ({
   onConfigChange,
 }) => {
   const { isDarkMode } = useTheme();
-  
-  const { 
-    data, 
-    formattedData, 
-    isLoading, 
-    error, 
-    refetch 
-  } = usePortfolioOverview({
-    widgetId,
-    refreshInterval: config.refreshInterval || 60000,
-    autoRefresh: true,
-  });
+
+  const { data, formattedData, isLoading, error, refetch } =
+    usePortfolioOverview({
+      widgetId,
+      refreshInterval: config.refreshInterval || 60000,
+      autoRefresh: true,
+    });
 
   const handleRefresh = useCallback(() => {
     refetch();
@@ -52,12 +47,12 @@ const PortfolioOverviewContent: React.FC<WidgetComponentProps> = ({
 
   if (isLoading) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center">
               <Briefcase className="h-4 w-4 mr-2 text-primary" />
-              {config.title || 'Portfolio Overview'}
+              {config.title || "Portfolio Overview"}
             </CardTitle>
             <RefreshCw className="h-4 w-4 text-muted-foreground animate-spin" />
           </div>
@@ -71,12 +66,12 @@ const PortfolioOverviewContent: React.FC<WidgetComponentProps> = ({
 
   if (error) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center text-danger-fg">
               <AlertCircle className="h-4 w-4 mr-2" />
-              {config.title || 'Portfolio Overview'}
+              {config.title || "Portfolio Overview"}
             </CardTitle>
             <button onClick={refetch} title="Retry loading data">
               <RefreshCw className="h-4 w-4 text-muted-foreground hover:text-primary" />
@@ -92,12 +87,12 @@ const PortfolioOverviewContent: React.FC<WidgetComponentProps> = ({
 
   if (!data || !formattedData) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center">
               <Briefcase className="h-4 w-4 mr-2 text-primary" />
-              {config.title || 'Portfolio Overview'}
+              {config.title || "Portfolio Overview"}
             </CardTitle>
             <button onClick={refetch} title="Reload data">
               <RefreshCw className="h-4 w-4 text-muted-foreground hover:text-primary" />
@@ -112,12 +107,12 @@ const PortfolioOverviewContent: React.FC<WidgetComponentProps> = ({
   }
 
   return (
-    <Card className={cn('h-full flex flex-col', config.className)}>
+    <Card className={cn("h-full flex flex-col", config.className)}>
       <CardHeader className="pb-2 pt-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold flex items-center">
             <Briefcase className="h-4 w-4 mr-2 text-primary" />
-            {config.title || 'Portfolio Overview'}
+            {config.title || "Portfolio Overview"}
           </CardTitle>
           <div className="flex items-center gap-2">
             {isEditMode && (
@@ -125,8 +120,8 @@ const PortfolioOverviewContent: React.FC<WidgetComponentProps> = ({
                 Edit
               </Badge>
             )}
-            <button 
-              onClick={handleRefresh} 
+            <button
+              onClick={handleRefresh}
               title="Refresh data"
               className="p-1 rounded-full hover:bg-muted"
             >
@@ -144,21 +139,21 @@ const PortfolioOverviewContent: React.FC<WidgetComponentProps> = ({
             icon={Briefcase}
             className="col-span-2"
           />
-          
+
           <MetricItem
             value={formattedData.dayChange}
             label="Day's Change"
             icon={TrendingUp}
             isPositive={formattedData.dayChangeIsPositive}
           />
-          
+
           <MetricItem
             value={formattedData.overallGain}
             label="Overall Gain/Loss"
             icon={DollarSign}
             isPositive={formattedData.overallGainIsPositive}
           />
-          
+
           <MetricItem
             value={data.assetCount}
             label="Active Assets"
@@ -175,10 +170,17 @@ const PortfolioOverviewContent: React.FC<WidgetComponentProps> = ({
             />
           )}
         </div>
-        
+
         <div className="mt-4 pt-2 border-t border-border-subtle flex items-center justify-end gap-2 text-xs text-muted-foreground">
           <Clock className="h-3 w-3" />
-          <span>Last updated: {formatDate(data.lastUpdated, { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+          <span>
+            Last updated:{" "}
+            {formatDate(data.lastUpdated, {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            })}
+          </span>
         </div>
       </CardContent>
     </Card>

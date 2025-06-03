@@ -1,12 +1,12 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 import {
   BarChart2,
   TrendingUp,
   TrendingDown,
   Clock,
   Sliders,
-} from 'lucide-react';
+} from "lucide-react";
 
 const GeneralTradingWorkspace: React.FC = () => {
   return (

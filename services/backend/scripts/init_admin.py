@@ -43,19 +43,21 @@ async def create_super_admin():
                 print(f"   Is Active: {existing_admin.is_active}")
                 print(f"   Can Login: {existing_admin.can_login()}")
                 print(f"   Created: {existing_admin.created_at}")
-                
+
                 # If user exists but is not approved, activate them
                 if existing_admin.status != UserStatus.APPROVED:
                     print("🔧 Activating existing admin user...")
                     existing_admin.status = UserStatus.APPROVED
                     existing_admin.is_active = True
                     existing_admin.approved_at = datetime.utcnow()
-                    existing_admin.approved_by = existing_admin.id  # Self-approved for admin
+                    existing_admin.approved_by = (
+                        existing_admin.id
+                    )  # Self-approved for admin
                     existing_admin.rejection_reason = None  # Clear any rejection reason
-                    
+
                     await db.commit()
                     await db.refresh(existing_admin)
-                    
+
                     print("✅ Admin user activated successfully!")
                     print(f"   Status: {existing_admin.status}")
                     print(f"   Is Active: {existing_admin.is_active}")
@@ -63,16 +65,16 @@ async def create_super_admin():
                     print(f"   Approved At: {existing_admin.approved_at}")
                 else:
                     print("✅ Admin user is already activated!")
-                
+
                 return
 
             # Create super admin user with auto-activation
             print("🚀 Creating new super admin user...")
-            
+
             # Hash the password
             password_hash = user_service.hash_password("admin@123")
             current_time = datetime.utcnow()
-            
+
             # Create user with APPROVED status and activation details
             admin_user = User(
                 email="admin@sp.com",
@@ -82,15 +84,15 @@ async def create_super_admin():
                 is_active=True,
                 approved_at=current_time,
                 created_at=current_time,
-                updated_at=current_time
+                updated_at=current_time,
             )
-            
+
             db.add(admin_user)
             await db.flush()  # Get the ID before commit
-            
+
             # Set approved_by to self for admin user
             admin_user.approved_by = admin_user.id
-            
+
             await db.commit()
             await db.refresh(admin_user)
 
@@ -110,6 +112,7 @@ async def create_super_admin():
     except Exception as e:
         print(f"❌ Error creating super admin user: {e}")
         import traceback
+
         traceback.print_exc()
         sys.exit(1)
 

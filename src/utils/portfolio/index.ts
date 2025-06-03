@@ -5,4 +5,4 @@
  */
 
 // Portfolio calculations and metrics
-export * from './portfolioCalculations'; 
+export * from "./portfolioCalculations";

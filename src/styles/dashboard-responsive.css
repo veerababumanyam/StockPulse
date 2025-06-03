@@ -86,7 +86,7 @@
   .widget-content {
     font-size: 14px;
   }
-  
+
   .widget-edit-toolbar {
     font-size: 12px;
     padding: 4px 8px;
@@ -97,7 +97,7 @@
   .widget-content {
     font-size: 16px;
   }
-  
+
   .widget-edit-toolbar {
     font-size: 14px;
     padding: 6px 12px;
@@ -125,11 +125,11 @@
   height: 20px !important;
   bottom: 0 !important;
   right: 0 !important;
-  background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgNiA2IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZG90cyBmaWxsPSIjOTk5IiBkPSJtMTUgMTJMMjAgN2wtNSA1Wk0zIDdsNSA1TDMgMTdaIi8+Cjwvc3ZnPgo=') !important;
+  background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgNiA2IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZG90cyBmaWxsPSIjOTk5IiBkPSJtMTUgMTJMMjAgN2wtNSA1Wk0zIDdsNSA1TDMgMTdaIi8+Cjwvc3ZnPgo=") !important;
   background-position: bottom right !important;
   padding: 0 3px 3px 0 !important;
   background-repeat: no-repeat !important;
   background-origin: content-box !important;
   box-sizing: border-box !important;
   cursor: se-resize !important;
-} 
+}

@@ -4,24 +4,27 @@
  * Follows Story 2.2 requirements and enterprise architecture patterns
  */
 
-import { widgetRegistry, WidgetRegistryEntry } from './widget-registry';
+import { widgetRegistry, WidgetRegistryEntry } from "./widget-registry";
 import {
   WidgetType,
   WidgetMetadata,
   WidgetCategory,
   WidgetComponentProps,
-} from '../types/dashboard';
-import { ComponentType } from 'react';
+} from "../types/dashboard";
+import { ComponentType } from "react";
 
 // ===============================================
 // Registration Events
 // ===============================================
 
-export type RegistrationEvent = 
-  | { type: 'WIDGET_REGISTERED'; payload: { widgetType: WidgetType } }
-  | { type: 'WIDGET_UNREGISTERED'; payload: { widgetType: WidgetType } }
-  | { type: 'WIDGET_ENABLED'; payload: { widgetType: WidgetType; enabled: boolean } }
-  | { type: 'REGISTRY_INITIALIZED'; payload: { totalWidgets: number } };
+export type RegistrationEvent =
+  | { type: "WIDGET_REGISTERED"; payload: { widgetType: WidgetType } }
+  | { type: "WIDGET_UNREGISTERED"; payload: { widgetType: WidgetType } }
+  | {
+      type: "WIDGET_ENABLED";
+      payload: { widgetType: WidgetType; enabled: boolean };
+    }
+  | { type: "REGISTRY_INITIALIZED"; payload: { totalWidgets: number } };
 
 export type RegistrationEventHandler = (event: RegistrationEvent) => void;
 
@@ -64,7 +67,9 @@ class WidgetRegistrationService {
     if (this.initialized) return;
 
     if (this.config.logRegistrations) {
-      console.log('[WidgetRegistration] Initializing widget registration service...');
+      console.log(
+        "[WidgetRegistration] Initializing widget registration service...",
+      );
     }
 
     // Auto-register all widgets if enabled
@@ -76,12 +81,14 @@ class WidgetRegistrationService {
 
     // Emit initialization event
     this.emitEvent({
-      type: 'REGISTRY_INITIALIZED',
+      type: "REGISTRY_INITIALIZED",
       payload: { totalWidgets: widgetRegistry.getAllWidgets().length },
     });
 
     if (this.config.logRegistrations) {
-      console.log('[WidgetRegistration] Widget registration service initialized');
+      console.log(
+        "[WidgetRegistration] Widget registration service initialized",
+      );
     }
   }
 
@@ -97,14 +104,16 @@ class WidgetRegistrationService {
       permissions?: string[];
       enabled?: boolean;
       version?: string;
-    } = {}
+    } = {},
   ): Promise<boolean> {
     try {
       // Validate component if enabled
       if (this.config.validateComponents) {
         const isValid = await this.validateComponent(component);
         if (!isValid) {
-          console.error(`[WidgetRegistration] Component validation failed for ${type}`);
+          console.error(
+            `[WidgetRegistration] Component validation failed for ${type}`,
+          );
           return false;
         }
       }
@@ -117,7 +126,7 @@ class WidgetRegistrationService {
         previewComponent: options.previewComponent,
         isEnabled: options.enabled ?? this.config.enabledByDefault,
         permissions: options.permissions || this.config.permissions,
-        version: options.version || '1.0.0',
+        version: options.version || "1.0.0",
         lastUpdated: new Date().toISOString(),
       };
 
@@ -126,7 +135,7 @@ class WidgetRegistrationService {
 
       // Emit registration event
       this.emitEvent({
-        type: 'WIDGET_REGISTERED',
+        type: "WIDGET_REGISTERED",
         payload: { widgetType: type },
       });
 
@@ -136,7 +145,10 @@ class WidgetRegistrationService {
 
       return true;
     } catch (error) {
-      console.error(`[WidgetRegistration] Failed to register widget ${type}:`, error);
+      console.error(
+        `[WidgetRegistration] Failed to register widget ${type}:`,
+        error,
+      );
       return false;
     }
   }
@@ -150,7 +162,7 @@ class WidgetRegistrationService {
 
       // Emit unregistration event
       this.emitEvent({
-        type: 'WIDGET_UNREGISTERED',
+        type: "WIDGET_UNREGISTERED",
         payload: { widgetType: type },
       });
 
@@ -160,7 +172,10 @@ class WidgetRegistrationService {
 
       return true;
     } catch (error) {
-      console.error(`[WidgetRegistration] Failed to unregister widget ${type}:`, error);
+      console.error(
+        `[WidgetRegistration] Failed to unregister widget ${type}:`,
+        error,
+      );
       return false;
     }
   }
@@ -174,17 +189,22 @@ class WidgetRegistrationService {
 
       // Emit enable/disable event
       this.emitEvent({
-        type: 'WIDGET_ENABLED',
+        type: "WIDGET_ENABLED",
         payload: { widgetType: type, enabled },
       });
 
       if (this.config.logRegistrations) {
-        console.log(`[WidgetRegistration] Widget ${enabled ? 'enabled' : 'disabled'}: ${type}`);
+        console.log(
+          `[WidgetRegistration] Widget ${enabled ? "enabled" : "disabled"}: ${type}`,
+        );
       }
 
       return true;
     } catch (error) {
-      console.error(`[WidgetRegistration] Failed to ${enabled ? 'enable' : 'disable'} widget ${type}:`, error);
+      console.error(
+        `[WidgetRegistration] Failed to ${enabled ? "enable" : "disable"} widget ${type}:`,
+        error,
+      );
       return false;
     }
   }
@@ -203,7 +223,7 @@ class WidgetRegistrationService {
         enabled?: boolean;
         version?: string;
       };
-    }>
+    }>,
   ): Promise<{ successful: WidgetType[]; failed: WidgetType[] }> {
     const successful: WidgetType[] = [];
     const failed: WidgetType[] = [];
@@ -213,7 +233,7 @@ class WidgetRegistrationService {
         widget.type,
         widget.metadata,
         widget.component,
-        widget.options
+        widget.options,
       );
 
       if (success) {
@@ -224,7 +244,9 @@ class WidgetRegistrationService {
     }
 
     if (this.config.logRegistrations) {
-      console.log(`[WidgetRegistration] Bulk registration completed: ${successful.length} successful, ${failed.length} failed`);
+      console.log(
+        `[WidgetRegistration] Bulk registration completed: ${successful.length} successful, ${failed.length} failed`,
+      );
     }
 
     return { successful, failed };
@@ -237,19 +259,23 @@ class WidgetRegistrationService {
     // All widgets are already registered in the registry constructor
     // This method is for future extensibility
     const stats = widgetRegistry.getRegistryStats();
-    
+
     if (this.config.logRegistrations) {
-      console.log(`[WidgetRegistration] Auto-registration completed: ${stats.totalWidgets} widgets registered`);
+      console.log(
+        `[WidgetRegistration] Auto-registration completed: ${stats.totalWidgets} widgets registered`,
+      );
     }
   }
 
   /**
    * Validate a widget component
    */
-  private async validateComponent(component: ComponentType<WidgetComponentProps>): Promise<boolean> {
+  private async validateComponent(
+    component: ComponentType<WidgetComponentProps>,
+  ): Promise<boolean> {
     try {
       // Basic validation - check if component is a valid React component
-      if (typeof component !== 'function' && typeof component !== 'object') {
+      if (typeof component !== "function" && typeof component !== "object") {
         return false;
       }
 
@@ -260,7 +286,7 @@ class WidgetRegistrationService {
 
       return true;
     } catch (error) {
-      console.error('[WidgetRegistration] Component validation error:', error);
+      console.error("[WidgetRegistration] Component validation error:", error);
       return false;
     }
   }
@@ -277,11 +303,12 @@ class WidgetRegistrationService {
     lastRegistration?: string;
   } {
     const registryStats = widgetRegistry.getRegistryStats();
-    
+
     return {
       totalRegistered: registryStats.totalWidgets,
       enabledWidgets: registryStats.enabledWidgets,
-      disabledWidgets: registryStats.totalWidgets - registryStats.enabledWidgets,
+      disabledWidgets:
+        registryStats.totalWidgets - registryStats.enabledWidgets,
       categoryCounts: registryStats.categoryCounts,
       premiumWidgets: registryStats.premiumWidgets,
       lastRegistration: new Date().toISOString(),
@@ -299,7 +326,7 @@ class WidgetRegistrationService {
    * Get all registered widget types
    */
   getRegisteredWidgetTypes(): WidgetType[] {
-    return widgetRegistry.getAllWidgets().map(widget => widget.type);
+    return widgetRegistry.getAllWidgets().map((widget) => widget.type);
   }
 
   /**
@@ -314,11 +341,16 @@ class WidgetRegistrationService {
    */
   searchWidgets(query: string): WidgetRegistryEntry[] {
     const searchTerm = query.toLowerCase();
-    return widgetRegistry.getAllWidgets().filter(widget =>
-      widget.metadata.name.toLowerCase().includes(searchTerm) ||
-      widget.metadata.description.toLowerCase().includes(searchTerm) ||
-      widget.metadata.tags?.some(tag => tag.toLowerCase().includes(searchTerm))
-    );
+    return widgetRegistry
+      .getAllWidgets()
+      .filter(
+        (widget) =>
+          widget.metadata.name.toLowerCase().includes(searchTerm) ||
+          widget.metadata.description.toLowerCase().includes(searchTerm) ||
+          widget.metadata.tags?.some((tag) =>
+            tag.toLowerCase().includes(searchTerm),
+          ),
+      );
   }
 
   /**
@@ -342,11 +374,11 @@ class WidgetRegistrationService {
    * Emit registration event
    */
   private emitEvent(event: RegistrationEvent): void {
-    this.eventHandlers.forEach(handler => {
+    this.eventHandlers.forEach((handler) => {
       try {
         handler(event);
       } catch (error) {
-        console.error('[WidgetRegistration] Event handler error:', error);
+        console.error("[WidgetRegistration] Event handler error:", error);
       }
     });
   }
@@ -356,9 +388,9 @@ class WidgetRegistrationService {
    */
   updateConfig(newConfig: Partial<RegistrationConfig>): void {
     this.config = { ...this.config, ...newConfig };
-    
+
     if (this.config.logRegistrations) {
-      console.log('[WidgetRegistration] Configuration updated:', newConfig);
+      console.log("[WidgetRegistration] Configuration updated:", newConfig);
     }
   }
 
@@ -375,9 +407,9 @@ class WidgetRegistrationService {
   reset(): void {
     this.eventHandlers = [];
     this.initialized = false;
-    
+
     if (this.config.logRegistrations) {
-      console.log('[WidgetRegistration] Registration service reset');
+      console.log("[WidgetRegistration] Registration service reset");
     }
   }
 
@@ -402,7 +434,9 @@ export const widgetRegistration = new WidgetRegistrationService();
 /**
  * Initialize widget registration
  */
-export const initializeWidgetRegistration = async (config?: Partial<RegistrationConfig>): Promise<void> => {
+export const initializeWidgetRegistration = async (
+  config?: Partial<RegistrationConfig>,
+): Promise<void> => {
   if (config) {
     widgetRegistration.updateConfig(config);
   }
@@ -421,7 +455,7 @@ export const registerWidget = async (
     permissions?: string[];
     enabled?: boolean;
     version?: string;
-  }
+  },
 ): Promise<boolean> => {
   return widgetRegistration.registerWidget(type, metadata, component, options);
 };
@@ -436,7 +470,10 @@ export const unregisterWidget = (type: WidgetType): boolean => {
 /**
  * Enable/disable a widget
  */
-export const setWidgetEnabled = (type: WidgetType, enabled: boolean): boolean => {
+export const setWidgetEnabled = (
+  type: WidgetType,
+  enabled: boolean,
+): boolean => {
   return widgetRegistration.setWidgetEnabled(type, enabled);
 };
 
@@ -461,4 +498,4 @@ export const searchWidgets = (query: string): WidgetRegistryEntry[] => {
   return widgetRegistration.searchWidgets(query);
 };
 
-export default widgetRegistration; 
+export default widgetRegistration;

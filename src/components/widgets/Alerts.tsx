@@ -3,19 +3,19 @@
  * Displays important notifications and alerts.
  * Part of Story 2.2: Customizable Widget System
  */
-'use client';
+"use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 // import Link from 'next/link'; // Removed next/link
-import { WidgetComponentProps } from '../../types/dashboard';
+import { WidgetComponentProps } from "../../types/dashboard";
 import {
   AlertsData,
   AlertItem,
   AlertSeverity,
   AlertStatus,
-} from '../../types/widget-data';
-import { useTheme } from '../../contexts/ThemeContext';
-import { apiClient } from '../../services/api';
+} from "../../types/widget-data";
+import { useTheme } from "../../contexts/ThemeContext";
+import { apiClient } from "../../services/api";
 import {
   Bell,
   RefreshCw,
@@ -26,55 +26,55 @@ import {
   XCircle,
   ArchiveX,
   Link2,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from '../ui/card';
-import { ScrollArea } from '../ui/scroll-area';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { cn } from '../../utils/cn';
+} from "../ui/card";
+import { ScrollArea } from "../ui/scroll-area";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { cn } from "../../utils/cn";
 
 const getSeverityStyles = (severity: AlertSeverity) => {
   switch (severity) {
-    case 'critical':
+    case "critical":
       return {
         icon: <AlertTriangle className="h-4 w-4" />,
-        color: 'text-danger-fg',
-        bg: 'bg-danger-muted',
-        border: 'border-danger-emphasis',
+        color: "text-danger-fg",
+        bg: "bg-danger-muted",
+        border: "border-danger-emphasis",
       };
-    case 'warning':
+    case "warning":
       return {
         icon: <AlertTriangle className="h-4 w-4" />,
-        color: 'text-warning-fg',
-        bg: 'bg-warning-muted',
-        border: 'border-warning-emphasis',
+        color: "text-warning-fg",
+        bg: "bg-warning-muted",
+        border: "border-warning-emphasis",
       };
-    case 'info':
+    case "info":
     default:
       return {
         icon: <Info className="h-4 w-4" />,
-        color: 'text-info-fg',
-        bg: 'bg-info-muted',
-        border: 'border-info-emphasis',
+        color: "text-info-fg",
+        bg: "bg-info-muted",
+        border: "border-info-emphasis",
       };
   }
 };
 
 const getStatusIcon = (status: AlertStatus) => {
   switch (status) {
-    case 'active':
+    case "active":
       return <Bell className="h-3.5 w-3.5 text-primary" />;
-    case 'acknowledged':
+    case "acknowledged":
       return <CheckCircle2 className="h-3.5 w-3.5 text-success-fg" />;
-    case 'resolved':
+    case "resolved":
       return <CheckCircle2 className="h-3.5 w-3.5 text-success-fg" />;
-    case 'dismissed':
+    case "dismissed":
       return <ArchiveX className="h-3.5 w-3.5 text-muted-foreground" />;
     default:
       return null;
@@ -94,10 +94,10 @@ const Alerts: React.FC<WidgetComponentProps> = ({
 
   const alertsLimit = config.config?.limit || 5;
   const initialFilter = config.config?.filter || {
-    status: ['active', 'acknowledged'],
+    status: ["active", "acknowledged"],
   }; // Default to active/ack
   const [activeFilters, setActiveFilters] =
-    useState<AlertsData['filter']>(initialFilter);
+    useState<AlertsData["filter"]>(initialFilter);
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
@@ -110,11 +110,11 @@ const Alerts: React.FC<WidgetComponentProps> = ({
       if (response.success && response.data) {
         setAlertsData(response.data);
       } else {
-        setError(response.message || 'Failed to fetch alerts.');
+        setError(response.message || "Failed to fetch alerts.");
       }
     } catch (err: any) {
       console.error(`[${widgetId}] Error fetching alerts:`, err);
-      setError(err.message || 'An unexpected error occurred.');
+      setError(err.message || "An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
@@ -139,7 +139,7 @@ const Alerts: React.FC<WidgetComponentProps> = ({
       <div
         key={item.id}
         className={cn(
-          'p-3 border-b border-border/50 last:border-b-0',
+          "p-3 border-b border-border/50 last:border-b-0",
           severityStyle.bg,
           `border-l-4 ${severityStyle.border}`,
         )}
@@ -147,7 +147,7 @@ const Alerts: React.FC<WidgetComponentProps> = ({
         <div className="flex items-start justify-between mb-1">
           <div
             className={cn(
-              'text-sm font-semibold flex items-center',
+              "text-sm font-semibold flex items-center",
               severityStyle.color,
             )}
           >
@@ -160,8 +160,8 @@ const Alerts: React.FC<WidgetComponentProps> = ({
         </div>
         <p
           className={cn(
-            'text-xs mb-1.5',
-            severityStyle.color?.replace('-fg', '-muted-fg'),
+            "text-xs mb-1.5",
+            severityStyle.color?.replace("-fg", "-muted-fg"),
           )}
         >
           {item.description}
@@ -169,10 +169,10 @@ const Alerts: React.FC<WidgetComponentProps> = ({
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div>
             <span>
-              {new Date(item.timestamp).toLocaleDateString()}{' '}
+              {new Date(item.timestamp).toLocaleDateString()}{" "}
               {new Date(item.timestamp).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
+                hour: "2-digit",
+                minute: "2-digit",
               })}
             </span>
             {item.symbol && (
@@ -192,23 +192,23 @@ const Alerts: React.FC<WidgetComponentProps> = ({
                 <Link2 className="h-3.5 w-3.5" />
               </a>
             )}
-            {isEditMode && item.status === 'active' && (
+            {isEditMode && item.status === "active" && (
               <Button
                 variant="outline"
                 size="sm"
                 className="h-6 px-1.5 py-0.5 text-xs"
-                onClick={() => handleUpdateAlertStatus(item.id, 'acknowledged')}
+                onClick={() => handleUpdateAlertStatus(item.id, "acknowledged")}
               >
                 Ack
               </Button>
             )}
             {isEditMode &&
-              (item.status === 'active' || item.status === 'acknowledged') && (
+              (item.status === "active" || item.status === "acknowledged") && (
                 <Button
                   variant="outline"
                   size="sm"
                   className="h-6 px-1.5 py-0.5 text-xs"
-                  onClick={() => handleUpdateAlertStatus(item.id, 'dismissed')}
+                  onClick={() => handleUpdateAlertStatus(item.id, "dismissed")}
                 >
                   Dismiss
                 </Button>
@@ -221,12 +221,12 @@ const Alerts: React.FC<WidgetComponentProps> = ({
 
   if (isLoading) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center">
               <Bell className="h-4 w-4 mr-2 text-primary" />
-              {config.title || 'Alerts'}
+              {config.title || "Alerts"}
             </CardTitle>
             <RefreshCw className="h-4 w-4 text-muted-foreground animate-spin" />
           </div>
@@ -240,12 +240,12 @@ const Alerts: React.FC<WidgetComponentProps> = ({
 
   if (error) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center text-danger-fg">
               <AlertCircleIcon className="h-4 w-4 mr-2" />
-              {config.title || 'Alerts'}
+              {config.title || "Alerts"}
             </CardTitle>
             <button onClick={fetchData} title="Retry loading alerts">
               <RefreshCw className="h-4 w-4 text-muted-foreground hover:text-primary" />
@@ -261,12 +261,12 @@ const Alerts: React.FC<WidgetComponentProps> = ({
 
   if (!alertsData || alertsData.alerts.length === 0) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center">
               <Bell className="h-4 w-4 mr-2 text-primary" />
-              {config.title || 'Alerts'}
+              {config.title || "Alerts"}
             </CardTitle>
             <button onClick={fetchData} title="Reload alerts">
               <RefreshCw className="h-4 w-4 text-muted-foreground hover:text-primary" />
@@ -282,14 +282,14 @@ const Alerts: React.FC<WidgetComponentProps> = ({
   }
 
   return (
-    <Card className={cn('h-full flex flex-col', config.className)}>
+    <Card className={cn("h-full flex flex-col", config.className)}>
       <CardHeader className="pb-2 pt-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold flex items-center">
             <Bell className="h-4 w-4 mr-2 text-primary" />
-            {config.title || 'Alerts'}
+            {config.title || "Alerts"}
             <Badge variant="destructive" className="ml-2">
-              {alertsData.alerts.filter((a) => a.status === 'active').length}{' '}
+              {alertsData.alerts.filter((a) => a.status === "active").length}{" "}
               New
             </Badge>
           </CardTitle>
@@ -298,7 +298,7 @@ const Alerts: React.FC<WidgetComponentProps> = ({
           </button>
         </div>
         <CardDescription className="text-xs text-muted-foreground pt-0.5">
-          Last refreshed:{' '}
+          Last refreshed:{" "}
           {new Date(alertsData.lastRefreshed).toLocaleTimeString()}
         </CardDescription>
       </CardHeader>

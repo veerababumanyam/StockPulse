@@ -3,7 +3,7 @@
  * Manages real-time data flow to widgets with smart caching and subscription management
  */
 
-import { WidgetType, WidgetData } from '../types/dashboard';
+import { WidgetType, WidgetData } from "../types/dashboard";
 
 // Data subscription configuration
 export interface DataSubscription {
@@ -30,7 +30,7 @@ export interface CacheEntry {
 
 // WebSocket message types
 export interface WebSocketMessage {
-  type: 'data' | 'error' | 'ping' | 'subscription' | 'unsubscription';
+  type: "data" | "error" | "ping" | "subscription" | "unsubscription";
   widgetType?: WidgetType;
   dataSource?: string;
   data?: any;
@@ -44,10 +44,10 @@ export interface DataFetchOptions {
   timeout?: number;
   retryOnError?: boolean;
   cacheStrategy?:
-    | 'cache-first'
-    | 'network-first'
-    | 'cache-only'
-    | 'network-only';
+    | "cache-first"
+    | "network-first"
+    | "cache-only"
+    | "network-only";
 }
 
 // Event callbacks
@@ -69,8 +69,8 @@ class WidgetDataService {
   private isConnected = false;
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
-  private baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-  private wsUrl = process.env.REACT_APP_WS_URL || 'ws://localhost:8000/ws';
+  private baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  private wsUrl = process.env.REACT_APP_WS_URL || "ws://localhost:8000/ws";
 
   constructor() {
     this.initializeWebSocket();
@@ -114,7 +114,7 @@ class WidgetDataService {
 
     // Send WebSocket subscription
     this.sendWebSocketMessage({
-      type: 'subscription',
+      type: "subscription",
       widgetType,
       dataSource,
     });
@@ -156,7 +156,7 @@ class WidgetDataService {
 
     // Send WebSocket unsubscription
     this.sendWebSocketMessage({
-      type: 'unsubscription',
+      type: "unsubscription",
       widgetType: subscription.widgetType,
       dataSource: subscription.dataSource,
     });
@@ -180,7 +180,7 @@ class WidgetDataService {
       forceRefresh = false,
       timeout = 10000,
       retryOnError = true,
-      cacheStrategy = 'cache-first',
+      cacheStrategy = "cache-first",
     } = options;
 
     const cacheKey = this.getCacheKey(
@@ -190,11 +190,11 @@ class WidgetDataService {
 
     try {
       // Check cache first (unless network-only)
-      if (cacheStrategy !== 'network-only' && !forceRefresh) {
+      if (cacheStrategy !== "network-only" && !forceRefresh) {
         const cached = this.getCachedData(cacheKey);
         if (
           cached &&
-          (cacheStrategy === 'cache-only' || cacheStrategy === 'cache-first')
+          (cacheStrategy === "cache-only" || cacheStrategy === "cache-first")
         ) {
           const widgetData: WidgetData = {
             widgetId,
@@ -210,7 +210,7 @@ class WidgetDataService {
       }
 
       // Skip network fetch if cache-only
-      if (cacheStrategy === 'cache-only') {
+      if (cacheStrategy === "cache-only") {
         return null;
       }
 
@@ -236,9 +236,9 @@ class WidgetDataService {
         {
           signal: controller.signal,
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-          credentials: 'include',
+          credentials: "include",
         },
       );
 
@@ -279,7 +279,7 @@ class WidgetDataService {
       return widgetData;
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error';
+        error instanceof Error ? error.message : "Unknown error";
       console.error(
         `Failed to fetch data for widget ${widgetId}:`,
         errorMessage,
@@ -395,7 +395,7 @@ class WidgetDataService {
       this.websocket = new WebSocket(this.wsUrl);
 
       this.websocket.onopen = () => {
-        console.log('WebSocket connected');
+        console.log("WebSocket connected");
         this.isConnected = true;
         this.reconnectAttempts = 0;
         this.callbacks.onConnectionChange?.(true);
@@ -403,7 +403,7 @@ class WidgetDataService {
         // Resubscribe to all active subscriptions
         this.subscriptions.forEach((subscription) => {
           this.sendWebSocketMessage({
-            type: 'subscription',
+            type: "subscription",
             widgetType: subscription.widgetType,
             dataSource: subscription.dataSource,
           });
@@ -415,22 +415,22 @@ class WidgetDataService {
           const message: WebSocketMessage = JSON.parse(event.data);
           this.handleWebSocketMessage(message);
         } catch (error) {
-          console.error('Failed to parse WebSocket message:', error);
+          console.error("Failed to parse WebSocket message:", error);
         }
       };
 
       this.websocket.onclose = () => {
-        console.log('WebSocket disconnected');
+        console.log("WebSocket disconnected");
         this.isConnected = false;
         this.callbacks.onConnectionChange?.(false);
         this.scheduleReconnect();
       };
 
       this.websocket.onerror = (error) => {
-        console.error('WebSocket error:', error);
+        console.error("WebSocket error:", error);
       };
     } catch (error) {
-      console.error('Failed to initialize WebSocket:', error);
+      console.error("Failed to initialize WebSocket:", error);
       this.scheduleReconnect();
     }
   }
@@ -440,7 +440,7 @@ class WidgetDataService {
    */
   private handleWebSocketMessage(message: WebSocketMessage): void {
     switch (message.type) {
-      case 'data':
+      case "data":
         if (message.widgetType && message.dataSource && message.data) {
           this.handleRealTimeData(
             message.widgetType,
@@ -450,16 +450,16 @@ class WidgetDataService {
         }
         break;
 
-      case 'error':
-        console.error('WebSocket error message:', message.error);
+      case "error":
+        console.error("WebSocket error message:", message.error);
         break;
 
-      case 'ping':
-        this.sendWebSocketMessage({ type: 'ping' });
+      case "ping":
+        this.sendWebSocketMessage({ type: "ping" });
         break;
 
       default:
-        console.warn('Unknown WebSocket message type:', message.type);
+        console.warn("Unknown WebSocket message type:", message.type);
     }
   }
 
@@ -520,7 +520,7 @@ class WidgetDataService {
    */
   private scheduleReconnect(): void {
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-      console.error('Max reconnection attempts reached');
+      console.error("Max reconnection attempts reached");
       return;
     }
 

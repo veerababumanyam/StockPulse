@@ -11,11 +11,11 @@
  */
 export const formatCurrency = (
   amount: number,
-  currency: string = 'USD',
-  locale: string = 'en-US'
+  currency: string = "USD",
+  locale: string = "en-US",
 ): string => {
   return new Intl.NumberFormat(locale, {
-    style: 'currency',
+    style: "currency",
     currency,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -29,17 +29,22 @@ export const formatCurrency = (
  */
 export const formatPercentage = (
   value: number,
-  decimals: number = 2
+  decimals: number = 2,
 ): string => {
-  return `${value >= 0 ? '+' : ''}${value.toFixed(decimals)}%`;
+  return `${value >= 0 ? "+" : ""}${value.toFixed(decimals)}%`;
 };
 
 /**
  * Calculate portfolio total value
  * @param positions - Array of position objects with quantity and price
  */
-export const calculatePortfolioValue = (positions: Array<{ quantity: number; price: number }>): number => {
-  return positions.reduce((total, position) => total + (position.quantity * position.price), 0);
+export const calculatePortfolioValue = (
+  positions: Array<{ quantity: number; price: number }>,
+): number => {
+  return positions.reduce(
+    (total, position) => total + position.quantity * position.price,
+    0,
+  );
 };
 
 /**
@@ -47,13 +52,16 @@ export const calculatePortfolioValue = (positions: Array<{ quantity: number; pri
  * @param currentValue - Current portfolio value
  * @param previousValue - Previous day portfolio value
  */
-export const calculateDailyChange = (currentValue: number, previousValue: number): {
+export const calculateDailyChange = (
+  currentValue: number,
+  previousValue: number,
+): {
   amount: number;
   percentage: number;
 } => {
   const amount = currentValue - previousValue;
   const percentage = previousValue !== 0 ? (amount / previousValue) * 100 : 0;
-  
+
   return { amount, percentage };
 };
 
@@ -62,8 +70,13 @@ export const calculateDailyChange = (currentValue: number, previousValue: number
  * @param positionValue - Value of the specific position
  * @param totalPortfolioValue - Total portfolio value
  */
-export const calculatePositionWeight = (positionValue: number, totalPortfolioValue: number): number => {
-  return totalPortfolioValue !== 0 ? (positionValue / totalPortfolioValue) * 100 : 0;
+export const calculatePositionWeight = (
+  positionValue: number,
+  totalPortfolioValue: number,
+): number => {
+  return totalPortfolioValue !== 0
+    ? (positionValue / totalPortfolioValue) * 100
+    : 0;
 };
 
 /**
@@ -72,12 +85,17 @@ export const calculatePositionWeight = (positionValue: number, totalPortfolioVal
  * @param currentPrice - Current market price
  * @param costBasis - Original purchase price
  */
-export const calculateUnrealizedPnL = (quantity: number, currentPrice: number, costBasis: number): {
+export const calculateUnrealizedPnL = (
+  quantity: number,
+  currentPrice: number,
+  costBasis: number,
+): {
   amount: number;
   percentage: number;
 } => {
   const amount = quantity * (currentPrice - costBasis);
-  const percentage = costBasis !== 0 ? ((currentPrice - costBasis) / costBasis) * 100 : 0;
-  
+  const percentage =
+    costBasis !== 0 ? ((currentPrice - costBasis) / costBasis) * 100 : 0;
+
   return { amount, percentage };
-}; 
+};

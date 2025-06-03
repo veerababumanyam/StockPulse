@@ -7,7 +7,7 @@
 # StockPulse - AI-Powered Financial Platform
 
 [![Production-Grade](https://img.shields.io/badge/Production-Grade-green.svg)](https://github.com/user/stockpulse)
-[![Docker](https://img.shields.io/badge/Docker-Enabled-blue.svg)](https://docker.com)
+[![Version](https://img.shields.io/badge/Version-0.2.5-blue.svg)](https://github.com/user/stockpulse)
 [![A2A Protocol](https://img.shields.io/badge/A2A-Protocol-orange.svg)](https://google-a2a.github.io/A2A/)
 [![MCP](https://img.shields.io/badge/MCP-Enabled-purple.svg)](https://modelcontextprotocol.io/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -18,86 +18,141 @@
 
 ## 🚀 Revolutionary Hybrid AI Architecture
 
-StockPulse implements a cutting-edge **A2A + MCP hybrid architecture + RAG ** following Google's vision for complementary AI protocols:
+StockPulse implements a cutting-edge **A2A + MCP hybrid architecture + RAG** following Google's vision for complementary AI protocols:
 
 - **🤝 A2A Protocol**: High-level agent collaboration and multi-agent workflows
-- **🔧 MCP Protocol**: Structured tool and resource access to databases and services
+- **🔧 MCP Protocol**: Structured tool and resource access to databases and services  
 - **🌉 Cross-Protocol Integration**: A2A skills automatically exposed as MCP tools
 - **🔄 Real-time Integration**: Live data flows between agents and specialized tools
-- ** [📖 **Comprehensive A2A+MCP Documentation\*\*](docs/ai/a2a-mcp-integration.md)
-- ** RAG** :
+- **🧠 RAG Pipeline**: Advanced retrieval-augmented generation for market insights
+- **📖 [Comprehensive A2A+MCP Documentation](docs/ai/a2a-mcp-integration.md)**
 
-## ⚡ Quick Start
+## ⚡ Quick Start - Current Working Setup
 
 ### Prerequisites
 
-- **Docker & Docker Compose** (for backend services)
 - **Node.js 18+** (for frontend development)
-- **Python 3.11+** (for local development)
+- **Python 3.11+** (for backend and agents)
+- **Docker & Docker Compose** (for database infrastructure - optional)
 
-### 🐳 Start Backend Infrastructure (Recommended)
+### 🚀 **Three-Service Architecture (Currently Working)**
 
+StockPulse now runs as **three separate services** that need to be started independently:
+
+#### **Service 1: Backend API Server**
 ```bash
-# Start all backend services (databases, MCP servers, A2A agents)
-docker-compose -f docker-compose.dev.yml up -d
-
-# Check service health
-docker-compose -f docker-compose.dev.yml ps
-
-# Initialize the database and create super admin user
-cd services/backend
-python init_admin.py
-
-# Start the backend server
-python main.py
-
-# Verify all services are healthy
-curl http://localhost:8000/health  # FastAPI Backend
-curl http://localhost:9001/health  # User Assistant Agent (A2A)
-curl http://localhost:9002/health  # Portfolio Manager Agent (A2A)
-curl http://localhost:8003/health  # PostgreSQL MCP Server
+# Terminal 1 - Backend (Port 8000)
+npm run dev:backend
+# ✅ Handles: Authentication, Database, Portfolio Management, API Gateway
 ```
 
-### Production Deployment
-
-```bash
-# Production deployment
-docker-compose -f docker-compose.yml up -d
-
-# Staging environment
-docker-compose -f docker-compose.yml -f docker-compose.staging.yml up -d
+#### **Service 2: Market Research Agent** 
+```bash  
+# Terminal 2 - AI Agent (Port 9003)
+cd a2a-agents/market-researcher
+python server.py
+# ✅ Handles: Market Analysis, AI Insights, A2A Protocol, WebSocket Intelligence
 ```
 
-### 🌐 Start Frontend (Local Development)
-
+#### **Service 3: Frontend Application**
 ```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-# ✅ Frontend: http://localhost:3000 or http://localhost:5173
+# Terminal 3 - Frontend (Port 3000)
+npm run dev  
+# ✅ Handles: User Interface, Real-time Dashboard, WebSocket Client
 ```
 
-### 🤖 Test AI Agent Integration
+### 🔄 **Service Communication Flow**
+```
+Frontend (3000) ←→ Backend API (8000) ←→ Market Research Agent (9003)
+       ↓                    ↓                         ↓
+   WebSocket Client    Database Gateway         A2A + WebSocket Server
+```
+
+### ✅ **Verification Commands**
+
+After starting all services, verify they're running:
 
 ```bash
-# Test A2A Portfolio Manager
-curl -X POST http://localhost:9002/jsonrpc \
-  -H "Content-Type: application/json" \
-  -d '{
-    "jsonrpc": "2.0",
-    "method": "tasks/send",
-    "params": {
-      "skill_id": "portfolio_analysis",
-      "input": {"data": {"user_id": "demo", "timeframe": "1M"}}
-    },
-    "id": "1"
-  }'
+# Check all services are listening
+netstat -an | findstr "3000\|8000\|9003"
 
-# Test MCP Integration (A2A skills as MCP tools)
-curl http://localhost:9002/mcp/capabilities
+# Should show:
+# TCP    0.0.0.0:3000    (Frontend)
+# TCP    0.0.0.0:8000    (Backend) 
+# TCP    0.0.0.0:9003    (Agent)
 ```
+
+## 🎯 **Current Feature Status - Version 0.2.5**
+
+### ✅ **Completed Features (Story 2.5)**
+
+#### **🤖 Market Research Agent (A2A Compliant)**
+- ✅ **Full A2A Protocol Implementation** - Google A2A specification compliance
+- ✅ **6 Specialized Skills**: market_analysis, news_research, company_analysis, trend_identification, sector_analysis, sentiment_analysis
+- ✅ **Natural Language Query Interface** - Ask questions about markets in plain English
+- ✅ **RAG Pipeline** - Advanced retrieval-augmented generation with fallbacks
+- ✅ **AG-UI Components** - Dynamic UI component generation for insights
+- ✅ **WebSocket Integration** - Real-time bidirectional communication
+- ✅ **MCP Integration** - Structured database and tool access
+
+#### **🔧 Backend Infrastructure**
+- ✅ **Enterprise Authentication** - JWT + HttpOnly cookies, permission system
+- ✅ **Market Research API Gateway** - Proxy between frontend and A2A agent  
+- ✅ **Database Integration** - PostgreSQL with user management
+- ✅ **WebSocket Proxy** - Bidirectional WebSocket communication
+- ✅ **Error Handling** - Comprehensive error handling and logging
+
+#### **🌐 Frontend Integration**
+- ✅ **AI Insights Panel Widget** - Real-time market insights display
+- ✅ **WebSocket Service** - Complete client-side WebSocket integration
+- ✅ **Market Research Interface** - Natural language query UI
+- ✅ **Responsive Design** - Mobile-first, accessible UI components
+
+### 🔄 **In Development**
+
+#### **📊 Portfolio Management (Story 2.6 - Next)**
+- 🔄 **Real-time Portfolio Tracking** - Live portfolio valuation with P&L
+- 🔄 **Performance Analytics** - Comprehensive performance metrics and attribution
+- 🔄 **Risk Management Tools** - VaR, maximum drawdown, position sizing
+
+#### **📈 Trading Intelligence (Story 2.7)**
+- 🔄 **Technical Analysis Engine** - 100+ indicators and pattern recognition
+- 🔄 **Options Analysis** - Options chain analysis with Greeks
+- 🔄 **Automated Strategies** - Customizable trading algorithms
+
+## 🤖 **AI Architecture - Current Implementation**
+
+### 🎯 **A2A Agent (Agent-to-Agent Protocol)**
+
+| Service | Port | Status | Capabilities |
+|---------|------|--------|-------------|
+| **Market Research Agent** | 9003 | ✅ **Active** | Market analysis, news research, company analysis, trends, sentiment, NLQ |
+
+#### **Market Research Agent Skills:**
+```json
+{
+  "skills": [
+    "market_analysis",     // Market sentiment, trends, risk assessment
+    "news_research",       // Financial news analysis and insights  
+    "company_analysis",    // Company fundamentals and health
+    "trend_identification", // Market trend detection and analysis
+    "sector_analysis",     // Sector performance and comparison
+    "sentiment_analysis"   // Market sentiment scoring and trends
+  ],
+  "natural_language_query": "Ask anything about markets in plain English",
+  "ag_ui_components": "Dynamic UI generation for insights"
+}
+```
+
+### 🔧 **MCP Servers (Planned - Docker Infrastructure)**
+
+| Server | Port | Status | Purpose |
+|--------|------|--------|---------|
+| **PostgreSQL MCP** | 8003 | 🔄 Planned | Database operations, user management |
+| **TimescaleDB MCP** | 8004 | 🔄 Planned | Time-series analytics, performance data |
+| **Redis MCP** | 8005 | 🔄 Planned | Caching, session management |
+| **Graphiti MCP** | 8006 | 🔄 Planned | Knowledge graph, relationship analysis |
+| **Qdrant MCP** | 8007 | 🔄 Planned | Vector similarity search, embeddings |
 
 ## 🎯 Core Features
 
@@ -371,21 +426,25 @@ src/
 ### 🚀 Key Improvements
 
 1. **Modular Architecture**
+
    - Separated concerns with container/presentational components
    - Reusable `MetricCard` and `MetricItem` components
    - Custom hook for data fetching and state management
 
 2. **Performance Optimizations**
+
    - Memoized expensive calculations
    - Efficient re-renders with React.memo
    - Optimized data fetching with caching
 
 3. **Error Handling**
+
    - Comprehensive error boundaries
    - Graceful error states and recovery
    - Retry mechanisms for failed requests
 
 4. **Testing**
+
    - Unit tests for all components and hooks
    - Integration tests for user flows
    - Test coverage for edge cases
@@ -398,18 +457,18 @@ src/
 ### 🛠️ Usage
 
 ```tsx
-import { PortfolioOverview } from './components/widgets/PortfolioOverview';
+import { PortfolioOverview } from "./components/widgets/PortfolioOverview";
 
 // In your component:
-<PortfolioOverview 
+<PortfolioOverview
   widgetId="portfolio-1"
   config={{
-    title: 'My Portfolio',
+    title: "My Portfolio",
     refreshInterval: 30000, // 30 seconds
   }}
   isEditMode={false}
-  onConfigChange={(config) => console.log('Config changed:', config)}
-/>
+  onConfigChange={(config) => console.log("Config changed:", config)}
+/>;
 ```
 
 ### 📊 Features
@@ -459,12 +518,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 The server comes with secure defaults:
 
 ### Allowed File Extensions
+
 - Source code: `.ts`, `.tsx`, `.js`, `.jsx`, `.py`, `.sql`
 - Documentation: `.md`, `.txt`, `.json`, `.yml`, `.yaml`
 - Configuration: `.env.example`, `.gitignore`
 - Assets: `.css`, `.html`, `.svg`, `.png`, `.jpg`
 
 ### Blocked Patterns
+
 - Dependencies: `**/node_modules/**`, `**/dist/**`
 - Version control: `**/.git/**`
 - Secrets: `**/.env`, `**/*.key`, `**/*.pem`
@@ -472,6 +533,7 @@ The server comes with secure defaults:
 - Build artifacts: `**/build/**`, `**/.next/**`
 
 ### Size Limits
+
 - Max file size: 50MB
 - Max directory depth: 10 levels
 - Max files per request: 100

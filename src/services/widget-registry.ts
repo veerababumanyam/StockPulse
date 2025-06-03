@@ -10,8 +10,8 @@ import {
   WidgetCategory,
   WidgetSize,
   WidgetComponentProps,
-} from '../types/dashboard';
-import { ComponentType, lazy } from 'react';
+} from "../types/dashboard";
+import { ComponentType, lazy } from "react";
 
 // ===============================================
 // Widget Registry Interface
@@ -36,19 +36,32 @@ export interface WidgetRegistry {
 // Widget Component Lazy Loading
 // ===============================================
 
-const WIDGET_COMPONENTS: Record<WidgetType, ComponentType<WidgetComponentProps>> = {
-  'portfolio-overview': lazy(() => import('../components/widgets/PortfolioOverview')),
-  'portfolio-chart': lazy(() => import('../components/widgets/PortfolioChart')),
-  'watchlist': lazy(() => import('../components/widgets/Watchlist')),
-  'market-summary': lazy(() => import('../components/widgets/MarketSummary')),
-  'ai-insights': lazy(() => import('../components/widgets/AIInsightsWidget')),
-  'recent-transactions': lazy(() => import('../components/widgets/RecentTransactions')),
-  'performance-metrics': lazy(() => import('../components/widgets/PerformanceMetrics')),
-  'alerts': lazy(() => import('../components/widgets/Alerts')),
-  'news-feed': lazy(() => import('../components/widgets/NewsFeed')),
-  'sector-performance': lazy(() => import('../components/widgets/SectorPerformance')),
-  'top-movers': lazy(() => import('../components/widgets/TopMovers')),
-  'economic-calendar': lazy(() => import('../components/widgets/EconomicCalendar')),
+const WIDGET_COMPONENTS: Record<
+  WidgetType,
+  ComponentType<WidgetComponentProps>
+> = {
+  "portfolio-overview": lazy(
+    () => import("../components/widgets/PortfolioOverview"),
+  ),
+  "portfolio-chart": lazy(() => import("../components/widgets/PortfolioChart")),
+  watchlist: lazy(() => import("../components/widgets/Watchlist")),
+  "market-summary": lazy(() => import("../components/widgets/MarketSummary")),
+  "ai-insights": lazy(() => import("../components/widgets/AIInsightsWidget")),
+  "recent-transactions": lazy(
+    () => import("../components/widgets/RecentTransactions"),
+  ),
+  "performance-metrics": lazy(
+    () => import("../components/widgets/PerformanceMetrics"),
+  ),
+  alerts: lazy(() => import("../components/widgets/Alerts")),
+  "news-feed": lazy(() => import("../components/widgets/NewsFeed")),
+  "sector-performance": lazy(
+    () => import("../components/widgets/SectorPerformance"),
+  ),
+  "top-movers": lazy(() => import("../components/widgets/TopMovers")),
+  "economic-calendar": lazy(
+    () => import("../components/widgets/EconomicCalendar"),
+  ),
 };
 
 // ===============================================
@@ -56,12 +69,13 @@ const WIDGET_COMPONENTS: Record<WidgetType, ComponentType<WidgetComponentProps>>
 // ===============================================
 
 const WIDGET_METADATA: Record<WidgetType, WidgetMetadata> = {
-  'portfolio-overview': {
-    type: 'portfolio-overview',
-    name: 'Portfolio Overview',
-    description: 'Comprehensive overview of portfolio performance and key metrics',
-    category: 'portfolio',
-    icon: 'PieChart',
+  "portfolio-overview": {
+    type: "portfolio-overview",
+    name: "Portfolio Overview",
+    description:
+      "Comprehensive overview of portfolio performance and key metrics",
+    category: "portfolio",
+    icon: "PieChart",
     isResizable: true,
     isDraggable: true,
     defaultSize: { w: 3, h: 3, minW: 2, minH: 2, maxW: 6, maxH: 4 },
@@ -70,15 +84,15 @@ const WIDGET_METADATA: Record<WidgetType, WidgetMetadata> = {
       { w: 3, h: 3, minW: 2, minH: 2 },
       { w: 4, h: 3, minW: 2, minH: 2 },
     ],
-    tags: ['portfolio', 'overview', 'performance', 'metrics'],
+    tags: ["portfolio", "overview", "performance", "metrics"],
     isPremium: false,
   },
-  'portfolio-chart': {
-    type: 'portfolio-chart',
-    name: 'Portfolio Chart',
-    description: 'Interactive chart showing portfolio performance over time',
-    category: 'portfolio',
-    icon: 'TrendingUp',
+  "portfolio-chart": {
+    type: "portfolio-chart",
+    name: "Portfolio Chart",
+    description: "Interactive chart showing portfolio performance over time",
+    category: "portfolio",
+    icon: "TrendingUp",
     isResizable: true,
     isDraggable: true,
     defaultSize: { w: 4, h: 3, minW: 3, minH: 2, maxW: 8, maxH: 6 },
@@ -87,15 +101,15 @@ const WIDGET_METADATA: Record<WidgetType, WidgetMetadata> = {
       { w: 4, h: 3, minW: 3, minH: 2 },
       { w: 6, h: 4, minW: 3, minH: 2 },
     ],
-    tags: ['portfolio', 'chart', 'performance', 'visualization'],
+    tags: ["portfolio", "chart", "performance", "visualization"],
     isPremium: false,
   },
-  'watchlist': {
-    type: 'watchlist',
-    name: 'Watchlist',
-    description: 'Monitor your favorite stocks and track their performance',
-    category: 'market',
-    icon: 'List',
+  watchlist: {
+    type: "watchlist",
+    name: "Watchlist",
+    description: "Monitor your favorite stocks and track their performance",
+    category: "market",
+    icon: "List",
     isResizable: true,
     isDraggable: true,
     defaultSize: { w: 3, h: 4, minW: 2, minH: 3, maxW: 6, maxH: 8 },
@@ -104,15 +118,15 @@ const WIDGET_METADATA: Record<WidgetType, WidgetMetadata> = {
       { w: 3, h: 4, minW: 2, minH: 3 },
       { w: 4, h: 5, minW: 2, minH: 3 },
     ],
-    tags: ['stocks', 'watchlist', 'monitoring', 'market'],
+    tags: ["stocks", "watchlist", "monitoring", "market"],
     isPremium: false,
   },
-  'market-summary': {
-    type: 'market-summary',
-    name: 'Market Summary',
-    description: 'Overview of major market indices and their performance',
-    category: 'market',
-    icon: 'BarChart3',
+  "market-summary": {
+    type: "market-summary",
+    name: "Market Summary",
+    description: "Overview of major market indices and their performance",
+    category: "market",
+    icon: "BarChart3",
     isResizable: true,
     isDraggable: true,
     defaultSize: { w: 3, h: 2, minW: 2, minH: 2, maxW: 6, maxH: 4 },
@@ -121,15 +135,15 @@ const WIDGET_METADATA: Record<WidgetType, WidgetMetadata> = {
       { w: 3, h: 2, minW: 2, minH: 2 },
       { w: 4, h: 3, minW: 2, minH: 2 },
     ],
-    tags: ['market', 'indices', 'summary', 'overview'],
+    tags: ["market", "indices", "summary", "overview"],
     isPremium: false,
   },
-  'ai-insights': {
-    type: 'ai-insights',
-    name: 'AI Insights',
-    description: 'AI-powered trading insights and recommendations',
-    category: 'analytics',
-    icon: 'Brain',
+  "ai-insights": {
+    type: "ai-insights",
+    name: "AI Insights",
+    description: "AI-powered trading insights and recommendations",
+    category: "analytics",
+    icon: "Brain",
     isResizable: true,
     isDraggable: true,
     defaultSize: { w: 3, h: 3, minW: 2, minH: 2, maxW: 6, maxH: 5 },
@@ -138,15 +152,15 @@ const WIDGET_METADATA: Record<WidgetType, WidgetMetadata> = {
       { w: 3, h: 3, minW: 2, minH: 2 },
       { w: 4, h: 4, minW: 2, minH: 2 },
     ],
-    tags: ['ai', 'insights', 'recommendations', 'analytics'],
+    tags: ["ai", "insights", "recommendations", "analytics"],
     isPremium: true,
   },
-  'recent-transactions': {
-    type: 'recent-transactions',
-    name: 'Recent Transactions',
-    description: 'View your latest trading activity and transaction history',
-    category: 'trading',
-    icon: 'History',
+  "recent-transactions": {
+    type: "recent-transactions",
+    name: "Recent Transactions",
+    description: "View your latest trading activity and transaction history",
+    category: "trading",
+    icon: "History",
     isResizable: true,
     isDraggable: true,
     defaultSize: { w: 3, h: 3, minW: 2, minH: 2, maxW: 6, maxH: 6 },
@@ -155,15 +169,15 @@ const WIDGET_METADATA: Record<WidgetType, WidgetMetadata> = {
       { w: 3, h: 3, minW: 2, minH: 2 },
       { w: 4, h: 4, minW: 2, minH: 2 },
     ],
-    tags: ['transactions', 'trading', 'history', 'activity'],
+    tags: ["transactions", "trading", "history", "activity"],
     isPremium: false,
   },
-  'performance-metrics': {
-    type: 'performance-metrics',
-    name: 'Performance Metrics',
-    description: 'Key performance indicators and portfolio analytics',
-    category: 'analytics',
-    icon: 'Gauge',
+  "performance-metrics": {
+    type: "performance-metrics",
+    name: "Performance Metrics",
+    description: "Key performance indicators and portfolio analytics",
+    category: "analytics",
+    icon: "Gauge",
     isResizable: true,
     isDraggable: true,
     defaultSize: { w: 3, h: 2, minW: 2, minH: 2, maxW: 6, maxH: 4 },
@@ -172,15 +186,15 @@ const WIDGET_METADATA: Record<WidgetType, WidgetMetadata> = {
       { w: 3, h: 2, minW: 2, minH: 2 },
       { w: 4, h: 3, minW: 2, minH: 2 },
     ],
-    tags: ['performance', 'metrics', 'analytics', 'kpi'],
+    tags: ["performance", "metrics", "analytics", "kpi"],
     isPremium: false,
   },
-  'alerts': {
-    type: 'alerts',
-    name: 'Alerts',
-    description: 'Trading alerts, notifications, and important updates',
-    category: 'trading',
-    icon: 'AlertTriangle',
+  alerts: {
+    type: "alerts",
+    name: "Alerts",
+    description: "Trading alerts, notifications, and important updates",
+    category: "trading",
+    icon: "AlertTriangle",
     isResizable: true,
     isDraggable: true,
     defaultSize: { w: 3, h: 3, minW: 2, minH: 2, maxW: 6, maxH: 5 },
@@ -189,15 +203,15 @@ const WIDGET_METADATA: Record<WidgetType, WidgetMetadata> = {
       { w: 3, h: 3, minW: 2, minH: 2 },
       { w: 4, h: 4, minW: 2, minH: 2 },
     ],
-    tags: ['alerts', 'notifications', 'trading', 'updates'],
+    tags: ["alerts", "notifications", "trading", "updates"],
     isPremium: false,
   },
-  'news-feed': {
-    type: 'news-feed',
-    name: 'News Feed',
-    description: 'Latest financial news and market updates',
-    category: 'news',
-    icon: 'Newspaper',
+  "news-feed": {
+    type: "news-feed",
+    name: "News Feed",
+    description: "Latest financial news and market updates",
+    category: "news",
+    icon: "Newspaper",
     isResizable: true,
     isDraggable: true,
     defaultSize: { w: 3, h: 4, minW: 2, minH: 3, maxW: 6, maxH: 8 },
@@ -206,15 +220,15 @@ const WIDGET_METADATA: Record<WidgetType, WidgetMetadata> = {
       { w: 3, h: 4, minW: 2, minH: 3 },
       { w: 4, h: 5, minW: 2, minH: 3 },
     ],
-    tags: ['news', 'financial', 'market', 'updates'],
+    tags: ["news", "financial", "market", "updates"],
     isPremium: false,
   },
-  'sector-performance': {
-    type: 'sector-performance',
-    name: 'Sector Performance',
-    description: 'Performance analysis across different market sectors',
-    category: 'market',
-    icon: 'Building2',
+  "sector-performance": {
+    type: "sector-performance",
+    name: "Sector Performance",
+    description: "Performance analysis across different market sectors",
+    category: "market",
+    icon: "Building2",
     isResizable: true,
     isDraggable: true,
     defaultSize: { w: 3, h: 3, minW: 2, minH: 2, maxW: 6, maxH: 5 },
@@ -223,15 +237,15 @@ const WIDGET_METADATA: Record<WidgetType, WidgetMetadata> = {
       { w: 3, h: 3, minW: 2, minH: 2 },
       { w: 4, h: 4, minW: 2, minH: 2 },
     ],
-    tags: ['sectors', 'performance', 'analysis', 'market'],
+    tags: ["sectors", "performance", "analysis", "market"],
     isPremium: false,
   },
-  'top-movers': {
-    type: 'top-movers',
-    name: 'Top Movers',
-    description: 'Stocks with the biggest gains and losses today',
-    category: 'market',
-    icon: 'Activity',
+  "top-movers": {
+    type: "top-movers",
+    name: "Top Movers",
+    description: "Stocks with the biggest gains and losses today",
+    category: "market",
+    icon: "Activity",
     isResizable: true,
     isDraggable: true,
     defaultSize: { w: 3, h: 3, minW: 2, minH: 2, maxW: 6, maxH: 5 },
@@ -240,15 +254,15 @@ const WIDGET_METADATA: Record<WidgetType, WidgetMetadata> = {
       { w: 3, h: 3, minW: 2, minH: 2 },
       { w: 4, h: 4, minW: 2, minH: 2 },
     ],
-    tags: ['movers', 'gainers', 'losers', 'market'],
+    tags: ["movers", "gainers", "losers", "market"],
     isPremium: false,
   },
-  'economic-calendar': {
-    type: 'economic-calendar',
-    name: 'Economic Calendar',
-    description: 'Important economic events and their market impact',
-    category: 'news',
-    icon: 'Calendar',
+  "economic-calendar": {
+    type: "economic-calendar",
+    name: "Economic Calendar",
+    description: "Important economic events and their market impact",
+    category: "news",
+    icon: "Calendar",
     isResizable: true,
     isDraggable: true,
     defaultSize: { w: 4, h: 3, minW: 3, minH: 2, maxW: 8, maxH: 6 },
@@ -257,7 +271,7 @@ const WIDGET_METADATA: Record<WidgetType, WidgetMetadata> = {
       { w: 4, h: 3, minW: 3, minH: 2 },
       { w: 6, h: 4, minW: 3, minH: 2 },
     ],
-    tags: ['economic', 'calendar', 'events', 'news'],
+    tags: ["economic", "calendar", "events", "news"],
     isPremium: true,
   },
 };
@@ -286,7 +300,7 @@ class WidgetRegistryService {
         metadata,
         component: WIDGET_COMPONENTS[type as WidgetType],
         isEnabled: true,
-        version: '1.0.0',
+        version: "1.0.0",
         lastUpdated: new Date().toISOString(),
       };
     });
@@ -306,7 +320,7 @@ class WidgetRegistryService {
    */
   getWidgetsByCategory(category: WidgetCategory): WidgetRegistryEntry[] {
     return Object.values(this.registry).filter(
-      (entry) => entry.metadata.category === category
+      (entry) => entry.metadata.category === category,
     );
   }
 
@@ -327,7 +341,9 @@ class WidgetRegistryService {
   /**
    * Get widget component
    */
-  getWidgetComponent(type: WidgetType): ComponentType<WidgetComponentProps> | undefined {
+  getWidgetComponent(
+    type: WidgetType,
+  ): ComponentType<WidgetComponentProps> | undefined {
     return this.registry[type]?.component;
   }
 
@@ -339,7 +355,9 @@ class WidgetRegistryService {
     if (!widget || !widget.isEnabled) return false;
 
     if (widget.permissions && widget.permissions.length > 0) {
-      return widget.permissions.some(permission => userPermissions.includes(permission));
+      return widget.permissions.some((permission) =>
+        userPermissions.includes(permission),
+      );
     }
 
     return true;
@@ -349,8 +367,8 @@ class WidgetRegistryService {
    * Get available widgets for user
    */
   getAvailableWidgets(userPermissions: string[] = []): WidgetRegistryEntry[] {
-    return Object.values(this.registry).filter(widget =>
-      this.isWidgetAvailable(widget.type, userPermissions)
+    return Object.values(this.registry).filter((widget) =>
+      this.isWidgetAvailable(widget.type, userPermissions),
     );
   }
 
@@ -395,15 +413,15 @@ class WidgetRegistryService {
       news: 0,
     };
 
-    widgets.forEach(widget => {
+    widgets.forEach((widget) => {
       categoryCounts[widget.metadata.category]++;
     });
 
     return {
       totalWidgets: widgets.length,
-      enabledWidgets: widgets.filter(w => w.isEnabled).length,
+      enabledWidgets: widgets.filter((w) => w.isEnabled).length,
       categoryCounts,
-      premiumWidgets: widgets.filter(w => w.metadata.isPremium).length,
+      premiumWidgets: widgets.filter((w) => w.metadata.isPremium).length,
     };
   }
 }
@@ -422,20 +440,24 @@ export const widgetRegistry = new WidgetRegistryService();
  * Get all available widget types
  */
 export const getAvailableWidgetTypes = (): WidgetType[] => {
-  return widgetRegistry.getAllWidgets().map(widget => widget.type);
+  return widgetRegistry.getAllWidgets().map((widget) => widget.type);
 };
 
 /**
  * Get widget metadata by type
  */
-export const getWidgetMetadata = (type: WidgetType): WidgetMetadata | undefined => {
+export const getWidgetMetadata = (
+  type: WidgetType,
+): WidgetMetadata | undefined => {
   return widgetRegistry.getWidgetMetadata(type);
 };
 
 /**
  * Get widget component by type
  */
-export const getWidgetComponent = (type: WidgetType): ComponentType<WidgetComponentProps> | undefined => {
+export const getWidgetComponent = (
+  type: WidgetType,
+): ComponentType<WidgetComponentProps> | undefined => {
   return widgetRegistry.getWidgetComponent(type);
 };
 
@@ -449,7 +471,9 @@ export const isValidWidgetType = (type: string): type is WidgetType => {
 /**
  * Get default widget configuration
  */
-export const getDefaultWidgetConfig = (type: WidgetType): Partial<WidgetSize> | undefined => {
+export const getDefaultWidgetConfig = (
+  type: WidgetType,
+): Partial<WidgetSize> | undefined => {
   const metadata = widgetRegistry.getWidgetMetadata(type);
   return metadata?.defaultSize;
 };

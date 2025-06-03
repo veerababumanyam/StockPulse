@@ -3,7 +3,7 @@
  * Implements IndexedDB, cross-tab sync, and fallback strategies
  */
 
-import { ColorTheme, ThemeMode } from '../types/theme';
+import { ColorTheme, ThemeMode } from "../types/theme";
 
 // Storage configuration
 interface StorageConfig {
@@ -53,8 +53,8 @@ export class ThemeStorageManager {
   constructor(config: Partial<StorageConfig> = {}) {
     this.config = {
       version: 1,
-      name: 'StockPulseThemeDB',
-      stores: ['themes', 'preferences', 'history'],
+      name: "StockPulseThemeDB",
+      stores: ["themes", "preferences", "history"],
       enableSync: true,
       enableCompression: false,
       maxEntries: 100,
@@ -79,10 +79,10 @@ export class ThemeStorageManager {
 
       // Check for compression support
       this.compressionEnabled =
-        this.config.enableCompression && 'CompressionStream' in window;
+        this.config.enableCompression && "CompressionStream" in window;
     } catch (error) {
       console.warn(
-        'Advanced storage initialization failed, falling back to localStorage:',
+        "Advanced storage initialization failed, falling back to localStorage:",
         error,
       );
     }
@@ -108,14 +108,14 @@ export class ThemeStorageManager {
       // Sync across tabs
       if (this.syncChannel) {
         this.syncChannel.postMessage({
-          type: 'THEME_UPDATED',
+          type: "THEME_UPDATED",
           data,
         });
       }
 
       return true;
     } catch (error) {
-      console.error('Failed to save theme data:', error);
+      console.error("Failed to save theme data:", error);
       return false;
     }
   }
@@ -134,7 +134,7 @@ export class ThemeStorageManager {
       // Fallback to localStorage
       return await this.loadFromLocalStorage();
     } catch (error) {
-      console.error('Failed to load theme data:', error);
+      console.error("Failed to load theme data:", error);
       return null;
     }
   }
@@ -145,9 +145,9 @@ export class ThemeStorageManager {
   async getUserPreferences(): Promise<UserPreferences | null> {
     try {
       if (this.db) {
-        const transaction = this.db.transaction(['preferences'], 'readonly');
-        const store = transaction.objectStore('preferences');
-        const request = store.get('userPreferences');
+        const transaction = this.db.transaction(["preferences"], "readonly");
+        const store = transaction.objectStore("preferences");
+        const request = store.get("userPreferences");
 
         return new Promise((resolve, reject) => {
           request.onsuccess = () => resolve(request.result?.data || null);
@@ -156,10 +156,10 @@ export class ThemeStorageManager {
       }
 
       // Fallback to localStorage
-      const stored = localStorage.getItem('stockpulse-user-preferences');
+      const stored = localStorage.getItem("stockpulse-user-preferences");
       return stored ? JSON.parse(stored) : null;
     } catch (error) {
-      console.error('Failed to load user preferences:', error);
+      console.error("Failed to load user preferences:", error);
       return null;
     }
   }
@@ -189,7 +189,7 @@ export class ThemeStorageManager {
         favoriteThemes: preferences.favoriteThemes,
       };
     } catch (error) {
-      console.error('Failed to generate theme analytics:', error);
+      console.error("Failed to generate theme analytics:", error);
       return null;
     }
   }
@@ -204,7 +204,7 @@ export class ThemeStorageManager {
       const history = await this.getThemeHistory();
 
       const exportData = {
-        version: '2.0',
+        version: "2.0",
         timestamp: Date.now(),
         currentTheme,
         preferences,
@@ -217,7 +217,7 @@ export class ThemeStorageManager {
 
       return JSON.stringify(exportData);
     } catch (error) {
-      console.error('Failed to export theme data:', error);
+      console.error("Failed to export theme data:", error);
       throw error;
     }
   }
@@ -237,7 +237,7 @@ export class ThemeStorageManager {
 
       // Validate import data
       if (!this.validateImportData(data)) {
-        throw new Error('Invalid import data format');
+        throw new Error("Invalid import data format");
       }
 
       // Import current theme
@@ -257,7 +257,7 @@ export class ThemeStorageManager {
 
       return true;
     } catch (error) {
-      console.error('Failed to import theme data:', error);
+      console.error("Failed to import theme data:", error);
       return false;
     }
   }
@@ -269,9 +269,9 @@ export class ThemeStorageManager {
     try {
       // Clear IndexedDB
       if (this.db) {
-        const stores = ['themes', 'preferences', 'history'];
+        const stores = ["themes", "preferences", "history"];
         for (const storeName of stores) {
-          const transaction = this.db.transaction([storeName], 'readwrite');
+          const transaction = this.db.transaction([storeName], "readwrite");
           const store = transaction.objectStore(storeName);
           await new Promise<void>((resolve, reject) => {
             const request = store.clear();
@@ -283,18 +283,18 @@ export class ThemeStorageManager {
 
       // Clear localStorage
       const keys = [
-        'stockpulse-theme',
-        'stockpulse-color-theme',
-        'stockpulse-user-preferences',
-        'stockpulse-theme-history',
-        'stockpulse-theme-version',
+        "stockpulse-theme",
+        "stockpulse-color-theme",
+        "stockpulse-user-preferences",
+        "stockpulse-theme-history",
+        "stockpulse-theme-version",
       ];
 
       keys.forEach((key) => localStorage.removeItem(key));
 
       return true;
     } catch (error) {
-      console.error('Failed to clear theme data:', error);
+      console.error("Failed to clear theme data:", error);
       return false;
     }
   }
@@ -316,11 +316,11 @@ export class ThemeStorageManager {
         // Create object stores
         this.config.stores.forEach((storeName) => {
           if (!db.objectStoreNames.contains(storeName)) {
-            const store = db.createObjectStore(storeName, { keyPath: 'id' });
+            const store = db.createObjectStore(storeName, { keyPath: "id" });
 
-            if (storeName === 'history') {
-              store.createIndex('timestamp', 'timestamp', { unique: false });
-              store.createIndex('theme', 'theme', { unique: false });
+            if (storeName === "history") {
+              store.createIndex("timestamp", "timestamp", { unique: false });
+              store.createIndex("theme", "theme", { unique: false });
             }
           }
         });
@@ -330,31 +330,31 @@ export class ThemeStorageManager {
 
   private initCrossTabSync(): void {
     try {
-      this.syncChannel = new BroadcastChannel('stockpulse-theme-sync');
+      this.syncChannel = new BroadcastChannel("stockpulse-theme-sync");
 
-      this.syncChannel.addEventListener('message', (event) => {
-        if (event.data.type === 'THEME_UPDATED') {
+      this.syncChannel.addEventListener("message", (event) => {
+        if (event.data.type === "THEME_UPDATED") {
           // Emit custom event for theme update
           window.dispatchEvent(
-            new CustomEvent('themeUpdatedFromSync', {
+            new CustomEvent("themeUpdatedFromSync", {
               detail: event.data.data,
             }),
           );
         }
       });
     } catch (error) {
-      console.warn('Cross-tab sync not available:', error);
+      console.warn("Cross-tab sync not available:", error);
     }
   }
 
   private async saveToIndexedDB(data: ThemeStorageData): Promise<void> {
-    if (!this.db) throw new Error('IndexedDB not available');
+    if (!this.db) throw new Error("IndexedDB not available");
 
-    const transaction = this.db.transaction(['themes'], 'readwrite');
-    const store = transaction.objectStore('themes');
+    const transaction = this.db.transaction(["themes"], "readwrite");
+    const store = transaction.objectStore("themes");
 
     const storageData = {
-      id: 'current',
+      id: "current",
       ...data,
     };
 
@@ -368,11 +368,11 @@ export class ThemeStorageManager {
   private async loadFromIndexedDB(): Promise<ThemeStorageData | null> {
     if (!this.db) return null;
 
-    const transaction = this.db.transaction(['themes'], 'readonly');
-    const store = transaction.objectStore('themes');
+    const transaction = this.db.transaction(["themes"], "readonly");
+    const store = transaction.objectStore("themes");
 
     return new Promise((resolve, reject) => {
-      const request = store.get('current');
+      const request = store.get("current");
       request.onsuccess = () => {
         const result = request.result;
         if (result) {
@@ -392,16 +392,16 @@ export class ThemeStorageManager {
         ? await this.compressData(JSON.stringify(data))
         : JSON.stringify(data);
 
-      localStorage.setItem('stockpulse-theme-data', compressed);
+      localStorage.setItem("stockpulse-theme-data", compressed);
     } catch (error) {
-      console.error('localStorage save failed:', error);
+      console.error("localStorage save failed:", error);
       throw error;
     }
   }
 
   private async loadFromLocalStorage(): Promise<ThemeStorageData | null> {
     try {
-      const stored = localStorage.getItem('stockpulse-theme-data');
+      const stored = localStorage.getItem("stockpulse-theme-data");
       if (!stored) return null;
 
       const data = this.compressionEnabled
@@ -410,7 +410,7 @@ export class ThemeStorageManager {
 
       return JSON.parse(data);
     } catch (error) {
-      console.error('localStorage load failed:', error);
+      console.error("localStorage load failed:", error);
       return null;
     }
   }

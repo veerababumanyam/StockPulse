@@ -1,1 +1,1 @@
-export { TopMoversPreview as default } from './index';
+export { TopMoversPreview as default } from "./index";

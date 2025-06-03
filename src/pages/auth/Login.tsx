@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail,
   Lock,
@@ -14,12 +14,12 @@ import {
   Github,
   Chrome,
   Twitter,
-  Sparkles
-} from 'lucide-react';
+  Sparkles,
+} from "lucide-react";
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,7 +30,7 @@ const Login: React.FC = () => {
   const location = useLocation();
 
   // Get redirect path from location state or default to dashboard
-  const from = (location.state as any)?.from?.pathname || '/dashboard';
+  const from = (location.state as any)?.from?.pathname || "/dashboard";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +45,7 @@ const Login: React.FC = () => {
         error?.response?.data?.detail ||
         error?.response?.data?.error ||
         error?.message ||
-        'Login failed. Please check your credentials and try again.';
+        "Login failed. Please check your credentials and try again.";
 
       setLoginError(errorMessage);
     } finally {
@@ -65,7 +65,7 @@ const Login: React.FC = () => {
             y: [-10, 10, -10],
             x: [-5, 5, -5],
           }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
           className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"
@@ -73,25 +73,33 @@ const Login: React.FC = () => {
             y: [10, -10, 10],
             x: [5, -5, 5],
           }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
-        
+
         {/* Animated grid */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent bg-[size:50px_50px] opacity-20" 
-             style={{ backgroundImage: 'radial-gradient(circle, #06b6d4 1px, transparent 1px)' }} />
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent bg-[size:50px_50px] opacity-20"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, #06b6d4 1px, transparent 1px)",
+          }}
+        />
       </div>
 
       {/* Modern Navigation */}
-      <motion.nav 
+      <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
         className="fixed top-0 w-full z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-2xl"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3 group cursor-pointer">
+            <Link
+              to="/"
+              className="flex items-center space-x-3 group cursor-pointer"
+            >
               <div className="relative">
                 <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-xl flex items-center justify-center">
                   <TrendingUp className="w-6 h-6 text-white" />
@@ -125,7 +133,7 @@ const Login: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="max-w-md w-full space-y-8"
         >
           {/* Header */}
@@ -138,7 +146,7 @@ const Login: React.FC = () => {
             >
               <TrendingUp className="w-10 h-10 text-white" />
             </motion.div>
-            
+
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -147,7 +155,7 @@ const Login: React.FC = () => {
             >
               Welcome back
             </motion.h2>
-            
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -191,7 +199,10 @@ const Login: React.FC = () => {
               <div className="space-y-4">
                 {/* Email Field */}
                 <div>
-                  <label htmlFor="email-address" className="block text-sm font-medium text-white/80 mb-2">
+                  <label
+                    htmlFor="email-address"
+                    className="block text-sm font-medium text-white/80 mb-2"
+                  >
                     Email address
                   </label>
                   <div className="relative">
@@ -213,7 +224,10 @@ const Login: React.FC = () => {
 
                 {/* Password Field */}
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-white/80 mb-2">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-white/80 mb-2"
+                  >
                     Password
                   </label>
                   <div className="relative">
@@ -221,7 +235,7 @@ const Login: React.FC = () => {
                     <input
                       id="password"
                       name="password"
-                      type={showPassword ? 'text' : 'password'}
+                      type={showPassword ? "text" : "password"}
                       autoComplete="current-password"
                       required
                       disabled={isFormLoading}
@@ -236,7 +250,11 @@ const Login: React.FC = () => {
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white/60 transition-colors"
                       disabled={isFormLoading}
                     >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
                     </button>
                   </div>
                 </div>
@@ -254,7 +272,9 @@ const Login: React.FC = () => {
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
                   />
-                  <span className="ml-2 text-sm text-white/70">Remember me</span>
+                  <span className="ml-2 text-sm text-white/70">
+                    Remember me
+                  </span>
                 </label>
 
                 <Link
@@ -298,15 +318,17 @@ const Login: React.FC = () => {
                   <div className="w-full border-t border-white/10"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-transparent text-white/60">Or continue with</span>
+                  <span className="px-4 bg-transparent text-white/60">
+                    Or continue with
+                  </span>
                 </div>
               </div>
 
               <div className="mt-6 grid grid-cols-3 gap-3">
                 {[
-                  { icon: Github, name: 'GitHub' },
-                  { icon: Chrome, name: 'Google' },
-                  { icon: Twitter, name: 'Twitter' }
+                  { icon: Github, name: "GitHub" },
+                  { icon: Chrome, name: "Google" },
+                  { icon: Twitter, name: "Twitter" },
                 ].map((provider, index) => (
                   <motion.button
                     key={provider.name}
@@ -332,7 +354,7 @@ const Login: React.FC = () => {
             className="text-center text-sm text-white/60"
           >
             <p>
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <Link
                 to="/auth/register"
                 className="font-medium text-cyan-400 hover:text-cyan-300 transition-colors"

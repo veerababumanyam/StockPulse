@@ -3,15 +3,15 @@
  * Displays a list of relevant financial news articles.
  * Part of Story 2.2: Customizable Widget System
  */
-'use client';
+"use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 // import Link from 'next/link'; // Removed next/link
 // import Image from 'next/image'; // Removed next/image
-import { WidgetComponentProps } from '../../types/dashboard';
-import { NewsFeedData, NewsArticle } from '../../types/widget-data';
-import { useTheme } from '../../contexts/ThemeContext';
-import { apiClient } from '../../services/api';
+import { WidgetComponentProps } from "../../types/dashboard";
+import { NewsFeedData, NewsArticle } from "../../types/widget-data";
+import { useTheme } from "../../contexts/ThemeContext";
+import { apiClient } from "../../services/api";
 import {
   Newspaper,
   RefreshCw,
@@ -21,19 +21,19 @@ import {
   Tag,
   Filter,
   Search,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from '../ui/card';
-import { ScrollArea } from '../ui/scroll-area';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input'; // Assuming Input component for search
-import { cn } from '../../utils/cn';
+} from "../ui/card";
+import { ScrollArea } from "../ui/scroll-area";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input"; // Assuming Input component for search
+import { cn } from "../../utils/cn";
 
 const NewsFeed: React.FC<WidgetComponentProps> = ({
   widgetId,
@@ -47,7 +47,7 @@ const NewsFeed: React.FC<WidgetComponentProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const articlesLimit = config.config?.limit || 5;
-  const initialKeywords = config.config?.keywords || '';
+  const initialKeywords = config.config?.keywords || "";
   const [keywords, setKeywords] = useState<string>(initialKeywords);
   const [debouncedKeywords, setDebouncedKeywords] =
     useState<string>(initialKeywords);
@@ -71,7 +71,7 @@ const NewsFeed: React.FC<WidgetComponentProps> = ({
     setIsLoading(true);
     setError(null);
     try {
-      const filters: NewsFeedData['filter'] = {};
+      const filters: NewsFeedData["filter"] = {};
       if (debouncedKeywords) filters.keywords = debouncedKeywords;
       // Could add more filters from config e.g. config.config.symbols, config.config.sources
 
@@ -79,7 +79,7 @@ const NewsFeed: React.FC<WidgetComponentProps> = ({
       setNewsData(data);
     } catch (err: any) {
       console.error(`[${widgetId}] Error fetching news:`, err);
-      setError(err.message || 'An unexpected error occurred.');
+      setError(err.message || "An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
@@ -100,7 +100,7 @@ const NewsFeed: React.FC<WidgetComponentProps> = ({
             <img
               src={article.imageUrl}
               alt={article.title}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           </div>
         )}
@@ -123,10 +123,10 @@ const NewsFeed: React.FC<WidgetComponentProps> = ({
               <RadioTower className="h-3 w-3 mr-1" /> {article.source}
             </span>
             <span>
-              {new Date(article.publishedAt).toLocaleDateString()}{' '}
+              {new Date(article.publishedAt).toLocaleDateString()}{" "}
               {new Date(article.publishedAt).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
+                hour: "2-digit",
+                minute: "2-digit",
               })}
             </span>
             {article.symbols && article.symbols.length > 0 && (
@@ -165,12 +165,12 @@ const NewsFeed: React.FC<WidgetComponentProps> = ({
   if (isLoading && !newsData) {
     // Show full loading state only on initial load
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center">
               <Newspaper className="h-4 w-4 mr-2 text-primary" />
-              {config.title || 'News Feed'}
+              {config.title || "News Feed"}
             </CardTitle>
             <RefreshCw className="h-4 w-4 text-muted-foreground animate-spin" />
           </div>
@@ -184,12 +184,12 @@ const NewsFeed: React.FC<WidgetComponentProps> = ({
 
   if (error) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center text-danger-fg">
               <AlertCircle className="h-4 w-4 mr-2" />
-              {config.title || 'News Feed'}
+              {config.title || "News Feed"}
             </CardTitle>
             <Button
               variant="ghost"
@@ -210,12 +210,12 @@ const NewsFeed: React.FC<WidgetComponentProps> = ({
   }
 
   return (
-    <Card className={cn('h-full flex flex-col', config.className)}>
+    <Card className={cn("h-full flex flex-col", config.className)}>
       <CardHeader className="pb-2 pt-3">
         <div className="flex items-center justify-between mb-1.5">
           <CardTitle className="text-base font-semibold flex items-center">
             <Newspaper className="h-4 w-4 mr-2 text-primary" />
-            {config.title || 'News Feed'}
+            {config.title || "News Feed"}
           </CardTitle>
           <Button
             variant="ghost"
@@ -224,7 +224,7 @@ const NewsFeed: React.FC<WidgetComponentProps> = ({
             title="Refresh news"
             className="h-7 w-7"
           >
-            <RefreshCw className={cn('h-4 w-4', isLoading && 'animate-spin')} />
+            <RefreshCw className={cn("h-4 w-4", isLoading && "animate-spin")} />
           </Button>
         </div>
         {isEditMode && (
@@ -240,10 +240,10 @@ const NewsFeed: React.FC<WidgetComponentProps> = ({
           </form>
         )}
         <CardDescription className="text-xs text-muted-foreground pt-1">
-          Displaying {newsData?.articles.length || 0} articles. Last updated:{' '}
+          Displaying {newsData?.articles.length || 0} articles. Last updated:{" "}
           {newsData
             ? new Date(newsData.lastRefreshed).toLocaleTimeString()
-            : 'N/A'}
+            : "N/A"}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-grow p-0 overflow-hidden">

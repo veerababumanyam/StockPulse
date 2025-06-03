@@ -6,11 +6,11 @@
   /* Ensure full viewport coverage */
   min-height: 100vh;
   min-height: 100dvh; /* Dynamic viewport height for mobile */
-  
+
   /* Touch-friendly scrolling */
   -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
-  
+
   /* Prevent zoom on input focus (iOS) */
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -20,12 +20,12 @@
 body[data-auth-context="true"] {
   /* Prevent background scrolling */
   overflow-x: hidden;
-  
+
   /* Enhanced font rendering */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  
+
   /* Touch action optimization */
   touch-action: manipulation;
 }
@@ -58,13 +58,13 @@ body[data-page-type="reset-password"] {
 .auth-layout textarea {
   /* Minimum touch target size (44px) */
   min-height: 44px;
-  
+
   /* Touch manipulation optimization */
   touch-action: manipulation;
-  
+
   /* Prevent zoom on focus (iOS) */
   font-size: 16px;
-  
+
   /* Enhanced tap highlighting */
   -webkit-tap-highlight-color: rgba(59, 130, 246, 0.1);
 }
@@ -79,7 +79,7 @@ body[data-page-type="reset-password"] {
   autocorrect: off;
   autocapitalize: off;
   spellcheck: false;
-  
+
   /* Enhanced focus states */
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -94,7 +94,7 @@ body[data-page-type="reset-password"] {
   ring-color: rgb(59 130 246);
   ring-offset: 2px;
   border-color: transparent;
-  
+
   /* Subtle scale effect */
   transform: scale(1.01);
 }
@@ -104,7 +104,7 @@ body[data-page-type="reset-password"] {
   /* Touch feedback */
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  
+
   /* Prevent text selection */
   user-select: none;
   -webkit-user-select: none;
@@ -131,7 +131,7 @@ body[data-page-type="reset-password"] {
   width: 18px;
   height: 18px;
   min-height: 18px;
-  
+
   /* Enhanced styling */
   accent-color: var(--auth-primary-color, #1e40af);
 }
@@ -158,7 +158,7 @@ body[data-page-type="reset-password"] {
   .auth-layout {
     color-scheme: dark;
   }
-  
+
   .auth-loading {
     background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
     background-size: 200% 100%;
@@ -172,7 +172,7 @@ body[data-page-type="reset-password"] {
     border-width: 2px;
     border-style: solid;
   }
-  
+
   .auth-layout button {
     font-weight: 600;
   }
@@ -197,17 +197,17 @@ body[data-page-type="reset-password"] {
   .auth-layout {
     padding: 1rem;
   }
-  
+
   .auth-layout .max-w-md {
     max-width: 100%;
   }
-  
+
   .auth-layout input,
   .auth-layout button {
     font-size: 16px; /* Prevent zoom on iOS */
     padding: 0.875rem 1rem;
   }
-  
+
   .auth-layout h1,
   .auth-layout h2 {
     font-size: 1.5rem;
@@ -220,7 +220,7 @@ body[data-page-type="reset-password"] {
   .auth-layout {
     padding: 1.5rem;
   }
-  
+
   .auth-layout input,
   .auth-layout button {
     padding: 1rem 1.25rem;
@@ -239,13 +239,13 @@ body[data-page-type="reset-password"] {
   .auth-layout {
     padding: 2.5rem;
   }
-  
+
   /* Hover effects for desktop */
   .auth-layout button:hover:not(:disabled) {
     transform: translateY(-1px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   }
-  
+
   .auth-layout input:hover {
     border-color: rgb(156 163 175);
   }
@@ -256,11 +256,11 @@ body[data-page-type="reset-password"] {
   .auth-layout {
     padding: 0.5rem;
   }
-  
+
   .auth-layout .space-y-6 > * + * {
     margin-top: 1rem;
   }
-  
+
   .auth-layout .space-y-8 > * + * {
     margin-top: 1.5rem;
   }
@@ -272,7 +272,7 @@ body[data-page-type="reset-password"] {
     background: white !important;
     color: black !important;
   }
-  
+
   .auth-layout button,
   .auth-layout .fixed,
   .auth-layout .absolute {
@@ -318,7 +318,8 @@ body[data-page-type="reset-password"] {
 }
 
 @keyframes security-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -381,7 +382,8 @@ body[data-page-type="reset-password"] {
 }
 
 @keyframes error-shake {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0);
   }
   25% {
@@ -398,7 +400,8 @@ body[data-page-type="reset-password"] {
 }
 
 @keyframes success-bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -441,7 +444,7 @@ body[data-page-type="reset-password"] {
   .auth-container {
     container-type: inline-size;
   }
-  
+
   @container (max-width: 400px) {
     .auth-layout .grid-cols-2 {
       grid-template-columns: 1fr;
@@ -454,11 +457,11 @@ body[data-page-type="reset-password"] {
   /* CSS Logical Properties */
   margin-inline: auto;
   padding-inline: 1rem;
-  
+
   /* CSS Grid Enhancements */
   display: grid;
   place-items: center;
-  
+
   /* CSS Custom Properties for Dynamic Theming */
   --auth-border-radius: clamp(0.5rem, 2vw, 1rem);
   --auth-spacing: clamp(1rem, 4vw, 2rem);
@@ -466,9 +469,11 @@ body[data-page-type="reset-password"] {
 
 /* Utility Classes for Auth System */
 .auth-gradient-bg {
-  background: linear-gradient(135deg, 
-    var(--auth-primary-color, #1e40af) 0%, 
-    var(--auth-accent-color, #3b82f6) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--auth-primary-color, #1e40af) 0%,
+    var(--auth-accent-color, #3b82f6) 100%
+  );
 }
 
 .auth-glass-effect {
@@ -521,11 +526,11 @@ body[data-page-type="reset-password"] {
   .auth-layout button:hover {
     transform: none;
   }
-  
+
   .auth-layout input:hover {
     border-color: initial;
   }
-  
+
   /* Larger touch targets for mobile */
   .auth-layout button,
   .auth-layout input[type="checkbox"],
@@ -533,4 +538,4 @@ body[data-page-type="reset-password"] {
     min-height: 48px;
     min-width: 48px;
   }
-} 
+}

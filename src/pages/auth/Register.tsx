@@ -1,7 +1,7 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '@contexts/AuthContext';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@contexts/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart3,
   CheckCircle,
@@ -19,21 +19,21 @@ import {
   Github,
   Chrome,
   Twitter,
-  Sparkles
-} from 'lucide-react';
-import { debugApiConfig } from '@config/api';
+  Sparkles,
+} from "lucide-react";
+import { debugApiConfig } from "@config/api";
 
 const Register: React.FC = () => {
   const [step, setStep] = React.useState(1);
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const [formData, setFormData] = React.useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    tradingExperience: 'beginner',
-    riskTolerance: 'moderate',
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    tradingExperience: "beginner",
+    riskTolerance: "moderate",
     termsAccepted: false,
     emailPreferences: {
       platformUpdates: false,
@@ -41,15 +41,15 @@ const Register: React.FC = () => {
     },
   });
   const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState('');
-  const [advisoryMessage, setAdvisoryMessage] = React.useState('');
+  const [error, setError] = React.useState("");
+  const [advisoryMessage, setAdvisoryMessage] = React.useState("");
 
   const { register } = useAuth();
   const navigate = useNavigate();
 
   // Debug API configuration on component mount
   React.useEffect(() => {
-    console.log('📱 Register component mounted');
+    console.log("📱 Register component mounted");
     debugApiConfig();
   }, []);
 
@@ -58,10 +58,10 @@ const Register: React.FC = () => {
   ) => {
     const { name, value, type } = e.target;
     const checked =
-      type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
+      type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
 
-    if (name.startsWith('emailPreferences.')) {
-      const prefKey = name.split('.')[1];
+    if (name.startsWith("emailPreferences.")) {
+      const prefKey = name.split(".")[1];
       setFormData((prev) => ({
         ...prev,
         emailPreferences: {
@@ -72,47 +72,47 @@ const Register: React.FC = () => {
     } else {
       setFormData((prev) => ({
         ...prev,
-        [name]: type === 'checkbox' ? checked : value,
+        [name]: type === "checkbox" ? checked : value,
       }));
     }
   };
 
   const validateStep = () => {
-    setError('');
+    setError("");
 
     if (step === 1) {
-      if (!formData.name.trim()) return setError('Name is required');
-      if (!formData.email.trim()) return setError('Email is required');
+      if (!formData.name.trim()) return setError("Name is required");
+      if (!formData.email.trim()) return setError("Email is required");
       if (!/\S+@\S+\.\S+/.test(formData.email))
-        return setError('Email is invalid');
-      if (!formData.password) return setError('Password is required');
+        return setError("Email is invalid");
+      if (!formData.password) return setError("Password is required");
 
       // Enhanced password validation
       const passwordRegex =
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
       if (!passwordRegex.test(formData.password)) {
         return setError(
-          'Password must be at least 8 characters long, and include at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).',
+          "Password must be at least 8 characters long, and include at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).",
         );
       }
       if (formData.password !== formData.confirmPassword)
-        return setError('Passwords do not match');
+        return setError("Passwords do not match");
 
       return true;
     }
 
     if (step === 2) {
       if (!formData.tradingExperience)
-        return setError('Trading experience is required');
+        return setError("Trading experience is required");
       if (!formData.riskTolerance)
-        return setError('Risk tolerance is required');
+        return setError("Risk tolerance is required");
 
       return true;
     }
 
     if (step === 3) {
       if (!formData.termsAccepted)
-        return setError('You must accept the terms and conditions');
+        return setError("You must accept the terms and conditions");
 
       return true;
     }
@@ -136,12 +136,12 @@ const Register: React.FC = () => {
     if (!validateStep()) return;
 
     setIsLoading(true);
-    setError('');
-    setAdvisoryMessage('');
+    setError("");
+    setAdvisoryMessage("");
 
-    console.log('🚀 Starting registration process...');
-    console.log('Current URL:', window.location.href);
-    console.log('Environment API URL:', import.meta.env.VITE_API_BASE_URL);
+    console.log("🚀 Starting registration process...");
+    console.log("Current URL:", window.location.href);
+    console.log("Environment API URL:", import.meta.env.VITE_API_BASE_URL);
 
     try {
       const response = await register({
@@ -151,29 +151,28 @@ const Register: React.FC = () => {
         confirmPassword: formData.confirmPassword,
       });
 
-      console.log('✅ Registration submitted:', response);
+      console.log("✅ Registration submitted:", response);
 
       // Show pending approval message instead of navigating to dashboard
-      if (response.status === 'pending') {
+      if (response.status === "pending") {
         setAdvisoryMessage(
-          response.message || 
-          'Registration submitted successfully! Your account is pending admin approval. You will receive an email once approved.'
+          response.message ||
+            "Registration submitted successfully! Your account is pending admin approval. You will receive an email once approved.",
         );
-        
+
         // Set step to show completion message
         setStep(4); // New completion step
       } else {
         // Fallback for other statuses
-        setAdvisoryMessage('Registration completed successfully!');
+        setAdvisoryMessage("Registration completed successfully!");
       }
-
     } catch (err) {
-      console.error('❌ Registration failed:', err);
+      console.error("❌ Registration failed:", err);
       if (err instanceof Error) {
         setError(err.message);
       } else {
         setError(
-          'An unexpected error occurred during registration. Please try again.',
+          "An unexpected error occurred during registration. Please try again.",
         );
       }
     } finally {
@@ -191,7 +190,7 @@ const Register: React.FC = () => {
             y: [-10, 10, -10],
             x: [-5, 5, -5],
           }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
           className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"
@@ -199,25 +198,33 @@ const Register: React.FC = () => {
             y: [10, -10, 10],
             x: [5, -5, 5],
           }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
-        
+
         {/* Animated grid */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent bg-[size:50px_50px] opacity-20" 
-             style={{ backgroundImage: 'radial-gradient(circle, #06b6d4 1px, transparent 1px)' }} />
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent bg-[size:50px_50px] opacity-20"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, #06b6d4 1px, transparent 1px)",
+          }}
+        />
       </div>
 
       {/* Modern Navigation */}
-      <motion.nav 
+      <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
         className="fixed top-0 w-full z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-2xl"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3 group cursor-pointer">
+            <Link
+              to="/"
+              className="flex items-center space-x-3 group cursor-pointer"
+            >
               <div className="relative">
                 <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-xl flex items-center justify-center">
                   <TrendingUp className="w-6 h-6 text-white" />
@@ -251,7 +258,7 @@ const Register: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="max-w-md w-full space-y-8"
         >
           {/* Header */}
@@ -264,7 +271,7 @@ const Register: React.FC = () => {
             >
               <TrendingUp className="w-10 h-10 text-white" />
             </motion.div>
-            
+
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -273,7 +280,7 @@ const Register: React.FC = () => {
             >
               Create your account
             </motion.h2>
-            
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -297,47 +304,57 @@ const Register: React.FC = () => {
                 <div className="flex items-center">
                   <motion.div
                     className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold transition-all duration-300 ${
-                      step >= 1 
-                        ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg' 
-                        : 'bg-white/10 border border-white/20 text-white/60'
+                      step >= 1
+                        ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
+                        : "bg-white/10 border border-white/20 text-white/60"
                     }`}
                     whileHover={{ scale: 1.05 }}
                   >
                     1
                   </motion.div>
-                  <div className={`ml-3 text-sm font-medium transition-colors ${step >= 1 ? 'text-white' : 'text-white/60'}`}>
+                  <div
+                    className={`ml-3 text-sm font-medium transition-colors ${step >= 1 ? "text-white" : "text-white/60"}`}
+                  >
                     Account
                   </div>
                 </div>
-                <div className={`flex-1 h-1 mx-4 rounded-full transition-all duration-500 ${step >= 2 ? 'bg-gradient-to-r from-cyan-500 to-purple-500' : 'bg-white/10'}`}></div>
+                <div
+                  className={`flex-1 h-1 mx-4 rounded-full transition-all duration-500 ${step >= 2 ? "bg-gradient-to-r from-cyan-500 to-purple-500" : "bg-white/10"}`}
+                ></div>
                 <div className="flex items-center">
                   <motion.div
                     className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold transition-all duration-300 ${
-                      step >= 2 
-                        ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg' 
-                        : 'bg-white/10 border border-white/20 text-white/60'
+                      step >= 2
+                        ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
+                        : "bg-white/10 border border-white/20 text-white/60"
                     }`}
                     whileHover={{ scale: 1.05 }}
                   >
                     2
                   </motion.div>
-                  <div className={`ml-3 text-sm font-medium transition-colors ${step >= 2 ? 'text-white' : 'text-white/60'}`}>
+                  <div
+                    className={`ml-3 text-sm font-medium transition-colors ${step >= 2 ? "text-white" : "text-white/60"}`}
+                  >
                     Profile
                   </div>
                 </div>
-                <div className={`flex-1 h-1 mx-4 rounded-full transition-all duration-500 ${step >= 3 ? 'bg-gradient-to-r from-cyan-500 to-purple-500' : 'bg-white/10'}`}></div>
+                <div
+                  className={`flex-1 h-1 mx-4 rounded-full transition-all duration-500 ${step >= 3 ? "bg-gradient-to-r from-cyan-500 to-purple-500" : "bg-white/10"}`}
+                ></div>
                 <div className="flex items-center">
                   <motion.div
                     className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold transition-all duration-300 ${
-                      step >= 3 
-                        ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg' 
-                        : 'bg-white/10 border border-white/20 text-white/60'
+                      step >= 3
+                        ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg"
+                        : "bg-white/10 border border-white/20 text-white/60"
                     }`}
                     whileHover={{ scale: 1.05 }}
                   >
                     3
                   </motion.div>
-                  <div className={`ml-3 text-sm font-medium transition-colors ${step >= 3 ? 'text-white' : 'text-white/60'}`}>
+                  <div
+                    className={`ml-3 text-sm font-medium transition-colors ${step >= 3 ? "text-white" : "text-white/60"}`}
+                  >
                     Complete
                   </div>
                 </div>
@@ -446,7 +463,7 @@ const Register: React.FC = () => {
                       <input
                         id="password"
                         name="password"
-                        type={showPassword ? 'text' : 'password'}
+                        type={showPassword ? "text" : "password"}
                         autoComplete="new-password"
                         required
                         value={formData.password}
@@ -480,7 +497,7 @@ const Register: React.FC = () => {
                       <input
                         id="confirmPassword"
                         name="confirmPassword"
-                        type={showConfirmPassword ? 'text' : 'password'}
+                        type={showConfirmPassword ? "text" : "password"}
                         autoComplete="new-password"
                         required
                         value={formData.confirmPassword}
@@ -544,8 +561,12 @@ const Register: React.FC = () => {
                       <option value="intermediate" className="bg-slate-800">
                         Intermediate (1-5 years)
                       </option>
-                      <option value="advanced" className="bg-slate-800">Advanced (5+ years)</option>
-                      <option value="professional" className="bg-slate-800">Professional Trader</option>
+                      <option value="advanced" className="bg-slate-800">
+                        Advanced (5+ years)
+                      </option>
+                      <option value="professional" className="bg-slate-800">
+                        Professional Trader
+                      </option>
                     </select>
                   </div>
 
@@ -563,9 +584,15 @@ const Register: React.FC = () => {
                       onChange={handleChange}
                       className="block w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-300"
                     >
-                      <option value="conservative" className="bg-slate-800">Conservative</option>
-                      <option value="moderate" className="bg-slate-800">Moderate</option>
-                      <option value="aggressive" className="bg-slate-800">Aggressive</option>
+                      <option value="conservative" className="bg-slate-800">
+                        Conservative
+                      </option>
+                      <option value="moderate" className="bg-slate-800">
+                        Moderate
+                      </option>
+                      <option value="aggressive" className="bg-slate-800">
+                        Aggressive
+                      </option>
                     </select>
                   </div>
 
@@ -724,7 +751,7 @@ const Register: React.FC = () => {
                   >
                     <Clock className="w-10 h-10 text-white" />
                   </motion.div>
-                  
+
                   <div>
                     <h3 className="text-2xl font-bold text-white mb-3">
                       Registration Submitted
@@ -760,7 +787,10 @@ const Register: React.FC = () => {
                   </div>
 
                   <div className="space-y-4">
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
                       <Link
                         to="/auth/login"
                         className="w-full bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 flex items-center justify-center group"
@@ -769,8 +799,11 @@ const Register: React.FC = () => {
                         <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                       </Link>
                     </motion.div>
-                    
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
                       <Link
                         to="/"
                         className="w-full bg-white/5 border border-white/10 text-white font-semibold py-3 px-4 rounded-xl hover:bg-white/10 transition-all duration-300 flex items-center justify-center"
@@ -792,7 +825,7 @@ const Register: React.FC = () => {
             className="text-center text-sm text-white/60"
           >
             <p>
-              Already have an account?{' '}
+              Already have an account?{" "}
               <Link
                 to="/auth/login"
                 className="font-medium text-cyan-400 hover:text-cyan-300 transition-colors"

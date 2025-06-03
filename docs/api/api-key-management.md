@@ -7,11 +7,13 @@ This document outlines the design for a secure, user-friendly API key management
 ## Security Considerations
 
 1. **No Frontend Storage of Actual Keys**
+
    - API keys will never be stored in the frontend
    - Keys will be stored securely on the backend using encryption
    - Frontend will only display masked versions of keys (e.g., `sk-***********ABCD`)
 
 2. **Backend Proxy Architecture**
+
    - All API calls requiring keys will be proxied through the backend
    - Frontend will make requests to backend endpoints that handle actual API calls
    - Backend will inject the appropriate keys before forwarding requests
@@ -30,11 +32,13 @@ The API Keys Management page will provide a centralized interface for users to m
 #### Layout
 
 1. **Header Section**
+
    - Title: "API Key Management"
    - Description: Brief explanation of how API keys are used and secured
    - Security notice: Reminder about key security best practices
 
 2. **Provider Categories**
+
    - Tabs or sections for different categories of API providers:
      - Financial Data Providers
      - LLM Providers
@@ -42,6 +46,7 @@ The API Keys Management page will provide a centralized interface for users to m
      - Other Services
 
 3. **Provider List**
+
    - For each category, display a list of supported providers
    - Status indicator showing if keys are configured
    - Last used/verified timestamp
@@ -57,17 +62,20 @@ The API Keys Management page will provide a centralized interface for users to m
 When adding or editing an API key, a modal will appear with the following elements:
 
 1. **Provider Information**
+
    - Provider name and logo
    - Link to provider's API documentation
    - Required and optional fields specific to the provider
 
 2. **Key Input Fields**
+
    - API Key / Secret Key input (password field)
    - Organization ID (if applicable)
    - Additional provider-specific fields
    - Environment selection (Production/Development)
 
 3. **Validation and Testing**
+
    - "Test Connection" button to verify key validity
    - Real-time validation of key format
    - Clear error messages for invalid keys
@@ -82,6 +90,7 @@ When adding or editing an API key, a modal will appear with the following elemen
 ### API Key Storage
 
 1. **Encrypted Storage**
+
    - Keys stored in encrypted format in the database
    - Encryption/decryption handled by backend services
    - Key-value store with provider identifiers as keys
@@ -94,11 +103,13 @@ When adding or editing an API key, a modal will appear with the following elemen
 ### Proxy Service
 
 1. **Request Forwarding**
+
    - Backend endpoints that mirror external API endpoints
    - Key injection before forwarding requests
    - Response normalization for consistent frontend handling
 
 2. **Rate Limiting and Quotas**
+
    - Tracking of API usage per provider
    - Enforcement of rate limits to prevent quota exhaustion
    - Alerts for approaching quota limits
@@ -141,6 +152,7 @@ When adding or editing an API key, a modal will appear with the following elemen
 ## User Documentation
 
 Clear documentation will be provided to users explaining:
+
 - How to obtain API keys from various providers
 - How to add and manage keys in StockPulse
 - Security best practices for API key management

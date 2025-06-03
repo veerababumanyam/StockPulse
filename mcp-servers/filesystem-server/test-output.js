@@ -1,1 +1,2 @@
-﻿console.log("Test output"); process.exit(0);
+﻿console.log("Test output");
+process.exit(0);

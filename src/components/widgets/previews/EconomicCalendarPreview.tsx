@@ -1,1 +1,1 @@
-export { EconomicCalendarPreview as default } from './index';
+export { EconomicCalendarPreview as default } from "./index";

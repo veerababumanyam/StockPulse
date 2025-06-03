@@ -3,9 +3,9 @@
  * Displays portfolio performance chart over time using Recharts
  */
 
-import React, { useMemo, useState } from 'react';
-import { TrendingUp, Calendar, BarChart3, Activity } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React, { useMemo, useState } from "react";
+import { TrendingUp, Calendar, BarChart3, Activity } from "lucide-react";
+import { motion } from "framer-motion";
 import {
   LineChart,
   Line,
@@ -16,18 +16,18 @@ import {
   ResponsiveContainer,
   Area,
   AreaChart,
-} from 'recharts';
+} from "recharts";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { usePortfolio } from '../../hooks/usePortfolio';
-import { cn } from '../../utils/cn';
+} from "../ui/card";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { usePortfolio } from "../../hooks/usePortfolio";
+import { cn } from "../../utils/cn";
 
 interface PortfolioChartWidgetProps {
   widgetId: string;
@@ -35,7 +35,7 @@ interface PortfolioChartWidgetProps {
   showHeader?: boolean;
 }
 
-type TimeRange = '1D' | '1W' | '1M' | '3M' | '6M' | '1Y' | 'ALL';
+type TimeRange = "1D" | "1W" | "1M" | "3M" | "6M" | "1Y" | "ALL";
 
 interface ChartDataPoint {
   date: string;
@@ -50,17 +50,17 @@ const PortfolioChartWidget: React.FC<PortfolioChartWidgetProps> = ({
   showHeader = true,
 }) => {
   const { portfolio, isLoading, error } = usePortfolio();
-  const [selectedRange, setSelectedRange] = useState<TimeRange>('1M');
-  const [chartType, setChartType] = useState<'line' | 'area'>('area');
+  const [selectedRange, setSelectedRange] = useState<TimeRange>("1M");
+  const [chartType, setChartType] = useState<"line" | "area">("area");
 
   const timeRanges: { label: string; value: TimeRange }[] = [
-    { label: '1D', value: '1D' },
-    { label: '1W', value: '1W' },
-    { label: '1M', value: '1M' },
-    { label: '3M', value: '3M' },
-    { label: '6M', value: '6M' },
-    { label: '1Y', value: '1Y' },
-    { label: 'ALL', value: 'ALL' },
+    { label: "1D", value: "1D" },
+    { label: "1W", value: "1W" },
+    { label: "1M", value: "1M" },
+    { label: "3M", value: "3M" },
+    { label: "6M", value: "6M" },
+    { label: "1Y", value: "1Y" },
+    { label: "ALL", value: "ALL" },
   ];
 
   // Generate mock chart data based on selected range
@@ -70,25 +70,25 @@ const PortfolioChartWidget: React.FC<PortfolioChartWidgetProps> = ({
 
     let days: number;
     switch (selectedRange) {
-      case '1D':
+      case "1D":
         days = 1;
         break;
-      case '1W':
+      case "1W":
         days = 7;
         break;
-      case '1M':
+      case "1M":
         days = 30;
         break;
-      case '3M':
+      case "3M":
         days = 90;
         break;
-      case '6M':
+      case "6M":
         days = 180;
         break;
-      case '1Y':
+      case "1Y":
         days = 365;
         break;
-      case 'ALL':
+      case "ALL":
         days = 730;
         break;
       default:
@@ -111,14 +111,14 @@ const PortfolioChartWidget: React.FC<PortfolioChartWidgetProps> = ({
 
       dataPoints.push({
         date:
-          selectedRange === '1D'
-            ? date.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
+          selectedRange === "1D"
+            ? date.toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
               })
-            : date.toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
+            : date.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
               }),
         value: Math.round(value),
         change: Math.round(change),
@@ -154,18 +154,18 @@ const PortfolioChartWidget: React.FC<PortfolioChartWidgetProps> = ({
         <div className="bg-background border rounded-lg shadow-lg p-3">
           <p className="text-sm font-medium">{label}</p>
           <p className="text-sm text-muted-foreground">
-            Value:{' '}
+            Value:{" "}
             <span className="font-semibold">
               ${data.value.toLocaleString()}
             </span>
           </p>
           <p
             className={cn(
-              'text-sm',
-              data.changePercent >= 0 ? 'text-green-600' : 'text-red-600',
+              "text-sm",
+              data.changePercent >= 0 ? "text-green-600" : "text-red-600",
             )}
           >
-            {data.changePercent >= 0 ? '+' : ''}
+            {data.changePercent >= 0 ? "+" : ""}
             {data.changePercent}%
           </p>
         </div>
@@ -176,7 +176,7 @@ const PortfolioChartWidget: React.FC<PortfolioChartWidgetProps> = ({
 
   if (isLoading) {
     return (
-      <Card className={cn('h-full', className)}>
+      <Card className={cn("h-full", className)}>
         {showHeader && (
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center">
@@ -194,7 +194,7 @@ const PortfolioChartWidget: React.FC<PortfolioChartWidgetProps> = ({
 
   if (error) {
     return (
-      <Card className={cn('h-full', className)}>
+      <Card className={cn("h-full", className)}>
         {showHeader && (
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center">
@@ -214,7 +214,7 @@ const PortfolioChartWidget: React.FC<PortfolioChartWidgetProps> = ({
   }
 
   return (
-    <Card className={cn('h-full flex flex-col', className)}>
+    <Card className={cn("h-full flex flex-col", className)}>
       {showHeader && (
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
@@ -229,17 +229,17 @@ const PortfolioChartWidget: React.FC<PortfolioChartWidgetProps> = ({
             </div>
             <div className="flex items-center space-x-1">
               <Button
-                variant={chartType === 'area' ? 'default' : 'outline'}
+                variant={chartType === "area" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setChartType('area')}
+                onClick={() => setChartType("area")}
                 className="h-6 px-2 text-xs"
               >
                 Area
               </Button>
               <Button
-                variant={chartType === 'line' ? 'default' : 'outline'}
+                variant={chartType === "line" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setChartType('line')}
+                onClick={() => setChartType("line")}
                 className="h-6 px-2 text-xs"
               >
                 Line
@@ -258,17 +258,17 @@ const PortfolioChartWidget: React.FC<PortfolioChartWidgetProps> = ({
         >
           <div>
             <p className="text-lg font-bold">
-              ${chartData[chartData.length - 1]?.value.toLocaleString() || '0'}
+              ${chartData[chartData.length - 1]?.value.toLocaleString() || "0"}
             </p>
             <p className="text-xs text-muted-foreground">Current Value</p>
           </div>
           <Badge
-            variant={performance.isPositive ? 'default' : 'destructive'}
+            variant={performance.isPositive ? "default" : "destructive"}
             className="text-xs"
           >
-            {performance.isPositive ? '+' : ''}$
+            {performance.isPositive ? "+" : ""}$
             {Math.abs(performance.change).toLocaleString()}(
-            {performance.isPositive ? '+' : ''}
+            {performance.isPositive ? "+" : ""}
             {performance.changePercent}%)
           </Badge>
         </motion.div>
@@ -278,7 +278,7 @@ const PortfolioChartWidget: React.FC<PortfolioChartWidgetProps> = ({
           {timeRanges.map((range) => (
             <Button
               key={range.value}
-              variant={selectedRange === range.value ? 'default' : 'outline'}
+              variant={selectedRange === range.value ? "default" : "outline"}
               size="sm"
               onClick={() => setSelectedRange(range.value)}
               className="h-6 px-2 text-xs whitespace-nowrap"
@@ -296,7 +296,7 @@ const PortfolioChartWidget: React.FC<PortfolioChartWidgetProps> = ({
           className="flex-1 min-h-0"
         >
           <ResponsiveContainer width="100%" height="100%">
-            {chartType === 'area' ? (
+            {chartType === "area" ? (
               <AreaChart data={chartData}>
                 <defs>
                   <linearGradient
@@ -308,12 +308,12 @@ const PortfolioChartWidget: React.FC<PortfolioChartWidgetProps> = ({
                   >
                     <stop
                       offset="5%"
-                      stopColor={performance.isPositive ? '#10b981' : '#ef4444'}
+                      stopColor={performance.isPositive ? "#10b981" : "#ef4444"}
                       stopOpacity={0.3}
                     />
                     <stop
                       offset="95%"
-                      stopColor={performance.isPositive ? '#10b981' : '#ef4444'}
+                      stopColor={performance.isPositive ? "#10b981" : "#ef4444"}
                       stopOpacity={0}
                     />
                   </linearGradient>
@@ -336,7 +336,7 @@ const PortfolioChartWidget: React.FC<PortfolioChartWidgetProps> = ({
                 <Area
                   type="monotone"
                   dataKey="value"
-                  stroke={performance.isPositive ? '#10b981' : '#ef4444'}
+                  stroke={performance.isPositive ? "#10b981" : "#ef4444"}
                   strokeWidth={2}
                   fill="url(#portfolioGradient)"
                 />
@@ -361,7 +361,7 @@ const PortfolioChartWidget: React.FC<PortfolioChartWidgetProps> = ({
                 <Line
                   type="monotone"
                   dataKey="value"
-                  stroke={performance.isPositive ? '#10b981' : '#ef4444'}
+                  stroke={performance.isPositive ? "#10b981" : "#ef4444"}
                   strokeWidth={2}
                   dot={false}
                   activeDot={{ r: 4 }}

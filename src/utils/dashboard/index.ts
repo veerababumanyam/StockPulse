@@ -5,4 +5,4 @@
  */
 
 // Dashboard layout and management utilities
-export * from './dashboard'; 
+export * from "./dashboard";

@@ -10,16 +10,16 @@ The StockPulse dashboard uses a WCAG AA+ compliant color palette that ensures ac
 
 ```css
 /* Light Theme */
---dashboard-success: #059669;  /* Green for positive values */
---dashboard-danger: #dc2626;   /* Red for negative values */
---dashboard-warning: #d97706;  /* Orange for neutral/warning */
---dashboard-primary: #1e40af;  /* Blue for primary actions */
+--dashboard-success: #059669; /* Green for positive values */
+--dashboard-danger: #dc2626; /* Red for negative values */
+--dashboard-warning: #d97706; /* Orange for neutral/warning */
+--dashboard-primary: #1e40af; /* Blue for primary actions */
 
 /* Dark Theme */
---dashboard-success: #10b981;  /* Emerald 500 - brighter for dark backgrounds */
---dashboard-danger: #ef4444;   /* Red 500 - brighter for dark backgrounds */
---dashboard-warning: #f59e0b;  /* Amber 500 - brighter for dark backgrounds */
---dashboard-primary: #3b82f6;  /* Blue 500 - brighter for dark backgrounds */
+--dashboard-success: #10b981; /* Emerald 500 - brighter for dark backgrounds */
+--dashboard-danger: #ef4444; /* Red 500 - brighter for dark backgrounds */
+--dashboard-warning: #f59e0b; /* Amber 500 - brighter for dark backgrounds */
+--dashboard-primary: #3b82f6; /* Blue 500 - brighter for dark backgrounds */
 ```
 
 ## Usage Examples
@@ -59,11 +59,13 @@ The StockPulse dashboard uses a WCAG AA+ compliant color palette that ensures ac
 ### In React Components
 
 ```tsx
-import React from 'react';
+import React from "react";
 
-const StatusIndicator: React.FC<{ status: 'success' | 'danger' | 'warning' | 'primary' }> = ({ status }) => {
+const StatusIndicator: React.FC<{
+  status: "success" | "danger" | "warning" | "primary";
+}> = ({ status }) => {
   return (
-    <span 
+    <span
       className={`text-dashboard-${status} font-semibold`}
       style={{ color: `var(--dashboard-${status})` }}
     >
@@ -83,6 +85,7 @@ The navbar can now use these color variables for:
 - Theme-aware components
 
 Example navbar usage:
+
 ```tsx
 // Portfolio performance indicator in navbar
 <div className="flex items-center space-x-2">
@@ -102,6 +105,7 @@ Example navbar usage:
 ## Accessibility Compliance
 
 These colors meet WCAG AA+ standards for:
+
 - ✅ Contrast ratio requirements
 - ✅ Color blindness accessibility
 - ✅ Dark/light theme support
@@ -117,17 +121,19 @@ These colors meet WCAG AA+ standards for:
 ## Integration with Existing Systems
 
 These colors work seamlessly with:
+
 - Tailwind CSS utility classes
 - Styled-components
 - CSS modules
 - Inline styles
-- Theme context providers 
+- Theme context providers
 
 # Color Palette Integration with ThemeComposer
 
 ## Overview
 
 The StockPulse dashboard uses an advanced theme management system that integrates:
+
 - **colorPalettes.ts**: Comprehensive color palette definitions
 - **themeComposer.ts**: Dynamic theme composition and management
 - **ThemeContext**: React context for theme state management
@@ -136,25 +142,31 @@ The StockPulse dashboard uses an advanced theme management system that integrate
 ## Available Color Themes
 
 ### Modern
+
 - **Electric Minimalist** (`default`): Clean and modern electric blue design
 
-### Futuristic  
+### Futuristic
+
 - **Cyber Luxury** (`cyber-neon`): Futuristic neon cyber aesthetic
 
 ### Natural
+
 - **Sage Luxury** (`sage-terracotta`): Natural sage green with terracotta accents
 - **Ocean Sunset** (`ocean-sunset`): Ocean blues meeting sunset oranges
 
 ### Elegant
+
 - **Midnight Gold** (`midnight-aurora`): Dark elegance with golden highlights
 - **Monochrome Pop** (`monochrome-pop`): Sophisticated monochrome with accent pops
 
 ### Vibrant
+
 - **Tropical Jungle** (`tropical-jungle`): Vibrant tropical greens and warm accents
 - **Berry Fields** (`berry-fields`): Rich berry purples and field greens
 - **Sunset Gradient** (`sunset-gradient`): Warm sunset gradient colors
 
 ### Cool & Earthy
+
 - **Arctic Moss** (`arctic-moss`): Cool arctic blues with moss greens
 - **Desert Storm** (`desert-storm`): Warm desert tones with storm grays
 
@@ -163,6 +175,7 @@ The StockPulse dashboard uses an advanced theme management system that integrate
 ### Theme Selection in Navbar
 
 The navbar includes a categorized color theme selector that:
+
 - Organizes themes by visual categories
 - Shows theme names and descriptions
 - Displays color indicators
@@ -180,16 +193,18 @@ When a user selects a color theme:
 ### Usage in Components
 
 ```tsx
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from "../../contexts/ThemeContext";
 
 const MyComponent = () => {
   const { colorTheme, setColorTheme } = useTheme();
-  
+
   return (
-    <div style={{ 
-      backgroundColor: 'var(--dashboard-primary-color)',
-      color: 'var(--dashboard-primary-color-text)'
-    }}>
+    <div
+      style={{
+        backgroundColor: "var(--dashboard-primary-color)",
+        color: "var(--dashboard-primary-color-text)",
+      }}
+    >
       Current theme: {colorTheme}
     </div>
   );
@@ -225,7 +240,7 @@ Each theme applies comprehensive CSS variables:
 The `themeComposer.ts` provides advanced features:
 
 - **Variants**: default, compact, comfortable, accessible
-- **Sizes**: sm, md, lg, xl  
+- **Sizes**: sm, md, lg, xl
 - **Density**: low, medium, high
 - **Accessibility**: high contrast, larger text, focus rings
 - **Custom Overrides**: spacing, typography, shadows
@@ -239,6 +254,7 @@ The `themeComposer.ts` provides advanced features:
 ## Browser Storage
 
 Theme preferences are persisted:
+
 - Light/Dark mode: `stockpulse-theme-mode`
 - Color theme: `stockpulse-color-theme`
 
@@ -257,4 +273,4 @@ Theme preferences are persisted:
 3. Include in `COLOR_THEMES` metadata
 4. Update navbar categorization
 
-🚀 
+🚀

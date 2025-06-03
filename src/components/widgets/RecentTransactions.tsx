@@ -3,18 +3,18 @@
  * Displays a list of recent account transactions.
  * Part of Story 2.2: Customizable Widget System
  */
-'use client';
+"use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { WidgetComponentProps } from '../../types/dashboard';
+import React, { useState, useEffect, useCallback } from "react";
+import { WidgetComponentProps } from "../../types/dashboard";
 import {
   RecentTransactionsData,
   TransactionItem,
   TransactionType,
   TransactionStatus,
-} from '../../types/widget-data';
-import { useTheme } from '../../contexts/ThemeContext';
-import { apiClient } from '../../services/api';
+} from "../../types/widget-data";
+import { useTheme } from "../../contexts/ThemeContext";
+import { apiClient } from "../../services/api";
 import {
   History,
   RefreshCw,
@@ -28,31 +28,31 @@ import {
   BadgeX,
   BadgeAlert,
   BadgeMinus,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from '../ui/card';
-import { ScrollArea } from '../ui/scroll-area';
-import { Badge } from '../ui/badge';
-import { cn } from '../../utils/cn';
+} from "../ui/card";
+import { ScrollArea } from "../ui/scroll-area";
+import { Badge } from "../ui/badge";
+import { cn } from "../../utils/cn";
 
 const getTransactionTypeIcon = (type: TransactionType) => {
   switch (type) {
-    case 'buy':
+    case "buy":
       return <ArrowUpCircle className="h-4 w-4 text-success-fg" />;
-    case 'sell':
+    case "sell":
       return <ArrowDownCircle className="h-4 w-4 text-danger-fg" />;
-    case 'dividend':
+    case "dividend":
       return <DollarSign className="h-4 w-4 text-success-fg" />;
-    case 'deposit':
+    case "deposit":
       return <ArrowDownCircle className="h-4 w-4 text-success-fg" />;
-    case 'withdrawal':
+    case "withdrawal":
       return <ArrowUpCircle className="h-4 w-4 text-danger-fg" />;
-    case 'fee':
+    case "fee":
       return <DollarSign className="h-4 w-4 text-warning-fg" />;
     default:
       return <ArrowRightLeft className="h-4 w-4 text-muted-foreground" />;
@@ -61,7 +61,7 @@ const getTransactionTypeIcon = (type: TransactionType) => {
 
 const getStatusBadge = (status: TransactionStatus) => {
   switch (status) {
-    case 'completed':
+    case "completed":
       return (
         <Badge
           variant="outline"
@@ -71,7 +71,7 @@ const getStatusBadge = (status: TransactionStatus) => {
           Completed
         </Badge>
       );
-    case 'pending':
+    case "pending":
       return (
         <Badge
           variant="outline"
@@ -81,7 +81,7 @@ const getStatusBadge = (status: TransactionStatus) => {
           Pending
         </Badge>
       );
-    case 'failed':
+    case "failed":
       return (
         <Badge
           variant="outline"
@@ -91,7 +91,7 @@ const getStatusBadge = (status: TransactionStatus) => {
           Failed
         </Badge>
       );
-    case 'cancelled':
+    case "cancelled":
       return (
         <Badge
           variant="outline"
@@ -132,11 +132,11 @@ const RecentTransactions: React.FC<WidgetComponentProps> = ({
       if (response.success && response.data) {
         setTransactionsData(response.data);
       } else {
-        setError(response.message || 'Failed to fetch recent transactions.');
+        setError(response.message || "Failed to fetch recent transactions.");
       }
     } catch (err: any) {
       console.error(`[${widgetId}] Error fetching transactions:`, err);
-      setError(err.message || 'An unexpected error occurred.');
+      setError(err.message || "An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
@@ -158,10 +158,10 @@ const RecentTransactions: React.FC<WidgetComponentProps> = ({
             {item.description}
           </p>
           <p className="text-xs text-muted-foreground">
-            {new Date(item.date).toLocaleDateString()}{' '}
+            {new Date(item.date).toLocaleDateString()}{" "}
             {new Date(item.date).toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
+              hour: "2-digit",
+              minute: "2-digit",
             })}
             {item.symbol && (
               <span className="ml-1 font-semibold">({item.symbol})</span>
@@ -172,11 +172,11 @@ const RecentTransactions: React.FC<WidgetComponentProps> = ({
       <div className="text-right flex-shrink-0">
         <p
           className={cn(
-            'text-sm font-semibold',
-            item.amount >= 0 ? 'text-success-fg' : 'text-danger-fg',
+            "text-sm font-semibold",
+            item.amount >= 0 ? "text-success-fg" : "text-danger-fg",
           )}
         >
-          {item.amount >= 0 ? '+' : ''}$
+          {item.amount >= 0 ? "+" : ""}$
           {Math.abs(item.amount).toLocaleString(undefined, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
@@ -189,12 +189,12 @@ const RecentTransactions: React.FC<WidgetComponentProps> = ({
 
   if (isLoading) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center">
               <History className="h-4 w-4 mr-2 text-primary" />
-              {config.title || 'Recent Transactions'}
+              {config.title || "Recent Transactions"}
             </CardTitle>
             <RefreshCw className="h-4 w-4 text-muted-foreground animate-spin" />
           </div>
@@ -208,12 +208,12 @@ const RecentTransactions: React.FC<WidgetComponentProps> = ({
 
   if (error) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center text-danger-fg">
               <AlertCircle className="h-4 w-4 mr-2" />
-              {config.title || 'Recent Transactions'}
+              {config.title || "Recent Transactions"}
             </CardTitle>
             <button onClick={fetchData} title="Retry loading transactions">
               <RefreshCw className="h-4 w-4 text-muted-foreground hover:text-primary" />
@@ -229,12 +229,12 @@ const RecentTransactions: React.FC<WidgetComponentProps> = ({
 
   if (!transactionsData || transactionsData.transactions.length === 0) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center">
               <History className="h-4 w-4 mr-2 text-primary" />
-              {config.title || 'Recent Transactions'}
+              {config.title || "Recent Transactions"}
             </CardTitle>
             <button onClick={fetchData} title="Reload transactions">
               <RefreshCw className="h-4 w-4 text-muted-foreground hover:text-primary" />
@@ -249,12 +249,12 @@ const RecentTransactions: React.FC<WidgetComponentProps> = ({
   }
 
   return (
-    <Card className={cn('h-full flex flex-col', config.className)}>
+    <Card className={cn("h-full flex flex-col", config.className)}>
       <CardHeader className="pb-2 pt-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold flex items-center">
             <History className="h-4 w-4 mr-2 text-primary" />
-            {config.title || 'Recent Transactions'}
+            {config.title || "Recent Transactions"}
           </CardTitle>
           <button onClick={fetchData} title="Refresh transactions">
             <RefreshCw className="h-4 w-4 text-muted-foreground hover:text-primary" />

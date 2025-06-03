@@ -4,11 +4,9 @@
     "version": "1.0.0"
   },
   "security": {
-    "allowedRootPaths": [
-      "C:\\Users\\admin\\Desktop\\StockPulse"
-    ],
+    "allowedRootPaths": ["C:\\Users\\admin\\Desktop\\StockPulse"],
     "readOnlyMode": false,
     "maxFileSize": 52428800,
     "maxDirectoryDepth": 10
   }
-} 
+}

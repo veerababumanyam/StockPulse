@@ -9,12 +9,12 @@ import React, { useCallback } from "react";
 import { WidgetComponentProps } from "../../types/dashboard";
 import { PortfolioOverviewData } from "../../types/widget-data";
 import { useTheme } from "../../contexts/ThemeContext";
-import { 
-  Briefcase, 
-  TrendingUp, 
-  DollarSign, 
-  AlertTriangle, 
-  RefreshCw, 
+import {
+  Briefcase,
+  TrendingUp,
+  DollarSign,
+  AlertTriangle,
+  RefreshCw,
   AlertCircle,
   Clock
 } from "lucide-react";
@@ -33,13 +33,13 @@ const PortfolioOverviewContent: React.FC<WidgetComponentProps> = ({
   onConfigChange,
 }) => {
   const { isDarkMode } = useTheme();
-  
-  const { 
-    data, 
-    formattedData, 
-    isLoading, 
-    error, 
-    refetch 
+
+  const {
+    data,
+    formattedData,
+    isLoading,
+    error,
+    refetch
   } = usePortfolioOverview({
     widgetId,
     refreshInterval: config.refreshInterval || 60000,
@@ -125,8 +125,8 @@ const PortfolioOverviewContent: React.FC<WidgetComponentProps> = ({
                 Edit
               </Badge>
             )}
-            <button 
-              onClick={handleRefresh} 
+            <button
+              onClick={handleRefresh}
               title="Refresh data"
               className="p-1 rounded-full hover:bg-muted"
             >
@@ -144,21 +144,21 @@ const PortfolioOverviewContent: React.FC<WidgetComponentProps> = ({
             icon={Briefcase}
             className="col-span-2"
           />
-          
+
           <MetricItem
             value={formattedData.dayChange}
             label="Day's Change"
             icon={TrendingUp}
             isPositive={formattedData.dayChangeIsPositive}
           />
-          
+
           <MetricItem
             value={formattedData.overallGain}
             label="Overall Gain/Loss"
             icon={DollarSign}
             isPositive={formattedData.overallGainIsPositive}
           />
-          
+
           <MetricItem
             value={data.assetCount}
             label="Active Assets"
@@ -175,7 +175,7 @@ const PortfolioOverviewContent: React.FC<WidgetComponentProps> = ({
             />
           )}
         </div>
-        
+
         <div className="mt-4 pt-2 border-t border-border-subtle flex items-center justify-end gap-2 text-xs text-muted-foreground">
           <Clock className="h-3 w-3" />
           <span>Last updated: {formatDate(data.lastUpdated, { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>

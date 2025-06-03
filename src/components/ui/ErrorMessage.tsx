@@ -2,8 +2,8 @@
  * Error Message Component
  * Reusable error display with consistent styling and retry functionality
  */
-import React from 'react';
-import { PortfolioError } from '../../types/portfolio';
+import React from "react";
+import { PortfolioError } from "../../types/portfolio";
 
 interface ErrorMessageProps {
   error: PortfolioError | Error | string;
@@ -15,31 +15,33 @@ interface ErrorMessageProps {
 const ErrorMessage: React.FC<ErrorMessageProps> = ({
   error,
   onRetry,
-  className = '',
+  className = "",
   showDetails = false,
 }) => {
   const getErrorMessage = (): string => {
-    if (typeof error === 'string') return error;
+    if (typeof error === "string") return error;
     if (error instanceof Error) return error.message;
-    return error.message || 'An unexpected error occurred';
+    return error.message || "An unexpected error occurred";
   };
 
   const getErrorCode = (): string | undefined => {
-    if (typeof error === 'object' && 'code' in error) {
+    if (typeof error === "object" && "code" in error) {
       return error.code;
     }
     return undefined;
   };
 
   const getErrorDetails = (): Record<string, any> | undefined => {
-    if (typeof error === 'object' && 'details' in error) {
+    if (typeof error === "object" && "details" in error) {
       return error.details;
     }
     return undefined;
   };
 
   return (
-    <div className={`rounded-lg border border-red-200 bg-red-50 p-4 ${className}`}>
+    <div
+      className={`rounded-lg border border-red-200 bg-red-50 p-4 ${className}`}
+    >
       <div className="flex items-start">
         <div className="flex-shrink-0">
           <svg
@@ -58,9 +60,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
         <div className="ml-3 flex-1">
           <h3 className="text-sm font-medium text-red-800">
             {getErrorCode() && (
-              <span className="mr-2 font-mono text-xs">
-                [{getErrorCode()}]
-              </span>
+              <span className="mr-2 font-mono text-xs">[{getErrorCode()}]</span>
             )}
             Error
           </h3>
@@ -94,4 +94,4 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
   );
 };
 
-export default ErrorMessage; 
+export default ErrorMessage;

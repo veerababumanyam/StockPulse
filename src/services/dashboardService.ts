@@ -20,12 +20,12 @@ import {
   DEFAULT_DASHBOARD_PREFERENCES,
   WidgetPosition,
   DashboardBreakpoints,
-} from '../types/dashboard';
-import { authService } from './authService'; // Assuming authService for user context
-import { apiClient } from './api'; // Assuming a configured apiClient
+} from "../types/dashboard";
+import { authService } from "./authService"; // Assuming authService for user context
+import { apiClient } from "./api"; // Assuming a configured apiClient
 
-const LOCAL_STORAGE_KEY = 'stockpulse_dashboard_config';
-const USER_PREFERENCES_KEY = 'stockpulse_dashboard_preferences';
+const LOCAL_STORAGE_KEY = "stockpulse_dashboard_config";
+const USER_PREFERENCES_KEY = "stockpulse_dashboard_preferences";
 
 // ===============================================
 // Utility Functions
@@ -56,7 +56,7 @@ const loadConfigFromLocalStorage = (): DashboardConfig | null => {
     return config;
   } catch (error) {
     console.error(
-      '[DashboardService] Error loading config from localStorage:',
+      "[DashboardService] Error loading config from localStorage:",
       error,
     );
     return null;
@@ -72,7 +72,7 @@ const saveConfigToLocalStorage = (config: DashboardConfig): void => {
     localStorage.setItem(LOCAL_STORAGE_KEY, serializedConfig);
   } catch (error) {
     console.error(
-      '[DashboardService] Error saving config to localStorage:',
+      "[DashboardService] Error saving config to localStorage:",
       error,
     );
   }
@@ -90,7 +90,7 @@ const loadPreferencesFromLocalStorage = (): DashboardPreferences => {
     return JSON.parse(serializedPrefs) as DashboardPreferences;
   } catch (error) {
     console.error(
-      '[DashboardService] Error loading preferences from localStorage:',
+      "[DashboardService] Error loading preferences from localStorage:",
       error,
     );
     return DEFAULT_DASHBOARD_PREFERENCES;
@@ -106,7 +106,7 @@ const savePreferencesToLocalStorage = (prefs: DashboardPreferences): void => {
     localStorage.setItem(USER_PREFERENCES_KEY, serializedPrefs);
   } catch (error) {
     console.error(
-      '[DashboardService] Error saving preferences to localStorage:',
+      "[DashboardService] Error saving preferences to localStorage:",
       error,
     );
   }
@@ -131,23 +131,23 @@ const fetchDashboardConfigAPI = async (
     const response = await apiClient.get<DashboardAPIResponse<DashboardConfig>>(
       `/dashboards/${dashboardId}`,
     );
-    console.log('[DashboardService] API Response:', response.data);
+    console.log("[DashboardService] API Response:", response.data);
 
     if (response.data.success && response.data.data) {
       console.log(
-        '[DashboardService] Successfully fetched dashboard config:',
+        "[DashboardService] Successfully fetched dashboard config:",
         response.data.data,
       );
       return response.data.data;
     }
     console.error(
-      '[DashboardService] API Error fetching dashboard:',
+      "[DashboardService] API Error fetching dashboard:",
       response.data.message,
     );
     return null;
   } catch (error) {
     console.error(
-      '[DashboardService] Network Error fetching dashboard:',
+      "[DashboardService] Network Error fetching dashboard:",
       error,
     );
     return null;
@@ -173,12 +173,12 @@ const saveDashboardConfigAPI = async (
       return true;
     }
     console.error(
-      '[DashboardService] API Error saving dashboard:',
+      "[DashboardService] API Error saving dashboard:",
       response.data.message,
     );
     return false;
   } catch (error) {
-    console.error('[DashboardService] Network Error saving dashboard:', error);
+    console.error("[DashboardService] Network Error saving dashboard:", error);
     return false;
   }
 };
@@ -194,10 +194,10 @@ const fetchUserDefaultDashboardIdAPI = async (): Promise<string | null> => {
     // if (response.data.success && response.data.data) {
     //   return response.data.data.defaultDashboardId;
     // }
-    return 'default-dashboard'; // Placeholder
+    return "default-dashboard"; // Placeholder
   } catch (error) {
     console.error(
-      '[DashboardService] Error fetching user default dashboard ID:',
+      "[DashboardService] Error fetching user default dashboard ID:",
       error,
     );
     return null;
@@ -212,7 +212,7 @@ const fetchUserDefaultDashboardIdAPI = async (): Promise<string | null> => {
  * Initialize dashboard: Load from API, then localStorage, or create default
  */
 const initializeDashboard = async (): Promise<DashboardConfig> => {
-  console.log('[DashboardService] Initializing dashboard...');
+  console.log("[DashboardService] Initializing dashboard...");
   let config: DashboardConfig | null = null;
 
   // Priority 1: Try loading user-specific dashboard from API
@@ -224,12 +224,12 @@ const initializeDashboard = async (): Promise<DashboardConfig> => {
   if (userDefaultDashboardId) {
     config = await fetchDashboardConfigAPI(userDefaultDashboardId);
     if (config) {
-      console.log('[DashboardService] Successfully loaded dashboard from API');
+      console.log("[DashboardService] Successfully loaded dashboard from API");
       saveConfigToLocalStorage(config); // Sync API version to local
       return config; // ✅ Return API config immediately, don't check localStorage
     } else {
       console.log(
-        '[DashboardService] Failed to load dashboard from API, trying localStorage',
+        "[DashboardService] Failed to load dashboard from API, trying localStorage",
       );
     }
   }
@@ -238,25 +238,25 @@ const initializeDashboard = async (): Promise<DashboardConfig> => {
   config = loadConfigFromLocalStorage();
   if (config) {
     console.log(
-      '[DashboardService] Successfully loaded dashboard from localStorage',
+      "[DashboardService] Successfully loaded dashboard from localStorage",
     );
     return config;
   }
 
   // Priority 3: Create default dashboard configuration
   console.log(
-    '[DashboardService] No existing config found. Creating default dashboard.',
+    "[DashboardService] No existing config found. Creating default dashboard.",
   );
   config = {
     ...DEFAULT_DASHBOARD_CONFIG,
-    id: userDefaultDashboardId || 'user-dashboard-' + Date.now(),
+    id: userDefaultDashboardId || "user-dashboard-" + Date.now(),
   }; // Ensure unique ID
   saveConfigToLocalStorage(config);
 
   // Optionally, save this new default to backend if it's a new user without one
   // await saveDashboardConfigAPI(config);
 
-  console.log('[DashboardService] Default dashboard created:', config);
+  console.log("[DashboardService] Default dashboard created:", config);
   return config;
 };
 
@@ -276,7 +276,7 @@ const getAvailableWidgets = (): WidgetMetadata[] => {
 const addWidgetToDashboard = (
   currentConfig: DashboardConfig,
   widgetType: WidgetType,
-  breakpoint: keyof DashboardBreakpoints = 'lg', // Default to largest for position calculation
+  breakpoint: keyof DashboardBreakpoints = "lg", // Default to largest for position calculation
 ): DashboardConfig | null => {
   const widgetMeta = WIDGET_LIBRARY.find((w) => w.type === widgetType);
   if (!widgetMeta) {
@@ -332,7 +332,7 @@ const addWidgetToDashboard = (
       ...currentConfig.metadata,
       createdAt: currentConfig.metadata?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      createdBy: currentConfig.metadata?.createdBy || 'system',
+      createdBy: currentConfig.metadata?.createdBy || "system",
       lastAccessedAt: currentConfig.metadata?.lastAccessedAt,
       accessCount: currentConfig.metadata?.accessCount,
       tags: currentConfig.metadata?.tags,
@@ -410,7 +410,7 @@ const removeWidgetFromDashboard = (
     ...currentConfig.metadata,
     createdAt: currentConfig.metadata?.createdAt || new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    createdBy: currentConfig.metadata?.createdBy || 'system',
+    createdBy: currentConfig.metadata?.createdBy || "system",
     lastAccessedAt: currentConfig.metadata?.lastAccessedAt,
     accessCount: currentConfig.metadata?.accessCount,
     tags: currentConfig.metadata?.tags,
@@ -431,7 +431,7 @@ const updateWidgetConfiguration = (
   currentConfig: DashboardConfig,
   widgetId: string,
   updates: Partial<
-    Omit<WidgetConfig, 'id' | 'type' | 'position'> & {
+    Omit<WidgetConfig, "id" | "type" | "position"> & {
       config?: Record<string, any>;
     }
   >,
@@ -458,7 +458,7 @@ const updateWidgetConfiguration = (
     ...currentConfig.metadata,
     createdAt: currentConfig.metadata?.createdAt || new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    createdBy: currentConfig.metadata?.createdBy || 'system',
+    createdBy: currentConfig.metadata?.createdBy || "system",
     lastAccessedAt: currentConfig.metadata?.lastAccessedAt,
     accessCount: currentConfig.metadata?.accessCount,
     tags: currentConfig.metadata?.tags,
@@ -527,7 +527,7 @@ const updateLayoutForBreakpoint = (
       ...currentConfig.metadata,
       createdAt: currentConfig.metadata?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      createdBy: currentConfig.metadata?.createdBy || 'system',
+      createdBy: currentConfig.metadata?.createdBy || "system",
       lastAccessedAt: currentConfig.metadata?.lastAccessedAt,
       accessCount: currentConfig.metadata?.accessCount,
       tags: currentConfig.metadata?.tags,

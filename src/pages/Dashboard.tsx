@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Layout, Layouts as RGLPrimitiveLayouts } from 'react-grid-layout';
-import WidgetLibrary from '../components/dashboard/WidgetLibrary';
-import EnterpriseWidgetGrid from '../components/dashboard/WidgetGrid';
-import { dashboardService } from '../services/dashboardService';
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { Layout, Layouts as RGLPrimitiveLayouts } from "react-grid-layout";
+import WidgetLibrary from "../components/dashboard/WidgetLibrary";
+import EnterpriseWidgetGrid from "../components/dashboard/WidgetGrid";
+import { dashboardService } from "../services/dashboardService";
 import {
   DashboardConfig,
   WidgetConfig,
@@ -15,8 +15,8 @@ import {
   WidgetMetadata,
   WIDGET_LIBRARY,
   DashboardLayout,
-} from '../types/dashboard';
-import { useTheme } from '../hooks/useTheme';
+} from "../types/dashboard";
+import { useTheme } from "../hooks/useTheme";
 import {
   PlusCircle,
   Edit,
@@ -29,27 +29,27 @@ import {
   Rows,
   Maximize,
   Minimize,
-} from 'lucide-react';
-import '../styles/dashboard-responsive.css';
-import 'react-grid-layout/css/styles.css';
-import 'react-resizable/css/styles.css';
+} from "lucide-react";
+import "../styles/dashboard-responsive.css";
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
 
 // Helper to get current breakpoint
 const getCurrentBreakpoint = (): keyof DashboardBreakpoints => {
   const width = window.innerWidth;
 
   if (width >= DASHBOARD_BREAKPOINTS.xl) {
-    return 'xl';
+    return "xl";
   } else if (width >= DASHBOARD_BREAKPOINTS.lg) {
-    return 'lg';
+    return "lg";
   } else if (width >= DASHBOARD_BREAKPOINTS.md) {
-    return 'md';
+    return "md";
   } else if (width >= DASHBOARD_BREAKPOINTS.sm) {
-    return 'sm';
+    return "sm";
   } else if (width >= DASHBOARD_BREAKPOINTS.xs) {
-    return 'xs';
+    return "xs";
   } else {
-    return 'xxs';
+    return "xxs";
   }
 };
 
@@ -67,11 +67,15 @@ const debounce = (func: Function, wait: number) => {
 };
 
 const DashboardPage: React.FC = () => {
-  const { isDark: isDarkMode, colorTheme, mode } = useTheme({
-    context: 'dashboard',
-    enableAnalytics: true
+  const {
+    isDark: isDarkMode,
+    colorTheme,
+    mode,
+  } = useTheme({
+    context: "dashboard",
+    enableAnalytics: true,
   });
-  
+
   const [dashboardConfig, setDashboardConfig] =
     useState<DashboardConfig | null>(null);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -110,8 +114,8 @@ const DashboardPage: React.FC = () => {
         prev ? { ...prev, layouts: updatedLayouts } : null,
       );
     } catch (err) {
-      console.error('Failed to load dashboard:', err);
-      setError('Failed to load dashboard. Please try again.');
+      console.error("Failed to load dashboard:", err);
+      setError("Failed to load dashboard. Please try again.");
       setDashboardConfig(DEFAULT_DASHBOARD_CONFIG);
     } finally {
       setIsLoading(false);
@@ -129,10 +133,10 @@ const DashboardPage: React.FC = () => {
         setCurrentBreakpoint(newBreakpoint);
       }
     }, 150);
-    
-    window.addEventListener('resize', handleResize);
+
+    window.addEventListener("resize", handleResize);
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, [currentBreakpoint]);
 
@@ -143,10 +147,10 @@ const DashboardPage: React.FC = () => {
       await dashboardService.saveDashboard(dashboardConfig);
       dashboardService._saveConfigToLocalStorage(dashboardConfig);
       setUnsavedChanges(false);
-      alert('Dashboard saved successfully!');
+      alert("Dashboard saved successfully!");
     } catch (err) {
-      console.error('Failed to save dashboard:', err);
-      setError('Failed to save dashboard. Changes might not be persisted.');
+      console.error("Failed to save dashboard:", err);
+      setError("Failed to save dashboard. Changes might not be persisted.");
     } finally {
       setIsLoading(false);
     }
@@ -281,37 +285,42 @@ const DashboardPage: React.FC = () => {
   );
 
   // Helper function to get widget config from dashboard config
-  const getWidgetConfig = useCallback((widgetId: string): WidgetConfig | undefined => {
-    if (!dashboardConfig) return undefined;
-    
-    // Search through all breakpoints to find the widget
-    for (const breakpoint of Object.keys(dashboardConfig.layouts) as Array<keyof DashboardBreakpoints>) {
-      const layout = dashboardConfig.layouts[breakpoint];
-      if (layout) {
-        const widget = layout.widgets.find(w => w.id === widgetId);
-        if (widget) {
-          return widget;
+  const getWidgetConfig = useCallback(
+    (widgetId: string): WidgetConfig | undefined => {
+      if (!dashboardConfig) return undefined;
+
+      // Search through all breakpoints to find the widget
+      for (const breakpoint of Object.keys(dashboardConfig.layouts) as Array<
+        keyof DashboardBreakpoints
+      >) {
+        const layout = dashboardConfig.layouts[breakpoint];
+        if (layout) {
+          const widget = layout.widgets.find((w) => w.id === widgetId);
+          if (widget) {
+            return widget;
+          }
         }
       }
-    }
-    return undefined;
-  }, [dashboardConfig]);
+      return undefined;
+    },
+    [dashboardConfig],
+  );
 
   // Handler for widget settings
   const handleWidgetSettings = useCallback((widgetId: string) => {
-    console.log('Opening settings for widget:', widgetId);
+    console.log("Opening settings for widget:", widgetId);
     // TODO: Implement widget settings modal
   }, []);
 
   // Handler for widget duplication
   const handleWidgetDuplicate = useCallback((widgetId: string) => {
-    console.log('Duplicating widget:', widgetId);
+    console.log("Duplicating widget:", widgetId);
     // TODO: Implement widget duplication logic
   }, []);
 
   const handleDeleteWidget = useCallback(
     (widgetId: string) => {
-      console.log('Deleting widget:', widgetId);
+      console.log("Deleting widget:", widgetId);
 
       setDashboardConfig((prev) => {
         if (!prev) return null;
@@ -342,7 +351,7 @@ const DashboardPage: React.FC = () => {
   const handleCancelEdit = () => {
     if (unsavedChanges) {
       const confirmCancel = window.confirm(
-        'You have unsaved changes. Are you sure you want to cancel?',
+        "You have unsaved changes. Are you sure you want to cancel?",
       );
       if (!confirmCancel) return;
     }
@@ -355,11 +364,11 @@ const DashboardPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div 
+      <div
         className="flex items-center justify-center min-h-screen bg-background text-text"
-        style={{ 
-          backgroundColor: isDarkMode ? '#1a1b23' : '#ffffff',
-          color: isDarkMode ? '#e2e8f0' : '#1a202c'
+        style={{
+          backgroundColor: isDarkMode ? "#1a1b23" : "#ffffff",
+          color: isDarkMode ? "#e2e8f0" : "#1a202c",
         }}
       >
         <div className="flex flex-col items-center space-y-4">
@@ -407,7 +416,7 @@ const DashboardPage: React.FC = () => {
               <span>•</span>
               <span>Theme: {colorTheme}</span>
               <span>•</span>
-              <span>{isDarkMode ? 'Dark' : 'Light'} Mode</span>
+              <span>{isDarkMode ? "Dark" : "Light"} Mode</span>
             </div>
           </div>
 
@@ -445,7 +454,7 @@ const DashboardPage: React.FC = () => {
                 >
                   <Save className="w-4 h-4" />
                   <span className="hidden sm:inline">
-                    {unsavedChanges ? 'Save Changes' : 'Saved'}
+                    {unsavedChanges ? "Save Changes" : "Saved"}
                   </span>
                 </button>
                 <button

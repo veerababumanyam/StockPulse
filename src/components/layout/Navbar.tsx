@@ -1,71 +1,74 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { 
-  Search, 
-  Bell, 
-  Settings, 
-  User, 
-  LogOut, 
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import {
+  Search,
+  Bell,
+  Settings,
+  User,
+  LogOut,
   ChevronDown,
   Menu,
   Home,
-  ChevronRight
-} from 'lucide-react';
-import { useTheme } from '../../hooks/useTheme';
-import { UnifiedThemeSelector } from '../common/UnifiedThemeSelector';
-import { cn } from '../../utils/theme';
-import Logo from '../ui/Logo';
+  ChevronRight,
+} from "lucide-react";
+import { useTheme } from "../../hooks/useTheme";
+import { UnifiedThemeSelector } from "../common/UnifiedThemeSelector";
+import { cn } from "../../utils/theme";
+import Logo from "../ui/Logo";
 
 interface NavbarProps {
   onToggleSidebar?: () => void;
   transparent?: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, transparent = false }) => {
+const Navbar: React.FC<NavbarProps> = ({
+  onToggleSidebar,
+  transparent = false,
+}) => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  
+
   const { isDark } = useTheme({
-    context: 'navbar'
+    context: "navbar",
   });
 
   const navClassName = cn(
     transparent
-      ? 'bg-transparent border-none text-white backdrop-blur-sm'
-      : 'bg-background/80 backdrop-blur-xl border-b border-border/50',
-    'px-4 lg:px-6 py-3 sticky top-0 z-50 transition-all duration-300',
+      ? "bg-transparent border-none text-white backdrop-blur-sm"
+      : "bg-background/80 backdrop-blur-xl border-b border-border/50",
+    "px-4 lg:px-6 py-3 sticky top-0 z-50 transition-all duration-300",
   );
 
-  const linkClassName = transparent 
-    ? 'hover:text-white/80 transition-all duration-200' 
-    : 'text-text/70 hover:text-text transition-all duration-200';
+  const linkClassName = transparent
+    ? "hover:text-white/80 transition-all duration-200"
+    : "text-text/70 hover:text-text transition-all duration-200";
 
   const buttonClassName = transparent
-    ? 'px-6 py-2.5 border border-white/30 hover:bg-white/10 text-white font-medium rounded-xl transition-all duration-200 hover:border-white/50'
-    : 'px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl';
+    ? "px-6 py-2.5 border border-white/30 hover:bg-white/10 text-white font-medium rounded-xl transition-all duration-200 hover:border-white/50"
+    : "px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl";
 
   const handleLogout = async () => {
     try {
       await logout();
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
   };
 
   const generateBreadcrumbs = () => {
-    const pathSegments = location.pathname.split('/').filter(Boolean);
-    if (location.pathname === '/dashboard') {
-      return [{ label: 'Dashboard', path: '/dashboard' }];
+    const pathSegments = location.pathname.split("/").filter(Boolean);
+    if (location.pathname === "/dashboard") {
+      return [{ label: "Dashboard", path: "/dashboard" }];
     }
-    const breadcrumbs = [{ label: 'Home', path: '/dashboard' }];
-    let currentPath = '';
+    const breadcrumbs = [{ label: "Home", path: "/dashboard" }];
+    let currentPath = "";
     pathSegments.forEach((segment) => {
       currentPath += `/${segment}`;
       const label =
-        segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
+        segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, " ");
       breadcrumbs.push({ label, path: currentPath });
     });
     return breadcrumbs;
@@ -74,11 +77,11 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, transparent = false })
   const breadcrumbs = generateBreadcrumbs();
 
   const getUserInitials = () => {
-    const name = user?.name || user?.email || 'U';
+    const name = user?.name || user?.email || "U";
     return name
-      .split(' ')
+      .split(" ")
       .map((n) => n[0])
-      .join('')
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
@@ -120,10 +123,10 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, transparent = false })
                       className={cn(
                         index === breadcrumbs.length - 1
                           ? transparent
-                            ? 'text-white font-semibold bg-white/10 px-3 py-1.5 rounded-lg'
-                            : 'text-text font-semibold bg-surface px-3 py-1.5 rounded-lg'
+                            ? "text-white font-semibold bg-white/10 px-3 py-1.5 rounded-lg"
+                            : "text-text font-semibold bg-surface px-3 py-1.5 rounded-lg"
                           : `${linkClassName} hover:bg-surface/50 px-2 py-1 rounded-lg`,
-                        'truncate transition-all duration-200',
+                        "truncate transition-all duration-200",
                       )}
                     >
                       {crumb.label}
@@ -197,26 +200,34 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, transparent = false })
                     />
                     <div className="absolute right-0 mt-2 w-80 bg-background border border-border rounded-2xl shadow-xl z-40 overflow-hidden">
                       <div className="p-4 border-b border-border">
-                        <h3 className="font-semibold text-text">Notifications</h3>
+                        <h3 className="font-semibold text-text">
+                          Notifications
+                        </h3>
                       </div>
                       <div className="max-h-80 overflow-y-auto">
                         <div className="p-4 hover:bg-surface transition-colors duration-200">
                           <p className="text-sm text-text/80">
                             Portfolio performance update available
                           </p>
-                          <p className="text-xs text-text/50 mt-1">2 minutes ago</p>
+                          <p className="text-xs text-text/50 mt-1">
+                            2 minutes ago
+                          </p>
                         </div>
                         <div className="p-4 hover:bg-surface transition-colors duration-200">
                           <p className="text-sm text-text/80">
                             New trading signal detected
                           </p>
-                          <p className="text-xs text-text/50 mt-1">5 minutes ago</p>
+                          <p className="text-xs text-text/50 mt-1">
+                            5 minutes ago
+                          </p>
                         </div>
                         <div className="p-4 hover:bg-surface transition-colors duration-200">
                           <p className="text-sm text-text/80">
                             Market analysis completed
                           </p>
-                          <p className="text-xs text-text/50 mt-1">1 hour ago</p>
+                          <p className="text-xs text-text/50 mt-1">
+                            1 hour ago
+                          </p>
                         </div>
                       </div>
                       <div className="p-3 border-t border-border">
@@ -255,10 +266,10 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, transparent = false })
                           </div>
                           <div className="min-w-0">
                             <p className="font-semibold text-text truncate">
-                              {user?.name || 'User'}
+                              {user?.name || "User"}
                             </p>
                             <p className="text-sm text-text/60 truncate">
-                              {user?.email || 'user@example.com'}
+                              {user?.email || "user@example.com"}
                             </p>
                           </div>
                         </div>

@@ -1,7 +1,8 @@
 {
   "name": "stockpulse",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "private": true,
+  "type": "module",
   "license": "Apache-2.0",
   "scripts": {
     "dev": "vite",

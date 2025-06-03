@@ -3,14 +3,14 @@
  * Displays top gaining, losing, and most active stocks.
  * Part of Story 2.2: Customizable Widget System
  */
-'use client';
+"use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 // import Image from 'next/image'; // Removed next/image
-import { WidgetComponentProps } from '../../types/dashboard';
-import { TopMoversData, TopMoverItem } from '../../types/widget-data';
-import { useTheme } from '../../contexts/ThemeContext';
-import { apiClient } from '../../services/api';
+import { WidgetComponentProps } from "../../types/dashboard";
+import { TopMoversData, TopMoverItem } from "../../types/widget-data";
+import { useTheme } from "../../contexts/ThemeContext";
+import { apiClient } from "../../services/api";
 import {
   TrendingUp,
   TrendingDown,
@@ -20,27 +20,27 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Flame, // For most active
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from '../ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'; // Assuming Tabs component
-import { ScrollArea } from '../ui/scroll-area';
+} from "../ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"; // Assuming Tabs component
+import { ScrollArea } from "../ui/scroll-area";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { cn } from '../../utils/cn';
-import { Button } from '../ui/button';
+} from "../ui/select";
+import { cn } from "../../utils/cn";
+import { Button } from "../ui/button";
 
-const MARKET_OPTIONS = ['US Equities', 'NASDAQ', 'NYSE', 'Crypto', 'Forex'];
+const MARKET_OPTIONS = ["US Equities", "NASDAQ", "NYSE", "Crypto", "Forex"];
 
 const TopMovers: React.FC<WidgetComponentProps> = ({
   widgetId,
@@ -53,7 +53,7 @@ const TopMovers: React.FC<WidgetComponentProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const initialMarket = config.config?.market || 'US Equities';
+  const initialMarket = config.config?.market || "US Equities";
   const [selectedMarket, setSelectedMarket] = useState<string>(initialMarket);
   const moversCount = config.config?.count || 5;
 
@@ -68,11 +68,11 @@ const TopMovers: React.FC<WidgetComponentProps> = ({
       if (response.success && response.data) {
         setMoversData(response.data);
       } else {
-        setError(response.message || 'Failed to fetch top movers.');
+        setError(response.message || "Failed to fetch top movers.");
       }
     } catch (err: any) {
       console.error(`[${widgetId}] Error fetching top movers:`, err);
-      setError(err.message || 'An unexpected error occurred.');
+      setError(err.message || "An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
@@ -94,7 +94,7 @@ const TopMovers: React.FC<WidgetComponentProps> = ({
 
   const renderMoverItem = (
     item: TopMoverItem,
-    type: 'gainer' | 'loser' | 'active',
+    type: "gainer" | "loser" | "active",
   ) => (
     <div
       key={item.id}
@@ -106,8 +106,8 @@ const TopMovers: React.FC<WidgetComponentProps> = ({
             <img
               src={item.logoUrl}
               alt={`${item.name} logo`}
-              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-              onError={(e) => (e.currentTarget.style.display = 'none')}
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+              onError={(e) => (e.currentTarget.style.display = "none")}
             />
           </div>
         )}
@@ -124,11 +124,11 @@ const TopMovers: React.FC<WidgetComponentProps> = ({
         </p>
         <p
           className={cn(
-            'text-xs',
-            item.changePercent >= 0 ? 'text-success-fg' : 'text-danger-fg',
+            "text-xs",
+            item.changePercent >= 0 ? "text-success-fg" : "text-danger-fg",
           )}
         >
-          {item.changePercent >= 0 ? '+' : ''}
+          {item.changePercent >= 0 ? "+" : ""}
           {item.changePercent.toFixed(2)}%
         </p>
       </div>
@@ -137,7 +137,7 @@ const TopMovers: React.FC<WidgetComponentProps> = ({
 
   const renderMoverList = (
     items: TopMoverItem[],
-    type: 'gainer' | 'loser' | 'active',
+    type: "gainer" | "loser" | "active",
   ) => {
     if (!items || items.length === 0) {
       return (
@@ -151,12 +151,12 @@ const TopMovers: React.FC<WidgetComponentProps> = ({
 
   if (isLoading && !moversData) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center">
               <Flame className="h-4 w-4 mr-2 text-primary" />
-              {config.title || 'Top Movers'}
+              {config.title || "Top Movers"}
             </CardTitle>
             <RefreshCw className="h-4 w-4 text-muted-foreground animate-spin" />
           </div>
@@ -170,12 +170,12 @@ const TopMovers: React.FC<WidgetComponentProps> = ({
 
   if (error) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center text-danger-fg">
               <AlertCircle className="h-4 w-4 mr-2" />
-              {config.title || 'Top Movers'}
+              {config.title || "Top Movers"}
             </CardTitle>
             <Button
               variant="ghost"
@@ -196,12 +196,12 @@ const TopMovers: React.FC<WidgetComponentProps> = ({
   }
 
   return (
-    <Card className={cn('h-full flex flex-col', config.className)}>
+    <Card className={cn("h-full flex flex-col", config.className)}>
       <CardHeader className="pb-2 pt-3">
         <div className="flex items-center justify-between mb-2">
           <CardTitle className="text-base font-semibold flex items-center">
             <Flame className="h-4 w-4 mr-2 text-primary" />
-            {config.title || 'Top Movers'}
+            {config.title || "Top Movers"}
           </CardTitle>
           <Button
             variant="ghost"
@@ -210,7 +210,7 @@ const TopMovers: React.FC<WidgetComponentProps> = ({
             title="Refresh data"
             className="h-7 w-7"
           >
-            <RefreshCw className={cn('h-4 w-4', isLoading && 'animate-spin')} />
+            <RefreshCw className={cn("h-4 w-4", isLoading && "animate-spin")} />
           </Button>
         </div>
         {isEditMode && (
@@ -228,10 +228,10 @@ const TopMovers: React.FC<WidgetComponentProps> = ({
           </Select>
         )}
         <CardDescription className="text-xs text-muted-foreground pt-1">
-          Showing top {moversCount} for {selectedMarket}. Last updated:{' '}
+          Showing top {moversCount} for {selectedMarket}. Last updated:{" "}
           {moversData
             ? new Date(moversData.lastUpdated).toLocaleTimeString()
-            : 'N/A'}
+            : "N/A"}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-grow p-0 overflow-hidden">
@@ -265,13 +265,13 @@ const TopMovers: React.FC<WidgetComponentProps> = ({
               </TabsList>
               <ScrollArea className="flex-grow px-2 pb-1">
                 <TabsContent value="gainers" className="mt-0">
-                  {renderMoverList(moversData.gainers, 'gainer')}
+                  {renderMoverList(moversData.gainers, "gainer")}
                 </TabsContent>
                 <TabsContent value="losers" className="mt-0">
-                  {renderMoverList(moversData.losers, 'loser')}
+                  {renderMoverList(moversData.losers, "loser")}
                 </TabsContent>
                 <TabsContent value="active" className="mt-0">
-                  {renderMoverList(moversData.mostActive, 'active')}
+                  {renderMoverList(moversData.mostActive, "active")}
                 </TabsContent>
               </ScrollArea>
             </Tabs>

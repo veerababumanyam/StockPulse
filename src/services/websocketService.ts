@@ -1,9 +1,36 @@
 /**
- * WebSocket Service - Real-time Market Data Updates
- * Handles real-time stock price updates for Story 2.4
+ * WebSocket Service for Real-time Market Insights
+ * Handles connection to Market Research Agent WebSocket endpoint
  */
 
-import { WatchlistItem } from '../types/widget-data';
+import { getEnvVar } from "../utils/common/env";
+
+export interface WebSocketMessage {
+  type: string;
+  data: any;
+  timestamp: string;
+  source?: string;
+}
+
+export interface MarketInsightUpdate {
+  id: string;
+  title: string;
+  content: string;
+  insight_type: string;
+  priority: string;
+  confidence: number;
+  sentiment?: string;
+  reference_symbol?: string;
+  source: string;
+  tags: string[];
+  agent_id: string;
+  timestamp: string;
+  actionable: boolean;
+  ag_ui_components?: Array<{
+    type: string;
+    props: Record<string, any>;
+  }>;
+}
 
 export interface MarketDataUpdate {
   symbol: string;
@@ -14,423 +41,451 @@ export interface MarketDataUpdate {
   timestamp: string;
 }
 
-export interface WebSocketConfig {
-  url: string;
-  reconnectAttempts: number;
-  reconnectInterval: number;
-  heartbeatInterval: number;
-  developmentMode: boolean;
+export interface WatchlistItem {
+  symbol: string;
+  name?: string;
+  price: number;
+  change: number;
+  changePercent: number;
+  volume: number;
 }
 
-export type MarketDataCallback = (update: MarketDataUpdate) => void;
-export type ConnectionStatusCallback = (status: 'connected' | 'disconnected' | 'connecting' | 'error') => void;
+export type MessageHandler = (message: WebSocketMessage) => void;
+export type ErrorHandler = (error: Event) => void;
+export type ConnectionHandler = (connected: boolean) => void;
 
-/**
- * WebSocket Service for real-time market data
- */
-export class WebSocketService {
-  private static instance: WebSocketService;
-  private socket: WebSocket | null = null;
-  private connectionStatus: 'connected' | 'disconnected' | 'connecting' | 'error' = 'disconnected';
-  private subscriptions: Map<string, Set<MarketDataCallback>> = new Map();
-  private statusCallbacks: Set<ConnectionStatusCallback> = new Set();
+class WebSocketService {
+  private ws: WebSocket | null = null;
   private reconnectAttempts = 0;
-  private heartbeatTimer: NodeJS.Timeout | null = null;
+  private maxReconnectAttempts = 5;
+  private reconnectDelay = 1000;
   private reconnectTimer: NodeJS.Timeout | null = null;
-  private developmentMockTimer: NodeJS.Timeout | null = null;
+  private heartbeatTimer: NodeJS.Timeout | null = null;
+  private heartbeatInterval = 30000; // 30 seconds
   
-  private readonly config: WebSocketConfig = {
-    url: (typeof process !== 'undefined' && process.env?.REACT_APP_WS_URL) 
-      || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_WS_URL)
-      || 'ws://localhost:8000/ws/market-data',
-    reconnectAttempts: 3, // Reduced for development
-    reconnectInterval: 10000, // Increased interval for development
-    heartbeatInterval: 30000,
-    developmentMode: (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development') 
-      || (typeof import.meta !== 'undefined' && import.meta.env?.DEV === true)
-      || true, // Default to development mode
-  };
+  private messageHandlers = new Map<string, Set<MessageHandler>>();
+  private errorHandlers = new Set<ErrorHandler>();
+  private connectionHandlers = new Set<ConnectionHandler>();
+  
+  private readonly baseUrl: string;
+  private isConnecting = false;
+  private shouldReconnect = true;
 
-  static getInstance(): WebSocketService {
-    if (!WebSocketService.instance) {
-      WebSocketService.instance = new WebSocketService();
-    }
-    return WebSocketService.instance;
+  constructor() {
+    this.baseUrl = getEnvVar("VITE_MARKET_RESEARCH_AGENT_URL", "http://localhost:9003")
+      .replace("http://", "ws://")
+      .replace("https://", "wss://");
   }
 
   /**
-   * Connect to WebSocket server
+   * Connect to the WebSocket server
    */
-  connect(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (this.socket?.readyState === WebSocket.OPEN) {
-        resolve();
-        return;
-      }
+  async connect(): Promise<void> {
+    if (this.ws?.readyState === WebSocket.OPEN || this.isConnecting) {
+      return;
+    }
 
-      // In development mode, if we've already failed multiple times, use mock data
-      if (this.config.developmentMode && this.reconnectAttempts >= this.config.reconnectAttempts) {
-        console.log('[WebSocketService] Using mock data in development mode');
-        this.setConnectionStatus('connected');
-        this.startDevelopmentMockData();
-        resolve();
-        return;
-      }
+    this.isConnecting = true;
+    this.shouldReconnect = true;
 
-      this.setConnectionStatus('connecting');
+    try {
+      const wsUrl = `${this.baseUrl}/ws`;
+      console.log(`[WebSocketService] Connecting to: ${wsUrl}`);
       
-      try {
-        this.socket = new WebSocket(this.config.url);
-        
-        this.socket.onopen = () => {
-          console.log('[WebSocketService] Connected to market data stream');
-          this.setConnectionStatus('connected');
-          this.reconnectAttempts = 0;
-          this.startHeartbeat();
-          resolve();
-        };
+      this.ws = new WebSocket(wsUrl);
+      
+      this.ws.onopen = this.handleOpen.bind(this);
+      this.ws.onmessage = this.handleMessage.bind(this);
+      this.ws.onclose = this.handleClose.bind(this);
+      this.ws.onerror = this.handleError.bind(this);
 
-        this.socket.onmessage = (event) => {
-          this.handleMessage(event);
-        };
-
-        this.socket.onclose = (event) => {
-          console.log('[WebSocketService] Connection closed:', event.reason);
-          this.setConnectionStatus('disconnected');
-          this.stopHeartbeat();
-          
-          // In development mode, be less aggressive with reconnection
-          if (this.config.developmentMode) {
-            this.attemptReconnectGracefully();
-          } else {
-            this.attemptReconnect();
-          }
-        };
-
-        this.socket.onerror = (error) => {
-          if (this.config.developmentMode) {
-            console.warn('[WebSocketService] Connection failed (development mode)');
-          } else {
-            console.error('[WebSocketService] Connection error:', error);
-          }
-          this.setConnectionStatus('error');
-          reject(error);
-        };
-
-        // Shorter timeout for development mode
-        const timeout = this.config.developmentMode ? 3000 : 10000;
-        setTimeout(() => {
-          if (this.socket?.readyState !== WebSocket.OPEN) {
-            this.socket?.close();
-            reject(new Error('WebSocket connection timeout'));
-          }
-        }, timeout);
-
-      } catch (error) {
-        console.error('[WebSocketService] Failed to create WebSocket:', error);
-        this.setConnectionStatus('error');
-        reject(error);
-      }
-    });
+    } catch (error) {
+      console.error("[WebSocketService] Connection error:", error);
+      this.isConnecting = false;
+      throw error;
+    }
   }
 
   /**
-   * Disconnect from WebSocket server
+   * Disconnect from the WebSocket server
    */
   disconnect(): void {
-    if (this.reconnectTimer) {
-      clearTimeout(this.reconnectTimer);
-      this.reconnectTimer = null;
-    }
-
-    this.stopHeartbeat();
-    this.stopDevelopmentMockData();
+    console.log("[WebSocketService] Disconnecting...");
     
-    if (this.socket) {
-      this.socket.close(1000, 'User initiated disconnect');
-      this.socket = null;
+    this.shouldReconnect = false;
+    this.isConnecting = false;
+    
+    this.clearTimers();
+    
+    if (this.ws) {
+      this.ws.close(1000, "Client disconnect");
+      this.ws = null;
     }
     
-    this.setConnectionStatus('disconnected');
+    this.notifyConnectionHandlers(false);
   }
 
   /**
-   * Subscribe to real-time updates for a symbol
+   * Check if WebSocket is connected
    */
-  subscribe(symbol: string, callback: MarketDataCallback): () => void {
-    const normalizedSymbol = symbol.toUpperCase();
-    
-    if (!this.subscriptions.has(normalizedSymbol)) {
-      this.subscriptions.set(normalizedSymbol, new Set());
-    }
-    
-    this.subscriptions.get(normalizedSymbol)!.add(callback);
-    
-    // Send subscription request to server
-    this.sendMessage({
-      action: 'subscribe',
-      symbol: normalizedSymbol
-    });
-
-    console.log(`[WebSocketService] Subscribed to ${normalizedSymbol}`);
-
-    // Return unsubscribe function
-    return () => {
-      this.unsubscribe(normalizedSymbol, callback);
-    };
+  isConnected(): boolean {
+    return this.ws?.readyState === WebSocket.OPEN;
   }
 
   /**
-   * Unsubscribe from real-time updates for a symbol
+   * Send a message through the WebSocket
    */
-  unsubscribe(symbol: string, callback: MarketDataCallback): void {
-    const normalizedSymbol = symbol.toUpperCase();
-    const callbacks = this.subscriptions.get(normalizedSymbol);
-    
-    if (callbacks) {
-      callbacks.delete(callback);
-      
-      // If no more callbacks for this symbol, unsubscribe from server
-      if (callbacks.size === 0) {
-        this.subscriptions.delete(normalizedSymbol);
-        this.sendMessage({
-          action: 'unsubscribe',
-          symbol: normalizedSymbol
-        });
-        console.log(`[WebSocketService] Unsubscribed from ${normalizedSymbol}`);
+  send(message: any): boolean {
+    if (!this.isConnected()) {
+      console.warn("[WebSocketService] Cannot send message: not connected");
+      return false;
+    }
+
+    try {
+      this.ws!.send(JSON.stringify(message));
+      return true;
+    } catch (error) {
+      console.error("[WebSocketService] Send error:", error);
+      return false;
+    }
+  }
+
+  /**
+   * Subscribe to specific message types
+   */
+  subscribe(type: string, handler: MessageHandler): void {
+    if (!this.messageHandlers.has(type)) {
+      this.messageHandlers.set(type, new Set());
+    }
+    this.messageHandlers.get(type)!.add(handler);
+
+    // Send subscription message if connected
+    if (this.isConnected()) {
+      this.send({
+        type: "subscribe",
+        event: type,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
+  /**
+   * Unsubscribe from message types
+   */
+  unsubscribe(type: string, handler: MessageHandler): void {
+    const handlers = this.messageHandlers.get(type);
+    if (handlers) {
+      handlers.delete(handler);
+      if (handlers.size === 0) {
+        this.messageHandlers.delete(type);
+        
+        // Send unsubscribe message if connected
+        if (this.isConnected()) {
+          this.send({
+            type: "unsubscribe",
+            event: type,
+            timestamp: new Date().toISOString()
+          });
+        }
       }
     }
   }
 
   /**
-   * Subscribe to connection status updates
+   * Subscribe to connection status changes
    */
-  onConnectionStatusChange(callback: ConnectionStatusCallback): () => void {
-    this.statusCallbacks.add(callback);
-    
-    // Immediately call with current status
-    callback(this.connectionStatus);
-    
-    // Return unsubscribe function
-    return () => {
-      this.statusCallbacks.delete(callback);
+  onConnectionChange(handler: ConnectionHandler): void {
+    this.connectionHandlers.add(handler);
+  }
+
+  /**
+   * Unsubscribe from connection status changes
+   */
+  offConnectionChange(handler: ConnectionHandler): void {
+    this.connectionHandlers.delete(handler);
+  }
+
+  /**
+   * Subscribe to WebSocket errors
+   */
+  onError(handler: ErrorHandler): void {
+    this.errorHandlers.add(handler);
+  }
+
+  /**
+   * Unsubscribe from WebSocket errors
+   */
+  offError(handler: ErrorHandler): void {
+    this.errorHandlers.delete(handler);
+  }
+
+  /**
+   * Get connection status information
+   */
+  getStatus(): {
+    connected: boolean;
+    readyState: number | null;
+    reconnectAttempts: number;
+    maxReconnectAttempts: number;
+  } {
+    return {
+      connected: this.isConnected(),
+      readyState: this.ws?.readyState ?? null,
+      reconnectAttempts: this.reconnectAttempts,
+      maxReconnectAttempts: this.maxReconnectAttempts,
     };
   }
 
   /**
-   * Get current connection status
+   * Get connection status as string
+   * Compatibility method for existing code
    */
   getConnectionStatus(): string {
-    return this.connectionStatus;
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      return "connected";
+    } else if (this.ws?.readyState === WebSocket.CONNECTING || this.isConnecting) {
+      return "connecting";
+    } else {
+      return "disconnected";
+    }
   }
 
   /**
-   * Subscribe to multiple symbols at once
+   * Subscribe to connection status changes
+   * Compatibility method for existing code
    */
-  subscribeToWatchlist(watchlistItems: WatchlistItem[], callback: MarketDataCallback): () => void {
-    const unsubscribeFunctions = watchlistItems.map(item => 
-      this.subscribe(item.symbol, callback)
-    );
-
-    // Return function to unsubscribe from all
-    return () => {
-      unsubscribeFunctions.forEach(unsub => unsub());
+  onConnectionStatusChange(callback: (status: string) => void): void {
+    const handler = (connected: boolean) => {
+      const status = connected ? "connected" : "disconnected";
+      callback(status);
     };
+    this.onConnectionChange(handler);
   }
 
   // Private methods
+  private handleOpen(event: Event): void {
+    console.log("[WebSocketService] Connected successfully");
+    
+    this.isConnecting = false;
+    this.reconnectAttempts = 0;
+    
+    this.startHeartbeat();
+    this.notifyConnectionHandlers(true);
+    
+    // Re-subscribe to all active subscriptions
+    this.resubscribeAll();
+  }
 
   private handleMessage(event: MessageEvent): void {
     try {
-      const data = JSON.parse(event.data);
+      const message: WebSocketMessage = JSON.parse(event.data);
       
-      switch (data.type) {
-        case 'market_data':
-          this.handleMarketDataUpdate(data);
-          break;
-        case 'heartbeat':
-          this.handleHeartbeat(data);
-          break;
-        case 'error':
-          console.error('[WebSocketService] Server error:', data.message);
-          break;
-        default:
-          console.warn('[WebSocketService] Unknown message type:', data.type);
+      // Handle heartbeat responses
+      if (message.type === "pong") {
+        return;
       }
-    } catch (error) {
-      console.error('[WebSocketService] Failed to parse message:', error);
-    }
-  }
-
-  private handleMarketDataUpdate(data: any): void {
-    const update: MarketDataUpdate = {
-      symbol: data.symbol,
-      price: data.price,
-      change: data.change,
-      changePercent: data.changePercent,
-      volume: data.volume,
-      timestamp: data.timestamp || new Date().toISOString(),
-    };
-
-    // Notify all subscribers for this symbol
-    const callbacks = this.subscriptions.get(update.symbol);
-    if (callbacks) {
-      callbacks.forEach(callback => {
-        try {
-          callback(update);
-        } catch (error) {
-          console.error('[WebSocketService] Error in callback:', error);
-        }
-      });
-    }
-  }
-
-  private handleHeartbeat(data: any): void {
-    // Respond to server heartbeat
-    this.sendMessage({
-      action: 'heartbeat_response',
-      timestamp: new Date().toISOString()
-    });
-  }
-
-  private sendMessage(message: any): void {
-    if (this.socket?.readyState === WebSocket.OPEN) {
-      this.socket.send(JSON.stringify(message));
-    } else {
-      console.warn('[WebSocketService] Cannot send message - not connected');
-    }
-  }
-
-  private setConnectionStatus(status: 'connected' | 'disconnected' | 'connecting' | 'error'): void {
-    if (this.connectionStatus !== status) {
-      this.connectionStatus = status;
       
-      // Notify all status callbacks
-      this.statusCallbacks.forEach(callback => {
-        try {
-          callback(status);
-        } catch (error) {
-          console.error('[WebSocketService] Error in status callback:', error);
-        }
-      });
+      // Distribute message to handlers
+      const handlers = this.messageHandlers.get(message.type);
+      if (handlers && handlers.size > 0) {
+        handlers.forEach(handler => {
+          try {
+            handler(message);
+          } catch (error) {
+            console.error(`[WebSocketService] Handler error for ${message.type}:`, error);
+          }
+        });
+      } else {
+        console.log(`[WebSocketService] No handlers for message type: ${message.type}`);
+      }
+      
+    } catch (error) {
+      console.error("[WebSocketService] Message parse error:", error);
     }
+  }
+
+  private handleClose(event: CloseEvent): void {
+    console.log(`[WebSocketService] Connection closed: ${event.code} - ${event.reason}`);
+    
+    this.isConnecting = false;
+    this.clearTimers();
+    this.notifyConnectionHandlers(false);
+    
+    if (this.shouldReconnect && this.reconnectAttempts < this.maxReconnectAttempts) {
+      this.scheduleReconnect();
+    } else if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+      console.error("[WebSocketService] Max reconnection attempts reached");
+    }
+  }
+
+  private handleError(event: Event): void {
+    console.error("[WebSocketService] WebSocket error:", event);
+    
+    this.errorHandlers.forEach(handler => {
+      try {
+        handler(event);
+      } catch (error) {
+        console.error("[WebSocketService] Error handler failed:", error);
+      }
+    });
+    
+    if (this.isConnecting) {
+      this.isConnecting = false;
+    }
+  }
+
+  private scheduleReconnect(): void {
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+    }
+    
+    const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts);
+    console.log(`[WebSocketService] Scheduling reconnect in ${delay}ms (attempt ${this.reconnectAttempts + 1}/${this.maxReconnectAttempts})`);
+    
+    this.reconnectTimer = setTimeout(() => {
+      this.reconnectAttempts++;
+      this.connect().catch(error => {
+        console.error("[WebSocketService] Reconnection failed:", error);
+      });
+    }, delay);
   }
 
   private startHeartbeat(): void {
-    this.stopHeartbeat();
+    this.clearHeartbeat();
     
     this.heartbeatTimer = setInterval(() => {
-      this.sendMessage({
-        action: 'heartbeat',
-        timestamp: new Date().toISOString()
-      });
-    }, this.config.heartbeatInterval);
+      if (this.isConnected()) {
+        this.send({
+          type: "ping",
+          timestamp: new Date().toISOString()
+        });
+      }
+    }, this.heartbeatInterval);
   }
 
-  private stopHeartbeat(): void {
+  private clearHeartbeat(): void {
     if (this.heartbeatTimer) {
       clearInterval(this.heartbeatTimer);
       this.heartbeatTimer = null;
     }
   }
 
-  private attemptReconnect(): void {
-    if (this.reconnectAttempts >= this.config.reconnectAttempts) {
-      console.error('[WebSocketService] Max reconnection attempts reached');
-      return;
+  private clearTimers(): void {
+    this.clearHeartbeat();
+    
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
     }
-
-    this.reconnectAttempts++;
-    console.log(`[WebSocketService] Attempting reconnection ${this.reconnectAttempts}/${this.config.reconnectAttempts}`);
-
-    this.reconnectTimer = setTimeout(() => {
-      this.connect().catch(error => {
-        console.error('[WebSocketService] Reconnection failed:', error);
-      });
-    }, this.config.reconnectInterval);
   }
 
-  private attemptReconnectGracefully(): void {
-    if (this.reconnectAttempts >= this.config.reconnectAttempts) {
-      if (this.config.developmentMode) {
-        console.log('[WebSocketService] Switching to mock data (no WebSocket server available)');
-        this.setConnectionStatus('connected');
-        this.startDevelopmentMockData();
-      } else {
-        console.error('[WebSocketService] Max reconnection attempts reached');
+  private notifyConnectionHandlers(connected: boolean): void {
+    this.connectionHandlers.forEach(handler => {
+      try {
+        handler(connected);
+      } catch (error) {
+        console.error("[WebSocketService] Connection handler error:", error);
       }
-      return;
-    }
+    });
+  }
 
-    this.reconnectAttempts++;
-    
-    if (this.config.developmentMode) {
-      console.log(`[WebSocketService] Reconnection attempt ${this.reconnectAttempts}/${this.config.reconnectAttempts} (development mode)`);
-    }
-
-    this.reconnectTimer = setTimeout(() => {
-      this.connect().catch(error => {
-        if (!this.config.developmentMode) {
-          console.error('[WebSocketService] Reconnection failed:', error);
-        }
+  private resubscribeAll(): void {
+    for (const type of this.messageHandlers.keys()) {
+      this.send({
+        type: "subscribe",
+        event: type,
+        timestamp: new Date().toISOString()
       });
-    }, this.config.reconnectInterval);
-  }
-
-  private startDevelopmentMockData(): void {
-    if (!this.config.developmentMode) return;
-
-    this.stopDevelopmentMockData();
-    
-    // Generate mock market data updates every 2-5 seconds
-    const generateMockUpdate = () => {
-      const symbols = Array.from(this.subscriptions.keys());
-      if (symbols.length === 0) return;
-
-      const symbol = symbols[Math.floor(Math.random() * symbols.length)];
-      const basePrice = 100 + Math.random() * 200; // $100-$300
-      const change = (Math.random() - 0.5) * 10; // -$5 to +$5
-      const changePercent = (change / basePrice) * 100;
-
-      const mockUpdate: MarketDataUpdate = {
-        symbol,
-        price: basePrice + change,
-        change,
-        changePercent,
-        volume: Math.floor(Math.random() * 10000000) + 1000000,
-        timestamp: new Date().toISOString(),
-      };
-
-      this.handleMarketDataUpdate({ ...mockUpdate, type: 'market_data' });
-    };
-
-    this.developmentMockTimer = setInterval(generateMockUpdate, 3000);
-    console.log('[WebSocketService] Mock data simulation started');
-  }
-
-  private stopDevelopmentMockData(): void {
-    if (this.developmentMockTimer) {
-      clearInterval(this.developmentMockTimer);
-      this.developmentMockTimer = null;
     }
   }
 }
 
-// Export singleton instance
-export const webSocketService = WebSocketService.getInstance();
+// Global WebSocket service instance
+export const webSocketService = new WebSocketService();
 
-// Auto-connect when service is imported (optional)
-// webSocketService.connect().catch(console.error);
+/**
+ * Connect to market data WebSocket
+ * Wrapper function for compatibility with existing code
+ */
+export const connectToMarketData = async (): Promise<void> => {
+  return webSocketService.connect();
+};
 
-// Export convenience functions
-export const subscribeToSymbol = (symbol: string, callback: MarketDataCallback) => 
-  webSocketService.subscribe(symbol, callback);
+/**
+ * Subscribe to watchlist updates
+ * Wrapper function for compatibility with existing code
+ */
+export const subscribeToWatchlist = (
+  items: WatchlistItem[],
+  callback: (update: MarketDataUpdate) => void
+): (() => void) => {
+  const handler = (message: WebSocketMessage) => {
+    if (message.type === 'market_data_update' && message.data) {
+      // Transform the message data to MarketDataUpdate format
+      const update: MarketDataUpdate = {
+        symbol: message.data.symbol || '',
+        price: message.data.price || 0,
+        change: message.data.change || 0,
+        changePercent: message.data.changePercent || 0,
+        volume: message.data.volume || 0,
+        timestamp: message.timestamp
+      };
+      callback(update);
+    }
+  };
 
-export const subscribeToWatchlist = (watchlistItems: WatchlistItem[], callback: MarketDataCallback) => 
-  webSocketService.subscribeToWatchlist(watchlistItems, callback);
+  webSocketService.subscribe('market_data_update', handler);
+  
+  // Return unsubscribe function
+  return () => {
+    webSocketService.unsubscribe('market_data_update', handler);
+  };
+};
 
-export const connectToMarketData = () => 
-  webSocketService.connect();
+/**
+ * Subscribe to single symbol updates
+ * Wrapper function for compatibility with existing code
+ */
+export const subscribeToSymbol = (
+  symbol: string,
+  callback: (update: MarketDataUpdate) => void
+): (() => void) => {
+  const handler = (message: WebSocketMessage) => {
+    if (message.type === 'market_data_update' && message.data && message.data.symbol === symbol) {
+      // Transform the message data to MarketDataUpdate format
+      const update: MarketDataUpdate = {
+        symbol: message.data.symbol || '',
+        price: message.data.price || 0,
+        change: message.data.change || 0,
+        changePercent: message.data.changePercent || 0,
+        volume: message.data.volume || 0,
+        timestamp: message.timestamp
+      };
+      callback(update);
+    }
+  };
 
-export const disconnectFromMarketData = () => 
-  webSocketService.disconnect(); 
+  webSocketService.subscribe('market_data_update', handler);
+  
+  // Return unsubscribe function
+  return () => {
+    webSocketService.unsubscribe('market_data_update', handler);
+  };
+};
+
+// Auto-connect on module load (can be disabled if needed)
+if (typeof window !== "undefined") {
+  // Only connect in browser environment
+  webSocketService.connect().catch(error => {
+    console.warn("[WebSocketService] Initial connection failed:", error);
+  });
+}
+
+// Cleanup on page unload
+if (typeof window !== "undefined") {
+  window.addEventListener("beforeunload", () => {
+    webSocketService.disconnect();
+  });
+}
+
+export default webSocketService;

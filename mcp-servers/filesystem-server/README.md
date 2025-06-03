@@ -61,6 +61,7 @@ Create a custom configuration file:
 ```
 
 Set the config path:
+
 ```bash
 export MCP_FILESYSTEM_CONFIG=/path/to/config.json
 npm start
@@ -69,6 +70,7 @@ npm start
 ## MCP Tools Available
 
 ### 1. `browse_directory`
+
 Browse directory contents with security filtering.
 
 ```json
@@ -83,6 +85,7 @@ Browse directory contents with security filtering.
 ```
 
 ### 2. `read_file`
+
 Read file contents with validation and encoding support.
 
 ```json
@@ -97,6 +100,7 @@ Read file contents with validation and encoding support.
 ```
 
 ### 3. `write_file`
+
 Write content to files with backup and validation.
 
 ```json
@@ -112,6 +116,7 @@ Write content to files with backup and validation.
 ```
 
 ### 4. `delete_file`
+
 Delete files or directories with optional backup.
 
 ```json
@@ -126,6 +131,7 @@ Delete files or directories with optional backup.
 ```
 
 ### 5. `get_file_info`
+
 Get detailed metadata about files or directories.
 
 ```json
@@ -138,6 +144,7 @@ Get detailed metadata about files or directories.
 ```
 
 ### 6. `search_files`
+
 Search for files matching patterns.
 
 ```json
@@ -155,25 +162,33 @@ Search for files matching patterns.
 ## MCP Resources Available
 
 ### File Resources
+
 Access file contents directly via URI:
+
 ```
 file:///absolute/path/to/file.txt
 ```
 
 ### Directory Resources
+
 Get directory listings via URI:
+
 ```
 directory:///absolute/path/to/directory
 ```
 
 ### Metadata Resources
+
 Get file/directory metadata via URI:
+
 ```
 metadata:///absolute/path/to/item
 ```
 
 ### System Resources
+
 Server information and capabilities:
+
 ```
 system://filesystem-server/info
 system://filesystem-server/capabilities
@@ -182,17 +197,20 @@ system://filesystem-server/capabilities
 ## Security Features
 
 ### Path Validation
+
 - **Directory Traversal Protection**: Prevents `../` attacks
 - **Allowed Path Enforcement**: Restricts access to configured directories
 - **Extension Filtering**: Controls which file types can be accessed
 
 ### Access Controls
+
 - **Read-Only Mode**: Disable write operations entirely
 - **File Size Limits**: Prevent reading/writing large files
 - **Directory Depth Limits**: Control recursion depth
 - **Pattern Blocking**: Block access to sensitive files (`.env`, `.git`, etc.)
 
 ### Audit Logging
+
 - **Operation Logging**: All file operations logged with context
 - **Error Tracking**: Security violations and errors tracked
 - **Structured Logs**: JSON format for analysis and monitoring
@@ -200,6 +218,7 @@ system://filesystem-server/capabilities
 ## Configuration Reference
 
 ### Server Configuration
+
 ```typescript
 {
   server: {
@@ -212,6 +231,7 @@ system://filesystem-server/capabilities
 ```
 
 ### Security Configuration
+
 ```typescript
 {
   security: {
@@ -227,24 +247,26 @@ system://filesystem-server/capabilities
 ```
 
 ### Features Configuration
+
 ```typescript
 {
   features: {
-    enableFileWatch: boolean;         // File change notifications
-    enableSearch: boolean;            // Search functionality
-    enableBinaryFiles: boolean;       // Binary file support
-    cacheDirectoryListings: boolean;  // Directory caching
+    enableFileWatch: boolean; // File change notifications
+    enableSearch: boolean; // Search functionality
+    enableBinaryFiles: boolean; // Binary file support
+    cacheDirectoryListings: boolean; // Directory caching
   }
 }
 ```
 
 ### Limits Configuration
+
 ```typescript
 {
   limits: {
-    maxFilesPerRequest: number;      // Max files returned per request
+    maxFilesPerRequest: number; // Max files returned per request
     maxConcurrentOperations: number; // Max concurrent operations
-    rateLimitPerMinute: number;      // Rate limit per minute
+    rateLimitPerMinute: number; // Rate limit per minute
   }
 }
 ```
@@ -287,27 +309,30 @@ Add to `claude_desktop_config.json`:
 ### Using with Custom MCP Client
 
 ```typescript
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
 const transport = new StdioClientTransport({
-  command: 'node',
-  args: ['/path/to/filesystem-server/dist/index.js']
+  command: "node",
+  args: ["/path/to/filesystem-server/dist/index.js"],
 });
 
-const client = new Client({
-  name: 'my-client',
-  version: '1.0.0'
-}, {
-  capabilities: {}
-});
+const client = new Client(
+  {
+    name: "my-client",
+    version: "1.0.0",
+  },
+  {
+    capabilities: {},
+  },
+);
 
 await client.connect(transport);
 
 // Use the filesystem tools
 const result = await client.callTool({
-  name: 'browse_directory',
-  arguments: { path: '/project' }
+  name: "browse_directory",
+  arguments: { path: "/project" },
 });
 ```
 
@@ -316,12 +341,14 @@ const result = await client.callTool({
 The server comes with secure defaults:
 
 ### Allowed File Extensions
+
 - Source code: `.ts`, `.tsx`, `.js`, `.jsx`, `.py`, `.sql`
 - Documentation: `.md`, `.txt`, `.json`, `.yml`, `.yaml`
 - Configuration: `.env.example`, `.gitignore`
 - Assets: `.css`, `.html`, `.svg`, `.png`, `.jpg`
 
 ### Blocked Patterns
+
 - Dependencies: `**/node_modules/**`, `**/dist/**`
 - Version control: `**/.git/**`
 - Secrets: `**/.env`, `**/*.key`, `**/*.pem`
@@ -329,6 +356,7 @@ The server comes with secure defaults:
 - Build artifacts: `**/build/**`, `**/.next/**`
 
 ### Size Limits
+
 - Max file size: 10MB
 - Max directory depth: 10 levels
 - Max files per request: 100
@@ -338,11 +366,13 @@ The server comes with secure defaults:
 ### Common Issues
 
 1. **"Access denied" errors**
+
    - Check that paths are within `allowedRootPaths`
    - Verify file extensions are in `allowedFileExtensions`
    - Ensure paths don't match `blockedPatterns`
 
 2. **"File too large" errors**
+
    - Increase `maxFileSize` in configuration
    - Use streaming for large files
 
@@ -428,4 +458,4 @@ MIT License - Part of the StockPulse project.
 
 ---
 
-🚀 **Built for StockPulse - Enterprise-Grade Financial Trading Platform** 
+🚀 **Built for StockPulse - Enterprise-Grade Financial Trading Platform**

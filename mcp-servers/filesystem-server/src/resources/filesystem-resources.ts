@@ -3,12 +3,12 @@
  * MCP resources for exposing filesystem data following MCP specification
  */
 
-import { Resource } from '@modelcontextprotocol/sdk/types.js';
-import fs from 'fs-extra';
-import path from 'path';
-import mime from 'mime-types';
-import { ConfigManager } from '../config/server-config.js';
-import { SecurityValidator } from '../security/path-validator.js';
+import { Resource } from "@modelcontextprotocol/sdk/types.js";
+import fs from "fs-extra";
+import path from "path";
+import mime from "mime-types";
+import { ConfigManager } from "../config/server-config.js";
+import { SecurityValidator } from "../security/path-validator.js";
 
 export interface FileSystemResourcesContext {
   configManager: ConfigManager;
@@ -20,29 +20,31 @@ export interface FileSystemResourcesContext {
  * Generate file resource URIs
  */
 export function generateFileResourceUri(filePath: string): string {
-  return `file://${filePath.replace(/\\/g, '/')}`;
+  return `file://${filePath.replace(/\\/g, "/")}`;
 }
 
 export function generateDirectoryResourceUri(dirPath: string): string {
-  return `directory://${dirPath.replace(/\\/g, '/')}`;
+  return `directory://${dirPath.replace(/\\/g, "/")}`;
 }
 
 export function generateMetadataResourceUri(targetPath: string): string {
-  return `metadata://${targetPath.replace(/\\/g, '/')}`;
+  return `metadata://${targetPath.replace(/\\/g, "/")}`;
 }
 
 /**
  * Parse resource URI to extract path and type
  */
-export function parseResourceUri(uri: string): { type: string; path: string } | null {
+export function parseResourceUri(
+  uri: string,
+): { type: string; path: string } | null {
   const match = uri.match(/^(file|directory|metadata):\/\/(.+)$/);
   if (!match) {
     return null;
   }
-  
+
   return {
     type: match[1],
-    path: match[2].replace(/\//g, path.sep)
+    path: match[2].replace(/\//g, path.sep),
   };
 }
 
@@ -50,55 +52,54 @@ export function parseResourceUri(uri: string): { type: string; path: string } | 
  * List all available resources
  */
 export async function listResources(
-  context: FileSystemResourcesContext
+  context: FileSystemResourcesContext,
 ): Promise<Resource[]> {
   const config = context.configManager.getConfig();
   const resources: Resource[] = [];
-  
+
   try {
     // Add root directory resources
     for (const rootPath of config.security.allowedRootPaths) {
       const resolvedPath = path.resolve(rootPath);
-      
+
       if (await fs.pathExists(resolvedPath)) {
         // Add the root directory itself
         resources.push({
           uri: generateDirectoryResourceUri(resolvedPath),
           name: `Directory: ${path.basename(resolvedPath)}`,
           description: `Root directory access for ${resolvedPath}`,
-          mimeType: 'application/x-directory'
+          mimeType: "application/x-directory",
         });
-        
+
         // Add metadata resource for the root
         resources.push({
           uri: generateMetadataResourceUri(resolvedPath),
           name: `Metadata: ${path.basename(resolvedPath)}`,
           description: `Metadata information for ${resolvedPath}`,
-          mimeType: 'application/json'
+          mimeType: "application/json",
         });
       }
     }
-    
+
     // Add system information resource
     resources.push({
-      uri: 'system://filesystem-server/info',
-      name: 'Filesystem Server Information',
-      description: 'Server configuration and status information',
-      mimeType: 'application/json'
+      uri: "system://filesystem-server/info",
+      name: "Filesystem Server Information",
+      description: "Server configuration and status information",
+      mimeType: "application/json",
     });
-    
+
     // Add capability resource
     resources.push({
-      uri: 'system://filesystem-server/capabilities',
-      name: 'Server Capabilities',
-      description: 'Available tools and features',
-      mimeType: 'application/json'
+      uri: "system://filesystem-server/capabilities",
+      name: "Server Capabilities",
+      description: "Available tools and features",
+      mimeType: "application/json",
     });
-    
   } catch (error) {
     context.logger.error(`Error listing resources: ${error}`);
   }
-  
+
   return resources;
 }
 
@@ -107,27 +108,27 @@ export async function listResources(
  */
 export async function readResource(
   uri: string,
-  context: FileSystemResourcesContext
-): Promise<{ contents: any[]; }> {
+  context: FileSystemResourcesContext,
+): Promise<{ contents: any[] }> {
   context.logger.info(`Reading resource: ${uri}`);
-  
+
   // Handle system resources
-  if (uri.startsWith('system://filesystem-server/')) {
+  if (uri.startsWith("system://filesystem-server/")) {
     return await handleSystemResource(uri, context);
   }
-  
+
   // Parse the URI
   const parsed = parseResourceUri(uri);
   if (!parsed) {
     throw new Error(`Invalid resource URI: ${uri}`);
   }
-  
+
   switch (parsed.type) {
-    case 'file':
+    case "file":
       return await readFileResource(parsed.path, context);
-    case 'directory':
+    case "directory":
       return await readDirectoryResource(parsed.path, context);
-    case 'metadata':
+    case "metadata":
       return await readMetadataResource(parsed.path, context);
     default:
       throw new Error(`Unsupported resource type: ${parsed.type}`);
@@ -139,11 +140,11 @@ export async function readResource(
  */
 async function handleSystemResource(
   uri: string,
-  context: FileSystemResourcesContext
+  context: FileSystemResourcesContext,
 ): Promise<{ contents: any[] }> {
   const config = context.configManager.getConfig();
-  
-  if (uri === 'system://filesystem-server/info') {
+
+  if (uri === "system://filesystem-server/info") {
     const info = {
       server: config.server,
       security: {
@@ -151,38 +152,40 @@ async function handleSystemResource(
         allowedExtensions: config.security.allowedFileExtensions.slice(0, 10), // Limit for display
         maxFileSize: config.security.maxFileSize,
         maxDirectoryDepth: config.security.maxDirectoryDepth,
-        enableAuditLog: config.security.enableAuditLog
+        enableAuditLog: config.security.enableAuditLog,
       },
       features: config.features,
       limits: config.limits,
-      status: 'operational',
+      status: "operational",
       uptime: process.uptime(),
       nodeVersion: process.version,
-      platform: process.platform
+      platform: process.platform,
     };
-    
+
     return {
-      contents: [{
-        type: 'text',
-        text: JSON.stringify(info, null, 2)
-      }]
+      contents: [
+        {
+          type: "text",
+          text: JSON.stringify(info, null, 2),
+        },
+      ],
     };
   }
-  
-  if (uri === 'system://filesystem-server/capabilities') {
+
+  if (uri === "system://filesystem-server/capabilities") {
     const capabilities = {
       tools: [
-        'browse_directory',
-        'read_file',
-        'write_file',
-        'delete_file',
-        'get_file_info',
-        'search_files'
+        "browse_directory",
+        "read_file",
+        "write_file",
+        "delete_file",
+        "get_file_info",
+        "search_files",
       ],
       resources: [
-        'file://path - File contents',
-        'directory://path - Directory listings',
-        'metadata://path - File/directory metadata'
+        "file://path - File contents",
+        "directory://path - Directory listings",
+        "metadata://path - File/directory metadata",
       ],
       features: {
         securityValidation: true,
@@ -191,27 +194,29 @@ async function handleSystemResource(
         binaryFileSupport: config.features.enableBinaryFiles,
         searchCapability: config.features.enableSearch,
         fileWatching: config.features.enableFileWatch,
-        auditLogging: config.security.enableAuditLog
+        auditLogging: config.security.enableAuditLog,
       },
       limits: config.limits,
-      supportedEncodings: ['utf8', 'base64', 'ascii', 'binary'],
+      supportedEncodings: ["utf8", "base64", "ascii", "binary"],
       supportedMimeTypes: [
-        'text/*',
-        'application/json',
-        'application/javascript',
-        'application/typescript',
-        'image/*'
-      ]
+        "text/*",
+        "application/json",
+        "application/javascript",
+        "application/typescript",
+        "image/*",
+      ],
     };
-    
+
     return {
-      contents: [{
-        type: 'text',
-        text: JSON.stringify(capabilities, null, 2)
-      }]
+      contents: [
+        {
+          type: "text",
+          text: JSON.stringify(capabilities, null, 2),
+        },
+      ],
     };
   }
-  
+
   throw new Error(`Unknown system resource: ${uri}`);
 }
 
@@ -220,51 +225,58 @@ async function handleSystemResource(
  */
 async function readFileResource(
   filePath: string,
-  context: FileSystemResourcesContext
+  context: FileSystemResourcesContext,
 ): Promise<{ contents: any[] }> {
-  await context.securityValidator.validateFileOperation(filePath, 'read');
-  
+  await context.securityValidator.validateFileOperation(filePath, "read");
+
   const validatedPath = await context.securityValidator.validatePath(filePath);
   const stats = await fs.stat(validatedPath);
   const config = context.configManager.getConfig();
-  
+
   // Check file size
   if (stats.size > config.security.maxFileSize) {
-    throw new Error(`File size ${stats.size} exceeds maximum ${config.security.maxFileSize} bytes`);
+    throw new Error(
+      `File size ${stats.size} exceeds maximum ${config.security.maxFileSize} bytes`,
+    );
   }
-  
+
   // Determine if binary
   const isBinary = await context.securityValidator.isBinaryFile(validatedPath);
-  
+
   if (isBinary && !config.features.enableBinaryFiles) {
-    throw new Error('Binary files are not supported');
+    throw new Error("Binary files are not supported");
   }
-  
+
   // Read file content
-  const encoding = isBinary ? 'base64' : 'utf8';
+  const encoding = isBinary ? "base64" : "utf8";
   let content = await fs.readFile(validatedPath, encoding as any);
-  
+
   // Sanitize text content
-  if (typeof content === 'string' && !isBinary) {
+  if (typeof content === "string" && !isBinary) {
     const mimeType = mime.lookup(validatedPath) || undefined;
-    content = context.securityValidator.sanitizeContent(content, mimeType) as any;
+    content = context.securityValidator.sanitizeContent(
+      content,
+      mimeType,
+    ) as any;
   }
-  
-  const mimeType = mime.lookup(validatedPath) || 'application/octet-stream';
-  
+
+  const mimeType = mime.lookup(validatedPath) || "application/octet-stream";
+
   return {
-    contents: [{
-      type: 'text',
-      text: content.toString(),
-      annotations: {
-        mimeType,
-        encoding,
-        size: stats.size,
-        lastModified: stats.mtime.toISOString(),
-        isBinary,
-        path: validatedPath
-      }
-    }]
+    contents: [
+      {
+        type: "text",
+        text: content.toString(),
+        annotations: {
+          mimeType,
+          encoding,
+          size: stats.size,
+          lastModified: stats.mtime.toISOString(),
+          isBinary,
+          path: validatedPath,
+        },
+      },
+    ],
   };
 }
 
@@ -273,40 +285,46 @@ async function readFileResource(
  */
 async function readDirectoryResource(
   dirPath: string,
-  context: FileSystemResourcesContext
+  context: FileSystemResourcesContext,
 ): Promise<{ contents: any[] }> {
-  await context.securityValidator.validateDirectoryOperation(dirPath, 'read');
-  
-  const listing = await context.securityValidator.getSecureDirectoryListing(dirPath, false);
-  
+  await context.securityValidator.validateDirectoryOperation(dirPath, "read");
+
+  const listing = await context.securityValidator.getSecureDirectoryListing(
+    dirPath,
+    false,
+  );
+
   // Create a structured representation of the directory
   const directoryData = {
     path: dirPath,
-    type: 'directory',
+    type: "directory",
     totalItems: listing.length,
-    accessibleItems: listing.filter(item => item.accessible).length,
-    items: listing.map(item => ({
+    accessibleItems: listing.filter((item) => item.accessible).length,
+    items: listing.map((item) => ({
       name: item.name,
       type: item.type,
       size: item.size,
       modified: item.modified?.toISOString(),
       accessible: item.accessible,
-      uri: item.type === 'directory' 
-        ? generateDirectoryResourceUri(path.join(dirPath, item.name))
-        : generateFileResourceUri(path.join(dirPath, item.name))
-    }))
+      uri:
+        item.type === "directory"
+          ? generateDirectoryResourceUri(path.join(dirPath, item.name))
+          : generateFileResourceUri(path.join(dirPath, item.name)),
+    })),
   };
-  
+
   return {
-    contents: [{
-      type: 'text',
-      text: JSON.stringify(directoryData, null, 2),
-      annotations: {
-        mimeType: 'application/json',
-        directoryPath: dirPath,
-        itemCount: listing.length
-      }
-    }]
+    contents: [
+      {
+        type: "text",
+        text: JSON.stringify(directoryData, null, 2),
+        annotations: {
+          mimeType: "application/json",
+          directoryPath: dirPath,
+          itemCount: listing.length,
+        },
+      },
+    ],
   };
 }
 
@@ -315,15 +333,16 @@ async function readDirectoryResource(
  */
 async function readMetadataResource(
   targetPath: string,
-  context: FileSystemResourcesContext
+  context: FileSystemResourcesContext,
 ): Promise<{ contents: any[] }> {
-  const validatedPath = await context.securityValidator.validatePath(targetPath);
+  const validatedPath =
+    await context.securityValidator.validatePath(targetPath);
   const stats = await fs.stat(validatedPath);
-  
+
   const metadata: any = {
     path: targetPath,
     absolutePath: validatedPath,
-    type: stats.isDirectory() ? 'directory' : 'file',
+    type: stats.isDirectory() ? "directory" : "file",
     size: stats.size,
     created: stats.birthtime.toISOString(),
     modified: stats.mtime.toISOString(),
@@ -331,17 +350,21 @@ async function readMetadataResource(
     permissions: {
       readable: true,
       writable: !context.configManager.getConfig().security.readOnlyMode,
-      executable: false
+      executable: false,
     },
-    isHidden: path.basename(validatedPath).startsWith('.'),
+    isHidden: path.basename(validatedPath).startsWith("."),
     extension: stats.isFile() ? path.extname(validatedPath) : null,
-    mimeType: stats.isFile() ? mime.lookup(validatedPath) || 'application/octet-stream' : null,
+    mimeType: stats.isFile()
+      ? mime.lookup(validatedPath) || "application/octet-stream"
+      : null,
     security: {
       accessible: context.configManager.isPathAllowed(validatedPath),
-      extensionAllowed: stats.isFile() ? context.configManager.isFileExtensionAllowed(validatedPath) : true
-    }
+      extensionAllowed: stats.isFile()
+        ? context.configManager.isFileExtensionAllowed(validatedPath)
+        : true,
+    },
   };
-  
+
   // Add directory-specific metadata
   if (stats.isDirectory()) {
     try {
@@ -351,22 +374,25 @@ async function readMetadataResource(
       metadata.itemCount = 0;
     }
   }
-  
+
   // Add file-specific metadata
   if (stats.isFile()) {
-    metadata.isBinary = await context.securityValidator.isBinaryFile(validatedPath);
+    metadata.isBinary =
+      await context.securityValidator.isBinaryFile(validatedPath);
   }
-  
+
   return {
-    contents: [{
-      type: 'text',
-      text: JSON.stringify(metadata, null, 2),
-      annotations: {
-        mimeType: 'application/json',
-        metadataFor: targetPath,
-        resourceType: metadata.type
-      }
-    }]
+    contents: [
+      {
+        type: "text",
+        text: JSON.stringify(metadata, null, 2),
+        annotations: {
+          mimeType: "application/json",
+          metadataFor: targetPath,
+          resourceType: metadata.type,
+        },
+      },
+    ],
   };
 }
 
@@ -375,20 +401,20 @@ async function readMetadataResource(
  */
 export function subscribeToResource(
   uri: string,
-  context: FileSystemResourcesContext
+  context: FileSystemResourcesContext,
 ): void {
   const config = context.configManager.getConfig();
-  
+
   if (!config.features.enableFileWatch) {
-    throw new Error('File watching is disabled');
+    throw new Error("File watching is disabled");
   }
-  
+
   // Parse the URI
   const parsed = parseResourceUri(uri);
   if (!parsed) {
     throw new Error(`Invalid resource URI: ${uri}`);
   }
-  
+
   // Implementation would set up file system watchers
   // This is a placeholder for the actual implementation
   context.logger.info(`Subscribed to resource changes: ${uri}`);
@@ -399,9 +425,9 @@ export function subscribeToResource(
  */
 export function unsubscribeFromResource(
   uri: string,
-  context: FileSystemResourcesContext
+  context: FileSystemResourcesContext,
 ): void {
   // Implementation would remove file system watchers
   // This is a placeholder for the actual implementation
   context.logger.info(`Unsubscribed from resource changes: ${uri}`);
-} 
+}

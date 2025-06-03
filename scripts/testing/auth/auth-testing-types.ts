@@ -4,7 +4,12 @@
  * Enterprise-grade testing type safety for StockPulse authentication system
  */
 
-import { User, LoginCredentials, RegisterCredentials, AuthError } from '../../../src/types/auth';
+import {
+  User,
+  LoginCredentials,
+  RegisterCredentials,
+  AuthError,
+} from "../../../src/types/auth";
 
 /**
  * Test User Creation Types
@@ -38,7 +43,7 @@ export interface TestUserMetadata {
 /**
  * Test Scenarios for Authentication
  */
-export type TestScenario = 
+export type TestScenario =
   | "successful_login"
   | "failed_login_invalid_credentials"
   | "failed_login_inactive_user"
@@ -151,7 +156,7 @@ export interface CleanupConfig {
   strategies: CleanupStrategy[];
 }
 
-export type CleanupStrategy = 
+export type CleanupStrategy =
   | "delete_test_users"
   | "reset_failed_attempts"
   | "clear_sessions"
@@ -298,7 +303,12 @@ export interface ExecutionMetrics {
  * Utility Types for Testing
  */
 export type TestUserRole = "ADMIN" | "USER" | "MODERATOR" | "TEST_ADMIN";
-export type TestUserStatus = "APPROVED" | "PENDING" | "REJECTED" | "LOCKED" | "INACTIVE";
+export type TestUserStatus =
+  | "APPROVED"
+  | "PENDING"
+  | "REJECTED"
+  | "LOCKED"
+  | "INACTIVE";
 
 export interface TestConstants {
   DEFAULT_PASSWORD: string;
@@ -331,4 +341,4 @@ export interface EnhancedRegisterCredentials extends RegisterCredentials {
 /**
  * Export all testing utilities
  */
-export * from '../../../src/types/auth'; 
+export * from "../../../src/types/auth";

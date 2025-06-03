@@ -75,7 +75,9 @@ Add to your Cursor MCP configuration:
   "mcpServers": {
     "stockpulse-filesystem": {
       "command": "node",
-      "args": ["C:/Users/admin/Desktop/StockPulse/mcp-servers/filesystem-server/dist/index.js"],
+      "args": [
+        "C:/Users/admin/Desktop/StockPulse/mcp-servers/filesystem-server/dist/index.js"
+      ],
       "env": {
         "MCP_FILESYSTEM_CONFIG": "C:/Users/admin/Desktop/StockPulse/mcp-servers/filesystem-server/config.example.json"
       }
@@ -93,7 +95,9 @@ Add to `claude_desktop_config.json`:
   "mcpServers": {
     "stockpulse-filesystem": {
       "command": "node",
-      "args": ["C:/Users/admin/Desktop/StockPulse/mcp-servers/filesystem-server/dist/index.js"]
+      "args": [
+        "C:/Users/admin/Desktop/StockPulse/mcp-servers/filesystem-server/dist/index.js"
+      ]
     }
   }
 }
@@ -102,43 +106,46 @@ Add to `claude_desktop_config.json`:
 ### Custom MCP Client
 
 ```typescript
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
 const transport = new StdioClientTransport({
-  command: 'node',
-  args: ['path/to/filesystem-server/dist/index.js']
+  command: "node",
+  args: ["path/to/filesystem-server/dist/index.js"],
 });
 
-const client = new Client({
-  name: 'stockpulse-client',
-  version: '1.0.0'
-}, {
-  capabilities: {}
-});
+const client = new Client(
+  {
+    name: "stockpulse-client",
+    version: "1.0.0",
+  },
+  {
+    capabilities: {},
+  },
+);
 
 await client.connect(transport);
 
 // Browse directory
 const result = await client.callTool({
-  name: 'browse_directory',
-  arguments: { path: '/stockpulse/src' }
+  name: "browse_directory",
+  arguments: { path: "/stockpulse/src" },
 });
 
 // Read file
 const fileContent = await client.callTool({
-  name: 'read_file',
-  arguments: { path: '/stockpulse/package.json' }
+  name: "read_file",
+  arguments: { path: "/stockpulse/package.json" },
 });
 
 // Write file
 await client.callTool({
-  name: 'write_file',
+  name: "write_file",
   arguments: {
-    path: '/stockpulse/temp/test.txt',
-    content: 'Hello from MCP!',
-    createDirectories: true
-  }
+    path: "/stockpulse/temp/test.txt",
+    content: "Hello from MCP!",
+    createDirectories: true,
+  },
 });
 ```
 
@@ -149,11 +156,13 @@ await client.callTool({
 List directory contents with security filtering.
 
 **Parameters:**
+
 - `path` (string, required): Directory path to browse
 - `includeHidden` (boolean, optional): Include hidden files
 - `recursive` (boolean, optional): Browse subdirectories
 
 **Example:**
+
 ```json
 {
   "name": "browse_directory",
@@ -166,6 +175,7 @@ List directory contents with security filtering.
 ```
 
 **Response:**
+
 ```json
 {
   "path": "/stockpulse/src",
@@ -193,11 +203,13 @@ List directory contents with security filtering.
 Read file contents with validation.
 
 **Parameters:**
+
 - `path` (string, required): File path to read
 - `encoding` (string, optional): File encoding (utf8, base64)
 - `maxSize` (number, optional): Maximum file size in bytes
 
 **Example:**
+
 ```json
 {
   "name": "read_file",
@@ -213,6 +225,7 @@ Read file contents with validation.
 Write content to files with backup support.
 
 **Parameters:**
+
 - `path` (string, required): File path to write
 - `content` (string, required): Content to write
 - `encoding` (string, optional): Content encoding
@@ -224,6 +237,7 @@ Write content to files with backup support.
 Delete files or directories with optional backup.
 
 **Parameters:**
+
 - `path` (string, required): Path to delete
 - `recursive` (boolean, optional): Delete directories recursively
 - `backup` (boolean, optional): Create backup before deletion
@@ -233,6 +247,7 @@ Delete files or directories with optional backup.
 Get detailed metadata about files or directories.
 
 **Parameters:**
+
 - `path` (string, required): Path to get information about
 
 ### 6. `search_files`
@@ -240,6 +255,7 @@ Get detailed metadata about files or directories.
 Search for files matching patterns.
 
 **Parameters:**
+
 - `rootPath` (string, required): Root directory to search from
 - `pattern` (string, required): Search pattern (glob or regex)
 - `type` (string, optional): Type of items ('file', 'directory', 'both')
@@ -299,19 +315,21 @@ system://filesystem-server/capabilities
 ### Audit Logging
 
 All operations are logged with:
+
 - Operation type and parameters
 - User context and timestamps
 - Success/failure status
 - Security violations
 
 Example log entry:
+
 ```json
 {
   "timestamp": "2025-01-06T12:38:00Z",
   "level": "info",
   "message": "Tool execution successful: read_file",
   "tool": "read_file",
-  "args": {"path": "/stockpulse/package.json"},
+  "args": { "path": "/stockpulse/package.json" },
   "success": true
 }
 ```
@@ -337,12 +355,14 @@ Example log entry:
 ### Default Security Settings
 
 **Allowed Extensions:**
+
 - Source: `.ts`, `.tsx`, `.js`, `.jsx`, `.py`, `.sql`
 - Config: `.json`, `.yml`, `.yaml`, `.env.example`
 - Docs: `.md`, `.txt`, `.gitignore`
 - Assets: `.css`, `.html`, `.svg`, `.png`, `.jpg`
 
 **Blocked Patterns:**
+
 - `**/node_modules/**`
 - `**/.git/**`
 - `**/.env`
@@ -351,6 +371,7 @@ Example log entry:
 - `**/*.key`, `**/*.pem`
 
 **Size Limits:**
+
 - Max file size: 50MB
 - Max directory depth: 10 levels
 - Max files per request: 100
@@ -360,6 +381,7 @@ Example log entry:
 ### Health Checks
 
 Check server status:
+
 ```bash
 # Test server capabilities
 curl -X POST -H "Content-Type: application/json" \
@@ -370,6 +392,7 @@ curl -X POST -H "Content-Type: application/json" \
 ### Debug Mode
 
 Enable debug logging:
+
 ```json
 {
   "logging": {
@@ -382,11 +405,13 @@ Enable debug logging:
 ### Common Issues
 
 1. **Access Denied Errors**
+
    - Verify paths are within `allowedRootPaths`
    - Check file extensions are allowed
    - Ensure paths don't match blocked patterns
 
 2. **File Too Large Errors**
+
    - Increase `maxFileSize` in configuration
    - Use streaming for large files
 
@@ -399,6 +424,7 @@ Enable debug logging:
 ### Rate Limiting
 
 Configure request limits:
+
 ```json
 {
   "limits": {
@@ -412,6 +438,7 @@ Configure request limits:
 ### Caching
 
 Enable directory listing cache:
+
 ```json
 {
   "features": {
@@ -463,4 +490,4 @@ The MCP Filesystem Server integrates with StockPulse's enterprise architecture:
 
 ---
 
-🚀 **Built for StockPulse - Enterprise-Grade Financial Trading Platform** 
+🚀 **Built for StockPulse - Enterprise-Grade Financial Trading Platform**

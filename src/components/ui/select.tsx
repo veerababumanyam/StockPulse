@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { ChevronDown } from 'lucide-react';
+import * as React from "react";
+import { ChevronDown } from "lucide-react";
 
 interface SelectContextType {
   value: string;
@@ -15,7 +15,7 @@ const SelectContext = React.createContext<SelectContextType | undefined>(
 const useSelect = () => {
   const context = React.useContext(SelectContext);
   if (!context) {
-    throw new Error('Select components must be used within Select');
+    throw new Error("Select components must be used within Select");
   }
   return context;
 };
@@ -31,7 +31,7 @@ const Select: React.FC<SelectProps> = ({
   children,
   value: controlledValue,
   onValueChange,
-  defaultValue = '',
+  defaultValue = "",
 }) => {
   const [internalValue, setInternalValue] = React.useState(defaultValue);
   const [open, setOpen] = React.useState(false);
@@ -56,7 +56,7 @@ const Select: React.FC<SelectProps> = ({
 const SelectTrigger = React.forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement>
->(({ className = '', children, ...props }, ref) => {
+>(({ className = "", children, ...props }, ref) => {
   const { open, onOpenChange } = useSelect();
 
   return (
@@ -72,12 +72,12 @@ const SelectTrigger = React.forwardRef<
     </button>
   );
 });
-SelectTrigger.displayName = 'SelectTrigger';
+SelectTrigger.displayName = "SelectTrigger";
 
 const SelectValue = React.forwardRef<
   HTMLSpanElement,
   React.HTMLAttributes<HTMLSpanElement> & { placeholder?: string }
->(({ className = '', placeholder, ...props }, ref) => {
+>(({ className = "", placeholder, ...props }, ref) => {
   const { value } = useSelect();
 
   return (
@@ -86,12 +86,12 @@ const SelectValue = React.forwardRef<
     </span>
   );
 });
-SelectValue.displayName = 'SelectValue';
+SelectValue.displayName = "SelectValue";
 
 const SelectContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className = '', children, ...props }, ref) => {
+>(({ className = "", children, ...props }, ref) => {
   const { open, onOpenChange } = useSelect();
 
   if (!open) return null;
@@ -112,12 +112,12 @@ const SelectContent = React.forwardRef<
     </>
   );
 });
-SelectContent.displayName = 'SelectContent';
+SelectContent.displayName = "SelectContent";
 
 const SelectItem = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & { value: string }
->(({ className = '', children, value, ...props }, ref) => {
+>(({ className = "", children, value, ...props }, ref) => {
   const { onValueChange, onOpenChange } = useSelect();
 
   const handleSelect = () => {
@@ -136,6 +136,6 @@ const SelectItem = React.forwardRef<
     </div>
   );
 });
-SelectItem.displayName = 'SelectItem';
+SelectItem.displayName = "SelectItem";
 
 export { Select, SelectContent, SelectItem, SelectTrigger, SelectValue };

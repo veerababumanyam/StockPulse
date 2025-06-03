@@ -56,6 +56,9 @@ class Settings(BaseSettings):
     risk_management_agent_endpoint: str = "http://localhost:8005"
     news_analysis_agent_endpoint: str = "http://localhost:8006"
     user_preference_agent_endpoint: str = "http://localhost:8007"
+    
+    # A2A Market Research Agent
+    MARKET_RESEARCH_AGENT_URL: str = "http://localhost:9003"
 
     # Security settings
     agent_jwt_secret_key: str = "default_secret_key"

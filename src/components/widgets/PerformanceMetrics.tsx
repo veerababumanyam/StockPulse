@@ -3,16 +3,16 @@
  * Displays key performance indicators for the portfolio.
  * Part of Story 2.2: Customizable Widget System
  */
-'use client';
+"use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { WidgetComponentProps } from '../../types/dashboard';
+import React, { useState, useEffect, useCallback } from "react";
+import { WidgetComponentProps } from "../../types/dashboard";
 import {
   PerformanceMetricsData,
   PerformanceMetricItem,
-} from '../../types/widget-data';
-import { useTheme } from '../../contexts/ThemeContext';
-import { apiClient } from '../../services/api';
+} from "../../types/widget-data";
+import { useTheme } from "../../contexts/ThemeContext";
+import { apiClient } from "../../services/api";
 import {
   TrendingUp,
   RefreshCw,
@@ -21,21 +21,21 @@ import {
   ArrowUp,
   ArrowDown,
   Minus,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from '../ui/card';
+} from "../ui/card";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '../ui/tooltip'; // Assuming tooltip component
-import { cn } from '../../utils/cn';
+} from "../ui/tooltip"; // Assuming tooltip component
+import { cn } from "../../utils/cn";
 
 const PerformanceMetrics: React.FC<WidgetComponentProps> = ({
   widgetId,
@@ -50,7 +50,7 @@ const PerformanceMetrics: React.FC<WidgetComponentProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const portfolioId = config.config?.portfolioId || 'default-portfolio';
+  const portfolioId = config.config?.portfolioId || "default-portfolio";
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
@@ -60,11 +60,11 @@ const PerformanceMetrics: React.FC<WidgetComponentProps> = ({
       if (response.success && response.data) {
         setMetricsData(response.data);
       } else {
-        setError(response.message || 'Failed to fetch performance metrics.');
+        setError(response.message || "Failed to fetch performance metrics.");
       }
     } catch (err: any) {
       console.error(`[${widgetId}] Error fetching metrics:`, err);
-      setError(err.message || 'An unexpected error occurred.');
+      setError(err.message || "An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
@@ -74,13 +74,13 @@ const PerformanceMetrics: React.FC<WidgetComponentProps> = ({
     fetchData();
   }, [fetchData]);
 
-  const renderTrendIcon = (trend?: 'up' | 'down' | 'neutral') => {
+  const renderTrendIcon = (trend?: "up" | "down" | "neutral") => {
     switch (trend) {
-      case 'up':
+      case "up":
         return <ArrowUp className="h-3.5 w-3.5 text-success-fg" />;
-      case 'down':
+      case "down":
         return <ArrowDown className="h-3.5 w-3.5 text-danger-fg" />;
-      case 'neutral':
+      case "neutral":
         return <Minus className="h-3.5 w-3.5 text-muted-foreground" />;
       default:
         return null;
@@ -123,12 +123,12 @@ const PerformanceMetrics: React.FC<WidgetComponentProps> = ({
 
   if (isLoading) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center">
               <TrendingUp className="h-4 w-4 mr-2 text-primary" />
-              {config.title || 'Performance Metrics'}
+              {config.title || "Performance Metrics"}
             </CardTitle>
             <RefreshCw className="h-4 w-4 text-muted-foreground animate-spin" />
           </div>
@@ -142,12 +142,12 @@ const PerformanceMetrics: React.FC<WidgetComponentProps> = ({
 
   if (error) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center text-danger-fg">
               <AlertCircle className="h-4 w-4 mr-2" />
-              {config.title || 'Performance Metrics'}
+              {config.title || "Performance Metrics"}
             </CardTitle>
             <button onClick={fetchData} title="Retry loading metrics">
               <RefreshCw className="h-4 w-4 text-muted-foreground hover:text-primary" />
@@ -163,12 +163,12 @@ const PerformanceMetrics: React.FC<WidgetComponentProps> = ({
 
   if (!metricsData || metricsData.metrics.length === 0) {
     return (
-      <Card className={cn('h-full flex flex-col', config.className)}>
+      <Card className={cn("h-full flex flex-col", config.className)}>
         <CardHeader className="pb-2 pt-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-semibold flex items-center">
               <TrendingUp className="h-4 w-4 mr-2 text-primary" />
-              {config.title || 'Performance Metrics'}
+              {config.title || "Performance Metrics"}
             </CardTitle>
             <button onClick={fetchData} title="Reload metrics">
               <RefreshCw className="h-4 w-4 text-muted-foreground hover:text-primary" />
@@ -183,19 +183,19 @@ const PerformanceMetrics: React.FC<WidgetComponentProps> = ({
   }
 
   return (
-    <Card className={cn('h-full flex flex-col', config.className)}>
+    <Card className={cn("h-full flex flex-col", config.className)}>
       <CardHeader className="pb-2 pt-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold flex items-center">
             <TrendingUp className="h-4 w-4 mr-2 text-primary" />
-            {config.title || 'Performance Metrics'}
+            {config.title || "Performance Metrics"}
           </CardTitle>
           <button onClick={fetchData} title="Refresh metrics">
             <RefreshCw className="h-4 w-4 text-muted-foreground hover:text-primary" />
           </button>
         </div>
         <CardDescription className="text-xs text-muted-foreground pt-0.5">
-          Metrics for portfolio {metricsData.portfolioId}, as of{' '}
+          Metrics for portfolio {metricsData.portfolioId}, as of{" "}
           {new Date(metricsData.asOfDate).toLocaleDateString()}
         </CardDescription>
       </CardHeader>

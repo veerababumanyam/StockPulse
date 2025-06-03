@@ -3,8 +3,8 @@
  * Tracks usage patterns and provides intelligent theme suggestions
  */
 
-import { ColorTheme, ThemeMode } from '../types/theme';
-import { themeStorage } from './themeStorage';
+import { ColorTheme, ThemeMode } from "../types/theme";
+import { themeStorage } from "./themeStorage";
 
 // Analytics data structures
 interface ThemeUsagePattern {
@@ -14,20 +14,20 @@ interface ThemeUsagePattern {
   dayOfWeek: number; // 0-6
   duration: number; // Minutes
   context: string; // page, feature, etc.
-  deviceType: 'mobile' | 'tablet' | 'desktop';
+  deviceType: "mobile" | "tablet" | "desktop";
   batteryLevel?: number;
-  ambientLight?: 'bright' | 'normal' | 'dim';
+  ambientLight?: "bright" | "normal" | "dim";
 }
 
 interface UserContext {
   timeOfDay: number;
   dayOfWeek: number;
-  deviceType: 'mobile' | 'tablet' | 'desktop';
+  deviceType: "mobile" | "tablet" | "desktop";
   batteryLevel?: number;
-  connectionSpeed: 'slow' | 'medium' | 'fast';
+  connectionSpeed: "slow" | "medium" | "fast";
   currentPage: string;
-  userActivity: 'active' | 'idle' | 'focused';
-  ambientLight?: 'bright' | 'normal' | 'dim';
+  userActivity: "active" | "idle" | "focused";
+  ambientLight?: "bright" | "normal" | "dim";
 }
 
 interface ThemeRecommendation {
@@ -35,8 +35,8 @@ interface ThemeRecommendation {
   mode: ThemeMode;
   confidence: number; // 0-1
   reason: string;
-  energyImpact: 'low' | 'medium' | 'high';
-  performanceImpact: 'low' | 'medium' | 'high';
+  energyImpact: "low" | "medium" | "high";
+  performanceImpact: "low" | "medium" | "high";
 }
 
 interface ThemeInsights {
@@ -69,7 +69,7 @@ export class ThemeAnalyticsEngine {
   async trackThemeUsage(
     theme: ColorTheme,
     mode: ThemeMode,
-    context: string = 'unknown',
+    context: string = "unknown",
   ): Promise<void> {
     try {
       const currentContext = await this.contextDetector.getCurrentContext();
@@ -98,7 +98,7 @@ export class ThemeAnalyticsEngine {
         await this.processUsageQueue();
       }
     } catch (error) {
-      console.error('Failed to track theme usage:', error);
+      console.error("Failed to track theme usage:", error);
     }
   }
 
@@ -133,7 +133,7 @@ export class ThemeAnalyticsEngine {
       );
 
       // 4. Energy-efficient recommendations (for mobile)
-      if (currentContext.deviceType === 'mobile') {
+      if (currentContext.deviceType === "mobile") {
         recommendations.push(
           ...(await this.getEnergyEfficientRecommendations(currentContext)),
         );
@@ -149,7 +149,7 @@ export class ThemeAnalyticsEngine {
       // Deduplicate and rank recommendations
       return this.rankRecommendations(recommendations);
     } catch (error) {
-      console.error('Failed to generate theme recommendations:', error);
+      console.error("Failed to generate theme recommendations:", error);
       return this.getFallbackRecommendations();
     }
   }
@@ -174,7 +174,7 @@ export class ThemeAnalyticsEngine {
 
       return insights;
     } catch (error) {
-      console.error('Failed to generate insights:', error);
+      console.error("Failed to generate insights:", error);
       throw error;
     }
   }
@@ -200,7 +200,7 @@ export class ThemeAnalyticsEngine {
 
       return null;
     } catch (error) {
-      console.error('Auto-switch failed:', error);
+      console.error("Auto-switch failed:", error);
       return null;
     }
   }
@@ -215,7 +215,7 @@ export class ThemeAnalyticsEngine {
       const performanceData = await this.performanceMonitor.exportData();
 
       return {
-        version: '1.0',
+        version: "1.0",
         timestamp: Date.now(),
         usageHistory,
         insights,
@@ -230,7 +230,7 @@ export class ThemeAnalyticsEngine {
         },
       };
     } catch (error) {
-      console.error('Failed to export analytics:', error);
+      console.error("Failed to export analytics:", error);
       throw error;
     }
   }
@@ -269,33 +269,33 @@ export class ThemeAnalyticsEngine {
       // Clear the queue
       this.usageQueue = [];
     } catch (error) {
-      console.error('Failed to process usage queue:', error);
+      console.error("Failed to process usage queue:", error);
     }
   }
 
-  private async detectAmbientLight(): Promise<'bright' | 'normal' | 'dim'> {
+  private async detectAmbientLight(): Promise<"bright" | "normal" | "dim"> {
     // Detect ambient light using device sensors if available
     try {
-      if ('AmbientLightSensor' in window) {
+      if ("AmbientLightSensor" in window) {
         // Use Ambient Light API if available
         const sensor = new (window as any).AmbientLightSensor();
         sensor.start();
 
         return new Promise((resolve) => {
-          sensor.addEventListener('reading', () => {
+          sensor.addEventListener("reading", () => {
             const lux = sensor.illuminance;
-            if (lux > 1000) resolve('bright');
-            else if (lux > 100) resolve('normal');
-            else resolve('dim');
+            if (lux > 1000) resolve("bright");
+            else if (lux > 100) resolve("normal");
+            else resolve("dim");
             sensor.stop();
           });
         });
       }
     } catch (error) {
-      console.debug('Ambient light detection not available:', error);
+      console.debug("Ambient light detection not available:", error);
     }
 
-    return 'normal'; // Default fallback
+    return "normal"; // Default fallback
   }
 
   private async getUsageHistory(): Promise<ThemeUsagePattern[]> {
@@ -315,36 +315,36 @@ export class ThemeAnalyticsEngine {
     // Morning (6-12): Energizing themes
     if (context.timeOfDay >= 6 && context.timeOfDay < 12) {
       recommendations.push({
-        theme: 'cyber-neon',
-        mode: 'light',
+        theme: "cyber-neon",
+        mode: "light",
         confidence: 0.7,
-        reason: 'Energizing theme for morning productivity',
-        energyImpact: 'medium',
-        performanceImpact: 'low',
+        reason: "Energizing theme for morning productivity",
+        energyImpact: "medium",
+        performanceImpact: "low",
       });
     }
 
     // Evening (18-22): Calming themes
     if (context.timeOfDay >= 18 && context.timeOfDay < 22) {
       recommendations.push({
-        theme: 'ocean-depth',
-        mode: 'dark',
+        theme: "ocean-depth",
+        mode: "dark",
         confidence: 0.8,
-        reason: 'Calming theme for evening wind-down',
-        energyImpact: 'low',
-        performanceImpact: 'low',
+        reason: "Calming theme for evening wind-down",
+        energyImpact: "low",
+        performanceImpact: "low",
       });
     }
 
     // Late night (22-6): Eye-friendly themes
     if (context.timeOfDay >= 22 || context.timeOfDay < 6) {
       recommendations.push({
-        theme: 'midnight-purple',
-        mode: 'dark',
+        theme: "midnight-purple",
+        mode: "dark",
         confidence: 0.9,
-        reason: 'Reduced eye strain for late-night usage',
-        energyImpact: 'low',
-        performanceImpact: 'low',
+        reason: "Reduced eye strain for late-night usage",
+        energyImpact: "low",
+        performanceImpact: "low",
       });
     }
 
@@ -358,16 +358,16 @@ export class ThemeAnalyticsEngine {
 
     // Trading/analysis contexts
     if (
-      context.currentPage.includes('trading') ||
-      context.currentPage.includes('analysis')
+      context.currentPage.includes("trading") ||
+      context.currentPage.includes("analysis")
     ) {
       recommendations.push({
-        theme: 'financial-green',
-        mode: context.timeOfDay > 18 ? 'dark' : 'light',
+        theme: "financial-green",
+        mode: context.timeOfDay > 18 ? "dark" : "light",
         confidence: 0.85,
-        reason: 'Optimized for financial data visualization',
-        energyImpact: 'medium',
-        performanceImpact: 'medium',
+        reason: "Optimized for financial data visualization",
+        energyImpact: "medium",
+        performanceImpact: "medium",
       });
     }
 
@@ -380,14 +380,14 @@ export class ThemeAnalyticsEngine {
     const recommendations: ThemeRecommendation[] = [];
 
     // Slow connection: lightweight themes
-    if (context.connectionSpeed === 'slow') {
+    if (context.connectionSpeed === "slow") {
       recommendations.push({
-        theme: 'default',
-        mode: 'light',
+        theme: "default",
+        mode: "light",
         confidence: 0.6,
-        reason: 'Lightweight theme for slow connections',
-        energyImpact: 'low',
-        performanceImpact: 'low',
+        reason: "Lightweight theme for slow connections",
+        energyImpact: "low",
+        performanceImpact: "low",
       });
     }
 
@@ -402,12 +402,12 @@ export class ThemeAnalyticsEngine {
     // Low battery: dark themes save energy on OLED displays
     if (context.batteryLevel && context.batteryLevel < 0.2) {
       recommendations.push({
-        theme: 'midnight-purple',
-        mode: 'dark',
+        theme: "midnight-purple",
+        mode: "dark",
         confidence: 0.9,
-        reason: 'Dark theme saves battery on OLED displays',
-        energyImpact: 'low',
-        performanceImpact: 'low',
+        reason: "Dark theme saves battery on OLED displays",
+        energyImpact: "low",
+        performanceImpact: "low",
       });
     }
 
@@ -446,12 +446,12 @@ export class ThemeAnalyticsEngine {
 
     return [
       {
-        theme: 'default',
-        mode: hour >= 6 && hour < 18 ? 'light' : 'dark',
+        theme: "default",
+        mode: hour >= 6 && hour < 18 ? "light" : "dark",
         confidence: 0.5,
-        reason: 'Fallback recommendation based on time of day',
-        energyImpact: 'low',
-        performanceImpact: 'low',
+        reason: "Fallback recommendation based on time of day",
+        energyImpact: "low",
+        performanceImpact: "low",
       },
     ];
   }
@@ -465,7 +465,7 @@ export class ThemeAnalyticsEngine {
       themeDurations.set(usage.theme, current + usage.duration);
     });
 
-    let mostProductive: ColorTheme = 'default';
+    let mostProductive: ColorTheme = "default";
     let longestDuration = 0;
 
     themeDurations.forEach((duration, theme) => {
@@ -571,45 +571,45 @@ class ContextDetector {
     // Setup context detection monitoring
   }
 
-  private detectDeviceType(): 'mobile' | 'tablet' | 'desktop' {
+  private detectDeviceType(): "mobile" | "tablet" | "desktop" {
     const userAgent = navigator.userAgent;
-    if (/tablet|ipad|playbook|silk/i.test(userAgent)) return 'tablet';
+    if (/tablet|ipad|playbook|silk/i.test(userAgent)) return "tablet";
     if (
       /mobile|iphone|ipod|android|blackberry|opera|mini|windows\sce|palm|smartphone|iemobile/i.test(
         userAgent,
       )
     )
-      return 'mobile';
-    return 'desktop';
+      return "mobile";
+    return "desktop";
   }
 
   private async getBatteryLevel(): Promise<number | undefined> {
     try {
-      if ('getBattery' in navigator) {
+      if ("getBattery" in navigator) {
         const battery = await (navigator as any).getBattery();
         return battery.level;
       }
     } catch (error) {
-      console.debug('Battery API not available:', error);
+      console.debug("Battery API not available:", error);
     }
     return undefined;
   }
 
-  private detectConnectionSpeed(): 'slow' | 'medium' | 'fast' {
-    if ('connection' in navigator) {
+  private detectConnectionSpeed(): "slow" | "medium" | "fast" {
+    if ("connection" in navigator) {
       const connection = (navigator as any).connection;
       const speed = connection.downlink || connection.bandwidth;
 
-      if (speed < 1) return 'slow';
-      if (speed < 5) return 'medium';
-      return 'fast';
+      if (speed < 1) return "slow";
+      if (speed < 5) return "medium";
+      return "fast";
     }
-    return 'medium';
+    return "medium";
   }
 
-  private detectUserActivity(): 'active' | 'idle' | 'focused' {
+  private detectUserActivity(): "active" | "idle" | "focused" {
     // Detect user activity level
-    return 'active'; // Simplified
+    return "active"; // Simplified
   }
 }
 

@@ -28,30 +28,36 @@ scripts/
 ## 🎯 Script Categories
 
 ### 🔧 Setup Scripts (`setup/`)
+
 **Purpose**: Initial system configuration and admin user management
 **When to Use**: During initial deployment and admin user setup
 **Dependencies**: Database connection, backend services
 
 #### `setup/activate_admin.py`
+
 - **Function**: Activates existing admin user directly via database
 - **Use Case**: Fix admin user status when account becomes inactive
 - **Safety**: Direct database manipulation with status verification
 
 #### `setup/create_admin_user.py`
+
 - **Function**: Creates new admin user with proper permissions
 - **Use Case**: Initial admin user creation for new deployments
 - **Features**: Auto-activation, role assignment, credential setup
 
 ### 🧪 Testing Scripts (`testing/`)
+
 **Purpose**: Comprehensive testing utilities for all system components
 **When to Use**: Development, CI/CD, and manual testing scenarios
 
 #### Authentication Testing (`testing/auth/`)
+
 **Purpose**: Authentication-specific testing integrated with `src/types/auth.ts`
 **Type Safety**: Full TypeScript integration with testing-specific interfaces
 **Coverage**: Login, registration, security, performance testing
 
 Key Features:
+
 - **Type-Safe Testing**: Extends `src/types/auth.ts` with testing types
 - **Comprehensive Scenarios**: 13+ authentication test scenarios
 - **Security Testing**: OWASP compliance testing
@@ -59,28 +65,34 @@ Key Features:
 - **Enterprise Integration**: CI/CD and automated testing support
 
 #### Widget Testing (`testing/`)
+
 - **`manual-widget-test.html`**: Manual testing interface for widget system
 - **Use Case**: Interactive widget functionality verification
 - **Features**: Visual testing, user interaction validation
 
 ### 🚀 Deployment Scripts (`deployment/`)
+
 **Purpose**: Infrastructure deployment and environment management
 **When to Use**: Staging deployments, environment provisioning
 
 #### `deployment/deploy-staging.sh`
+
 - **Function**: Complete staging environment deployment
 - **Features**: Docker orchestration, health checks, service validation
 - **Includes**: Database setup, Redis configuration, MCP services
 
 #### `deployment/stop-staging.sh`
+
 - **Function**: Clean shutdown of staging environment
 - **Features**: Graceful service termination, resource cleanup
 
 ### 🎨 Development Scripts (`development/`)
+
 **Purpose**: Development tools and build optimization
 **When to Use**: Theme development, build processes, development workflow
 
 #### `development/theme-build-optimizer.js`
+
 - **Function**: Advanced theme validation and optimization
 - **Features**: WCAG compliance, CSS optimization, performance analysis
 - **Output**: Optimized CSS, accessibility reports, TypeScript definitions
@@ -88,24 +100,32 @@ Key Features:
 ## 🔗 Integration with Core Types
 
 ### Authentication Integration
+
 The authentication testing scripts in `testing/auth/` are designed to work seamlessly with:
 
 ```typescript
 // Core authentication types
-import { User, LoginCredentials, AuthContextType } from '../src/types/auth';
+import { User, LoginCredentials, AuthContextType } from "../src/types/auth";
 
-// Extended testing types  
-import { TestUser, CreateTestUserRequest, TestScenario } from './testing/auth/auth-testing-types';
+// Extended testing types
+import {
+  TestUser,
+  CreateTestUserRequest,
+  TestScenario,
+} from "./testing/auth/auth-testing-types";
 ```
 
 This integration provides:
+
 - **Type Safety**: Full TypeScript coverage for testing scenarios
 - **Consistency**: Same interfaces used in production and testing
 - **Extensibility**: Easy addition of new test scenarios
 - **Maintainability**: Single source of truth for authentication types
 
 ### Widget System Integration
+
 Widget testing scripts complement:
+
 - `src/components/widgets/` - Widget implementations
 - `tests/story-2.2/` - Automated widget tests
 - `src/types/` - Widget type definitions
@@ -113,6 +133,7 @@ Widget testing scripts complement:
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 1. **Database**: PostgreSQL running on port 5432
 2. **Backend**: StockPulse API running on port 8000
 3. **Docker**: For deployment scripts
@@ -122,6 +143,7 @@ Widget testing scripts complement:
 ### Quick Start Guide
 
 #### 1. Initial Setup
+
 ```bash
 # Create admin user (run once)
 cd StockPulse
@@ -132,6 +154,7 @@ python scripts/setup/activate_admin.py
 ```
 
 #### 2. Testing Setup
+
 ```bash
 # Create test users for authentication testing
 python scripts/testing/auth/create_test_user.py
@@ -141,6 +164,7 @@ python scripts/testing/auth/create_test_user.py
 ```
 
 #### 3. Development Workflow
+
 ```bash
 # Optimize themes for production
 node scripts/development/theme-build-optimizer.js
@@ -155,6 +179,7 @@ node scripts/development/theme-build-optimizer.js
 ## 🛡️ Security Standards
 
 ### Enterprise Security Compliance
+
 All scripts follow enterprise security standards:
 
 ✅ **Input Validation**: All user inputs validated
@@ -165,7 +190,9 @@ All scripts follow enterprise security standards:
 ✅ **Error Handling**: Secure error messages without information leakage
 
 ### Testing Security
+
 Authentication testing scripts include:
+
 - **OWASP Top 10 Testing**: Comprehensive security vulnerability testing
 - **Brute Force Protection**: Account lockout testing
 - **Session Security**: Session management validation
@@ -175,14 +202,18 @@ Authentication testing scripts include:
 ## 📊 Performance & Optimization
 
 ### Theme Optimization
+
 The theme build optimizer provides:
+
 - **CSS Minification**: Production-ready CSS output
 - **Accessibility Validation**: WCAG 2.1 AA+ compliance
 - **Performance Analysis**: Load time optimization
 - **Browser Compatibility**: Cross-browser CSS generation
 
 ### Deployment Optimization
+
 Staging deployment scripts include:
+
 - **Health Checks**: Service availability verification
 - **Resource Management**: Optimal resource allocation
 - **Service Dependencies**: Proper startup order
@@ -191,13 +222,17 @@ Staging deployment scripts include:
 ## 🧹 Maintenance & Cleanup
 
 ### Test Data Management
+
 Testing scripts include automatic cleanup:
+
 - **Auto-cleanup**: Test data removal after execution
 - **Preserve Production**: Admin and production data protection
 - **Configurable Retention**: Adjustable cleanup policies
 
 ### Development Cleanup
+
 Development scripts provide:
+
 - **Build Artifacts**: Automatic cleanup of temporary files
 - **Cache Management**: Development cache clearing
 - **Log Rotation**: Automated log file management
@@ -205,14 +240,18 @@ Development scripts provide:
 ## 📈 Monitoring & Reporting
 
 ### Execution Monitoring
+
 All scripts provide:
+
 - **Execution Metrics**: Performance and timing data
 - **Success/Failure Tracking**: Comprehensive result reporting
 - **Error Collection**: Detailed error information
 - **Audit Trails**: Complete execution history
 
 ### Integration with CI/CD
+
 Scripts are designed for:
+
 - **Automated Execution**: CI/CD pipeline integration
 - **Environment Testing**: Multi-environment support
 - **Regression Testing**: Consistent test execution
@@ -221,22 +260,26 @@ Scripts are designed for:
 ## 🔄 Script Lifecycle Management
 
 ### Development Phase
+
 - Theme optimization and validation
 - Manual testing interfaces
 - Development environment setup
 
-### Testing Phase  
+### Testing Phase
+
 - Comprehensive authentication testing
 - Widget system validation
 - Security vulnerability testing
 - Performance testing
 
 ### Deployment Phase
+
 - Staging environment provisioning
 - Production deployment preparation
 - Infrastructure validation
 
 ### Maintenance Phase
+
 - Admin user management
 - Data cleanup and maintenance
 - System health monitoring
@@ -244,16 +287,19 @@ Scripts are designed for:
 ## 📚 Related Documentation
 
 ### Core Application
+
 - `src/types/auth.ts` - Authentication type definitions
 - `src/components/widgets/` - Widget implementations
 - `services/backend/scripts/` - Backend utility scripts
 
 ### Testing Documentation
+
 - `tests/story-2.2/` - Widget system tests
 - `tests/story-1.2/` - Authentication tests
 - `docs/testing/` - Testing documentation
 
 ### Deployment Documentation
+
 - `docker-compose.staging.yml` - Staging configuration
 - `docs/deployment/` - Deployment guides
 
@@ -269,4 +315,4 @@ Scripts are designed for:
 
 ---
 
-**Note**: This script directory follows enterprise architecture principles with clear separation of concerns, comprehensive type safety, and integration with the core StockPulse application types and interfaces. 
+**Note**: This script directory follows enterprise architecture principles with clear separation of concerns, comprehensive type safety, and integration with the core StockPulse application types and interfaces.

@@ -3,16 +3,16 @@
  * Simplified preview version for the widget library
  */
 
-import React from 'react';
-import { BarChart3, TrendingUp, TrendingDown } from 'lucide-react';
+import React from "react";
+import { BarChart3, TrendingUp, TrendingDown } from "lucide-react";
 
 const MarketSummaryPreview: React.FC<{ isPreview?: boolean }> = ({
   isPreview = true,
 }) => {
   const indices = [
-    { name: 'S&P 500', value: '4,567.89', change: '+0.52%', positive: true },
-    { name: 'NASDAQ', value: '14,234.56', change: '-0.32%', positive: false },
-    { name: 'DOW', value: '34,567.12', change: '+0.46%', positive: true },
+    { name: "S&P 500", value: "4,567.89", change: "+0.52%", positive: true },
+    { name: "NASDAQ", value: "14,234.56", change: "-0.32%", positive: false },
+    { name: "DOW", value: "34,567.12", change: "+0.46%", positive: true },
   ];
 
   return (
@@ -42,7 +42,7 @@ const MarketSummaryPreview: React.FC<{ isPreview?: boolean }> = ({
                 <TrendingDown className="h-3 w-3 text-red-500" />
               )}
               <span
-                className={`text-xs ${index.positive ? 'text-green-500' : 'text-red-500'}`}
+                className={`text-xs ${index.positive ? "text-green-500" : "text-red-500"}`}
               >
                 {index.change}
               </span>

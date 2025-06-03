@@ -1,45 +1,45 @@
-import React, { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
-} from '../ui/card';
-import { 
-  Form, 
-  FormControl, 
-  FormDescription, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
-  FormMessage 
-} from '../ui/form';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
-import { 
-  AlertCircle, 
-  CheckCircle, 
-  Plus, 
-  Trash2, 
-  Settings, 
+import React, { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import {
+  AlertCircle,
+  CheckCircle,
+  Plus,
+  Trash2,
+  Settings,
   RefreshCw,
   Power,
   Activity,
   Server,
   Zap,
-  Shield
-} from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { useToast } from '../../hooks/useToast';
-import { Switch } from '../ui/switch';
-import { Progress } from '../ui/progress';
+  Shield,
+} from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useToast } from "../../hooks/useToast";
+import { Switch } from "../ui/switch";
+import { Progress } from "../ui/progress";
 
 // Form schema for automation toggles
 const automationTogglesSchema = z.object({
@@ -56,7 +56,7 @@ const automationTogglesSchema = z.object({
 type AutomationTogglesValues = z.infer<typeof automationTogglesSchema>;
 
 const AutomationToggles: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('mcp');
+  const [activeTab, setActiveTab] = useState("mcp");
   const { toast } = useToast();
 
   const form = useForm<AutomationTogglesValues>({
@@ -74,20 +74,21 @@ const AutomationToggles: React.FC = () => {
   });
 
   const handleSaveSettings = (values: AutomationTogglesValues) => {
-    console.log('Automation toggles saved:', values);
-    
+    console.log("Automation toggles saved:", values);
+
     toast({
-      title: 'Settings Saved',
-      description: 'Your automation settings have been updated.',
-      variant: 'success',
+      title: "Settings Saved",
+      description: "Your automation settings have been updated.",
+      variant: "success",
     });
   };
 
   const handleEmergencyStop = () => {
     toast({
-      title: 'Emergency Stop Activated',
-      description: 'All automated trading has been halted. Please review your positions.',
-      variant: 'destructive',
+      title: "Emergency Stop Activated",
+      description:
+        "All automated trading has been halted. Please review your positions.",
+      variant: "destructive",
     });
   };
 
@@ -109,13 +110,15 @@ const AutomationToggles: React.FC = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Automation Controls</h2>
+          <h2 className="text-2xl font-bold tracking-tight">
+            Automation Controls
+          </h2>
           <p className="text-muted-foreground mt-1">
             Enable or disable automation components and MCP integrations
           </p>
         </div>
-        <Button 
-          variant="destructive" 
+        <Button
+          variant="destructive"
           className="gap-2"
           onClick={handleEmergencyStop}
         >
@@ -123,14 +126,14 @@ const AutomationToggles: React.FC = () => {
           Emergency Stop
         </Button>
       </div>
-      
+
       <Tabs defaultValue="mcp" value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="mcp">MCP Servers</TabsTrigger>
           <TabsTrigger value="safety">Safety Controls</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
-        
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSaveSettings)}>
             <TabsContent value="mcp" className="mt-6 space-y-6">
@@ -183,7 +186,7 @@ const AutomationToggles: React.FC = () => {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="enableTradingApiMcp"
@@ -221,7 +224,7 @@ const AutomationToggles: React.FC = () => {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="enableNewsAnalysisMcp"
@@ -259,7 +262,7 @@ const AutomationToggles: React.FC = () => {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="enablePortfolioOptimizer"
@@ -298,12 +301,14 @@ const AutomationToggles: React.FC = () => {
                       )}
                     />
                   </div>
-                  
+
                   <Alert variant="warning">
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>MCP Integration Notice</AlertTitle>
                     <AlertDescription>
-                      Enabling MCP servers grants them access to execute operations within StockPulse. Review security settings regularly.
+                      Enabling MCP servers grants them access to execute
+                      operations within StockPulse. Review security settings
+                      regularly.
                     </AlertDescription>
                   </Alert>
                 </CardContent>
@@ -321,7 +326,7 @@ const AutomationToggles: React.FC = () => {
                 </CardFooter>
               </Card>
             </TabsContent>
-            
+
             <TabsContent value="safety" className="mt-6 space-y-6">
               <Card>
                 <CardHeader>
@@ -351,12 +356,17 @@ const AutomationToggles: React.FC = () => {
                               <FormLabel className="text-base font-semibold">
                                 Risk Management Framework
                               </FormLabel>
-                              <Badge variant={field.value ? 'success' : 'destructive'}>
-                                {field.value ? 'Enabled' : 'Disabled'}
+                              <Badge
+                                variant={
+                                  field.value ? "success" : "destructive"
+                                }
+                              >
+                                {field.value ? "Enabled" : "Disabled"}
                               </Badge>
                             </div>
                             <FormDescription>
-                              Enforces position sizing, drawdown limits, and other risk controls
+                              Enforces position sizing, drawdown limits, and
+                              other risk controls
                             </FormDescription>
                             {field.value && (
                               <div className="mt-2">
@@ -374,7 +384,7 @@ const AutomationToggles: React.FC = () => {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="enableAuditLogging"
@@ -391,12 +401,17 @@ const AutomationToggles: React.FC = () => {
                               <FormLabel className="text-base font-semibold">
                                 Comprehensive Audit Logging
                               </FormLabel>
-                              <Badge variant={field.value ? 'success' : 'destructive'}>
-                                {field.value ? 'Enabled' : 'Disabled'}
+                              <Badge
+                                variant={
+                                  field.value ? "success" : "destructive"
+                                }
+                              >
+                                {field.value ? "Enabled" : "Disabled"}
                               </Badge>
                             </div>
                             <FormDescription>
-                              Records all trading activities, MCP operations, and system events
+                              Records all trading activities, MCP operations,
+                              and system events
                             </FormDescription>
                             {field.value && (
                               <div className="mt-2">
@@ -414,7 +429,7 @@ const AutomationToggles: React.FC = () => {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="enableEmergencyStop"
@@ -431,12 +446,17 @@ const AutomationToggles: React.FC = () => {
                               <FormLabel className="text-base font-semibold">
                                 Automatic Emergency Stop
                               </FormLabel>
-                              <Badge variant={field.value ? 'success' : 'destructive'}>
-                                {field.value ? 'Enabled' : 'Disabled'}
+                              <Badge
+                                variant={
+                                  field.value ? "success" : "destructive"
+                                }
+                              >
+                                {field.value ? "Enabled" : "Disabled"}
                               </Badge>
                             </div>
                             <FormDescription>
-                              Automatically halts all trading when risk thresholds are exceeded
+                              Automatically halts all trading when risk
+                              thresholds are exceeded
                             </FormDescription>
                             {field.value && (
                               <div className="mt-2">
@@ -455,19 +475,21 @@ const AutomationToggles: React.FC = () => {
                       )}
                     />
                   </div>
-                  
+
                   <Alert>
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>Safety Recommendation</AlertTitle>
                     <AlertDescription>
-                      We strongly recommend keeping all safety controls enabled for automated trading operations.
+                      We strongly recommend keeping all safety controls enabled
+                      for automated trading operations.
                     </AlertDescription>
                   </Alert>
                 </CardContent>
                 <CardFooter className="flex justify-between border-t px-6 py-4">
                   <div className="text-sm text-muted-foreground">
                     <Shield className="inline-block mr-1 h-4 w-4" />
-                    Safety controls help protect your portfolio from unexpected events
+                    Safety controls help protect your portfolio from unexpected
+                    events
                   </div>
                   <Button variant="outline" size="sm" asChild>
                     <a href="/agents/risk-management">
@@ -478,7 +500,7 @@ const AutomationToggles: React.FC = () => {
                 </CardFooter>
               </Card>
             </TabsContent>
-            
+
             <TabsContent value="notifications" className="mt-6 space-y-6">
               <Card>
                 <CardHeader>
@@ -507,21 +529,26 @@ const AutomationToggles: React.FC = () => {
                             <FormLabel className="text-base font-semibold">
                               Automation Notifications
                             </FormLabel>
-                            <Badge variant={field.value ? 'success' : 'destructive'}>
-                              {field.value ? 'Enabled' : 'Disabled'}
+                            <Badge
+                              variant={field.value ? "success" : "destructive"}
+                            >
+                              {field.value ? "Enabled" : "Disabled"}
                             </Badge>
                           </div>
                           <FormDescription>
-                            Receive notifications for important automation events
+                            Receive notifications for important automation
+                            events
                           </FormDescription>
                         </div>
                       </FormItem>
                     )}
                   />
-                  
-                  {form.watch('enableNotifications') && (
+
+                  {form.watch("enableNotifications") && (
                     <div className="space-y-4 mt-4">
-                      <h3 className="text-sm font-semibold">Notification Channels</h3>
+                      <h3 className="text-sm font-semibold">
+                        Notification Channels
+                      </h3>
                       <div className="border rounded-lg divide-y">
                         <div className="p-4 flex justify-between items-center">
                           <div className="flex items-center gap-2">
@@ -552,8 +579,10 @@ const AutomationToggles: React.FC = () => {
                           <Badge variant="outline">All Events</Badge>
                         </div>
                       </div>
-                      
-                      <h3 className="text-sm font-semibold mt-6">Event Types</h3>
+
+                      <h3 className="text-sm font-semibold mt-6">
+                        Event Types
+                      </h3>
                       <div className="border rounded-lg divide-y">
                         <div className="p-4 flex justify-between items-center">
                           <span>Trade Execution</span>
@@ -587,14 +616,14 @@ const AutomationToggles: React.FC = () => {
                 </CardFooter>
               </Card>
             </TabsContent>
-            
+
             <div className="flex justify-end mt-6">
               <Button type="submit">Save Settings</Button>
             </div>
           </form>
         </Form>
       </Tabs>
-      
+
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">System Status</CardTitle>
@@ -617,21 +646,27 @@ const AutomationToggles: React.FC = () => {
                 All systems operating normally
               </p>
             </div>
-            
+
             <div>
               <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-medium">MCP Server Availability</span>
+                <span className="text-sm font-medium">
+                  MCP Server Availability
+                </span>
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-yellow-500"></div>
                   <span className="text-sm">Partial</span>
                 </div>
               </div>
-              <Progress value={75} className="h-2" indicatorClassName="bg-yellow-500" />
+              <Progress
+                value={75}
+                className="h-2"
+                indicatorClassName="bg-yellow-500"
+              />
               <p className="text-xs text-muted-foreground mt-1">
                 3/4 MCP servers online and responding
               </p>
             </div>
-            
+
             <div>
               <div className="flex justify-between items-center mb-1">
                 <span className="text-sm font-medium">Active Automations</span>
@@ -642,7 +677,7 @@ const AutomationToggles: React.FC = () => {
                 3 out of 4 automations currently running
               </p>
             </div>
-            
+
             <div className="pt-4 border-t">
               <h3 className="text-sm font-semibold mb-2">Recent Events</h3>
               <div className="space-y-2 text-sm">

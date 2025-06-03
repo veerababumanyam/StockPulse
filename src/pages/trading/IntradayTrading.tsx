@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 // import Navbar from '@components/layout/Navbar'; // REMOVE: MainLayout provides the Navbar
 // import Footer from '@components/layout/Footer'; // REMOVE: MainLayout provides the Footer
 
@@ -103,7 +103,7 @@ const IntradayTrading: React.FC = () => {
                     <div className="relative">
                       <div
                         className="absolute inset-0 bg-green-500/10 rounded"
-                        style={{ width: '95%' }}
+                        style={{ width: "95%" }}
                       ></div>
                       <div className="relative flex justify-between text-xs py-1 px-2">
                         <span className="text-green-600">182.61</span>
@@ -114,7 +114,7 @@ const IntradayTrading: React.FC = () => {
                     <div className="relative">
                       <div
                         className="absolute inset-0 bg-green-500/10 rounded"
-                        style={{ width: '88%' }}
+                        style={{ width: "88%" }}
                       ></div>
                       <div className="relative flex justify-between text-xs py-1 px-2">
                         <span className="text-green-600">182.60</span>
@@ -125,7 +125,7 @@ const IntradayTrading: React.FC = () => {
                     <div className="relative">
                       <div
                         className="absolute inset-0 bg-green-500/10 rounded"
-                        style={{ width: '76%' }}
+                        style={{ width: "76%" }}
                       ></div>
                       <div className="relative flex justify-between text-xs py-1 px-2">
                         <span className="text-green-600">182.59</span>
@@ -136,7 +136,7 @@ const IntradayTrading: React.FC = () => {
                     <div className="relative">
                       <div
                         className="absolute inset-0 bg-green-500/10 rounded"
-                        style={{ width: '62%' }}
+                        style={{ width: "62%" }}
                       ></div>
                       <div className="relative flex justify-between text-xs py-1 px-2">
                         <span className="text-green-600">182.58</span>
@@ -147,7 +147,7 @@ const IntradayTrading: React.FC = () => {
                     <div className="relative">
                       <div
                         className="absolute inset-0 bg-green-500/10 rounded"
-                        style={{ width: '54%' }}
+                        style={{ width: "54%" }}
                       ></div>
                       <div className="relative flex justify-between text-xs py-1 px-2">
                         <span className="text-green-600">182.57</span>
@@ -171,7 +171,7 @@ const IntradayTrading: React.FC = () => {
                     <div className="relative">
                       <div
                         className="absolute inset-0 bg-red-500/10 rounded"
-                        style={{ width: '89%' }}
+                        style={{ width: "89%" }}
                       ></div>
                       <div className="relative flex justify-between text-xs py-1 px-2">
                         <span className="text-red-600">182.64</span>
@@ -182,7 +182,7 @@ const IntradayTrading: React.FC = () => {
                     <div className="relative">
                       <div
                         className="absolute inset-0 bg-red-500/10 rounded"
-                        style={{ width: '72%' }}
+                        style={{ width: "72%" }}
                       ></div>
                       <div className="relative flex justify-between text-xs py-1 px-2">
                         <span className="text-red-600">182.65</span>
@@ -193,7 +193,7 @@ const IntradayTrading: React.FC = () => {
                     <div className="relative">
                       <div
                         className="absolute inset-0 bg-red-500/10 rounded"
-                        style={{ width: '58%' }}
+                        style={{ width: "58%" }}
                       ></div>
                       <div className="relative flex justify-between text-xs py-1 px-2">
                         <span className="text-red-600">182.66</span>
@@ -204,7 +204,7 @@ const IntradayTrading: React.FC = () => {
                     <div className="relative">
                       <div
                         className="absolute inset-0 bg-red-500/10 rounded"
-                        style={{ width: '43%' }}
+                        style={{ width: "43%" }}
                       ></div>
                       <div className="relative flex justify-between text-xs py-1 px-2">
                         <span className="text-red-600">182.67</span>
@@ -215,7 +215,7 @@ const IntradayTrading: React.FC = () => {
                     <div className="relative">
                       <div
                         className="absolute inset-0 bg-red-500/10 rounded"
-                        style={{ width: '34%' }}
+                        style={{ width: "34%" }}
                       ></div>
                       <div className="relative flex justify-between text-xs py-1 px-2">
                         <span className="text-red-600">182.68</span>

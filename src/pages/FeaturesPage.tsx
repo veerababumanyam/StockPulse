@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import React from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
   Brain,
   TrendingUp,
@@ -18,7 +18,7 @@ import {
   Star,
   Users,
   Clock,
-} from 'lucide-react';
+} from "lucide-react";
 
 const FeaturesPage: React.FC = () => {
   return (
@@ -91,13 +91,13 @@ const FeaturesPage: React.FC = () => {
               <h1 className="text-4xl sm:text-5xl font-bold text-text mb-6">
                 Powerful Features for
                 <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
-                  {' '}
+                  {" "}
                   Smart Trading
                 </span>
               </h1>
               <p className="text-lg text-text/70 max-w-3xl mx-auto">
-                Discover the powerful features that make StockPulse the trader&apos;s
-                choice for intelligent market analysis.
+                Discover the powerful features that make StockPulse the
+                trader&apos;s choice for intelligent market analysis.
               </p>
             </motion.div>
 
@@ -106,80 +106,80 @@ const FeaturesPage: React.FC = () => {
               {[
                 {
                   icon: Activity,
-                  title: 'Real-Time Market Data',
+                  title: "Real-Time Market Data",
                   description:
-                    'Access live market data, price movements, and volume analysis with millisecond precision. Stay ahead with real-time updates.',
-                  color: 'from-blue-500 to-blue-600',
+                    "Access live market data, price movements, and volume analysis with millisecond precision. Stay ahead with real-time updates.",
+                  color: "from-blue-500 to-blue-600",
                   features: [
-                    'Live price feeds',
-                    'Volume analysis',
-                    'Market depth',
-                    'News integration',
+                    "Live price feeds",
+                    "Volume analysis",
+                    "Market depth",
+                    "News integration",
                   ],
                 },
                 {
                   icon: Brain,
-                  title: 'AI Trading Signals',
+                  title: "AI Trading Signals",
                   description:
-                    'Advanced machine learning algorithms analyze patterns and generate actionable trading signals with high accuracy.',
-                  color: 'from-purple-500 to-purple-600',
+                    "Advanced machine learning algorithms analyze patterns and generate actionable trading signals with high accuracy.",
+                  color: "from-purple-500 to-purple-600",
                   features: [
-                    'Pattern recognition',
-                    'Sentiment analysis',
-                    'Predictive modeling',
-                    'Risk assessment',
+                    "Pattern recognition",
+                    "Sentiment analysis",
+                    "Predictive modeling",
+                    "Risk assessment",
                   ],
                 },
                 {
                   icon: PieChart,
-                  title: 'Portfolio Analytics',
+                  title: "Portfolio Analytics",
                   description:
-                    'Comprehensive portfolio tracking with performance metrics, risk analysis, and asset allocation insights.',
-                  color: 'from-green-500 to-green-600',
+                    "Comprehensive portfolio tracking with performance metrics, risk analysis, and asset allocation insights.",
+                  color: "from-green-500 to-green-600",
                   features: [
-                    'Performance tracking',
-                    'Risk metrics',
-                    'Asset allocation',
-                    'Rebalancing alerts',
+                    "Performance tracking",
+                    "Risk metrics",
+                    "Asset allocation",
+                    "Rebalancing alerts",
                   ],
                 },
                 {
                   icon: Target,
-                  title: 'Smart Screeners',
+                  title: "Smart Screeners",
                   description:
-                    'Find the best opportunities with customizable stock screeners and advanced filtering capabilities.',
-                  color: 'from-orange-500 to-orange-600',
+                    "Find the best opportunities with customizable stock screeners and advanced filtering capabilities.",
+                  color: "from-orange-500 to-orange-600",
                   features: [
-                    'Custom filters',
-                    'Technical indicators',
-                    'Fundamental data',
-                    'Saved searches',
+                    "Custom filters",
+                    "Technical indicators",
+                    "Fundamental data",
+                    "Saved searches",
                   ],
                 },
                 {
                   icon: Shield,
-                  title: 'Risk Management',
+                  title: "Risk Management",
                   description:
-                    'Built-in risk management tools to protect your capital and optimize returns with smart position sizing.',
-                  color: 'from-red-500 to-red-600',
+                    "Built-in risk management tools to protect your capital and optimize returns with smart position sizing.",
+                  color: "from-red-500 to-red-600",
                   features: [
-                    'Stop loss automation',
-                    'Position sizing',
-                    'Risk limits',
-                    'Drawdown protection',
+                    "Stop loss automation",
+                    "Position sizing",
+                    "Risk limits",
+                    "Drawdown protection",
                   ],
                 },
                 {
                   icon: Zap,
-                  title: 'Lightning Fast',
+                  title: "Lightning Fast",
                   description:
-                    'Optimized for speed with instant order execution, real-time updates, and minimal latency.',
-                  color: 'from-yellow-500 to-yellow-600',
+                    "Optimized for speed with instant order execution, real-time updates, and minimal latency.",
+                  color: "from-yellow-500 to-yellow-600",
                   features: [
-                    'Sub-second execution',
-                    'Real-time updates',
-                    'Low latency feeds',
-                    'Optimized algorithms',
+                    "Sub-second execution",
+                    "Real-time updates",
+                    "Low latency feeds",
+                    "Optimized algorithms",
                   ],
                 },
               ].map((feature, index) => (
@@ -240,21 +240,21 @@ const FeaturesPage: React.FC = () => {
               {[
                 {
                   icon: Globe,
-                  title: 'Global Infrastructure',
+                  title: "Global Infrastructure",
                   description:
-                    'Distributed servers worldwide ensure low latency and high availability for all users.',
+                    "Distributed servers worldwide ensure low latency and high availability for all users.",
                 },
                 {
                   icon: Smartphone,
-                  title: 'Cross-Platform',
+                  title: "Cross-Platform",
                   description:
-                    'Access your trading platform from any device - web, mobile, or desktop applications.',
+                    "Access your trading platform from any device - web, mobile, or desktop applications.",
                 },
                 {
                   icon: Lock,
-                  title: 'Enterprise Security',
+                  title: "Enterprise Security",
                   description:
-                    'Bank-grade security with end-to-end encryption and multi-factor authentication.',
+                    "Bank-grade security with end-to-end encryption and multi-factor authentication.",
                 },
               ].map((tech, index) => (
                 <motion.div

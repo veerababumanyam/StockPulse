@@ -9,25 +9,25 @@
 // ===============================================
 
 // Theme utilities
-export * from './theme';
+export * from "./theme";
 
-// Portfolio utilities  
-export * from './portfolio';
+// Portfolio utilities
+export * from "./portfolio";
 
 // Dashboard utilities
-export * from './dashboard';
+export * from "./dashboard";
 
 // Common utilities
-export * from './common';
+export * from "./common";
 
 // ===============================================
 // Backward Compatibility Exports
 // ===============================================
 
 // Direct exports for existing imports (maintains compatibility)
-export { cn } from './theme/cn';
-export { debounce } from './common/debounce';
-export { getEnvVar, isProduction, isDevelopment } from './common/env';
+export { cn } from "./theme/cn";
+export { debounce } from "./common/debounce";
+export { getEnvVar, isProduction, isDevelopment } from "./common/env";
 
 // ===============================================
 // Convenience Re-exports
@@ -43,4 +43,4 @@ export { getEnvVar, isProduction, isDevelopment } from './common/env';
 // export { takeScreenshot } from './common';
 
 // Note: Specific function exports depend on actual implementations
-// This structure provides both organization and backward compatibility 
+// This structure provides both organization and backward compatibility

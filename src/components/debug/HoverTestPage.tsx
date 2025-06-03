@@ -3,8 +3,8 @@
  * Simple page to show how containers highlight with border colors on hover
  */
 
-import React from 'react';
-import { useTheme } from '../../hooks/useTheme';
+import React from "react";
+import { useTheme } from "../../hooks/useTheme";
 
 export const HoverTestPage: React.FC = () => {
   const { theme, colorTheme, setColorTheme } = useTheme();
@@ -28,19 +28,19 @@ export const HoverTestPage: React.FC = () => {
         </h2>
         <div className="flex gap-4 flex-wrap">
           <button
-            onClick={() => setColorTheme('default')}
+            onClick={() => setColorTheme("default")}
             className="px-4 py-2 border border-surface rounded-lg hover:border-primary"
           >
             Default
           </button>
           <button
-            onClick={() => setColorTheme('cyber-neon')}
+            onClick={() => setColorTheme("cyber-neon")}
             className="px-4 py-2 border border-surface rounded-lg hover:border-primary"
           >
             Cyber Neon
           </button>
           <button
-            onClick={() => setColorTheme('tropical-jungle')}
+            onClick={() => setColorTheme("tropical-jungle")}
             className="px-4 py-2 border border-surface rounded-lg hover:border-primary"
           >
             Tropical Jungle

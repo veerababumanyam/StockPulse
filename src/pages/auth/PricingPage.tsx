@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   CheckCircle,
   X,
@@ -15,43 +15,43 @@ import {
   Sparkles,
   Users,
   Award,
-  Activity
-} from 'lucide-react';
+  Activity,
+} from "lucide-react";
 
 const PricingPage: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSignIn = () => {
-    navigate('/auth/login');
+    navigate("/auth/login");
   };
 
   const handleGetStarted = () => {
-    navigate('/auth/register');
+    navigate("/auth/register");
   };
 
   const handleNavigation = (section: string) => {
     setIsMenuOpen(false);
-    
+
     switch (section.toLowerCase()) {
-      case 'features':
-        navigate('/');
+      case "features":
+        navigate("/");
         // After navigation, scroll to features
         setTimeout(() => {
-          const featuresSection = document.getElementById('features');
+          const featuresSection = document.getElementById("features");
           if (featuresSection) {
-            featuresSection.scrollIntoView({ behavior: 'smooth' });
+            featuresSection.scrollIntoView({ behavior: "smooth" });
           }
         }, 100);
         break;
-      case 'pricing':
+      case "pricing":
         // Already on pricing page
         break;
-      case 'about':
-        navigate('/about');
+      case "about":
+        navigate("/about");
         break;
-      case 'contact':
-        navigate('/auth/contact');
+      case "contact":
+        navigate("/auth/contact");
         break;
       default:
         break;
@@ -60,66 +60,66 @@ const PricingPage: React.FC = () => {
 
   const plans = [
     {
-      name: 'Starter',
-      price: '$29',
-      period: '/month',
-      description: 'Perfect for individual traders getting started',
+      name: "Starter",
+      price: "$29",
+      period: "/month",
+      description: "Perfect for individual traders getting started",
       features: [
-        'Real-time market data',
-        'Basic trading signals',
-        'Portfolio tracking',
-        'Mobile app access',
-        'Email support',
-        'Up to 10 watchlists',
+        "Real-time market data",
+        "Basic trading signals",
+        "Portfolio tracking",
+        "Mobile app access",
+        "Email support",
+        "Up to 10 watchlists",
       ],
       notIncluded: [
-        'Advanced AI analytics',
-        'Custom indicators',
-        'Priority support',
-        'API access',
+        "Advanced AI analytics",
+        "Custom indicators",
+        "Priority support",
+        "API access",
       ],
       popular: false,
-      cta: 'Start Free Trial',
+      cta: "Start Free Trial",
     },
     {
-      name: 'Professional',
-      price: '$79',
-      period: '/month',
-      description: 'Advanced tools for serious traders',
+      name: "Professional",
+      price: "$79",
+      period: "/month",
+      description: "Advanced tools for serious traders",
       features: [
-        'Everything in Starter',
-        'Advanced AI trading signals',
-        'Custom technical indicators',
-        'Risk management tools',
-        'Advanced portfolio analytics',
-        'Priority support',
-        'Unlimited watchlists',
-        'Export data features',
+        "Everything in Starter",
+        "Advanced AI trading signals",
+        "Custom technical indicators",
+        "Risk management tools",
+        "Advanced portfolio analytics",
+        "Priority support",
+        "Unlimited watchlists",
+        "Export data features",
       ],
-      notIncluded: ['White-label solutions', 'Dedicated account manager'],
+      notIncluded: ["White-label solutions", "Dedicated account manager"],
       popular: true,
-      cta: 'Start Free Trial',
+      cta: "Start Free Trial",
     },
     {
-      name: 'Enterprise',
-      price: '$299',
-      period: '/month',
-      description: 'Complete solution for institutions',
+      name: "Enterprise",
+      price: "$299",
+      period: "/month",
+      description: "Complete solution for institutions",
       features: [
-        'Everything in Professional',
-        'API access & webhooks',
-        'White-label solutions',
-        'Custom integrations',
-        'Dedicated account manager',
-        'Multi-user accounts',
-        'Advanced security features',
-        'Custom reporting',
-        'SLA guarantee',
-        '24/7 phone support',
+        "Everything in Professional",
+        "API access & webhooks",
+        "White-label solutions",
+        "Custom integrations",
+        "Dedicated account manager",
+        "Multi-user accounts",
+        "Advanced security features",
+        "Custom reporting",
+        "SLA guarantee",
+        "24/7 phone support",
       ],
       notIncluded: [],
       popular: false,
-      cta: 'Contact Sales',
+      cta: "Contact Sales",
     },
   ];
 
@@ -133,7 +133,7 @@ const PricingPage: React.FC = () => {
             y: [-10, 10, -10],
             x: [-5, 5, -5],
           }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
           className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"
@@ -141,25 +141,33 @@ const PricingPage: React.FC = () => {
             y: [10, -10, 10],
             x: [5, -5, 5],
           }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
-        
+
         {/* Animated grid */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent bg-[size:50px_50px] opacity-20" 
-             style={{ backgroundImage: 'radial-gradient(circle, #06b6d4 1px, transparent 1px)' }} />
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent bg-[size:50px_50px] opacity-20"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, #06b6d4 1px, transparent 1px)",
+          }}
+        />
       </div>
 
       {/* Modern Navigation */}
-      <motion.nav 
+      <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
         className="fixed top-0 w-full z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-2xl"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3 group cursor-pointer">
+            <Link
+              to="/"
+              className="flex items-center space-x-3 group cursor-pointer"
+            >
               <div className="relative">
                 <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-xl flex items-center justify-center">
                   <TrendingUp className="w-6 h-6 text-white" />
@@ -177,31 +185,33 @@ const PricingPage: React.FC = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              {['Features', 'Pricing', 'About', 'Contact'].map((item, index) => (
-                <motion.button
-                  key={item}
-                  onClick={() => handleNavigation(item)}
-                  className={`relative transition-all duration-300 font-medium cursor-pointer ${
-                    item === 'Pricing' 
-                      ? 'text-cyan-400' 
-                      : 'text-white/70 hover:text-white'
-                  }`}
-                  whileHover={{ y: -2 }}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 + 0.5 }}
-                >
-                  {item}
-                  {item === 'Pricing' && (
-                    <motion.div
-                      className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400"
-                      initial={{ width: 0 }}
-                      animate={{ width: '100%' }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  )}
-                </motion.button>
-              ))}
+              {["Features", "Pricing", "About", "Contact"].map(
+                (item, index) => (
+                  <motion.button
+                    key={item}
+                    onClick={() => handleNavigation(item)}
+                    className={`relative transition-all duration-300 font-medium cursor-pointer ${
+                      item === "Pricing"
+                        ? "text-cyan-400"
+                        : "text-white/70 hover:text-white"
+                    }`}
+                    whileHover={{ y: -2 }}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 + 0.5 }}
+                  >
+                    {item}
+                    {item === "Pricing" && (
+                      <motion.div
+                        className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400"
+                        initial={{ width: 0 }}
+                        animate={{ width: "100%" }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    )}
+                  </motion.button>
+                ),
+              )}
             </div>
 
             {/* Auth Buttons */}
@@ -217,7 +227,10 @@ const PricingPage: React.FC = () => {
               <motion.button
                 onClick={handleGetStarted}
                 className="bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-semibold px-6 py-2.5 rounded-xl shadow-lg hover:shadow-cyan-500/25 transition-all duration-300"
-                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(6, 182, 212, 0.3)' }}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 20px 40px rgba(6, 182, 212, 0.3)",
+                }}
                 whileTap={{ scale: 0.95 }}
               >
                 Get Started
@@ -262,28 +275,30 @@ const PricingPage: React.FC = () => {
           {isMenuOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
               className="md:hidden backdrop-blur-xl bg-black/20 border-t border-white/10"
             >
               <div className="px-4 py-6 space-y-4">
-                {['Features', 'Pricing', 'About', 'Contact'].map((item, index) => (
-                  <motion.button
-                    key={item}
-                    onClick={() => handleNavigation(item)}
-                    className={`block py-3 text-lg transition-colors w-full text-left ${
-                      item === 'Pricing' 
-                        ? 'text-cyan-400' 
-                        : 'text-white/70 hover:text-white'
-                    }`}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    {item}
-                  </motion.button>
-                ))}
+                {["Features", "Pricing", "About", "Contact"].map(
+                  (item, index) => (
+                    <motion.button
+                      key={item}
+                      onClick={() => handleNavigation(item)}
+                      className={`block py-3 text-lg transition-colors w-full text-left ${
+                        item === "Pricing"
+                          ? "text-cyan-400"
+                          : "text-white/70 hover:text-white"
+                      }`}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      {item}
+                    </motion.button>
+                  ),
+                )}
                 <hr className="border-white/10 my-4" />
                 <motion.button
                   onClick={handleSignIn}
@@ -331,13 +346,14 @@ const PricingPage: React.FC = () => {
               </motion.div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-                Simple, Transparent{' '}
+                Simple, Transparent{" "}
                 <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
                   Pricing
                 </span>
               </h1>
               <p className="text-xl text-white/70 max-w-3xl mx-auto mb-8">
-                Choose the perfect plan for your trading needs. All plans include a 14-day free trial with no commitment.
+                Choose the perfect plan for your trading needs. All plans
+                include a 14-day free trial with no commitment.
               </p>
 
               {/* Pricing Toggle */}
@@ -361,8 +377,8 @@ const PricingPage: React.FC = () => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className={`relative backdrop-blur-xl bg-white/5 border rounded-3xl p-8 shadow-2xl transition-all duration-300 hover:shadow-cyan-500/25 ${
                     plan.popular
-                      ? 'border-cyan-500 scale-105 bg-gradient-to-b from-cyan-500/10 to-purple-500/10'
-                      : 'border-white/10 hover:border-cyan-500/30'
+                      ? "border-cyan-500 scale-105 bg-gradient-to-b from-cyan-500/10 to-purple-500/10"
+                      : "border-white/10 hover:border-cyan-500/30"
                   }`}
                 >
                   {plan.popular && (
@@ -384,7 +400,9 @@ const PricingPage: React.FC = () => {
                       <span className="text-5xl font-bold text-white">
                         {plan.price}
                       </span>
-                      <span className="text-white/70 ml-2 text-lg">{plan.period}</span>
+                      <span className="text-white/70 ml-2 text-lg">
+                        {plan.period}
+                      </span>
                     </div>
                   </div>
 
@@ -419,16 +437,16 @@ const PricingPage: React.FC = () => {
                   {/* CTA Button */}
                   <motion.button
                     onClick={() => {
-                      if (plan.name === 'Enterprise') {
-                        navigate('/auth/contact');
+                      if (plan.name === "Enterprise") {
+                        navigate("/auth/contact");
                       } else {
                         handleGetStarted();
                       }
                     }}
                     className={`w-full py-4 px-6 rounded-xl font-semibold text-center transition-all duration-300 flex items-center justify-center group ${
                       plan.popular
-                        ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg hover:shadow-cyan-500/50'
-                        : 'bg-white/5 border-2 border-cyan-500 text-cyan-400 hover:bg-cyan-500 hover:text-white'
+                        ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg hover:shadow-cyan-500/50"
+                        : "bg-white/5 border-2 border-cyan-500 text-cyan-400 hover:bg-cyan-500 hover:text-white"
                     }`}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -456,7 +474,8 @@ const PricingPage: React.FC = () => {
                 Compare All Features
               </h2>
               <p className="text-lg text-white/70 max-w-3xl mx-auto">
-                See exactly what's included in each plan to make the best choice for your trading needs.
+                See exactly what's included in each plan to make the best choice
+                for your trading needs.
               </p>
             </motion.div>
 
@@ -488,20 +507,28 @@ const PricingPage: React.FC = () => {
                   </thead>
                   <tbody className="divide-y divide-white/10">
                     {[
-                      ['Real-time market data', true, true, true],
-                      ['Trading signals', 'Basic', 'Advanced AI', 'Advanced AI'],
-                      ['Portfolio tracking', true, true, true],
-                      ['Custom indicators', false, true, true],
-                      ['Risk management', false, true, true],
-                      ['API access', false, false, true],
-                      ['Priority support', false, true, true],
-                      ['Dedicated account manager', false, false, true],
-                      ['White-label solutions', false, false, true],
+                      ["Real-time market data", true, true, true],
+                      [
+                        "Trading signals",
+                        "Basic",
+                        "Advanced AI",
+                        "Advanced AI",
+                      ],
+                      ["Portfolio tracking", true, true, true],
+                      ["Custom indicators", false, true, true],
+                      ["Risk management", false, true, true],
+                      ["API access", false, false, true],
+                      ["Priority support", false, true, true],
+                      ["Dedicated account manager", false, false, true],
+                      ["White-label solutions", false, false, true],
                     ].map((row, index) => (
-                      <tr key={index} className="hover:bg-white/5 transition-colors">
+                      <tr
+                        key={index}
+                        className="hover:bg-white/5 transition-colors"
+                      >
                         <td className="py-4 px-6 text-white">{row[0]}</td>
                         <td className="py-4 px-6 text-center">
-                          {typeof row[1] === 'boolean' ? (
+                          {typeof row[1] === "boolean" ? (
                             row[1] ? (
                               <CheckCircle className="w-5 h-5 text-green-400 mx-auto" />
                             ) : (
@@ -512,7 +539,7 @@ const PricingPage: React.FC = () => {
                           )}
                         </td>
                         <td className="py-4 px-6 text-center">
-                          {typeof row[2] === 'boolean' ? (
+                          {typeof row[2] === "boolean" ? (
                             row[2] ? (
                               <CheckCircle className="w-5 h-5 text-green-400 mx-auto" />
                             ) : (
@@ -523,7 +550,7 @@ const PricingPage: React.FC = () => {
                           )}
                         </td>
                         <td className="py-4 px-6 text-center">
-                          {typeof row[3] === 'boolean' ? (
+                          {typeof row[3] === "boolean" ? (
                             row[3] ? (
                               <CheckCircle className="w-5 h-5 text-green-400 mx-auto" />
                             ) : (
@@ -560,24 +587,29 @@ const PricingPage: React.FC = () => {
             <div className="space-y-6">
               {[
                 {
-                  question: 'Can I try StockPulse before purchasing?',
-                  answer: 'Yes! All plans include a 14-day free trial with full access to features. No credit card required to start.',
+                  question: "Can I try StockPulse before purchasing?",
+                  answer:
+                    "Yes! All plans include a 14-day free trial with full access to features. No credit card required to start.",
                 },
                 {
-                  question: 'Can I change my plan later?',
-                  answer: 'Absolutely. You can upgrade or downgrade your plan at any time. Changes take effect immediately with prorated billing.',
+                  question: "Can I change my plan later?",
+                  answer:
+                    "Absolutely. You can upgrade or downgrade your plan at any time. Changes take effect immediately with prorated billing.",
                 },
                 {
-                  question: 'What payment methods do you accept?',
-                  answer: 'We accept all major credit cards, PayPal, and bank transfers for Enterprise customers. All payments are processed securely.',
+                  question: "What payment methods do you accept?",
+                  answer:
+                    "We accept all major credit cards, PayPal, and bank transfers for Enterprise customers. All payments are processed securely.",
                 },
                 {
-                  question: 'Is there a cancellation fee?',
-                  answer: 'No cancellation fees. You can cancel your subscription at any time and continue using the service until the end of your billing period.',
+                  question: "Is there a cancellation fee?",
+                  answer:
+                    "No cancellation fees. You can cancel your subscription at any time and continue using the service until the end of your billing period.",
                 },
                 {
-                  question: 'Do you offer refunds?',
-                  answer: 'We offer a 30-day money-back guarantee for all paid plans. If you\'re not satisfied, contact us for a full refund.',
+                  question: "Do you offer refunds?",
+                  answer:
+                    "We offer a 30-day money-back guarantee for all paid plans. If you're not satisfied, contact us for a full refund.",
                 },
               ].map((faq, index) => (
                 <motion.div
@@ -613,7 +645,8 @@ const PricingPage: React.FC = () => {
                 Ready to Start Trading Smarter?
               </h2>
               <p className="text-xl mb-8 text-white/80 max-w-2xl mx-auto">
-                Join thousands of successful traders using StockPulse to maximize their returns
+                Join thousands of successful traders using StockPulse to
+                maximize their returns
               </p>
               <motion.button
                 onClick={handleGetStarted}
@@ -656,12 +689,18 @@ const PricingPage: React.FC = () => {
               <h3 className="font-semibold text-white mb-4">Product</h3>
               <ul className="space-y-2 text-white/70">
                 <li>
-                  <button onClick={() => handleNavigation('features')} className="hover:text-cyan-400 transition-colors">
+                  <button
+                    onClick={() => handleNavigation("features")}
+                    className="hover:text-cyan-400 transition-colors"
+                  >
                     Features
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => handleNavigation('pricing')} className="hover:text-cyan-400 transition-colors">
+                  <button
+                    onClick={() => handleNavigation("pricing")}
+                    className="hover:text-cyan-400 transition-colors"
+                  >
                     Pricing
                   </button>
                 </li>
@@ -682,7 +721,10 @@ const PricingPage: React.FC = () => {
               <h3 className="font-semibold text-white mb-4">Company</h3>
               <ul className="space-y-2 text-white/70">
                 <li>
-                  <button onClick={() => handleNavigation('about')} className="hover:text-cyan-400 transition-colors">
+                  <button
+                    onClick={() => handleNavigation("about")}
+                    className="hover:text-cyan-400 transition-colors"
+                  >
                     About
                   </button>
                 </li>
@@ -697,7 +739,10 @@ const PricingPage: React.FC = () => {
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => handleNavigation('contact')} className="hover:text-cyan-400 transition-colors">
+                  <button
+                    onClick={() => handleNavigation("contact")}
+                    className="hover:text-cyan-400 transition-colors"
+                  >
                     Contact
                   </button>
                 </li>
@@ -740,4 +785,4 @@ const PricingPage: React.FC = () => {
   );
 };
 
-export default PricingPage; 
+export default PricingPage;

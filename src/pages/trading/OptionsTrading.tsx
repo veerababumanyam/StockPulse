@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 // import Navbar from '@components/layout/Navbar'; // REMOVE: MainLayout provides the Navbar
 // import Footer from '@components/layout/Footer'; // REMOVE: MainLayout provides the Footer
 

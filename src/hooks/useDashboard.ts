@@ -3,7 +3,7 @@
  * Manages dashboard state, layout, and widget operations
  * Part of Story 2.2: Customizable Widget System
  */
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   DashboardLayout,
   DashboardConfig,
@@ -11,9 +11,9 @@ import {
   WidgetInstance,
   DEFAULT_LAYOUTS,
   WIDGET_LIBRARY,
-} from '../types/dashboard';
-import dashboardService from '../services/dashboardServicexxx';
-import { generateWidgetId } from '../utils/dashboard';
+} from "../types/dashboard";
+import dashboardService from "../services/dashboardServicexxx";
+import { generateWidgetId } from "../utils/dashboard";
 
 interface UseDashboardReturn {
   // State
@@ -38,7 +38,7 @@ interface UseDashboardReturn {
   existingWidgetTypes: WidgetType[];
   updateWidgetConfig: (
     widgetId: string,
-    newConfig: Partial<WidgetInstance['config']>,
+    newConfig: Partial<WidgetInstance["config"]>,
   ) => void;
 }
 
@@ -71,19 +71,19 @@ export const useDashboard = (): UseDashboardReturn => {
 
       if (dashboardConfig) {
         console.log(
-          'Loaded dashboard config with',
+          "Loaded dashboard config with",
           dashboardConfig.layout.widgets.length,
-          'widgets',
+          "widgets",
         );
         setConfig(dashboardConfig);
         setCurrentLayout(dashboardConfig.layout);
         setSavedLayout(dashboardConfig.layout);
       } else {
-        throw new Error('Failed to load or create dashboard configuration');
+        throw new Error("Failed to load or create dashboard configuration");
       }
     } catch (err) {
-      console.error('Failed to load dashboard:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load dashboard');
+      console.error("Failed to load dashboard:", err);
+      setError(err instanceof Error ? err.message : "Failed to load dashboard");
     } finally {
       setIsLoading(false);
     }
@@ -167,7 +167,7 @@ export const useDashboard = (): UseDashboardReturn => {
 
   // Update widget configuration
   const updateWidgetConfig = useCallback(
-    (widgetId: string, newConfig: Partial<WidgetInstance['config']>) => {
+    (widgetId: string, newConfig: Partial<WidgetInstance["config"]>) => {
       if (!currentLayout) return;
 
       setCurrentLayout((prevLayout) => {
@@ -203,9 +203,9 @@ export const useDashboard = (): UseDashboardReturn => {
       setSavedLayout(currentLayout);
       setHasUnsavedChanges(false);
 
-      console.log('Dashboard layout saved successfully');
+      console.log("Dashboard layout saved successfully");
     } catch (err) {
-      console.error('Failed to save dashboard layout:', err);
+      console.error("Failed to save dashboard layout:", err);
       throw err;
     }
   }, [currentLayout, config]);
@@ -291,7 +291,7 @@ export const useDashboard = (): UseDashboardReturn => {
         try {
           await saveLayout();
         } catch (err) {
-          console.error('Auto-save failed:', err);
+          console.error("Auto-save failed:", err);
         }
       };
 

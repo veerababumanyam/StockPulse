@@ -1,7 +1,7 @@
-import '@testing-library/jest-dom';
-import { expect, afterEach, vi } from 'vitest';
-import { cleanup } from '@testing-library/react';
-import * as matchers from '@testing-library/jest-dom/matchers';
+import "@testing-library/jest-dom";
+import { expect, afterEach, vi } from "vitest";
+import { cleanup } from "@testing-library/react";
+import * as matchers from "@testing-library/jest-dom/matchers";
 
 // Extend Vitest's expect with jest-dom matchers
 expect.extend(matchers);
@@ -14,16 +14,16 @@ afterEach(() => {
 // Mock process.env for browser environment
 globalThis.process = {
   env: {
-    REACT_APP_WS_URL: 'ws://localhost:8000/ws/market-data',
-    VITE_WS_URL: 'ws://localhost:8000/ws/market-data',
-    NODE_ENV: 'test',
-  }
+    REACT_APP_WS_URL: "ws://localhost:8000/ws/market-data",
+    VITE_WS_URL: "ws://localhost:8000/ws/market-data",
+    NODE_ENV: "test",
+  },
 } as any;
 
 // Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
-  value: vi.fn().mockImplementation(query => ({
+  value: vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -36,7 +36,7 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock window.scrollTo
-Object.defineProperty(window, 'scrollTo', {
+Object.defineProperty(window, "scrollTo", {
   writable: true,
   value: vi.fn(),
 });
@@ -67,4 +67,4 @@ global.console = {
   // info: vi.fn(),
   // warn: vi.fn(),
   // error: vi.fn(),
-}; 
+};

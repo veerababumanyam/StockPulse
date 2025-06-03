@@ -1,7 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '@contexts/AuthContext';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@contexts/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail,
   ArrowRight,
@@ -9,33 +9,33 @@ import {
   TrendingUp,
   CheckCircle,
   AlertCircle,
-  Shield
-} from 'lucide-react';
+  Shield,
+} from "lucide-react";
 
 const ForgotPassword: React.FC = () => {
-  const [email, setEmail] = React.useState('');
+  const [email, setEmail] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState('');
+  const [error, setError] = React.useState("");
   const [success, setSuccess] = React.useState(false);
-  
+
   const { forgotPassword } = useAuth();
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setSuccess(false);
     setIsLoading(true);
-    
+
     try {
       await forgotPassword(email);
       setSuccess(true);
     } catch (err) {
-      setError('Failed to send password reset email. Please try again.');
+      setError("Failed to send password reset email. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden">
       {/* Animated Background Elements */}
@@ -46,7 +46,7 @@ const ForgotPassword: React.FC = () => {
             y: [-10, 10, -10],
             x: [-5, 5, -5],
           }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
           className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"
@@ -54,25 +54,33 @@ const ForgotPassword: React.FC = () => {
             y: [10, -10, 10],
             x: [5, -5, 5],
           }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
-        
+
         {/* Animated grid */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent bg-[size:50px_50px] opacity-20" 
-             style={{ backgroundImage: 'radial-gradient(circle, #06b6d4 1px, transparent 1px)' }} />
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent bg-[size:50px_50px] opacity-20"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, #06b6d4 1px, transparent 1px)",
+          }}
+        />
       </div>
 
       {/* Modern Navigation */}
-      <motion.nav 
+      <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
         className="fixed top-0 w-full z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-2xl"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3 group cursor-pointer">
+            <Link
+              to="/"
+              className="flex items-center space-x-3 group cursor-pointer"
+            >
               <div className="relative">
                 <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-xl flex items-center justify-center">
                   <TrendingUp className="w-6 h-6 text-white" />
@@ -106,7 +114,7 @@ const ForgotPassword: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="max-w-md w-full space-y-8"
         >
           {/* Header */}
@@ -119,7 +127,7 @@ const ForgotPassword: React.FC = () => {
             >
               <Shield className="w-10 h-10 text-white" />
             </motion.div>
-            
+
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -128,14 +136,15 @@ const ForgotPassword: React.FC = () => {
             >
               Reset your password
             </motion.h2>
-            
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
               className="text-white/70"
             >
-              Enter your email address and we'll send you a link to reset your password.
+              Enter your email address and we'll send you a link to reset your
+              password.
             </motion.p>
           </div>
 
@@ -162,7 +171,7 @@ const ForgotPassword: React.FC = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-            
+
             {success ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -180,13 +189,17 @@ const ForgotPassword: React.FC = () => {
 
                 <div className="bg-green-500/10 backdrop-blur-xl border border-green-500/20 rounded-xl p-4 mb-6">
                   <p className="text-sm text-green-200">
-                    Password reset email sent! Check your inbox for further instructions.
+                    Password reset email sent! Check your inbox for further
+                    instructions.
                   </p>
                 </div>
 
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Link 
-                    to="/auth/login" 
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Link
+                    to="/auth/login"
                     className="w-full bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 flex items-center justify-center group"
                   >
                     Return to login
@@ -197,7 +210,10 @@ const ForgotPassword: React.FC = () => {
             ) : (
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-white/80 mb-2"
+                  >
                     Email address
                   </label>
                   <div className="relative">
@@ -236,10 +252,13 @@ const ForgotPassword: React.FC = () => {
                       </>
                     )}
                   </motion.button>
-                  
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <Link 
-                      to="/auth/login" 
+
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Link
+                      to="/auth/login"
                       className="w-full bg-white/5 border border-white/10 text-white font-semibold py-3 px-4 rounded-xl hover:bg-white/10 transition-all duration-300 flex items-center justify-center group"
                     >
                       <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
@@ -259,7 +278,7 @@ const ForgotPassword: React.FC = () => {
             className="text-center text-sm text-white/60"
           >
             <p>
-              Remember your password?{' '}
+              Remember your password?{" "}
               <Link
                 to="/auth/login"
                 className="font-medium text-cyan-400 hover:text-cyan-300 transition-colors"

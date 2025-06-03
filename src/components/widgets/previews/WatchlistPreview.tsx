@@ -1,1 +1,1 @@
-export { WatchlistPreview as default } from './index';
+export { WatchlistPreview as default } from "./index";

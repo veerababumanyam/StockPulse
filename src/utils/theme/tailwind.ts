@@ -2,8 +2,8 @@
  * Tailwind CSS utility functions
  * Provides class name combination and conditional styling utilities
  */
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 /**
  * Combines class names with tailwind-merge for proper class conflicts resolution
@@ -24,7 +24,7 @@ export function cn(...inputs: ClassValue[]) {
 export function conditionalClass(
   condition: boolean,
   trueClasses: string,
-  falseClasses: string = ''
+  falseClasses: string = "",
 ): string {
   return condition ? trueClasses : falseClasses;
 }
@@ -39,9 +39,9 @@ export function conditionalClass(
 export function variantClass<T extends string>(
   variant: T,
   variants: Record<T, string>,
-  defaultVariant?: T
+  defaultVariant?: T,
 ): string {
-  return variants[variant] || (defaultVariant ? variants[defaultVariant] : '');
+  return variants[variant] || (defaultVariant ? variants[defaultVariant] : "");
 }
 
 /**
@@ -51,10 +51,10 @@ export function variantClass<T extends string>(
  * @returns Class string for the size
  */
 export function sizeClass(
-  size: 'xs' | 'sm' | 'md' | 'lg' | 'xl',
-  sizes: Record<string, string>
+  size: "xs" | "sm" | "md" | "lg" | "xl",
+  sizes: Record<string, string>,
 ): string {
-  return sizes[size] || sizes.md || '';
+  return sizes[size] || sizes.md || "";
 }
 
-export default cn; 
+export default cn;

@@ -3,12 +3,14 @@
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Frontend running on `http://localhost:3000`
 - Backend running on `http://localhost:8000`
 - Node.js and npm installed
 - Playwright installed (`npx playwright install`)
 
 ### Run All Tests
+
 ```bash
 # Run core authentication tests (recommended)
 node tests/run-all-auth-tests.js
@@ -21,6 +23,7 @@ node tests/run-all-auth-tests.js --full
 ```
 
 ### Run Specific Test Types
+
 ```bash
 # Unit tests only
 node tests/run-all-auth-tests.js --unit-only
@@ -33,6 +36,7 @@ node tests/run-all-auth-tests.js --e2e-only
 ```
 
 ### Debug Options
+
 ```bash
 # Run with visual browser (headed mode)
 node tests/run-all-auth-tests.js --headed
@@ -45,6 +49,7 @@ node tests/run-all-auth-tests.js --report
 ```
 
 ### Individual Test Commands
+
 ```bash
 # Run unit tests with Vitest
 npm run test
@@ -82,10 +87,12 @@ tests/
 ## 🎯 Test Status
 
 ### ✅ Working Tests (100% Pass Rate)
+
 - **Unit Tests**: AuthContext, Login Component, Debug Auth
 - **Test Infrastructure**: Test runner, setup, configuration
 
 ### 🔄 Created Tests (Waiting for Backend Fix)
+
 - **Integration Tests**: Complete auth flows
 - **Multi-Role Tests**: Admin, User, Guest permissions
 - **API Tests**: Backend authentication endpoints
@@ -96,12 +103,14 @@ tests/
 ### Common Issues
 
 #### "Frontend not running"
+
 ```bash
 # Start frontend
 npm run dev
 ```
 
 #### "Backend not accessible"
+
 ```bash
 # Start backend
 cd services/backend
@@ -109,23 +118,28 @@ python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 #### "Rate limiting errors"
+
 - Backend has aggressive rate limiting
 - Tests include delays to handle this
 - Consider adjusting backend rate limits for testing
 
 #### "Authentication setup fails"
+
 - Check if login page loads at `http://localhost:3000/auth/login`
 - Verify backend API responds at `http://localhost:8000/health`
 - Check browser console for errors
 
 ### Debug Steps
+
 1. **Check Services**:
+
    ```bash
    curl http://localhost:3000        # Frontend
    curl http://localhost:8000/health # Backend
    ```
 
 2. **Run Debug Tests**:
+
    ```bash
    node tests/run-all-auth-tests.js --unit-only --debug
    ```
@@ -138,11 +152,13 @@ python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ## 📊 Test Reports
 
 ### Generated Reports
+
 - **JSON Report**: `test-results/auth-test-report.json`
 - **HTML Report**: `test-results/auth-test-report.html`
 - **Playwright HTML**: `test-results/html-report/index.html`
 
 ### View Reports
+
 ```bash
 # Open HTML report
 npx playwright show-report
@@ -161,12 +177,13 @@ open test-results/auth-test-report.html
 ## 🆘 Support
 
 For issues or questions:
+
 1. Check `tests/AUTHENTICATION_TEST_SUMMARY.md` for detailed analysis
 2. Review test logs in `test-results/` directory
 3. Run debug mode for detailed output
 4. Check browser console for frontend errors
 
-🚀 
+🚀
 
 # Watchlist Widget Test Suite
 
@@ -180,18 +197,20 @@ Our testing strategy follows the **Testing Pyramid** approach:
 
 ```
         🔺 E2E Tests (Few)
-       🔺🔺 Integration Tests (Some)  
+       🔺🔺 Integration Tests (Some)
     🔺🔺🔺🔺 Unit Tests (Many)
 ```
 
 ### Test Categories
 
 1. **Unit Tests** (Fast, Isolated)
+
    - Component logic testing
    - Service function testing
    - Utility function testing
 
 2. **Integration Tests** (Medium, API focused)
+
    - Service-to-API integration
    - Component-to-service integration
    - WebSocket real-time functionality
@@ -231,21 +250,22 @@ Tests the **Watchlist React component** functionality:
 - ✅ **Configuration**: Widget customization options
 
 **Key Test Scenarios:**
+
 ```typescript
 // Rendering tests
-it('renders watchlist widget with title')
-it('displays loading state initially')
-it('shows empty state when no items')
+it("renders watchlist widget with title");
+it("displays loading state initially");
+it("shows empty state when no items");
 
 // CRUD functionality
-it('opens add symbol modal on button click')
-it('validates symbol input')
-it('successfully adds a valid symbol')
-it('successfully removes a symbol')
+it("opens add symbol modal on button click");
+it("validates symbol input");
+it("successfully adds a valid symbol");
+it("successfully removes a symbol");
 
 // Real-time updates
-it('subscribes to WebSocket updates on mount')
-it('updates stock data when WebSocket message received')
+it("subscribes to WebSocket updates on mount");
+it("updates stock data when WebSocket message received");
 ```
 
 ### Service Tests (`services/`)
@@ -262,19 +282,20 @@ Tests the **Watchlist API service** functionality:
 - ✅ **Demo Mode**: Fallback behavior when API unavailable
 
 **Key Test Scenarios:**
+
 ```typescript
 // API integration
-it('fetches watchlist from API successfully')
-it('successfully adds a new symbol')
-it('successfully removes a symbol')
+it("fetches watchlist from API successfully");
+it("successfully adds a new symbol");
+it("successfully removes a symbol");
 
 // Caching behavior
-it('uses cached data when available and fresh')
-it('invalidates cache after successful addition')
+it("uses cached data when available and fresh");
+it("invalidates cache after successful addition");
 
 // Error handling
-it('falls back to mock data when API fails')
-it('simulates success when API is unavailable')
+it("falls back to mock data when API fails");
+it("simulates success when API is unavailable");
 ```
 
 #### WebSocketService Tests (`websocketService.test.ts`)
@@ -289,20 +310,21 @@ Tests the **WebSocket real-time service** functionality:
 - ✅ **Error Resilience**: Malformed messages, callback errors
 
 **Key Test Scenarios:**
+
 ```typescript
 // Connection management
-it('connects to WebSocket server successfully')
-it('handles connection timeout')
-it('attempts reconnection after connection loss')
+it("connects to WebSocket server successfully");
+it("handles connection timeout");
+it("attempts reconnection after connection loss");
 
 // Message handling
-it('handles market data updates')
-it('handles heartbeat messages')
-it('handles malformed JSON messages')
+it("handles market data updates");
+it("handles heartbeat messages");
+it("handles malformed JSON messages");
 
 // Subscription management
-it('subscribes to multiple symbols from watchlist')
-it('only unsubscribes from server when no callbacks remain')
+it("subscribes to multiple symbols from watchlist");
+it("only unsubscribes from server when no callbacks remain");
 ```
 
 ### E2E Integration Tests (`e2e/watchlist-integration.spec.ts`)
@@ -320,19 +342,20 @@ Tests the **complete user experience** using Playwright:
 - ✅ **Performance**: Load times, large dataset handling
 
 **Key Test Scenarios:**
+
 ```typescript
 // Complete user flows
-test('successfully adds a valid symbol')
-test('navigates to stock detail page on click')
-test('simulates real-time price updates')
+test("successfully adds a valid symbol");
+test("navigates to stock detail page on click");
+test("simulates real-time price updates");
 
 // Error handling
-test('displays error state when API fails')
-test('retries loading on retry button click')
+test("displays error state when API fails");
+test("retries loading on retry button click");
 
 // Accessibility & Performance
-test('keyboard navigation works correctly')
-test('loads within performance budget')
+test("keyboard navigation works correctly");
+test("loads within performance budget");
 ```
 
 ## 🚀 Running Tests
@@ -345,7 +368,7 @@ node tests/run-watchlist-tests.js
 
 # Run specific test types
 node tests/run-watchlist-tests.js --component
-node tests/run-watchlist-tests.js --services  
+node tests/run-watchlist-tests.js --services
 node tests/run-watchlist-tests.js --e2e
 
 # Generate coverage report
@@ -389,12 +412,12 @@ The custom test runner (`run-watchlist-tests.js`) provides:
 
 We maintain **high code coverage** standards:
 
-| Component | Target Coverage | Critical Paths |
-|-----------|----------------|----------------|
-| React Components | 90%+ | User interactions, error states |
-| Services | 95%+ | API calls, caching, error handling |
-| WebSocket | 85%+ | Connection management, message handling |
-| Integration | 80%+ | Complete user flows |
+| Component        | Target Coverage | Critical Paths                          |
+| ---------------- | --------------- | --------------------------------------- |
+| React Components | 90%+            | User interactions, error states         |
+| Services         | 95%+            | API calls, caching, error handling      |
+| WebSocket        | 85%+            | Connection management, message handling |
+| Integration      | 80%+            | Complete user flows                     |
 
 ## 🔧 Test Configuration
 
@@ -409,13 +432,13 @@ We maintain **high code coverage** standards:
 
 ```typescript
 // API Client mocking
-vi.mock('../../src/services/api');
+vi.mock("../../src/services/api");
 
 // WebSocket mocking
 global.WebSocket = MockWebSocket as any;
 
 // Router mocking
-vi.mock('react-router-dom', async () => ({
+vi.mock("react-router-dom", async () => ({
   ...actual,
   useNavigate: () => vi.fn(),
 }));
@@ -427,18 +450,18 @@ We use **consistent test data** across all test files:
 
 ```typescript
 const mockWatchlistData = {
-  watchlistId: 'test-watchlist',
-  name: 'Test Watchlist',
+  watchlistId: "test-watchlist",
+  name: "Test Watchlist",
   items: [
     {
-      symbol: 'AAPL',
-      name: 'Apple Inc.',
+      symbol: "AAPL",
+      name: "Apple Inc.",
       price: 185.42,
       change: 2.34,
       changePercent: 1.28,
       // ... complete mock data
-    }
-  ]
+    },
+  ],
 };
 ```
 
@@ -447,20 +470,20 @@ const mockWatchlistData = {
 ### Test Naming Convention
 
 ```typescript
-describe('Component/Service Name', () => {
-  describe('Feature Category', () => {
-    it('should do something specific when condition occurs')
-  })
-})
+describe("Component/Service Name", () => {
+  describe("Feature Category", () => {
+    it("should do something specific when condition occurs");
+  });
+});
 ```
 
 ### Assertion Patterns
 
 ```typescript
 // ✅ Good - Specific assertions
-expect(screen.getByTestId('stock-price-AAPL')).toContainText('$185.42');
+expect(screen.getByTestId("stock-price-AAPL")).toContainText("$185.42");
 
-// ❌ Avoid - Generic assertions  
+// ❌ Avoid - Generic assertions
 expect(element).toBeTruthy();
 ```
 
@@ -469,7 +492,7 @@ expect(element).toBeTruthy();
 ```typescript
 // ✅ Proper async testing
 await waitFor(() => {
-  expect(screen.getByText('AAPL')).toBeInTheDocument();
+  expect(screen.getByText("AAPL")).toBeInTheDocument();
 });
 
 // ✅ Act wrapper for state changes
@@ -483,6 +506,7 @@ await act(async () => {
 ### Common Issues
 
 1. **Timing Issues**
+
    ```typescript
    // Use waitFor for async operations
    await waitFor(() => {
@@ -491,6 +515,7 @@ await act(async () => {
    ```
 
 2. **Mock Persistence**
+
    ```typescript
    // Clear mocks between tests
    beforeEach(() => {
@@ -527,7 +552,7 @@ npm run test:e2e -- --headed
 - name: Run Watchlist Tests
   run: |
     node tests/run-watchlist-tests.js --coverage
-    
+
 - name: Upload Coverage
   uses: codecov/codecov-action@v3
   with:
@@ -579,4 +604,4 @@ The test suite validates that **Story 2.4 - Watchlist Widget** meets all require
 - ✅ **Reliability**: Graceful error handling and recovery
 - ✅ **Security**: Input validation and sanitization
 
-**When all tests pass, the feature is ready for production deployment! 🚀** 
+**When all tests pass, the feature is ready for production deployment! 🚀**

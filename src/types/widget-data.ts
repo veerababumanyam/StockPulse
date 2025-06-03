@@ -21,7 +21,7 @@ export interface PortfolioChartDatapoint {
 
 export interface PortfolioChartData {
   portfolioId: string;
-  timeframe: '1D' | '1W' | '1M' | '3M' | '1Y' | 'ALL';
+  timeframe: "1D" | "1W" | "1M" | "3M" | "1Y" | "ALL";
   dataPoints: PortfolioChartDatapoint[];
   previousClose?: number; // For 1D chart to show +/- from prev day
   currency: string;
@@ -60,13 +60,13 @@ export interface MarketSummaryData {
   lastUpdated: string;
 }
 
-export type AIInsightSentiment = 'positive' | 'negative' | 'neutral' | 'mixed';
+export type AIInsightSentiment = "positive" | "negative" | "neutral" | "mixed";
 export type AIInsightType =
-  | 'market_trend'
-  | 'stock_signal'
-  | 'portfolio_tip'
-  | 'economic_event'
-  | 'news_summary';
+  | "market_trend"
+  | "stock_signal"
+  | "portfolio_tip"
+  | "economic_event"
+  | "news_summary";
 
 export interface AIInsightItem {
   id: string;
@@ -87,17 +87,17 @@ export interface AIInsightsData {
 }
 
 export type TransactionType =
-  | 'buy'
-  | 'sell'
-  | 'dividend'
-  | 'deposit'
-  | 'withdrawal'
-  | 'fee';
+  | "buy"
+  | "sell"
+  | "dividend"
+  | "deposit"
+  | "withdrawal"
+  | "fee";
 export type TransactionStatus =
-  | 'completed'
-  | 'pending'
-  | 'failed'
-  | 'cancelled';
+  | "completed"
+  | "pending"
+  | "failed"
+  | "cancelled";
 
 export interface TransactionItem {
   id: string;
@@ -122,7 +122,7 @@ export interface PerformanceMetricItem {
   id: string;
   label: string; // e.g., "Annualized Return", "Sharpe Ratio", "Max Drawdown"
   value: string; // Can be string to accommodate percentages, ratios, or currency
-  trend?: 'up' | 'down' | 'neutral';
+  trend?: "up" | "down" | "neutral";
   tooltip?: string; // Explanation of the metric
   period?: string; // e.g., "YTD", "1Y", "3Y", "Since Inception"
 }
@@ -133,8 +133,8 @@ export interface PerformanceMetricsData {
   asOfDate: string;
 }
 
-export type AlertSeverity = 'info' | 'warning' | 'critical';
-export type AlertStatus = 'active' | 'acknowledged' | 'resolved' | 'dismissed';
+export type AlertSeverity = "info" | "warning" | "critical";
+export type AlertStatus = "active" | "acknowledged" | "resolved" | "dismissed";
 
 export interface AlertItem {
   id: string;
@@ -167,7 +167,7 @@ export interface NewsArticle {
   summary?: string;
   imageUrl?: string;
   symbols?: string[]; // Related stock symbols
-  sentiment?: 'positive' | 'negative' | 'neutral';
+  sentiment?: "positive" | "negative" | "neutral";
 }
 
 export interface NewsFeedData {
@@ -192,7 +192,7 @@ export interface SectorPerformanceItem {
 
 export interface SectorPerformanceData {
   sectors: SectorPerformanceItem[];
-  timeframe: '1D' | '1W' | '1M' | 'YTD'; // Timeframe for the performance data
+  timeframe: "1D" | "1W" | "1M" | "YTD"; // Timeframe for the performance data
   lastUpdated: string;
 }
 
@@ -216,17 +216,17 @@ export interface TopMoversData {
   lastUpdated: string;
 }
 
-export type EventImpact = 'low' | 'medium' | 'high';
+export type EventImpact = "low" | "medium" | "high";
 export type EventType =
-  | 'earnings'
-  | 'dividend'
-  | 'ipo'
-  | 'split'
-  | 'fed_meeting'
-  | 'cpi_report'
-  | 'gdp_report'
-  | 'unemployment_report'
-  | 'other_economic';
+  | "earnings"
+  | "dividend"
+  | "ipo"
+  | "split"
+  | "fed_meeting"
+  | "cpi_report"
+  | "gdp_report"
+  | "unemployment_report"
+  | "other_economic";
 
 export interface CalendarEventItem {
   id: string;

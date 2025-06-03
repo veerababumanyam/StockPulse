@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -6,7 +6,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '../ui/card';
+} from "../ui/card";
 import {
   Form,
   FormControl,
@@ -15,11 +15,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../ui/form';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import {
   AlertCircle,
   Shield,
@@ -28,14 +28,14 @@ import {
   Lock,
   Save,
   RefreshCw,
-} from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { useToast } from '../../hooks/useToast';
-import { Switch } from '../ui/switch';
-import { Slider } from '../ui/slider';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+} from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useToast } from "../../hooks/useToast";
+import { Switch } from "../ui/switch";
+import { Slider } from "../ui/slider";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 // Form schema for risk management settings
 const riskManagementSchema = z.object({
@@ -47,13 +47,13 @@ const riskManagementSchema = z.object({
   enableEmergencyShutdown: z.boolean(),
   enableMcpRiskMonitoring: z.boolean(),
   enableAuditLogging: z.boolean(),
-  riskLevel: z.enum(['conservative', 'moderate', 'aggressive']),
+  riskLevel: z.enum(["conservative", "moderate", "aggressive"]),
 });
 
 type RiskManagementValues = z.infer<typeof riskManagementSchema>;
 
 const RiskManagementFramework: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('general');
+  const [activeTab, setActiveTab] = useState("general");
   const { toast } = useToast();
 
   const form = useForm<RiskManagementValues>({
@@ -67,17 +67,17 @@ const RiskManagementFramework: React.FC = () => {
       enableEmergencyShutdown: true,
       enableMcpRiskMonitoring: true,
       enableAuditLogging: true,
-      riskLevel: 'moderate',
+      riskLevel: "moderate",
     },
   });
 
   const handleSaveSettings = (values: RiskManagementValues) => {
-    console.log('Risk management settings saved:', values);
+    console.log("Risk management settings saved:", values);
 
     toast({
-      title: 'Risk Settings Saved',
-      description: 'Your risk management settings have been updated.',
-      variant: 'success',
+      title: "Risk Settings Saved",
+      description: "Your risk management settings have been updated.",
+      variant: "success",
     });
   };
 
@@ -91,22 +91,22 @@ const RiskManagementFramework: React.FC = () => {
       enableEmergencyShutdown: true,
       enableMcpRiskMonitoring: true,
       enableAuditLogging: true,
-      riskLevel: 'moderate',
+      riskLevel: "moderate",
     });
 
     toast({
-      title: 'Settings Reset',
-      description: 'Risk management settings have been reset to defaults.',
-      variant: 'default',
+      title: "Settings Reset",
+      description: "Risk management settings have been reset to defaults.",
+      variant: "default",
     });
   };
 
   const handleEmergencyStop = () => {
     toast({
-      title: 'Emergency Stop Activated',
+      title: "Emergency Stop Activated",
       description:
-        'All automated trading has been halted. Please review your positions.',
-      variant: 'destructive',
+        "All automated trading has been halted. Please review your positions.",
+      variant: "destructive",
     });
   };
 
@@ -319,8 +319,8 @@ const RiskManagementFramework: React.FC = () => {
                             <FormControl>
                               <input
                                 type="radio"
-                                checked={field.value === 'conservative'}
-                                onChange={() => field.onChange('conservative')}
+                                checked={field.value === "conservative"}
+                                onChange={() => field.onChange("conservative")}
                                 className="h-4 w-4 text-primary"
                               />
                             </FormControl>
@@ -332,8 +332,8 @@ const RiskManagementFramework: React.FC = () => {
                             <FormControl>
                               <input
                                 type="radio"
-                                checked={field.value === 'moderate'}
-                                onChange={() => field.onChange('moderate')}
+                                checked={field.value === "moderate"}
+                                onChange={() => field.onChange("moderate")}
                                 className="h-4 w-4 text-primary"
                               />
                             </FormControl>
@@ -345,8 +345,8 @@ const RiskManagementFramework: React.FC = () => {
                             <FormControl>
                               <input
                                 type="radio"
-                                checked={field.value === 'aggressive'}
-                                onChange={() => field.onChange('aggressive')}
+                                checked={field.value === "aggressive"}
+                                onChange={() => field.onChange("aggressive")}
                                 className="h-4 w-4 text-primary"
                               />
                             </FormControl>

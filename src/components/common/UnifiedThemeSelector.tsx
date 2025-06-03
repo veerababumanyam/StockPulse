@@ -1,7 +1,7 @@
 /**
  * Unified Theme Selector - Enterprise-Grade Theme Management Component
  * Demonstrates the complete improved architecture with ThemeEngine integration
- * 
+ *
  * Features:
  * - Central ThemeEngine coordination
  * - AI-powered recommendations
@@ -10,48 +10,53 @@
  * - Storage persistence
  * - Cross-tab synchronization
  * - Accessibility compliance
- * 
+ *
  * @example
  * // Basic usage
  * <UnifiedThemeSelector />
- * 
+ *
  * @example
  * // With advanced features
- * <UnifiedThemeSelector 
+ * <UnifiedThemeSelector
  *   showRecommendations={true}
  *   showAnalytics={true}
  *   enableAutoSwitch={true}
  *   className="custom-theme-selector"
  * />
- * 
+ *
  * @example
  * // Compact mode for toolbar
- * <UnifiedThemeSelector 
+ * <UnifiedThemeSelector
  *   variant="compact"
  *   showLabels={false}
  *   position="toolbar"
  * />
  */
 
-import React, { useState, useEffect } from 'react';
-import { useTheme } from '../../hooks/useTheme';
-import { getAllThemeKeys, getAllThemeMetadata, type ColorTheme, type ThemeMode } from '../../theme/colorPalettes';
-import type { ThemeVariant } from '../../theme/themeComposer';
-import { cn } from '../../utils/theme';
+import React, { useState, useEffect } from "react";
+import { useTheme } from "../../hooks/useTheme";
+import {
+  getAllThemeKeys,
+  getAllThemeMetadata,
+  type ColorTheme,
+  type ThemeMode,
+} from "../../theme/colorPalettes";
+import type { ThemeVariant } from "../../theme/themeComposer";
+import { cn } from "../../utils/theme";
 
 interface UnifiedThemeSelectorProps {
   // Appearance
-  variant?: 'default' | 'compact' | 'detailed';
+  variant?: "default" | "compact" | "detailed";
   className?: string;
   showLabels?: boolean;
-  position?: 'standalone' | 'toolbar' | 'sidebar';
-  
+  position?: "standalone" | "toolbar" | "sidebar";
+
   // Features
   showRecommendations?: boolean;
   showAnalytics?: boolean;
   enableAutoSwitch?: boolean;
   showTransitionIndicator?: boolean;
-  
+
   // Behavior
   autoSave?: boolean;
   enableHaptics?: boolean;
@@ -59,10 +64,10 @@ interface UnifiedThemeSelectorProps {
 }
 
 export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
-  variant = 'default',
-  className = '',
+  variant = "default",
+  className = "",
   showLabels = true,
-  position = 'standalone',
+  position = "standalone",
   showRecommendations = false,
   showAnalytics = false,
   enableAutoSwitch = false,
@@ -98,20 +103,25 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
     enableAnalytics: showAnalytics,
     enableAutoSwitch,
     autoSave,
-    context: 'theme-selector',
+    context: "theme-selector",
   });
 
   // Local state
-  const [selectedTab, setSelectedTab] = useState<'themes' | 'recommendations' | 'analytics'>('themes');
+  const [selectedTab, setSelectedTab] = useState<
+    "themes" | "recommendations" | "analytics"
+  >("themes");
   const [showExportDialog, setShowExportDialog] = useState(false);
-  const [exportedData, setExportedData] = useState<string>('');
+  const [exportedData, setExportedData] = useState<string>("");
 
   // Get theme data
   const availableThemes = getAvailableThemes();
   const themeMetadata = getThemeMetadata();
 
   // Handle theme changes
-  const handleThemeChange = async (newTheme: ColorTheme, newMode?: ThemeMode) => {
+  const handleThemeChange = async (
+    newTheme: ColorTheme,
+    newMode?: ThemeMode,
+  ) => {
     const success = await setTheme(newTheme, newMode || mode);
     if (success && onThemeChange) {
       onThemeChange(newTheme, newMode || mode);
@@ -121,7 +131,7 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
   const handleModeToggle = async () => {
     const success = await toggleMode();
     if (success && onThemeChange) {
-      onThemeChange(colorTheme, isDark ? 'light' : 'dark');
+      onThemeChange(colorTheme, isDark ? "light" : "dark");
     }
   };
 
@@ -132,7 +142,7 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
   const handleAutoSwitch = async () => {
     const success = await autoSwitch();
     if (success) {
-      console.log('Auto-switch completed successfully');
+      console.log("Auto-switch completed successfully");
     }
   };
 
@@ -145,28 +155,28 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
   const handleReset = async () => {
     const success = await resetToDefault();
     if (success) {
-      console.log('Theme reset to default');
+      console.log("Theme reset to default");
     }
   };
 
   // Component style classes based on variant
   const containerClasses = cn(
-    'unified-theme-selector',
+    "unified-theme-selector",
     {
-      'compact': variant === 'compact',
-      'detailed': variant === 'detailed',
-      'toolbar': position === 'toolbar',
-      'sidebar': position === 'sidebar',
-      'transitioning': isTransitioning && showTransitionIndicator,
-      'engine-loading': !engineReady,
+      compact: variant === "compact",
+      detailed: variant === "detailed",
+      toolbar: position === "toolbar",
+      sidebar: position === "sidebar",
+      transitioning: isTransitioning && showTransitionIndicator,
+      "engine-loading": !engineReady,
     },
-    className
+    className,
   );
 
   // Don't render until engine is ready
   if (!engineReady) {
     return (
-      <div className={cn(containerClasses, 'loading')}>
+      <div className={cn(containerClasses, "loading")}>
         <div className="loading-spinner" />
         {showLabels && <span>Loading theme engine...</span>}
       </div>
@@ -180,24 +190,24 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
         <div className="mode-controls">
           <button
             onClick={handleModeToggle}
-            className={cn('mode-toggle', { active: isDark })}
-            aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+            className={cn("mode-toggle", { active: isDark })}
+            aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
             disabled={isTransitioning}
           >
-            <span className="mode-icon">
-              {isDark ? '🌙' : '☀️'}
-            </span>
+            <span className="mode-icon">{isDark ? "🌙" : "☀️"}</span>
             {showLabels && (
-              <span className="mode-label">
-                {isDark ? 'Dark' : 'Light'}
-              </span>
+              <span className="mode-label">{isDark ? "Dark" : "Light"}</span>
             )}
           </button>
-          
-          {variant === 'detailed' && (
+
+          {variant === "detailed" && (
             <div className="theme-info">
-              <span className="current-theme">{themeMetadata[colorTheme]?.name}</span>
-              <span className="theme-category">{themeMetadata[colorTheme]?.category}</span>
+              <span className="current-theme">
+                {themeMetadata[colorTheme]?.name}
+              </span>
+              <span className="theme-category">
+                {themeMetadata[colorTheme]?.category}
+              </span>
             </div>
           )}
         </div>
@@ -211,29 +221,33 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
       </div>
 
       {/* Navigation tabs for detailed view */}
-      {variant === 'detailed' && (showRecommendations || showAnalytics) && (
+      {variant === "detailed" && (showRecommendations || showAnalytics) && (
         <div className="theme-tabs">
           <button
-            onClick={() => setSelectedTab('themes')}
-            className={cn('tab', { active: selectedTab === 'themes' })}
+            onClick={() => setSelectedTab("themes")}
+            className={cn("tab", { active: selectedTab === "themes" })}
           >
             Themes
           </button>
           {showRecommendations && (
             <button
-              onClick={() => setSelectedTab('recommendations')}
-              className={cn('tab', { active: selectedTab === 'recommendations' })}
+              onClick={() => setSelectedTab("recommendations")}
+              className={cn("tab", {
+                active: selectedTab === "recommendations",
+              })}
             >
               AI Recommendations
               {recommendations.length > 0 && (
-                <span className="recommendation-badge">{recommendations.length}</span>
+                <span className="recommendation-badge">
+                  {recommendations.length}
+                </span>
               )}
             </button>
           )}
           {showAnalytics && (
             <button
-              onClick={() => setSelectedTab('analytics')}
-              className={cn('tab', { active: selectedTab === 'analytics' })}
+              onClick={() => setSelectedTab("analytics")}
+              className={cn("tab", { active: selectedTab === "analytics" })}
             >
               Analytics
             </button>
@@ -244,17 +258,17 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
       {/* Content based on selected tab */}
       <div className="theme-content">
         {/* Theme Selection */}
-        {(selectedTab === 'themes' || variant !== 'detailed') && (
+        {(selectedTab === "themes" || variant !== "detailed") && (
           <div className="theme-grid">
             {availableThemes.map((theme) => {
               const metadata = themeMetadata[theme];
               const isSelected = theme === colorTheme;
-              
+
               return (
                 <button
                   key={theme}
                   onClick={() => handleThemeChange(theme)}
-                  className={cn('theme-option', {
+                  className={cn("theme-option", {
                     selected: isSelected,
                     transitioning: isTransitioning && isSelected,
                   })}
@@ -273,21 +287,21 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
                       ))}
                     </div>
                   </div>
-                  
+
                   {/* Theme info */}
                   {showLabels && (
                     <div className="theme-info">
                       <span className="theme-name">{metadata.name}</span>
-                      {variant === 'detailed' && (
-                        <span className="theme-description">{metadata.description}</span>
+                      {variant === "detailed" && (
+                        <span className="theme-description">
+                          {metadata.description}
+                        </span>
                       )}
                     </div>
                   )}
-                  
+
                   {/* Selection indicator */}
-                  {isSelected && (
-                    <div className="selection-indicator">✓</div>
-                  )}
+                  {isSelected && <div className="selection-indicator">✓</div>}
                 </button>
               );
             })}
@@ -295,7 +309,7 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
         )}
 
         {/* AI Recommendations */}
-        {selectedTab === 'recommendations' && showRecommendations && (
+        {selectedTab === "recommendations" && showRecommendations && (
           <div className="recommendations-panel">
             <div className="recommendations-header">
               <h3>AI-Powered Recommendations</h3>
@@ -309,37 +323,52 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
                 </button>
               )}
             </div>
-            
+
             {recommendations.length > 0 ? (
               <div className="recommendations-list">
                 {recommendations.map((rec, index) => (
-                  <div key={`${rec.theme}-${rec.mode}-${index}`} className="recommendation-item">
+                  <div
+                    key={`${rec.theme}-${rec.mode}-${index}`}
+                    className="recommendation-item"
+                  >
                     <div className="recommendation-preview">
                       <div className="theme-colors">
                         {themeMetadata[rec.theme]?.colors.map((color, idx) => (
-                          <div key={idx} className="color-dot" style={{ backgroundColor: color }} />
+                          <div
+                            key={idx}
+                            className="color-dot"
+                            style={{ backgroundColor: color }}
+                          />
                         ))}
                       </div>
-                      <span className="rec-mode-indicator">{rec.mode === 'dark' ? '🌙' : '☀️'}</span>
+                      <span className="rec-mode-indicator">
+                        {rec.mode === "dark" ? "🌙" : "☀️"}
+                      </span>
                     </div>
-                    
+
                     <div className="recommendation-info">
                       <div className="rec-header">
-                        <span className="rec-theme">{themeMetadata[rec.theme]?.name}</span>
+                        <span className="rec-theme">
+                          {themeMetadata[rec.theme]?.name}
+                        </span>
                         <span className="rec-mode">({rec.mode})</span>
-                        <span className="rec-confidence">{Math.round(rec.confidence * 100)}%</span>
+                        <span className="rec-confidence">
+                          {Math.round(rec.confidence * 100)}%
+                        </span>
                       </div>
                       <p className="rec-reason">{rec.reason}</p>
                       <div className="rec-impacts">
                         <span className={`impact energy-${rec.energyImpact}`}>
                           Energy: {rec.energyImpact}
                         </span>
-                        <span className={`impact performance-${rec.performanceImpact}`}>
+                        <span
+                          className={`impact performance-${rec.performanceImpact}`}
+                        >
                           Performance: {rec.performanceImpact}
                         </span>
                       </div>
                     </div>
-                    
+
                     <button
                       onClick={() => handleRecommendationApply(rec)}
                       className="apply-recommendation-btn"
@@ -352,14 +381,17 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
               </div>
             ) : (
               <div className="no-recommendations">
-                <p>No recommendations available yet. Use the app more to get personalized suggestions.</p>
+                <p>
+                  No recommendations available yet. Use the app more to get
+                  personalized suggestions.
+                </p>
               </div>
             )}
           </div>
         )}
 
         {/* Analytics Panel */}
-        {selectedTab === 'analytics' && showAnalytics && (
+        {selectedTab === "analytics" && showAnalytics && (
           <div className="analytics-panel">
             <h3>Theme Usage Analytics</h3>
             {analytics ? (
@@ -367,18 +399,24 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
                 <div className="analytics-summary">
                   <div className="metric">
                     <span className="metric-label">Most Used Theme:</span>
-                    <span className="metric-value">{analytics.mostUsedThemes?.[0] || 'N/A'}</span>
+                    <span className="metric-value">
+                      {analytics.mostUsedThemes?.[0] || "N/A"}
+                    </span>
                   </div>
                   <div className="metric">
                     <span className="metric-label">Total Sessions:</span>
-                    <span className="metric-value">{analytics.totalSessions || 0}</span>
+                    <span className="metric-value">
+                      {analytics.totalSessions || 0}
+                    </span>
                   </div>
                   <div className="metric">
                     <span className="metric-label">Average Session:</span>
-                    <span className="metric-value">{analytics.averageSessionTime || 0}min</span>
+                    <span className="metric-value">
+                      {analytics.averageSessionTime || 0}min
+                    </span>
                   </div>
                 </div>
-                
+
                 {analytics.favoriteThemes && (
                   <div className="favorite-themes">
                     <h4>Favorite Themes</h4>
@@ -394,7 +432,10 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
               </div>
             ) : (
               <div className="no-analytics">
-                <p>Analytics data is being generated. Check back after using different themes.</p>
+                <p>
+                  Analytics data is being generated. Check back after using
+                  different themes.
+                </p>
               </div>
             )}
           </div>
@@ -402,7 +443,7 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
       </div>
 
       {/* Actions footer for detailed view */}
-      {variant === 'detailed' && (
+      {variant === "detailed" && (
         <div className="theme-actions">
           <button onClick={handleExport} className="action-btn">
             Export Settings
@@ -421,11 +462,7 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
         <div className="export-dialog-overlay">
           <div className="export-dialog">
             <h3>Export Theme Settings</h3>
-            <textarea
-              value={exportedData}
-              readOnly
-              className="export-data"
-            />
+            <textarea value={exportedData} readOnly className="export-data" />
             <div className="export-actions">
               <button
                 onClick={() => navigator.clipboard.writeText(exportedData)}
@@ -447,4 +484,4 @@ export const UnifiedThemeSelector: React.FC<UnifiedThemeSelectorProps> = ({
   );
 };
 
-export default UnifiedThemeSelector; 
+export default UnifiedThemeSelector;

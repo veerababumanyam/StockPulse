@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Sun, Moon, Monitor, Check, ChevronDown } from 'lucide-react';
-import { useTheme } from '@/contexts/ThemeContext';
-import type { ThemeMode, ColorTheme, THEME_METADATA } from '@/types/theme';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Sun, Moon, Monitor, Check, ChevronDown } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
+import type { ThemeMode, ColorTheme, THEME_METADATA } from "@/types/theme";
 
 interface ThemeSelectorProps {
   className?: string;
 }
 
-const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) => {
+const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = "" }) => {
   const { mode, setMode, colorTheme, setColorTheme, getThemeMetadata } =
     useTheme();
   const [isOpen, setIsOpen] = useState(false);
@@ -29,11 +29,11 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) => {
 
   const getModeIcon = () => {
     switch (mode) {
-      case 'light':
+      case "light":
         return <Sun className="w-4 h-4" />;
-      case 'dark':
+      case "dark":
         return <Moon className="w-4 h-4" />;
-      case 'system':
+      case "system":
         return <Monitor className="w-4 h-4" />;
       default:
         return <Monitor className="w-4 h-4" />;
@@ -42,14 +42,14 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) => {
 
   const getModeName = () => {
     switch (mode) {
-      case 'light':
-        return 'Light';
-      case 'dark':
-        return 'Dark';
-      case 'system':
-        return 'System';
+      case "light":
+        return "Light";
+      case "dark":
+        return "Dark";
+      case "system":
+        return "System";
       default:
-        return 'System';
+        return "System";
     }
   };
 
@@ -101,34 +101,34 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) => {
               className="absolute right-0 mt-2 w-48 bg-surface border border-border rounded-md shadow-lg z-10 py-1"
             >
               <button
-                onClick={() => handleModeChange('light')}
+                onClick={() => handleModeChange("light")}
                 className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <div className="flex items-center">
                   <Sun className="w-4 h-4 mr-2" />
                   <span>Light</span>
                 </div>
-                {mode === 'light' && <Check className="w-4 h-4 text-primary" />}
+                {mode === "light" && <Check className="w-4 h-4 text-primary" />}
               </button>
               <button
-                onClick={() => handleModeChange('dark')}
+                onClick={() => handleModeChange("dark")}
                 className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <div className="flex items-center">
                   <Moon className="w-4 h-4 mr-2" />
                   <span>Dark</span>
                 </div>
-                {mode === 'dark' && <Check className="w-4 h-4 text-primary" />}
+                {mode === "dark" && <Check className="w-4 h-4 text-primary" />}
               </button>
               <button
-                onClick={() => handleModeChange('system')}
+                onClick={() => handleModeChange("system")}
                 className="flex items-center justify-between w-full px-4 py-2 text-left text-sm text-text hover:bg-surface/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <div className="flex items-center">
                   <Monitor className="w-4 h-4 mr-2" />
                   <span>System</span>
                 </div>
-                {mode === 'system' && (
+                {mode === "system" && (
                   <Check className="w-4 h-4 text-primary" />
                 )}
               </button>

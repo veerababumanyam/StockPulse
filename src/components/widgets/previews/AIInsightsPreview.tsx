@@ -1,1 +1,1 @@
-export { AIInsightsPreview as default } from './index';
+export { AIInsightsPreview as default } from "./index";

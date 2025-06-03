@@ -3,7 +3,7 @@
  * Renders the appropriate widget component based on widget type
  */
 
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy } from "react";
 import {
   PieChart,
   TrendingUp,
@@ -19,25 +19,25 @@ import {
   X,
   Settings,
   Loader2,
-} from 'lucide-react';
-import { motion } from 'framer-motion';
-import { WidgetType, WidgetInstance } from '../../types/dashboard';
+} from "lucide-react";
+import { motion } from "framer-motion";
+import { WidgetType, WidgetInstance } from "../../types/dashboard";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { cn } from '../../utils/cn';
+} from "../ui/card";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { cn } from "../../utils/cn";
 
 // Lazy load individual widget components
-const PortfolioOverviewWidget = lazy(() => import('./PortfolioOverview'));
-const PortfolioChartWidget = lazy(() => import('./PortfolioChartWidget'));
-const WatchlistWidget = lazy(() => import('./WatchlistWidget'));
-const AIInsightsWidget = lazy(() => import('./AIInsightsWidget'));
+const PortfolioOverviewWidget = lazy(() => import("./PortfolioOverview"));
+const PortfolioChartWidget = lazy(() => import("./PortfolioChartWidget"));
+const WatchlistWidget = lazy(() => import("./WatchlistWidget"));
+const AIInsightsWidget = lazy(() => import("./AIInsightsWidget"));
 
 interface WidgetPlaceholderProps {
   widget: WidgetInstance;
@@ -49,48 +49,48 @@ interface WidgetPlaceholderProps {
 }
 
 const WIDGET_ICONS: Record<WidgetType, React.ComponentType<any>> = {
-  'portfolio-overview': PieChart,
-  'portfolio-chart': TrendingUp,
+  "portfolio-overview": PieChart,
+  "portfolio-chart": TrendingUp,
   watchlist: Eye,
-  'market-summary': BarChart3,
-  'ai-insights': Brain,
-  'recent-transactions': ArrowLeftRight,
-  'performance-metrics': Activity,
+  "market-summary": BarChart3,
+  "ai-insights": Brain,
+  "recent-transactions": ArrowLeftRight,
+  "performance-metrics": Activity,
   alerts: Bell,
-  'news-feed': Newspaper,
-  'sector-performance': Building2,
-  'top-movers': TrendingUp,
-  'economic-calendar': Calendar,
+  "news-feed": Newspaper,
+  "sector-performance": Building2,
+  "top-movers": TrendingUp,
+  "economic-calendar": Calendar,
 };
 
 const WIDGET_COLORS: Record<WidgetType, string> = {
-  'portfolio-overview': 'from-blue-500 to-blue-600',
-  'portfolio-chart': 'from-green-500 to-green-600',
-  watchlist: 'from-purple-500 to-purple-600',
-  'market-summary': 'from-orange-500 to-orange-600',
-  'ai-insights': 'from-pink-500 to-pink-600',
-  'recent-transactions': 'from-indigo-500 to-indigo-600',
-  'performance-metrics': 'from-teal-500 to-teal-600',
-  alerts: 'from-red-500 to-red-600',
-  'news-feed': 'from-yellow-500 to-yellow-600',
-  'sector-performance': 'from-cyan-500 to-cyan-600',
-  'top-movers': 'from-emerald-500 to-emerald-600',
-  'economic-calendar': 'from-violet-500 to-violet-600',
+  "portfolio-overview": "from-blue-500 to-blue-600",
+  "portfolio-chart": "from-green-500 to-green-600",
+  watchlist: "from-purple-500 to-purple-600",
+  "market-summary": "from-orange-500 to-orange-600",
+  "ai-insights": "from-pink-500 to-pink-600",
+  "recent-transactions": "from-indigo-500 to-indigo-600",
+  "performance-metrics": "from-teal-500 to-teal-600",
+  alerts: "from-red-500 to-red-600",
+  "news-feed": "from-yellow-500 to-yellow-600",
+  "sector-performance": "from-cyan-500 to-cyan-600",
+  "top-movers": "from-emerald-500 to-emerald-600",
+  "economic-calendar": "from-violet-500 to-violet-600",
 };
 
 const WIDGET_TITLES: Record<WidgetType, string> = {
-  'portfolio-overview': 'Portfolio Overview',
-  'portfolio-chart': 'Portfolio Chart',
-  watchlist: 'Watchlist',
-  'market-summary': 'Market Summary',
-  'ai-insights': 'AI Insights',
-  'recent-transactions': 'Recent Transactions',
-  'performance-metrics': 'Performance Metrics',
-  alerts: 'Alerts',
-  'news-feed': 'News Feed',
-  'sector-performance': 'Sector Performance',
-  'top-movers': 'Top Movers',
-  'economic-calendar': 'Economic Calendar',
+  "portfolio-overview": "Portfolio Overview",
+  "portfolio-chart": "Portfolio Chart",
+  watchlist: "Watchlist",
+  "market-summary": "Market Summary",
+  "ai-insights": "AI Insights",
+  "recent-transactions": "Recent Transactions",
+  "performance-metrics": "Performance Metrics",
+  alerts: "Alerts",
+  "news-feed": "News Feed",
+  "sector-performance": "Sector Performance",
+  "top-movers": "Top Movers",
+  "economic-calendar": "Economic Calendar",
 };
 
 // Loading component for Suspense fallback
@@ -135,7 +135,7 @@ const UnsupportedWidgetFallback: React.FC<{
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-medium flex items-center">
             <div
-              className={cn('p-1.5 rounded-md bg-gradient-to-r', colorClass)}
+              className={cn("p-1.5 rounded-md bg-gradient-to-r", colorClass)}
             >
               <IconComponent className="h-4 w-4 text-white" />
             </div>
@@ -174,7 +174,7 @@ const WidgetPlaceholderInternal: React.FC<WidgetPlaceholderProps> = ({
 
   const commonProps = {
     widgetId: widget.id,
-    className: 'h-full',
+    className: "h-full",
     showHeader: !isEditMode, // Hide headers in edit mode to save space
   };
 
@@ -182,7 +182,7 @@ const WidgetPlaceholderInternal: React.FC<WidgetPlaceholderProps> = ({
   return (
     <motion.div
       layout
-      className={cn('h-full', className)}
+      className={cn("h-full", className)}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}

@@ -140,9 +140,12 @@
 
     /* === SHADOW SYSTEM === */
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-md:
+      0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg:
+      0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl:
+      0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 
     /* === RADIUS SYSTEM === */
     --radius-sm: 0.125rem;
@@ -162,9 +165,10 @@
     --spacing-3xl: 4rem;
 
     /* === TYPOGRAPHY SYSTEM === */
-    --font-family-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-family-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
-    --font-family-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-family-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-family-mono:
+      "JetBrains Mono", ui-monospace, "Cascadia Code", monospace;
+    --font-family-display: "Inter", ui-sans-serif, system-ui, sans-serif;
 
     --font-size-xs: 0.75rem;
     --font-size-sm: 0.875rem;
@@ -235,7 +239,12 @@
 
   /* === THEME APPLICATION STYLES === */
   /* Global UI Chrome (navbar, sidebar, footer) always gets theme colors */
-  nav, aside, footer, .sidebar, .navbar, .header {
+  nav,
+  aside,
+  footer,
+  .sidebar,
+  .navbar,
+  .header {
     /* Use theme colors from colorPalettes.ts via ThemeContext */
     color: rgb(var(--text-primary, var(--gray-900)));
     background-color: rgb(var(--background, var(--background-primary, white)));
@@ -243,7 +252,12 @@
   }
 
   /* Ensure all UI chrome elements inherit theme properties */
-  nav *, aside *, footer *, .sidebar *, .navbar *, .header * {
+  nav *,
+  aside *,
+  footer *,
+  .sidebar *,
+  .navbar *,
+  .header * {
     /* Inherit theme variables */
     --text: var(--text-primary, var(--gray-900));
     --surface: var(--surface, var(--surface-primary, white));
@@ -251,17 +265,27 @@
   }
 
   /* Enhanced theme application for interactive elements */
-  nav button, aside button, footer button, 
-  .sidebar button, .navbar button, .header button {
+  nav button,
+  aside button,
+  footer button,
+  .sidebar button,
+  .navbar button,
+  .header button {
     color: rgb(var(--text-primary, var(--gray-700)));
     background-color: transparent;
     border-color: rgb(var(--border, var(--border-light, var(--gray-200))));
   }
 
-  nav button:hover, aside button:hover, footer button:hover,
-  .sidebar button:hover, .navbar button:hover, .header button:hover {
+  nav button:hover,
+  aside button:hover,
+  footer button:hover,
+  .sidebar button:hover,
+  .navbar button:hover,
+  .header button:hover {
     color: rgb(var(--primary, var(--primary-600, var(--blue-600))));
-    background-color: rgb(var(--surface, var(--surface-primary, var(--gray-50))));
+    background-color: rgb(
+      var(--surface, var(--surface-primary, var(--gray-50)))
+    );
   }
 
   /* Global Chrome Theme Application - Always applies to navbar/sidebar/footer */
@@ -272,9 +296,18 @@
   .global-chrome-themed .navbar,
   .global-chrome-themed .header {
     /* Force theme application to UI chrome */
-    color: rgb(var(--text-primary, var(--color-text, var(--gray-900)))) !important;
-    background-color: rgb(var(--background, var(--color-background, var(--background-primary, white)))) !important;
-    border-color: rgb(var(--border, var(--color-border, var(--border-light, var(--gray-200))))) !important;
+    color: rgb(
+      var(--text-primary, var(--color-text, var(--gray-900)))
+    ) !important;
+    background-color: rgb(
+      var(
+        --background,
+        var(--color-background, var(--background-primary, white))
+      )
+    ) !important;
+    border-color: rgb(
+      var(--border, var(--color-border, var(--border-light, var(--gray-200))))
+    ) !important;
   }
 
   /* Ensure theme variables cascade to all chrome children */
@@ -332,7 +365,9 @@
     line-height: var(--line-height-normal);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    transition: background-color var(--transition-normal), color var(--transition-normal);
+    transition:
+      background-color var(--transition-normal),
+      color var(--transition-normal);
   }
 
   /* === SCROLLBAR STYLING === */
@@ -610,7 +645,12 @@
 
 /* === GLOBAL UI CHROME (Always themed) === */
 /* Navbar, sidebar, footer always get theme colors regardless of page type */
-nav, aside, footer, .sidebar, .navbar, .header,
+nav,
+aside,
+footer,
+.sidebar,
+.navbar,
+.header,
 [data-chrome-themed="true"] nav,
 [data-chrome-themed="true"] aside,
 [data-chrome-themed="true"] footer,
@@ -618,13 +658,22 @@ nav, aside, footer, .sidebar, .navbar, .header,
 [data-chrome-themed="true"] .navbar,
 [data-chrome-themed="true"] .header {
   /* Force theme color application with fallbacks */
-  color: rgb(var(--text-primary, var(--foreground, var(--gray-900)))) !important;
+  color: rgb(
+    var(--text-primary, var(--foreground, var(--gray-900)))
+  ) !important;
   background-color: rgb(var(--background, var(--surface, white))) !important;
-  border-color: rgb(var(--border-light, var(--border, var(--gray-200)))) !important;
+  border-color: rgb(
+    var(--border-light, var(--border, var(--gray-200)))
+  ) !important;
 }
 
 /* Ensure all UI chrome elements inherit theme properties */
-nav *, aside *, footer *, .sidebar *, .navbar *, .header *,
+nav *,
+aside *,
+footer *,
+.sidebar *,
+.navbar *,
+.header *,
 [data-chrome-themed="true"] nav *,
 [data-chrome-themed="true"] aside *,
 [data-chrome-themed="true"] footer *,
@@ -637,8 +686,12 @@ nav *, aside *, footer *, .sidebar *, .navbar *, .header *,
 }
 
 /* Enhanced theme application for interactive elements in UI chrome */
-nav button, aside button, footer button, 
-.sidebar button, .navbar button, .header button,
+nav button,
+aside button,
+footer button,
+.sidebar button,
+.navbar button,
+.header button,
 [data-chrome-themed="true"] nav button,
 [data-chrome-themed="true"] aside button,
 [data-chrome-themed="true"] footer button,
@@ -650,8 +703,12 @@ nav button, aside button, footer button,
   border-color: rgb(var(--border-light, var(--border, var(--gray-200))));
 }
 
-nav button:hover, aside button:hover, footer button:hover,
-.sidebar button:hover, .navbar button:hover, .header button:hover,
+nav button:hover,
+aside button:hover,
+footer button:hover,
+.sidebar button:hover,
+.navbar button:hover,
+.header button:hover,
 [data-chrome-themed="true"] nav button:hover,
 [data-chrome-themed="true"] aside button:hover,
 [data-chrome-themed="true"] footer button:hover,
@@ -659,7 +716,9 @@ nav button:hover, aside button:hover, footer button:hover,
 [data-chrome-themed="true"] .navbar button:hover,
 [data-chrome-themed="true"] .header button:hover {
   color: rgb(var(--primary-600, var(--primary, var(--blue-600))));
-  background-color: rgb(var(--surface-elevated, var(--surface, var(--gray-50))));
+  background-color: rgb(
+    var(--surface-elevated, var(--surface, var(--gray-50)))
+  );
 }
 
 /* === APPLICATION PAGES (Full theme application) === */
@@ -771,9 +830,21 @@ nav button:hover, aside button:hover, footer button:hover,
 .global-chrome-themed .navbar,
 .global-chrome-themed .header {
   /* Force theme application to UI chrome with enhanced specificity */
-  color: rgb(var(--text-primary, var(--foreground, var(--color-text, var(--gray-900))))) !important;
-  background-color: rgb(var(--background, var(--surface, var(--color-background, var(--background-primary, white))))) !important;
-  border-color: rgb(var(--border-light, var(--border, var(--color-border, var(--border-light, var(--gray-200)))))) !important;
+  color: rgb(
+    var(--text-primary, var(--foreground, var(--color-text, var(--gray-900))))
+  ) !important;
+  background-color: rgb(
+    var(
+      --background,
+      var(--surface, var(--color-background, var(--background-primary, white)))
+    )
+  ) !important;
+  border-color: rgb(
+    var(
+      --border-light,
+      var(--border, var(--color-border, var(--border-light, var(--gray-200))))
+    )
+  ) !important;
 }
 
 /* Enhanced theme variable cascade to all chrome children */
@@ -792,13 +863,33 @@ nav button:hover, aside button:hover, footer button:hover,
 /* Ensure Tailwind utility classes work with theme variables */
 
 /* Background utilities */
-.bg-background { background-color: rgb(var(--background, white)) !important; }
-.bg-surface { background-color: rgb(var(--surface, white)) !important; }
-.bg-surface-elevated { background-color: rgb(var(--surface-elevated, var(--surface, white))) !important; }
+.bg-background {
+  background-color: rgb(var(--background, white)) !important;
+}
+.bg-surface {
+  background-color: rgb(var(--surface, white)) !important;
+}
+.bg-surface-elevated {
+  background-color: rgb(
+    var(--surface-elevated, var(--surface, white))
+  ) !important;
+}
 
 /* Text utilities */
-.text-foreground { color: rgb(var(--foreground, var(--text-primary, var(--gray-900)))) !important; }
-.text-muted-foreground { color: rgb(var(--muted-foreground, var(--text-secondary, var(--gray-600)))) !important; }
+.text-foreground {
+  color: rgb(
+    var(--foreground, var(--text-primary, var(--gray-900)))
+  ) !important;
+}
+.text-muted-foreground {
+  color: rgb(
+    var(--muted-foreground, var(--text-secondary, var(--gray-600)))
+  ) !important;
+}
 
-/* Border utilities */  
-.border-border { border-color: rgb(var(--border, var(--border-light, var(--gray-200)))) !important; } 
+/* Border utilities */
+.border-border {
+  border-color: rgb(
+    var(--border, var(--border-light, var(--gray-200)))
+  ) !important;
+}

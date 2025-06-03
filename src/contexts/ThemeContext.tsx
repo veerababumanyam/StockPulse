@@ -4,10 +4,16 @@
  * Eliminates storage and application logic overlaps
  */
 
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import type { ThemeMode, ColorTheme, ThemeContextType } from '../types/theme';
-import { themeEngine, type ThemeState } from '../theme/themeEngine';
-import type { ThemeVariant } from '../theme/themeComposer';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+import type { ThemeMode, ColorTheme, ThemeContextType } from "../types/theme";
+import { themeEngine, type ThemeState } from "../theme/themeEngine";
+import type { ThemeVariant } from "../theme/themeComposer";
 
 // Enhanced context interface aligned with ThemeEngine
 interface EnhancedThemeContextType extends ThemeContextType {
@@ -18,7 +24,9 @@ interface EnhancedThemeContextType extends ThemeContextType {
   engineReady: boolean;
 }
 
-const ThemeContext = createContext<EnhancedThemeContextType | undefined>(undefined);
+const ThemeContext = createContext<EnhancedThemeContextType | undefined>(
+  undefined,
+);
 
 interface ThemeProviderProps {
   children: ReactNode;
@@ -30,12 +38,14 @@ interface ThemeProviderProps {
   };
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ 
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   children,
-  config = {}
+  config = {},
 }) => {
   // State synchronized with ThemeEngine
-  const [themeState, setThemeState] = useState<ThemeState>(() => themeEngine.getState());
+  const [themeState, setThemeState] = useState<ThemeState>(() =>
+    themeEngine.getState(),
+  );
   const [engineReady, setEngineReady] = useState(false);
 
   // Subscribe to ThemeEngine state changes
@@ -54,7 +64,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   useEffect(() => {
     if (engineReady && config) {
       // Engine configuration is handled in constructor
-      console.log('🎨 ThemeProvider: Engine configured and ready');
+      console.log("🎨 ThemeProvider: Engine configured and ready");
     }
   }, [engineReady, config]);
 
@@ -65,10 +75,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
         themeState.colorTheme,
         newMode,
         themeState.variant,
-        'context'
+        "context",
       );
     } catch (error) {
-      console.error('Failed to set mode via context:', error);
+      console.error("Failed to set mode via context:", error);
     }
   };
 
@@ -78,10 +88,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
         newColorTheme,
         themeState.mode,
         themeState.variant,
-        'context'
+        "context",
       );
     } catch (error) {
-      console.error('Failed to set color theme via context:', error);
+      console.error("Failed to set color theme via context:", error);
     }
   };
 
@@ -91,10 +101,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
         themeState.colorTheme,
         themeState.mode,
         newVariant,
-        'context'
+        "context",
       );
     } catch (error) {
-      console.error('Failed to set variant via context:', error);
+      console.error("Failed to set variant via context:", error);
       return false;
     }
   };
@@ -103,7 +113,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     try {
       await themeEngine.toggleMode();
     } catch (error) {
-      console.error('Failed to toggle mode via context:', error);
+      console.error("Failed to toggle mode via context:", error);
     }
   };
 
@@ -115,13 +125,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     colorTheme: themeState.colorTheme,
     variant: themeState.variant,
     isTransitioning: themeState.isTransitioning,
-    
+
     // Actions that delegate to engine
     setMode,
     setColorTheme,
     setVariant,
     toggleMode,
-    
+
     // Engine state
     lastChanged: themeState.lastChanged,
     engineReady,
@@ -141,7 +151,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
 export const useTheme = (): EnhancedThemeContextType => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
 };
@@ -150,7 +160,7 @@ export const useTheme = (): EnhancedThemeContextType => {
  * Higher-order component for theme injection
  */
 export function withTheme<P extends object>(
-  Component: React.ComponentType<P>
+  Component: React.ComponentType<P>,
 ): React.ComponentType<P> {
   const WrappedComponent = (props: P) => {
     const theme = useTheme();
@@ -172,19 +182,17 @@ interface ThemeWrapperProps {
 
 export const ThemeWrapper: React.FC<ThemeWrapperProps> = ({
   children,
-  className = '',
-  applyThemeClasses = true
+  className = "",
+  applyThemeClasses = true,
 }) => {
   const { colorTheme, isDark, isTransitioning } = useTheme();
 
-  const themeClasses = applyThemeClasses 
-    ? `theme-${colorTheme} ${isDark ? 'dark' : 'light'} ${isTransitioning ? 'transitioning' : ''}`
-    : '';
+  const themeClasses = applyThemeClasses
+    ? `theme-${colorTheme} ${isDark ? "dark" : "light"} ${isTransitioning ? "transitioning" : ""}`
+    : "";
 
   return (
-    <div className={`${themeClasses} ${className}`.trim()}>
-      {children}
-    </div>
+    <div className={`${themeClasses} ${className}`.trim()}>{children}</div>
   );
 };
 
@@ -193,8 +201,8 @@ export const ThemeWrapper: React.FC<ThemeWrapperProps> = ({
  */
 export const ThemeDebugger: React.FC = () => {
   const theme = useTheme();
-  
-  if (process.env.NODE_ENV !== 'development') {
+
+  if (process.env.NODE_ENV !== "development") {
     return null;
   }
 
@@ -203,10 +211,12 @@ export const ThemeDebugger: React.FC = () => {
       <div>Theme: {theme.colorTheme}</div>
       <div>Mode: {theme.mode}</div>
       <div>Variant: {theme.variant}</div>
-      <div>Dark: {theme.isDark ? 'Yes' : 'No'}</div>
-      <div>Transitioning: {theme.isTransitioning ? 'Yes' : 'No'}</div>
-      <div>Engine Ready: {theme.engineReady ? 'Yes' : 'No'}</div>
-      <div>Last Changed: {new Date(theme.lastChanged).toLocaleTimeString()}</div>
+      <div>Dark: {theme.isDark ? "Yes" : "No"}</div>
+      <div>Transitioning: {theme.isTransitioning ? "Yes" : "No"}</div>
+      <div>Engine Ready: {theme.engineReady ? "Yes" : "No"}</div>
+      <div>
+        Last Changed: {new Date(theme.lastChanged).toLocaleTimeString()}
+      </div>
     </div>
   );
 };

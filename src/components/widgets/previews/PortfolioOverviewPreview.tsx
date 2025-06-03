@@ -3,8 +3,8 @@
  * Simplified preview version for the widget library
  */
 
-import React from 'react';
-import { PieChart, TrendingUp } from 'lucide-react';
+import React from "react";
+import { PieChart, TrendingUp } from "lucide-react";
 
 const PortfolioOverviewPreview: React.FC<{ isPreview?: boolean }> = ({
   isPreview = true,

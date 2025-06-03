@@ -42,28 +42,28 @@ export interface WidgetLibraryItem {
  * Each widget provides specific financial/trading functionality
  */
 export type WidgetType =
-  | 'portfolio-overview' // Portfolio summary and metrics
-  | 'portfolio-chart' // Portfolio performance chart
-  | 'watchlist' // Stock watchlist and monitoring
-  | 'market-summary' // Market overview and indices
-  | 'ai-insights' // AI-powered trading insights
-  | 'recent-transactions' // Recent trading activity
-  | 'performance-metrics' // Performance analytics
-  | 'alerts' // Trading alerts and notifications
-  | 'news-feed' // Financial news feed
-  | 'sector-performance' // Sector analysis
-  | 'top-movers' // Top gaining/losing stocks
-  | 'economic-calendar'; // Economic events calendar
+  | "portfolio-overview" // Portfolio summary and metrics
+  | "portfolio-chart" // Portfolio performance chart
+  | "watchlist" // Stock watchlist and monitoring
+  | "market-summary" // Market overview and indices
+  | "ai-insights" // AI-powered trading insights
+  | "recent-transactions" // Recent trading activity
+  | "performance-metrics" // Performance analytics
+  | "alerts" // Trading alerts and notifications
+  | "news-feed" // Financial news feed
+  | "sector-performance" // Sector analysis
+  | "top-movers" // Top gaining/losing stocks
+  | "economic-calendar"; // Economic events calendar
 
 /**
  * Widget categories for organization and filtering
  */
 export type WidgetCategory =
-  | 'portfolio' // Portfolio-related widgets
-  | 'market' // Market data and analysis
-  | 'trading' // Trading tools and activity
-  | 'analytics' // Performance and insights
-  | 'news'; // News and information
+  | "portfolio" // Portfolio-related widgets
+  | "market" // Market data and analysis
+  | "trading" // Trading tools and activity
+  | "analytics" // Performance and insights
+  | "news"; // News and information
 
 /**
  * Widget size configurations for responsive grid layout
@@ -198,7 +198,7 @@ export interface DashboardStatus {
   isSaving: boolean; // Save operation active
   error?: string; // Error message
   lastRefresh?: string; // Last data refresh
-  syncStatus: 'synced' | 'syncing' | 'error' | 'offline'; // Sync status
+  syncStatus: "synced" | "syncing" | "error" | "offline"; // Sync status
 }
 
 /**
@@ -225,7 +225,7 @@ export interface DashboardPreferences {
   animations: boolean; // Enable animations
   notifications: boolean; // Show notifications
   theme?: string; // Theme preference
-  defaultView: 'desktop' | 'tablet' | 'mobile'; // Default view mode
+  defaultView: "desktop" | "tablet" | "mobile"; // Default view mode
 }
 
 // ===============================================
@@ -252,8 +252,8 @@ export interface WidgetLibraryFilters {
   categories: WidgetCategory[]; // Selected categories
   showPremiumOnly: boolean; // Premium widgets only
   showAvailableOnly: boolean; // Available widgets only
-  sortBy: 'name' | 'category' | 'popularity' | 'recent'; // Sort option
-  sortOrder: 'asc' | 'desc'; // Sort direction
+  sortBy: "name" | "category" | "popularity" | "recent"; // Sort option
+  sortOrder: "asc" | "desc"; // Sort direction
 }
 
 // ===============================================
@@ -276,18 +276,18 @@ export const DASHBOARD_BREAKPOINTS: DashboardBreakpoints = {
  * Default widget sizes for different widget types
  */
 export const WIDGET_SIZES: Record<WidgetType, WidgetSize> = {
-  'portfolio-overview': { w: 6, h: 4, minW: 4, minH: 3, maxW: 12, maxH: 6 },
-  'portfolio-chart': { w: 8, h: 6, minW: 6, minH: 4, maxW: 12, maxH: 8 },
+  "portfolio-overview": { w: 6, h: 4, minW: 4, minH: 3, maxW: 12, maxH: 6 },
+  "portfolio-chart": { w: 8, h: 6, minW: 6, minH: 4, maxW: 12, maxH: 8 },
   watchlist: { w: 4, h: 6, minW: 3, minH: 4, maxW: 6, maxH: 8 },
-  'market-summary': { w: 6, h: 4, minW: 4, minH: 3, maxW: 8, maxH: 5 },
-  'ai-insights': { w: 6, h: 5, minW: 4, minH: 4, maxW: 8, maxH: 7 },
-  'recent-transactions': { w: 5, h: 5, minW: 4, minH: 4, maxW: 7, maxH: 6 },
-  'performance-metrics': { w: 4, h: 4, minW: 3, minH: 3, maxW: 6, maxH: 5 },
+  "market-summary": { w: 6, h: 4, minW: 4, minH: 3, maxW: 8, maxH: 5 },
+  "ai-insights": { w: 6, h: 5, minW: 4, minH: 4, maxW: 8, maxH: 7 },
+  "recent-transactions": { w: 5, h: 5, minW: 4, minH: 4, maxW: 7, maxH: 6 },
+  "performance-metrics": { w: 4, h: 4, minW: 3, minH: 3, maxW: 6, maxH: 5 },
   alerts: { w: 3, h: 4, minW: 3, minH: 3, maxW: 5, maxH: 6 },
-  'news-feed': { w: 4, h: 6, minW: 3, minH: 5, maxW: 6, maxH: 8 },
-  'sector-performance': { w: 5, h: 4, minW: 4, minH: 3, maxW: 7, maxH: 5 },
-  'top-movers': { w: 4, h: 5, minW: 3, minH: 4, maxW: 6, maxH: 6 },
-  'economic-calendar': { w: 5, h: 5, minW: 4, minH: 4, maxW: 7, maxH: 7 },
+  "news-feed": { w: 4, h: 6, minW: 3, minH: 5, maxW: 6, maxH: 8 },
+  "sector-performance": { w: 5, h: 4, minW: 4, minH: 3, maxW: 7, maxH: 5 },
+  "top-movers": { w: 4, h: 5, minW: 3, minH: 4, maxW: 6, maxH: 6 },
+  "economic-calendar": { w: 5, h: 5, minW: 4, minH: 4, maxW: 7, maxH: 7 },
 };
 
 /**
@@ -295,86 +295,86 @@ export const WIDGET_SIZES: Record<WidgetType, WidgetSize> = {
  */
 export const WIDGET_LIBRARY: WidgetMetadata[] = [
   {
-    type: 'portfolio-overview',
-    name: 'Portfolio Overview',
+    type: "portfolio-overview",
+    name: "Portfolio Overview",
     description:
-      'Comprehensive portfolio summary with key metrics and performance indicators',
-    category: 'portfolio',
-    icon: 'TrendingUp',
+      "Comprehensive portfolio summary with key metrics and performance indicators",
+    category: "portfolio",
+    icon: "TrendingUp",
     isResizable: true,
     isDraggable: true,
-    defaultSize: WIDGET_SIZES['portfolio-overview'],
+    defaultSize: WIDGET_SIZES["portfolio-overview"],
     supportedSizes: [
       { w: 4, h: 3 },
       { w: 6, h: 4 },
       { w: 8, h: 4 },
       { w: 12, h: 5 },
     ],
-    tags: ['portfolio', 'metrics', 'overview', 'performance'],
+    tags: ["portfolio", "metrics", "overview", "performance"],
   },
   {
-    type: 'portfolio-chart',
-    name: 'Portfolio Chart',
+    type: "portfolio-chart",
+    name: "Portfolio Chart",
     description:
-      'Interactive portfolio performance chart with historical data and analysis',
-    category: 'portfolio',
-    icon: 'BarChart3',
+      "Interactive portfolio performance chart with historical data and analysis",
+    category: "portfolio",
+    icon: "BarChart3",
     isResizable: true,
     isDraggable: true,
-    defaultSize: WIDGET_SIZES['portfolio-chart'],
+    defaultSize: WIDGET_SIZES["portfolio-chart"],
     supportedSizes: [
       { w: 6, h: 4 },
       { w: 8, h: 6 },
       { w: 12, h: 6 },
       { w: 12, h: 8 },
     ],
-    tags: ['portfolio', 'chart', 'performance', 'analytics'],
+    tags: ["portfolio", "chart", "performance", "analytics"],
   },
   {
-    type: 'watchlist',
-    name: 'Stock Watchlist',
+    type: "watchlist",
+    name: "Stock Watchlist",
     description:
-      'Monitor your favorite stocks with real-time prices and alerts',
-    category: 'market',
-    icon: 'Eye',
+      "Monitor your favorite stocks with real-time prices and alerts",
+    category: "market",
+    icon: "Eye",
     isResizable: true,
     isDraggable: true,
-    defaultSize: WIDGET_SIZES['watchlist'],
+    defaultSize: WIDGET_SIZES["watchlist"],
     supportedSizes: [
       { w: 3, h: 4 },
       { w: 4, h: 6 },
       { w: 6, h: 6 },
       { w: 6, h: 8 },
     ],
-    tags: ['watchlist', 'stocks', 'monitoring', 'real-time'],
+    tags: ["watchlist", "stocks", "monitoring", "real-time"],
   },
   {
-    type: 'market-summary',
-    name: 'Market Summary',
-    description: 'Overview of major market indices and market sentiment',
-    category: 'market',
-    icon: 'Globe',
+    type: "market-summary",
+    name: "Market Summary",
+    description: "Overview of major market indices and market sentiment",
+    category: "market",
+    icon: "Globe",
     isResizable: true,
     isDraggable: true,
-    defaultSize: WIDGET_SIZES['market-summary'],
+    defaultSize: WIDGET_SIZES["market-summary"],
     supportedSizes: [
       { w: 4, h: 3 },
       { w: 6, h: 4 },
       { w: 8, h: 4 },
       { w: 8, h: 5 },
     ],
-    tags: ['market', 'indices', 'summary', 'sentiment'],
+    tags: ["market", "indices", "summary", "sentiment"],
   },
   {
-    type: 'ai-insights',
-    name: 'AI Insights',
+    type: "ai-insights",
+    name: "AI Insights",
     description:
-      'AI-powered trading insights and recommendations based on market analysis',
-    category: 'analytics',
-    icon: 'Brain',
+      "AI-powered trading insights and recommendations based on market analysis",
+    category: "analytics",
+    icon: "Brain",
     isResizable: true,
     isDraggable: true,
-    defaultSize: WIDGET_SIZES['ai-insights'],
+    defaultSize: WIDGET_SIZES["ai-insights"],
     supportedSizes: [
       { w: 4, h: 4 },
       { w: 6, h: 5 },
@@ -382,130 +382,130 @@ export const WIDGET_LIBRARY: WidgetMetadata[] = [
       { w: 8, h: 7 },
     ],
     isPremium: true,
-    tags: ['ai', 'insights', 'recommendations', 'analysis'],
+    tags: ["ai", "insights", "recommendations", "analysis"],
   },
   {
-    type: 'recent-transactions',
-    name: 'Recent Transactions',
-    description: 'Your latest trading activity and transaction history',
-    category: 'trading',
-    icon: 'Receipt',
+    type: "recent-transactions",
+    name: "Recent Transactions",
+    description: "Your latest trading activity and transaction history",
+    category: "trading",
+    icon: "Receipt",
     isResizable: true,
     isDraggable: true,
-    defaultSize: WIDGET_SIZES['recent-transactions'],
+    defaultSize: WIDGET_SIZES["recent-transactions"],
     supportedSizes: [
       { w: 4, h: 4 },
       { w: 5, h: 5 },
       { w: 6, h: 5 },
       { w: 7, h: 6 },
     ],
-    tags: ['transactions', 'trading', 'history', 'activity'],
+    tags: ["transactions", "trading", "history", "activity"],
   },
   {
-    type: 'performance-metrics',
-    name: 'Performance Metrics',
+    type: "performance-metrics",
+    name: "Performance Metrics",
     description:
-      'Detailed performance analytics and key performance indicators',
-    category: 'analytics',
-    icon: 'Target',
+      "Detailed performance analytics and key performance indicators",
+    category: "analytics",
+    icon: "Target",
     isResizable: true,
     isDraggable: true,
-    defaultSize: WIDGET_SIZES['performance-metrics'],
+    defaultSize: WIDGET_SIZES["performance-metrics"],
     supportedSizes: [
       { w: 3, h: 3 },
       { w: 4, h: 4 },
       { w: 6, h: 4 },
       { w: 6, h: 5 },
     ],
-    tags: ['performance', 'metrics', 'analytics', 'kpi'],
+    tags: ["performance", "metrics", "analytics", "kpi"],
   },
   {
-    type: 'alerts',
-    name: 'Trading Alerts',
+    type: "alerts",
+    name: "Trading Alerts",
     description:
-      'Important trading alerts and notifications for your portfolio',
-    category: 'trading',
-    icon: 'Bell',
+      "Important trading alerts and notifications for your portfolio",
+    category: "trading",
+    icon: "Bell",
     isResizable: true,
     isDraggable: true,
-    defaultSize: WIDGET_SIZES['alerts'],
+    defaultSize: WIDGET_SIZES["alerts"],
     supportedSizes: [
       { w: 3, h: 3 },
       { w: 3, h: 4 },
       { w: 4, h: 4 },
       { w: 5, h: 6 },
     ],
-    tags: ['alerts', 'notifications', 'trading', 'monitoring'],
+    tags: ["alerts", "notifications", "trading", "monitoring"],
   },
   {
-    type: 'news-feed',
-    name: 'Financial News',
+    type: "news-feed",
+    name: "Financial News",
     description:
-      'Latest financial news and market updates relevant to your investments',
-    category: 'news',
-    icon: 'Newspaper',
+      "Latest financial news and market updates relevant to your investments",
+    category: "news",
+    icon: "Newspaper",
     isResizable: true,
     isDraggable: true,
-    defaultSize: WIDGET_SIZES['news-feed'],
+    defaultSize: WIDGET_SIZES["news-feed"],
     supportedSizes: [
       { w: 3, h: 5 },
       { w: 4, h: 6 },
       { w: 6, h: 6 },
       { w: 6, h: 8 },
     ],
-    tags: ['news', 'financial', 'updates', 'market'],
+    tags: ["news", "financial", "updates", "market"],
   },
   {
-    type: 'sector-performance',
-    name: 'Sector Performance',
-    description: 'Performance analysis across different market sectors',
-    category: 'market',
-    icon: 'PieChart',
+    type: "sector-performance",
+    name: "Sector Performance",
+    description: "Performance analysis across different market sectors",
+    category: "market",
+    icon: "PieChart",
     isResizable: true,
     isDraggable: true,
-    defaultSize: WIDGET_SIZES['sector-performance'],
+    defaultSize: WIDGET_SIZES["sector-performance"],
     supportedSizes: [
       { w: 4, h: 3 },
       { w: 5, h: 4 },
       { w: 6, h: 4 },
       { w: 7, h: 5 },
     ],
-    tags: ['sectors', 'performance', 'analysis', 'comparison'],
+    tags: ["sectors", "performance", "analysis", "comparison"],
   },
   {
-    type: 'top-movers',
-    name: 'Top Movers',
-    description: 'Top gaining and losing stocks in the market today',
-    category: 'market',
-    icon: 'TrendingDown',
+    type: "top-movers",
+    name: "Top Movers",
+    description: "Top gaining and losing stocks in the market today",
+    category: "market",
+    icon: "TrendingDown",
     isResizable: true,
     isDraggable: true,
-    defaultSize: WIDGET_SIZES['top-movers'],
+    defaultSize: WIDGET_SIZES["top-movers"],
     supportedSizes: [
       { w: 3, h: 4 },
       { w: 4, h: 5 },
       { w: 5, h: 5 },
       { w: 6, h: 6 },
     ],
-    tags: ['movers', 'gainers', 'losers', 'trending'],
+    tags: ["movers", "gainers", "losers", "trending"],
   },
   {
-    type: 'economic-calendar',
-    name: 'Economic Calendar',
+    type: "economic-calendar",
+    name: "Economic Calendar",
     description:
-      'Important economic events and announcements affecting the markets',
-    category: 'news',
-    icon: 'Calendar',
+      "Important economic events and announcements affecting the markets",
+    category: "news",
+    icon: "Calendar",
     isResizable: true,
     isDraggable: true,
-    defaultSize: WIDGET_SIZES['economic-calendar'],
+    defaultSize: WIDGET_SIZES["economic-calendar"],
     supportedSizes: [
       { w: 4, h: 4 },
       { w: 5, h: 5 },
       { w: 6, h: 5 },
       { w: 7, h: 7 },
     ],
-    tags: ['economic', 'calendar', 'events', 'announcements'],
+    tags: ["economic", "calendar", "events", "announcements"],
   },
 ];
 
@@ -517,92 +517,92 @@ export const DEFAULT_LAYOUTS: Record<
   DashboardLayout
 > = {
   lg: {
-    breakpoint: 'lg',
+    breakpoint: "lg",
     cols: 12,
     rowHeight: 60,
     margin: [16, 16],
     containerPadding: [16, 16],
     widgets: [
       {
-        id: 'portfolio-overview-1',
-        type: 'portfolio-overview',
+        id: "portfolio-overview-1",
+        type: "portfolio-overview",
         position: { x: 0, y: 0, w: 6, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'portfolio-chart-1',
-        type: 'portfolio-chart',
+        id: "portfolio-chart-1",
+        type: "portfolio-chart",
         position: { x: 6, y: 0, w: 6, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'watchlist-1',
-        type: 'watchlist',
+        id: "watchlist-1",
+        type: "watchlist",
         position: { x: 0, y: 4, w: 4, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'market-summary-1',
-        type: 'market-summary',
+        id: "market-summary-1",
+        type: "market-summary",
         position: { x: 4, y: 6, w: 4, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'ai-insights-1',
-        type: 'ai-insights',
+        id: "ai-insights-1",
+        type: "ai-insights",
         position: { x: 8, y: 6, w: 4, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'recent-transactions-1',
-        type: 'recent-transactions',
+        id: "recent-transactions-1",
+        type: "recent-transactions",
         position: { x: 0, y: 10, w: 5, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'performance-metrics-1',
-        type: 'performance-metrics',
+        id: "performance-metrics-1",
+        type: "performance-metrics",
         position: { x: 5, y: 10, w: 4, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'alerts-1',
-        type: 'alerts',
+        id: "alerts-1",
+        type: "alerts",
         position: { x: 9, y: 11, w: 3, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'news-feed-1',
-        type: 'news-feed',
+        id: "news-feed-1",
+        type: "news-feed",
         position: { x: 0, y: 15, w: 4, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'sector-performance-1',
-        type: 'sector-performance',
+        id: "sector-performance-1",
+        type: "sector-performance",
         position: { x: 4, y: 14, w: 5, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'top-movers-1',
-        type: 'top-movers',
+        id: "top-movers-1",
+        type: "top-movers",
         position: { x: 9, y: 15, w: 3, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'economic-calendar-1',
-        type: 'economic-calendar',
+        id: "economic-calendar-1",
+        type: "economic-calendar",
         position: { x: 4, y: 18, w: 5, h: 5 },
         isVisible: true,
         isLocked: false,
@@ -610,92 +610,92 @@ export const DEFAULT_LAYOUTS: Record<
     ],
   },
   md: {
-    breakpoint: 'md',
+    breakpoint: "md",
     cols: 8,
     rowHeight: 60,
     margin: [12, 12],
     containerPadding: [12, 12],
     widgets: [
       {
-        id: 'portfolio-overview-1',
-        type: 'portfolio-overview',
+        id: "portfolio-overview-1",
+        type: "portfolio-overview",
         position: { x: 0, y: 0, w: 4, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'portfolio-chart-1',
-        type: 'portfolio-chart',
+        id: "portfolio-chart-1",
+        type: "portfolio-chart",
         position: { x: 4, y: 0, w: 4, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'watchlist-1',
-        type: 'watchlist',
+        id: "watchlist-1",
+        type: "watchlist",
         position: { x: 0, y: 4, w: 4, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'market-summary-1',
-        type: 'market-summary',
+        id: "market-summary-1",
+        type: "market-summary",
         position: { x: 0, y: 10, w: 4, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'ai-insights-1',
-        type: 'ai-insights',
+        id: "ai-insights-1",
+        type: "ai-insights",
         position: { x: 4, y: 6, w: 4, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'recent-transactions-1',
-        type: 'recent-transactions',
+        id: "recent-transactions-1",
+        type: "recent-transactions",
         position: { x: 4, y: 11, w: 4, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'performance-metrics-1',
-        type: 'performance-metrics',
+        id: "performance-metrics-1",
+        type: "performance-metrics",
         position: { x: 0, y: 14, w: 4, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'alerts-1',
-        type: 'alerts',
+        id: "alerts-1",
+        type: "alerts",
         position: { x: 4, y: 16, w: 4, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'news-feed-1',
-        type: 'news-feed',
+        id: "news-feed-1",
+        type: "news-feed",
         position: { x: 0, y: 18, w: 4, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'sector-performance-1',
-        type: 'sector-performance',
+        id: "sector-performance-1",
+        type: "sector-performance",
         position: { x: 4, y: 20, w: 4, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'top-movers-1',
-        type: 'top-movers',
+        id: "top-movers-1",
+        type: "top-movers",
         position: { x: 0, y: 24, w: 4, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'economic-calendar-1',
-        type: 'economic-calendar',
+        id: "economic-calendar-1",
+        type: "economic-calendar",
         position: { x: 4, y: 24, w: 4, h: 5 },
         isVisible: true,
         isLocked: false,
@@ -703,92 +703,92 @@ export const DEFAULT_LAYOUTS: Record<
     ],
   },
   sm: {
-    breakpoint: 'sm',
+    breakpoint: "sm",
     cols: 6,
     rowHeight: 60,
     margin: [8, 8],
     containerPadding: [8, 8],
     widgets: [
       {
-        id: 'portfolio-overview-1',
-        type: 'portfolio-overview',
+        id: "portfolio-overview-1",
+        type: "portfolio-overview",
         position: { x: 0, y: 0, w: 6, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'portfolio-chart-1',
-        type: 'portfolio-chart',
+        id: "portfolio-chart-1",
+        type: "portfolio-chart",
         position: { x: 0, y: 4, w: 6, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'watchlist-1',
-        type: 'watchlist',
+        id: "watchlist-1",
+        type: "watchlist",
         position: { x: 0, y: 10, w: 6, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'market-summary-1',
-        type: 'market-summary',
+        id: "market-summary-1",
+        type: "market-summary",
         position: { x: 0, y: 16, w: 6, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'ai-insights-1',
-        type: 'ai-insights',
+        id: "ai-insights-1",
+        type: "ai-insights",
         position: { x: 0, y: 20, w: 6, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'recent-transactions-1',
-        type: 'recent-transactions',
+        id: "recent-transactions-1",
+        type: "recent-transactions",
         position: { x: 0, y: 25, w: 6, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'performance-metrics-1',
-        type: 'performance-metrics',
+        id: "performance-metrics-1",
+        type: "performance-metrics",
         position: { x: 0, y: 30, w: 6, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'alerts-1',
-        type: 'alerts',
+        id: "alerts-1",
+        type: "alerts",
         position: { x: 0, y: 34, w: 6, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'news-feed-1',
-        type: 'news-feed',
+        id: "news-feed-1",
+        type: "news-feed",
         position: { x: 0, y: 38, w: 6, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'sector-performance-1',
-        type: 'sector-performance',
+        id: "sector-performance-1",
+        type: "sector-performance",
         position: { x: 0, y: 44, w: 6, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'top-movers-1',
-        type: 'top-movers',
+        id: "top-movers-1",
+        type: "top-movers",
         position: { x: 0, y: 48, w: 6, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'economic-calendar-1',
-        type: 'economic-calendar',
+        id: "economic-calendar-1",
+        type: "economic-calendar",
         position: { x: 0, y: 53, w: 6, h: 5 },
         isVisible: true,
         isLocked: false,
@@ -796,92 +796,92 @@ export const DEFAULT_LAYOUTS: Record<
     ],
   },
   xs: {
-    breakpoint: 'xs',
+    breakpoint: "xs",
     cols: 4,
     rowHeight: 60,
     margin: [8, 8],
     containerPadding: [8, 8],
     widgets: [
       {
-        id: 'portfolio-overview-1',
-        type: 'portfolio-overview',
+        id: "portfolio-overview-1",
+        type: "portfolio-overview",
         position: { x: 0, y: 0, w: 4, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'portfolio-chart-1',
-        type: 'portfolio-chart',
+        id: "portfolio-chart-1",
+        type: "portfolio-chart",
         position: { x: 0, y: 4, w: 4, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'watchlist-1',
-        type: 'watchlist',
+        id: "watchlist-1",
+        type: "watchlist",
         position: { x: 0, y: 10, w: 4, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'market-summary-1',
-        type: 'market-summary',
+        id: "market-summary-1",
+        type: "market-summary",
         position: { x: 0, y: 16, w: 4, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'ai-insights-1',
-        type: 'ai-insights',
+        id: "ai-insights-1",
+        type: "ai-insights",
         position: { x: 0, y: 20, w: 4, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'recent-transactions-1',
-        type: 'recent-transactions',
+        id: "recent-transactions-1",
+        type: "recent-transactions",
         position: { x: 0, y: 25, w: 4, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'performance-metrics-1',
-        type: 'performance-metrics',
+        id: "performance-metrics-1",
+        type: "performance-metrics",
         position: { x: 0, y: 30, w: 4, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'alerts-1',
-        type: 'alerts',
+        id: "alerts-1",
+        type: "alerts",
         position: { x: 0, y: 34, w: 4, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'news-feed-1',
-        type: 'news-feed',
+        id: "news-feed-1",
+        type: "news-feed",
         position: { x: 0, y: 38, w: 4, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'sector-performance-1',
-        type: 'sector-performance',
+        id: "sector-performance-1",
+        type: "sector-performance",
         position: { x: 0, y: 44, w: 4, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'top-movers-1',
-        type: 'top-movers',
+        id: "top-movers-1",
+        type: "top-movers",
         position: { x: 0, y: 48, w: 4, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'economic-calendar-1',
-        type: 'economic-calendar',
+        id: "economic-calendar-1",
+        type: "economic-calendar",
         position: { x: 0, y: 53, w: 4, h: 5 },
         isVisible: true,
         isLocked: false,
@@ -889,92 +889,92 @@ export const DEFAULT_LAYOUTS: Record<
     ],
   },
   xxs: {
-    breakpoint: 'xxs',
+    breakpoint: "xxs",
     cols: 2,
     rowHeight: 60,
     margin: [4, 4],
     containerPadding: [4, 4],
     widgets: [
       {
-        id: 'portfolio-overview-1',
-        type: 'portfolio-overview',
+        id: "portfolio-overview-1",
+        type: "portfolio-overview",
         position: { x: 0, y: 0, w: 2, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'portfolio-chart-1',
-        type: 'portfolio-chart',
+        id: "portfolio-chart-1",
+        type: "portfolio-chart",
         position: { x: 0, y: 4, w: 2, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'watchlist-1',
-        type: 'watchlist',
+        id: "watchlist-1",
+        type: "watchlist",
         position: { x: 0, y: 10, w: 2, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'market-summary-1',
-        type: 'market-summary',
+        id: "market-summary-1",
+        type: "market-summary",
         position: { x: 0, y: 16, w: 2, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'ai-insights-1',
-        type: 'ai-insights',
+        id: "ai-insights-1",
+        type: "ai-insights",
         position: { x: 0, y: 20, w: 2, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'recent-transactions-1',
-        type: 'recent-transactions',
+        id: "recent-transactions-1",
+        type: "recent-transactions",
         position: { x: 0, y: 25, w: 2, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'performance-metrics-1',
-        type: 'performance-metrics',
+        id: "performance-metrics-1",
+        type: "performance-metrics",
         position: { x: 0, y: 30, w: 2, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'alerts-1',
-        type: 'alerts',
+        id: "alerts-1",
+        type: "alerts",
         position: { x: 0, y: 34, w: 2, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'news-feed-1',
-        type: 'news-feed',
+        id: "news-feed-1",
+        type: "news-feed",
         position: { x: 0, y: 38, w: 2, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'sector-performance-1',
-        type: 'sector-performance',
+        id: "sector-performance-1",
+        type: "sector-performance",
         position: { x: 0, y: 44, w: 2, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'top-movers-1',
-        type: 'top-movers',
+        id: "top-movers-1",
+        type: "top-movers",
         position: { x: 0, y: 48, w: 2, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'economic-calendar-1',
-        type: 'economic-calendar',
+        id: "economic-calendar-1",
+        type: "economic-calendar",
         position: { x: 0, y: 53, w: 2, h: 5 },
         isVisible: true,
         isLocked: false,
@@ -982,92 +982,92 @@ export const DEFAULT_LAYOUTS: Record<
     ],
   },
   xl: {
-    breakpoint: 'xl',
+    breakpoint: "xl",
     cols: 16,
     rowHeight: 60,
     margin: [20, 20],
     containerPadding: [20, 20],
     widgets: [
       {
-        id: 'portfolio-overview-1',
-        type: 'portfolio-overview',
+        id: "portfolio-overview-1",
+        type: "portfolio-overview",
         position: { x: 0, y: 0, w: 8, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'portfolio-chart-1',
-        type: 'portfolio-chart',
+        id: "portfolio-chart-1",
+        type: "portfolio-chart",
         position: { x: 8, y: 0, w: 8, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'watchlist-1',
-        type: 'watchlist',
+        id: "watchlist-1",
+        type: "watchlist",
         position: { x: 0, y: 4, w: 5, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'market-summary-1',
-        type: 'market-summary',
+        id: "market-summary-1",
+        type: "market-summary",
         position: { x: 5, y: 6, w: 5, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'ai-insights-1',
-        type: 'ai-insights',
+        id: "ai-insights-1",
+        type: "ai-insights",
         position: { x: 10, y: 6, w: 6, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'recent-transactions-1',
-        type: 'recent-transactions',
+        id: "recent-transactions-1",
+        type: "recent-transactions",
         position: { x: 0, y: 10, w: 6, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'performance-metrics-1',
-        type: 'performance-metrics',
+        id: "performance-metrics-1",
+        type: "performance-metrics",
         position: { x: 6, y: 10, w: 5, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'alerts-1',
-        type: 'alerts',
+        id: "alerts-1",
+        type: "alerts",
         position: { x: 11, y: 11, w: 5, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'news-feed-1',
-        type: 'news-feed',
+        id: "news-feed-1",
+        type: "news-feed",
         position: { x: 0, y: 15, w: 5, h: 6 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'sector-performance-1',
-        type: 'sector-performance',
+        id: "sector-performance-1",
+        type: "sector-performance",
         position: { x: 5, y: 14, w: 6, h: 4 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'top-movers-1',
-        type: 'top-movers',
+        id: "top-movers-1",
+        type: "top-movers",
         position: { x: 11, y: 15, w: 5, h: 5 },
         isVisible: true,
         isLocked: false,
       },
       {
-        id: 'economic-calendar-1',
-        type: 'economic-calendar',
+        id: "economic-calendar-1",
+        type: "economic-calendar",
         position: { x: 5, y: 18, w: 6, h: 5 },
         isVisible: true,
         isLocked: false,
@@ -1080,18 +1080,18 @@ export const DEFAULT_LAYOUTS: Record<
  * Default dashboard configuration for new users
  */
 export const DEFAULT_DASHBOARD_CONFIG: DashboardConfig = {
-  id: 'default-dashboard',
-  name: 'My Dashboard',
-  description: 'Default StockPulse trading dashboard',
+  id: "default-dashboard",
+  name: "My Dashboard",
+  description: "Default StockPulse trading dashboard",
   layouts: DEFAULT_LAYOUTS,
-  version: '1.0.0',
+  version: "1.0.0",
   isDefault: true,
   metadata: {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    createdBy: 'system',
+    createdBy: "system",
     accessCount: 0,
-    tags: ['default', 'trading', 'portfolio'],
+    tags: ["default", "trading", "portfolio"],
   },
 };
 
@@ -1107,7 +1107,7 @@ export const DEFAULT_DASHBOARD_PREFERENCES: DashboardPreferences = {
   compactMode: false,
   animations: true,
   notifications: true,
-  defaultView: 'desktop',
+  defaultView: "desktop",
 };
 
 // ===============================================
@@ -1130,24 +1130,24 @@ export interface WidgetComponentProps {
  * Dashboard event types
  */
 export type DashboardEvent =
-  | { type: 'WIDGET_ADDED'; payload: { widget: WidgetConfig } }
-  | { type: 'WIDGET_REMOVED'; payload: { widgetId: string } }
+  | { type: "WIDGET_ADDED"; payload: { widget: WidgetConfig } }
+  | { type: "WIDGET_REMOVED"; payload: { widgetId: string } }
   | {
-      type: 'WIDGET_MOVED';
+      type: "WIDGET_MOVED";
       payload: { widgetId: string; position: WidgetPosition };
     }
   | {
-      type: 'WIDGET_RESIZED';
+      type: "WIDGET_RESIZED";
       payload: { widgetId: string; size: { w: number; h: number } };
     }
   | {
-      type: 'WIDGET_CONFIGURED';
+      type: "WIDGET_CONFIGURED";
       payload: { widgetId: string; config: WidgetConfig };
     }
-  | { type: 'LAYOUT_CHANGED'; payload: { layout: DashboardLayout } }
-  | { type: 'EDIT_MODE_TOGGLED'; payload: { isEditMode: boolean } }
-  | { type: 'DASHBOARD_SAVED'; payload: { config: DashboardConfig } }
-  | { type: 'DASHBOARD_LOADED'; payload: { config: DashboardConfig } };
+  | { type: "LAYOUT_CHANGED"; payload: { layout: DashboardLayout } }
+  | { type: "EDIT_MODE_TOGGLED"; payload: { isEditMode: boolean } }
+  | { type: "DASHBOARD_SAVED"; payload: { config: DashboardConfig } }
+  | { type: "DASHBOARD_LOADED"; payload: { config: DashboardConfig } };
 
 /**
  * Dashboard API response types

@@ -1,16 +1,24 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-import { vi, describe, it, expect, beforeEach, afterEach, MockedFunction } from 'vitest';
-import { usePortfolioOverview } from '../usePortfolioOverview';
-import { apiClient } from '../../services/api';
+import { renderHook, act } from "@testing-library/react-hooks";
+import {
+  vi,
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  MockedFunction,
+} from "vitest";
+import { usePortfolioOverview } from "../usePortfolioOverview";
+import { apiClient } from "../../services/api";
 
 // Mock the API client
-vi.mock('../../services/api', () => ({
+vi.mock("../../services/api", () => ({
   apiClient: {
     get: vi.fn(),
   },
 }));
 
-describe('usePortfolioOverview', () => {
+describe("usePortfolioOverview", () => {
   const mockData = {
     portfolioValue: 125000.75,
     dayChange: 1250.5,
@@ -19,11 +27,11 @@ describe('usePortfolioOverview', () => {
     overallGainPercent: 25.0,
     assetCount: 8,
     alertsCount: 2,
-    lastUpdated: '2023-06-01T12:00:00Z',
+    lastUpdated: "2023-06-01T12:00:00Z",
   };
 
   const defaultProps = {
-    widgetId: 'portfolio-overview-1',
+    widgetId: "portfolio-overview-1",
     refreshInterval: 60000,
     autoRefresh: true,
   };
@@ -37,7 +45,7 @@ describe('usePortfolioOverview', () => {
     vi.useRealTimers();
   });
 
-  it('should fetch data on mount', async () => {
+  it("should fetch data on mount", async () => {
     (apiClient.get as any).mockResolvedValueOnce({ data: mockData });
 
     const { result } = renderHook(() => usePortfolioOverview(defaultProps));
@@ -47,15 +55,15 @@ describe('usePortfolioOverview', () => {
 
     // Wait for the effect to complete
     await vi.waitFor(() => {
-      expect(apiClient.get).toHaveBeenCalledWith('/api/portfolio/overview');
+      expect(apiClient.get).toHaveBeenCalledWith("/api/portfolio/overview");
       expect(result.current.isLoading).toBe(false);
       expect(result.current.error).toBeNull();
       expect(result.current.data).toEqual(mockData);
       expect(result.current.formattedData).toMatchObject({
-        portfolioValue: '$125,000.75',
-        dayChange: '+$1,250.50 (1.01%)',
+        portfolioValue: "$125,000.75",
+        dayChange: "+$1,250.50 (1.01%)",
         dayChangeIsPositive: true,
-        overallGain: '+$25,000.25 (25.00%)',
+        overallGain: "+$25,000.25 (25.00%)",
         overallGainIsPositive: true,
         assetCount: 8,
         alertsCount: 2,
@@ -64,8 +72,8 @@ describe('usePortfolioOverview', () => {
     });
   });
 
-  it('should handle API errors', async () => {
-    const errorMessage = 'Network error';
+  it("should handle API errors", async () => {
+    const errorMessage = "Network error";
     (apiClient.get as any).mockRejectedValueOnce(new Error(errorMessage));
 
     const { result } = renderHook(() => usePortfolioOverview(defaultProps));
@@ -78,8 +86,10 @@ describe('usePortfolioOverview', () => {
     });
   });
 
-  it('should refetch data when refetch is called', async () => {
-    (apiClient.get as MockedFunction<typeof apiClient.get>).mockResolvedValue({ data: mockData });
+  it("should refetch data when refetch is called", async () => {
+    (apiClient.get as MockedFunction<typeof apiClient.get>).mockResolvedValue({
+      data: mockData,
+    });
 
     const { result } = renderHook(() => usePortfolioOverview(defaultProps));
 
@@ -95,15 +105,17 @@ describe('usePortfolioOverview', () => {
     expect(apiClient.get).toHaveBeenCalledTimes(2);
   });
 
-  it('should auto-refresh data based on refreshInterval', async () => {
-    (apiClient.get as MockedFunction<typeof apiClient.get>).mockResolvedValue({ data: mockData });
+  it("should auto-refresh data based on refreshInterval", async () => {
+    (apiClient.get as MockedFunction<typeof apiClient.get>).mockResolvedValue({
+      data: mockData,
+    });
 
     const refreshInterval = 1000;
     renderHook(() =>
       usePortfolioOverview({
         ...defaultProps,
         refreshInterval,
-      })
+      }),
     );
 
     await vi.waitFor(() => {
@@ -120,14 +132,16 @@ describe('usePortfolioOverview', () => {
     });
   });
 
-  it('should clean up interval on unmount', async () => {
-    (apiClient.get as MockedFunction<typeof apiClient.get>).mockResolvedValue({ data: mockData });
+  it("should clean up interval on unmount", async () => {
+    (apiClient.get as MockedFunction<typeof apiClient.get>).mockResolvedValue({
+      data: mockData,
+    });
 
     const { unmount } = renderHook(() =>
       usePortfolioOverview({
         ...defaultProps,
         refreshInterval: 1000,
-      })
+      }),
     );
 
     await vi.waitFor(() => {
@@ -144,15 +158,17 @@ describe('usePortfolioOverview', () => {
     expect(apiClient.get).toHaveBeenCalledTimes(1);
   });
 
-  it('should not auto-refresh when autoRefresh is false', async () => {
-    (apiClient.get as MockedFunction<typeof apiClient.get>).mockResolvedValue({ data: mockData });
+  it("should not auto-refresh when autoRefresh is false", async () => {
+    (apiClient.get as MockedFunction<typeof apiClient.get>).mockResolvedValue({
+      data: mockData,
+    });
 
     renderHook(() =>
       usePortfolioOverview({
         ...defaultProps,
         autoRefresh: false,
         refreshInterval: 1000,
-      })
+      }),
     );
 
     await vi.waitFor(() => {

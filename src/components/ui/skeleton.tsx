@@ -2,26 +2,26 @@
  * Basic Skeleton Component
  * Simple skeleton loader for consistent loading states
  */
-import React from 'react';
-import { cn } from '../../utils/theme/tailwind';
+import React from "react";
+import { cn } from "../../utils/theme/tailwind";
 
 interface SkeletonProps {
   className?: string;
   animate?: boolean;
-  'aria-label'?: string;
+  "aria-label"?: string;
 }
 
-export const Skeleton: React.FC<SkeletonProps> = ({ 
-  className, 
+export const Skeleton: React.FC<SkeletonProps> = ({
+  className,
   animate = true,
-  'aria-label': ariaLabel = 'Loading content...'
+  "aria-label": ariaLabel = "Loading content...",
 }) => {
   return (
     <div
       className={cn(
-        'bg-muted rounded-md',
-        animate && 'animate-pulse',
-        className
+        "bg-muted rounded-md",
+        animate && "animate-pulse",
+        className,
       )}
       role="status"
       aria-label={ariaLabel}
@@ -29,4 +29,4 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   );
 };
 
-export default Skeleton; 
+export default Skeleton;

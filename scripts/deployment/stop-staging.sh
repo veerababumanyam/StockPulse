@@ -38,7 +38,7 @@ log_error() {
 # Main stop function
 stop_staging() {
     log_info "Stopping staging services..."
-    
+
     if [ -f "$STAGING_COMPOSE_FILE" ]; then
         # Stop and remove containers
         docker-compose -f "$STAGING_COMPOSE_FILE" -p "$PROJECT_NAME" down --remove-orphans
@@ -52,13 +52,13 @@ stop_staging() {
 # Cleanup function
 cleanup_resources() {
     log_info "Cleaning up resources..."
-    
+
     # Remove stopped containers
     docker container prune -f &> /dev/null || true
-    
+
     # Remove unused networks
     docker network prune -f &> /dev/null || true
-    
+
     log_success "Cleanup completed"
 }
 
@@ -89,11 +89,11 @@ case "${1:-stop}" in
     "full")
         log_warning "Performing full cleanup (including volumes)..."
         stop_staging
-        
+
         # Remove volumes
         docker volume rm stockpulse-postgres-staging-data 2>/dev/null || true
         docker volume rm stockpulse-redis-staging-data 2>/dev/null || true
-        
+
         cleanup_resources
         log_success "Full cleanup completed (including database volumes)"
         ;;
@@ -105,4 +105,4 @@ case "${1:-stop}" in
         echo "  full          - Stop services and remove all data volumes"
         exit 1
         ;;
-esac 
+esac

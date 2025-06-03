@@ -1,4 +1,4 @@
-import { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from "react";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -12,7 +12,10 @@ interface ErrorBoundaryState {
   errorInfo: ErrorInfo | null;
 }
 
-export class WidgetErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class WidgetErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
@@ -33,16 +36,18 @@ export class WidgetErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoun
 
   render() {
     if (this.state.hasError) {
-      return this.props.fallback || (
-        <div className="p-4 bg-danger-muted text-danger-fg rounded-md">
-          <h3 className="font-bold">Something went wrong</h3>
-          <details className="mt-2 text-sm">
-            <summary className="cursor-pointer">Show details</summary>
-            <pre className="mt-2 p-2 bg-black/10 rounded overflow-auto text-xs">
-              {this.state.error?.toString()}
-            </pre>
-          </details>
-        </div>
+      return (
+        this.props.fallback || (
+          <div className="p-4 bg-danger-muted text-danger-fg rounded-md">
+            <h3 className="font-bold">Something went wrong</h3>
+            <details className="mt-2 text-sm">
+              <summary className="cursor-pointer">Show details</summary>
+              <pre className="mt-2 p-2 bg-black/10 rounded overflow-auto text-xs">
+                {this.state.error?.toString()}
+              </pre>
+            </details>
+          </div>
+        )
       );
     }
 
